@@ -1,0 +1,17 @@
+{
+  "version": "1.0.0",
+  "organization": "Software Engineering",
+  "technology": "Feature Specification and Planning",
+  "date": "January 2026",
+  "abstract": "Comprehensive feature specification and planning guide for software engineers, product managers, and technical leads. Contains 42 rules across 8 categories, prioritized by impact from critical (scope definition, requirements clarity) to foundational (documentation standards). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct approaches, and specific impact metrics to prevent scope creep and ensure project success.",
+  "references": [
+    "https://www.wrike.com/project-management-guide/faq/what-is-scope-creep-in-project-management/",
+    "https://www.atlassian.com/agile/product-management/requirements",
+    "https://www.scaledagileframework.com/user-stories/",
+    "https://www.productplan.com/glossary/rice-scoring-model/",
+    "https://www.karlwiegers.com/requirements-traceability/",
+    "https://owasp.org/www-project-application-security-verification-standard/",
+    "https://adr.github.io/",
+    "https://sre.google/sre-book/service-level-objectives/"
+  ]
+}
