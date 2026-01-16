@@ -6,6 +6,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 
 | Skill | Description |
 |-------|-------------|
+| [systematic-debugging](skills/systematic-debugging) | Comprehensive debugging methodology with 42 rules across 8 categories for finding and fixing bugs systematically |
 | [example-skill](skills/example-skill) | A demonstration skill showing the Agent Skills format structure |
 
 ## Installation
