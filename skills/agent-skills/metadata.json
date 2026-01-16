@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Anthropic Community",
+  "technology": "AI Agent Skills",
+  "date": "January 2026",
+  "abstract": "Comprehensive design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 43 rules across 8 categories, prioritized by impact from critical (skill metadata and description engineering) to incremental (maintenance and distribution). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide skill creation, review, and optimization.",
+  "references": [
+    "https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills",
+    "https://code.claude.com/docs/en/skills",
+    "https://github.com/anthropics/skills",
+    "https://modelcontextprotocol.info/docs/best-practices/",
+    "https://www.promptingguide.ai/research/llm-agents",
+    "https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/"
+  ]
+}
