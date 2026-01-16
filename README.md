@@ -45,7 +45,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on creating new skills.
 ### Quick Start
 
 1. Copy the template: `cp -r skills/.template skills/my-skill`
-2. Rename directory to match your skill name (kebab-case)
+2. Rename the template file: `mv skills/my-skill/SKILL.md.template skills/my-skill/SKILL.md`
 3. Edit `SKILL.md` with your skill's frontmatter and instructions
 4. Add scripts, references, or assets as needed
 5. Test with `npx add-skill . --list`
@@ -61,7 +61,7 @@ skills/
 │   └── assets/           # Optional: Static resources
 ├── .curated/             # Vetted, production-ready skills
 ├── .experimental/        # Work-in-progress skills
-└── .template/            # Skill template for new skills
+└── .template/            # Skill template (SKILL.md.template)
 ```
 
 ## License
