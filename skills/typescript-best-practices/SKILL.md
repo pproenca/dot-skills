@@ -1,6 +1,6 @@
 ---
 name: typescript-best-practices
-description: TypeScript performance and type system optimization guidelines. This skill should be used when writing, reviewing, or refactoring TypeScript code to ensure optimal compilation performance and runtime efficiency. Triggers on tasks involving TypeScript configuration, type definitions, async patterns, module organization, or performance improvements.
+description: This skill should be used when the user asks to "optimize TypeScript performance", "speed up tsc compilation", "configure tsconfig.json", "fix type errors", "improve async patterns", or encounters TS errors (TS2322, TS2339, "is not assignable to"). Also triggers on .ts, .tsx, .d.ts file work involving type definitions, module organization, or memory management. Does NOT cover TypeScript basics, framework-specific patterns, or testing.
 ---
 
 # TypeScript Best Practices
