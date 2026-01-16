@@ -1,26 +1,37 @@
 ---
 title: Use Lowercase Hyphenated Skill Names
 impact: CRITICAL
-impactDescription: prevents discovery failures and cross-platform issues
-tags: meta, naming, discovery, filesystem
+impactDescription: 100% skill rejection by skills-ref validator
+tags: meta, naming, discovery, filesystem, skills-ref
 ---
 
 ## Use Lowercase Hyphenated Skill Names
 
-The skill name must match the directory name and use lowercase with hyphens. Mixed case or special characters cause discovery failures on case-sensitive filesystems and break URL routing in skill registries.
+The skill name must use lowercase letters, digits, and hyphens only. The skills-ref validator enforces this constraint and rejects names with uppercase letters, spaces, or special characters.
 
-**Incorrect (mixed case and spaces cause failures):**
+**Incorrect (mixed case causes validation failure):**
 
 ```yaml
 ---
-name: PDF Processing Tool
+name: PDF-Processing
 description: Handles PDF files
 ---
-# Discovery fails on Linux/macOS due to case mismatch
-# Spaces break URL routing in plugin marketplaces
+# skills-ref validate ./skills/PDF-Processing/
+# Error: Name must be lowercase
 ```
 
-**Correct (lowercase hyphenated matches directory):**
+**Incorrect (spaces not allowed):**
+
+```yaml
+---
+name: pdf processing tool
+description: Handles PDF files
+---
+# skills-ref validate ./skills/pdf processing tool/
+# Error: Name can only contain letters, digits, and hyphens
+```
+
+**Correct (lowercase with hyphens):**
 
 ```yaml
 ---
@@ -28,12 +39,19 @@ name: pdf-processing
 description: Handles PDF files
 ---
 # Directory: skills/pdf-processing/SKILL.md
-# Works consistently across all platforms
+# skills-ref validate ./skills/pdf-processing/
+# Validation passed
 ```
 
+**Allowed characters:**
+- Lowercase letters (a-z)
+- Digits (0-9)
+- Hyphens (-)
+- Unicode letters for i18n support
+
 **Benefits:**
+- Passes skills-ref validation
 - Consistent discovery across Windows, macOS, and Linux
 - Valid URL slugs for plugin marketplaces
-- Predictable programmatic access via Automation API
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
