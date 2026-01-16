@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "Pulumi Community",
+  "technology": "Pulumi",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance and reliability guide for Pulumi infrastructure as code, designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (state management, resource graph optimization) to incremental (automation and CI/CD). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://www.pulumi.com/docs/",
+    "https://www.pulumi.com/docs/iac/concepts/",
+    "https://www.pulumi.com/docs/iac/concepts/state-and-backends/",
+    "https://www.pulumi.com/docs/iac/concepts/components/",
+    "https://www.pulumi.com/docs/iac/concepts/secrets/",
+    "https://www.pulumi.com/docs/iac/automation-api/",
+    "https://www.pulumi.com/docs/iac/guides/testing/",
+    "https://www.pulumi.com/blog/amazing-performance/",
+    "https://www.pulumi.com/blog/journaling/"
+  ]
+}

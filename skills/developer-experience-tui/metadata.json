@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "DevEx",
+  "technology": "Developer Experience TUI",
+  "date": "January 2026",
+  "abstract": "Comprehensive developer experience guide for building TypeScript terminal user interfaces using Ink (React for CLIs) and Clack prompts. Contains 42 rules across 8 categories, prioritized by impact from critical (rendering optimization, input handling) to incremental (robustness and compatibility). Each rule includes detailed explanations, real-world TypeScript examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://github.com/bombshell-dev/clack",
+    "https://github.com/vadimdemedes/ink",
+    "https://github.com/vadimdemedes/ink-ui",
+    "https://clig.dev/",
+    "https://textual.textualize.io/blog/2024/12/12/algorithms-for-high-performance-terminal-apps/"
+  ]
+}
