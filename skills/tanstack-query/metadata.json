@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "organization": "community",
+  "technology": "TanStack Query v5",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for TanStack Query v5 applications, designed for AI agents and LLMs. Contains 40+ rules across 8 categories, prioritized by impact from critical (query key structure, caching configuration) to incremental (render optimization). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://tanstack.com/query/v5/docs",
+    "https://tkdodo.eu/blog",
+    "https://github.com/lukemorales/query-key-factory",
+    "https://github.com/TanStack/query/discussions"
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "React Feature-Based Architecture",
+  "date": "January 2026",
+  "abstract": "Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 42 rules across 8 categories, prioritized by impact from critical (directory structure and import rules) to incremental (naming conventions). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://www.robinwieruch.de/react-feature-architecture/",
+    "https://feature-sliced.design/",
+    "https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md",
+    "https://legacy.reactjs.org/docs/faq-structure.html"
+  ]
+}
