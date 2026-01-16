@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "Fowler/Martin",
+  "technology": "Code Refactoring",
+  "date": "January 2026",
+  "abstract": "Comprehensive code refactoring guide based on Martin Fowler's refactoring catalog and Robert C. Martin's Clean Code principles, designed for AI agents and LLMs. Contains 43+ rules across 8 categories, prioritized by impact from critical (structure decomposition, reducing coupling) to incremental (micro-refactoring). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://refactoring.com/catalog/",
+    "https://refactoring.guru/refactoring/smells",
+    "https://martinfowler.com/books/refactoring.html",
+    "https://en.wikipedia.org/wiki/SOLID"
+  ]
+}
