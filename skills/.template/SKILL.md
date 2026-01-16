@@ -1,9 +1,10 @@
 ---
-name: skill-name
-description: Brief description of what this skill does and when to use it. Include trigger keywords for agent discovery.
+# TEMPLATE: Copy this directory and replace all <placeholders>
+name: <your-skill-name>
+description: <Brief description of what this skill does and when to use it. Include trigger keywords for agent discovery.>
 license: MIT
 metadata:
-  author: your-name
+  author: <your-name>
   version: "1.0.0"
 ---
 
