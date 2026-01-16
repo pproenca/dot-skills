@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "TypeScript Best Practices",
+  "technology": "TypeScript",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for TypeScript applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (type system performance, compiler configuration) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://github.com/microsoft/TypeScript/wiki/Performance",
+    "https://www.typescriptlang.org/docs/handbook/",
+    "https://v8.dev/blog",
+    "https://nodejs.org/en/learn/diagnostics/memory"
+  ]
+}
