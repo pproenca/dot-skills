@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "Orval Community",
+  "technology": "Orval OpenAPI",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for Orval OpenAPI TypeScript client generation, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (OpenAPI spec quality, configuration architecture) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated configuration and code generation.",
+  "references": [
+    "https://orval.dev",
+    "https://github.com/orval-labs/orval",
+    "https://tanstack.com/query/latest",
+    "https://mswjs.io",
+    "https://axios-http.com"
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "React Community",
+  "technology": "React 19",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for React 19 applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (Actions, data fetching, Suspense) to incremental (DOM optimizations, hydration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://react.dev",
+    "https://react.dev/blog/2024/12/05/react-19",
+    "https://react.dev/reference/react/use",
+    "https://react.dev/reference/react/useActionState",
+    "https://react.dev/reference/react/useOptimistic",
+    "https://react.dev/reference/rsc/server-components",
+    "https://react.dev/learn/react-compiler/introduction",
+    "https://vercel.com/blog/whats-new-in-react-19"
+  ]
+}
