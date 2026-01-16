@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Test-Driven Development",
+  "date": "January 2026",
+  "abstract": "Comprehensive guide to Test-Driven Development practices, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (red-green-refactor cycle, test design principles) to strategic (test pyramid, coverage targets). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide test writing, refactoring, and code generation.",
+  "references": [
+    "https://martinfowler.com/bliki/TestDrivenDevelopment.html",
+    "http://blog.cleancoder.com/uncle-bob/2014/12/17/TheCyclesOfTDD.html",
+    "https://learn.microsoft.com/en-us/dotnet/core/testing/unit-testing-best-practices",
+    "https://testing.googleblog.com/2020/08/code-coverage-best-practices.html",
+    "https://semaphore.io/blog/aaa-pattern-test-automation",
+    "https://docs.pytest.org/en/stable/how-to/fixtures.html",
+    "https://martinfowler.com/articles/practical-test-pyramid.html"
+  ]
+}
