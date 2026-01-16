@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "UI/UX Best Practices",
+  "technology": "UI/UX Frontend Design",
+  "date": "January 2026",
+  "abstract": "Comprehensive UI/UX and frontend design best practices guide, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (accessibility compliance, Core Web Vitals) to incremental (animation performance). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated code review and generation.",
+  "references": [
+    "https://www.w3.org/WAI/WCAG22/quickref/",
+    "https://web.dev/articles/vitals",
+    "https://www.nngroup.com/",
+    "https://developer.mozilla.org/",
+    "https://developers.google.com/search/docs/appearance/core-web-vitals",
+    "https://baymard.com/",
+    "https://m3.material.io/"
+  ]
+}
