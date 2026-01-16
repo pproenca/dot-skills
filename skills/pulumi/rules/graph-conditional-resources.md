@@ -72,3 +72,5 @@ class MonitoredInstance extends pulumi.ComponentResource {
   }
 }
 ```
+
+Reference: [Inputs and Outputs](https://www.pulumi.com/docs/iac/concepts/inputs-outputs/)

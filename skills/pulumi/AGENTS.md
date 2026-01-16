@@ -247,24 +247,24 @@ Pulumi Cloud provides transactional checkpointing, concurrent state locking, and
 
 **Incorrect (self-managed S3 backend without optimization):**
 
-```typescript
-// Pulumi.yaml
+```yaml
+# Pulumi.yaml
 name: production-infrastructure
 runtime: nodejs
 backend:
   url: s3://my-state-bucket/pulumi-state
-// No concurrent locking, full state uploads on every operation
-// Team members can corrupt state with simultaneous updates
+# No concurrent locking, full state uploads on every operation
+# Team members can corrupt state with simultaneous updates
 ```
 
 **Correct (Pulumi Cloud with automatic optimization):**
 
-```typescript
-// Pulumi.yaml
+```yaml
+# Pulumi.yaml
 name: production-infrastructure
 runtime: nodejs
-// Default backend uses Pulumi Cloud
-// Automatic diff-based uploads, concurrent locking, audit history
+# Default backend uses Pulumi Cloud
+# Automatic diff-based uploads, concurrent locking, audit history
 ```
 
 **When NOT to use managed backend:**
@@ -525,6 +525,8 @@ pulumi up --parallel 50
 - VPC must exist before subnets
 - IAM role must exist before assuming it
 
+Reference: [Pulumi CLI - pulumi up](https://www.pulumi.com/docs/iac/cli/commands/pulumi_up/)
+
 ### 2.4 Use Conditional Logic at Resource Level
 
 **Impact: CRITICAL (prevents graph instability and state drift)**
@@ -594,6 +596,8 @@ class MonitoredInstance extends pulumi.ComponentResource {
   }
 }
 ```
+
+Reference: [Inputs and Outputs](https://www.pulumi.com/docs/iac/concepts/inputs-outputs/)
 
 ### 2.5 Use dependsOn Only for External Dependencies
 
@@ -1967,6 +1971,8 @@ const role = new aws.iam.Role("service-role", {
 - Route53 hosted zones
 - CloudFront distributions with aliases
 - Any resource with unique name constraints
+
+Reference: [deleteBeforeReplace](https://www.pulumi.com/docs/iac/concepts/resources/options/deletebeforereplace/)
 
 ### 6.5 Use ignoreChanges for Externally Managed Properties
 

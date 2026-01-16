@@ -47,3 +47,5 @@ pulumi up --parallel 50
 - Database must exist before schema migration
 - VPC must exist before subnets
 - IAM role must exist before assuming it
+
+Reference: [Pulumi CLI - pulumi up](https://www.pulumi.com/docs/iac/cli/commands/pulumi_up/)

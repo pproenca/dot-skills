@@ -11,24 +11,24 @@ Pulumi Cloud provides transactional checkpointing, concurrent state locking, and
 
 **Incorrect (self-managed S3 backend without optimization):**
 
-```typescript
-// Pulumi.yaml
+```yaml
+# Pulumi.yaml
 name: production-infrastructure
 runtime: nodejs
 backend:
   url: s3://my-state-bucket/pulumi-state
-// No concurrent locking, full state uploads on every operation
-// Team members can corrupt state with simultaneous updates
+# No concurrent locking, full state uploads on every operation
+# Team members can corrupt state with simultaneous updates
 ```
 
 **Correct (Pulumi Cloud with automatic optimization):**
 
-```typescript
-// Pulumi.yaml
+```yaml
+# Pulumi.yaml
 name: production-infrastructure
 runtime: nodejs
-// Default backend uses Pulumi Cloud
-// Automatic diff-based uploads, concurrent locking, audit history
+# Default backend uses Pulumi Cloud
+# Automatic diff-based uploads, concurrent locking, audit history
 ```
 
 **When NOT to use managed backend:**

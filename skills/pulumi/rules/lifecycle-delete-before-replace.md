@@ -56,3 +56,5 @@ const role = new aws.iam.Role("service-role", {
 - Route53 hosted zones
 - CloudFront distributions with aliases
 - Any resource with unique name constraints
+
+Reference: [deleteBeforeReplace](https://www.pulumi.com/docs/iac/concepts/resources/options/deletebeforereplace/)
