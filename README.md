@@ -14,16 +14,16 @@ Install skills using Vercel's [add-skill](https://github.com/vercel-labs/add-ski
 
 ```bash
 # Install all skills
-npx add-skill <owner>/dot-skills
+npx add-skill pproenca/dot-skills
 
 # List available skills
-npx add-skill <owner>/dot-skills --list
+npx add-skill pproenca/dot-skills --list
 
 # Install a specific skill
-npx add-skill <owner>/dot-skills --skill <skill-name>
+npx add-skill pproenca/dot-skills --skill <skill-name>
 
 # Install globally (across all projects)
-npx add-skill <owner>/dot-skills --global
+npx add-skill pproenca/dot-skills --global
 ```
 
 ### Supported Agents
