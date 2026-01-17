@@ -97,13 +97,12 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/build-dynamic-imports.md
-rules/cache-use-cache-directive.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- [build-dynamic-imports](references/build-dynamic-imports.md) - Example rule file
+- [cache-use-cache-directive](references/cache-use-cache-directive.md) - Example rule file
 
 ## Related Skills
 

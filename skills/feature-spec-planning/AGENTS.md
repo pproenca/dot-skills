@@ -4310,3 +4310,16 @@ Reference: [Google Technical Writing - Document Templates](https://developers.go
 6. [https://owasp.org/www-project-application-security-verification-standard/](https://owasp.org/www-project-application-security-verification-standard/)
 7. [https://adr.github.io/](https://adr.github.io/)
 8. [https://sre.google/sre-book/service-level-objectives/](https://sre.google/sre-book/service-level-objectives/)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |
