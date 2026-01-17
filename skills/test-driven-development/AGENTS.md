@@ -4,9 +4,9 @@
 Community  
 January 2026
 
-> **Note:**
-> This document is mainly for agents and LLMs to follow when writing tests,
-> generating Test-Driven Development code, or refactoring test suites. Humans may also find it useful,
+> **Note:**  
+> This document is mainly for agents and LLMs to follow when maintaining,  
+> generating, or refactoring codebases. Humans may also find it useful,  
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
@@ -3087,3 +3087,16 @@ Reference: [Mutation Testing - Codecov](https://about.codecov.io/blog/mutation-t
 5. [https://semaphore.io/blog/aaa-pattern-test-automation](https://semaphore.io/blog/aaa-pattern-test-automation)
 6. [https://docs.pytest.org/en/stable/how-to/fixtures.html](https://docs.pytest.org/en/stable/how-to/fixtures.html)
 7. [https://martinfowler.com/articles/practical-test-pyramid.html](https://martinfowler.com/articles/practical-test-pyramid.html)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |
