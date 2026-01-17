@@ -5,7 +5,7 @@ description: AI agent skill design and development best practices. This skill sh
 
 # Anthropic Community Agent Skills Best Practices
 
-Comprehensive design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 43 rules across 8 categories, prioritized by impact to guide skill creation, review, and optimization.
+Comprehensive design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 46 rules across 8 categories, prioritized by impact to guide skill creation, review, and optimization. Validated against the official [skills-ref library](https://github.com/agentskills/agentskills/tree/main/skills-ref) specification.
 
 ## When to Apply
 
@@ -15,6 +15,7 @@ Reference these guidelines when:
 - Optimizing skill trigger reliability
 - Structuring skill content for progressive disclosure
 - Testing skill activation and behavior
+- Validating skills against skills-ref specification
 
 ## Rule Categories by Priority
 
@@ -34,8 +35,11 @@ Reference these guidelines when:
 ### 1. Skill Metadata Design (CRITICAL)
 
 - `meta-name-format` - Use lowercase hyphenated skill names
+- `meta-name-hyphen-boundaries` - Never start or end names with hyphens
+- `meta-name-no-consecutive-hyphens` - Avoid consecutive hyphens in names
 - `meta-name-uniqueness` - Ensure skill names are globally unique
 - `meta-required-frontmatter` - Include all required frontmatter fields
+- `meta-allowed-frontmatter-fields` - Only use allowed frontmatter fields
 - `meta-frontmatter-yaml-syntax` - Use valid YAML frontmatter syntax
 - `meta-name-length` - Keep skill names under 64 characters
 - `meta-directory-match` - Match skill name to directory name

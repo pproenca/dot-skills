@@ -1,31 +1,34 @@
 # AI Agent Skills
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 Anthropic Community  
 January 2026
 
-> **Note:**
-> This document is for agents and LLMs to follow when creating AI Agent Skills,
-> including Claude Code skills and MCP tools. Humans may also find it useful,
+> **Note:**  
+> This document is mainly for agents and LLMs to follow when maintaining,  
+> generating, or refactoring codebases. Humans may also find it useful,  
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
 
 ## Abstract
 
-Comprehensive design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 43 rules across 8 categories, prioritized by impact from critical (skill metadata and description engineering) to incremental (maintenance and distribution). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide skill creation, review, and optimization.
+Comprehensive design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 46 rules across 8 categories, prioritized by impact from critical (skill metadata and description engineering) to incremental (maintenance and distribution). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide skill creation, review, and optimization. Validated against the official skills-ref library specification.
 
 ---
 
 ## Table of Contents
 
 1. [Skill Metadata Design](#1-skill-metadata-design) — **CRITICAL**
-   - 1.1 [Ensure Skill Names Are Globally Unique](#11-ensure-skill-names-are-globally-unique)
-   - 1.2 [Include All Required Frontmatter Fields](#12-include-all-required-frontmatter-fields)
-   - 1.3 [Keep Skill Names Under 64 Characters](#13-keep-skill-names-under-64-characters)
-   - 1.4 [Match Skill Name to Directory Name](#14-match-skill-name-to-directory-name)
-   - 1.5 [Use Lowercase Hyphenated Skill Names](#15-use-lowercase-hyphenated-skill-names)
-   - 1.6 [Use Valid YAML Frontmatter Syntax](#16-use-valid-yaml-frontmatter-syntax)
+   - 1.1 [Avoid Consecutive Hyphens in Names](#11-avoid-consecutive-hyphens-in-names)
+   - 1.2 [Ensure Skill Names Are Globally Unique](#12-ensure-skill-names-are-globally-unique)
+   - 1.3 [Include All Required Frontmatter Fields](#13-include-all-required-frontmatter-fields)
+   - 1.4 [Keep Skill Names Under 64 Characters](#14-keep-skill-names-under-64-characters)
+   - 1.5 [Match Skill Name to Directory Name](#15-match-skill-name-to-directory-name)
+   - 1.6 [Never Start or End Names with Hyphens](#16-never-start-or-end-names-with-hyphens)
+   - 1.7 [Only Use Allowed Frontmatter Fields](#17-only-use-allowed-frontmatter-fields)
+   - 1.8 [Use Lowercase Hyphenated Skill Names](#18-use-lowercase-hyphenated-skill-names)
+   - 1.9 [Use Valid YAML Frontmatter Syntax](#19-use-valid-yaml-frontmatter-syntax)
 2. [Description Engineering](#2-description-engineering) — **CRITICAL**
    - 2.1 [Avoid Vague Terms in Descriptions](#21-avoid-vague-terms-in-descriptions)
    - 2.2 [Differentiate Similar Skills with Distinct Triggers](#22-differentiate-similar-skills-with-distinct-triggers)
@@ -79,7 +82,68 @@ Comprehensive design and development guide for AI agent skills, including Claude
 
 Metadata determines skill discovery and selection. Poor names or descriptions mean the skill is never triggered, rendering all other optimizations worthless.
 
-### 1.1 Ensure Skill Names Are Globally Unique
+### 1.1 Avoid Consecutive Hyphens in Names
+
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
+
+Skill names cannot contain consecutive hyphens (`--`). The skills-ref validator rejects names with double or multiple consecutive hyphens. This prevents ambiguous word boundaries and ensures clean URL slugs.
+
+**Incorrect (double hyphen):**
+
+```yaml
+---
+name: pdf--processor
+description: Processes PDF files
+---
+# Validation error: consecutive hyphens not allowed
+# skills-ref validate ./skills/pdf--processor/
+# Error: Name cannot contain consecutive hyphens
+```
+
+**Incorrect (multiple consecutive hyphens):**
+
+```yaml
+---
+name: enterprise---crm---sync
+description: Syncs enterprise CRM data
+---
+# Validation error: triple hyphens not allowed
+# Ambiguous word boundaries
+```
+
+**Correct (single hyphens only):**
+
+```yaml
+---
+name: pdf-processor
+description: Processes PDF files
+---
+# Valid: single hyphens between words
+# skills-ref validate ./skills/pdf-processor/
+# Validation passed
+```
+
+**Common causes:**
+- Find-and-replace errors when renaming
+- Copy-paste from URLs with encoded characters
+- Automated slug generation without normalization
+
+**Prevention pattern:**
+
+```javascript
+// Normalize skill names before creating directories
+function normalizeSkillName(name) {
+  return name
+    .toLowerCase()
+    .replace(/[^a-z0-9-]/g, '-')
+    .replace(/-+/g, '-')  // Collapse consecutive hyphens
+    .replace(/^-|-$/g, ''); // Remove boundary hyphens
+}
+```
+
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
+
+### 1.2 Ensure Skill Names Are Globally Unique
 
 **Impact: CRITICAL (prevents silent overrides and unpredictable behavior)**
 
@@ -119,24 +183,31 @@ description: ACME Corp deployment utility functions
 
 Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
 
-### 1.2 Include All Required Frontmatter Fields
+### 1.3 Include All Required Frontmatter Fields
 
-**Impact: CRITICAL (prevents 100% skill failures from missing metadata)**
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
 
-Every SKILL.md must have valid YAML frontmatter with `name` and `description` fields. Missing or malformed frontmatter causes silent loading failures—the skill appears in the directory but never activates.
+Every SKILL.md must have valid YAML frontmatter with `name` and `description` fields. The skills-ref validator requires both fields and rejects skills with missing or empty values.
 
 **Incorrect (missing description field):**
 
 ```yaml
 ---
 name: code-review
-# Missing description field
 ---
+# skills-ref validate ./skills/code-review/
+# Error: description is required
+```
 
-# Code Review Instructions
-...
-# Skill loads but never triggers automatically
-# Claude cannot determine when to use it
+**Incorrect (empty name):**
+
+```yaml
+---
+name: ""
+description: Reviews code for quality issues
+---
+# skills-ref validate ./skills/code-review/
+# Error: name must be non-empty
 ```
 
 **Correct (all required fields present):**
@@ -149,24 +220,34 @@ description: Reviews code for quality issues, security vulnerabilities, and perf
 
 # Code Review Instructions
 ...
-# Skill triggers reliably when user mentions code review
+# skills-ref validate ./skills/code-review/
+# Validation passed
 ```
 
-**Field requirements:**
+**Field requirements (per skills-ref):**
+
 | Field | Required | Max Length | Format |
 |-------|----------|------------|--------|
-| name | Yes | 64 chars | lowercase, hyphens, numbers |
-| description | Yes | 1024 chars | Third-person, trigger keywords |
+| name | Yes | 64 chars | lowercase, hyphens, digits |
+| description | Yes | 1024 chars | non-empty string |
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+**Validation command:**
 
-### 1.3 Keep Skill Names Under 64 Characters
+```bash
+skills-ref validate ./skills/my-skill/
+# Or extract properties as JSON
+skills-ref read-properties ./skills/my-skill/
+```
 
-**Impact: CRITICAL (prevents truncation and discovery failures)**
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
 
-Skill names exceeding 64 characters get truncated in discovery systems, breaking skill matching and causing silent failures. Short, descriptive names also improve readability in skill listings.
+### 1.4 Keep Skill Names Under 64 Characters
 
-**Incorrect (name too long, gets truncated):**
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
+
+The skills-ref validator enforces a 64-character maximum for skill names. Names exceeding this limit cause validation failure and cannot be published or distributed.
+
+**Incorrect (exceeds 64-character limit):**
 
 ```yaml
 ---
@@ -174,8 +255,8 @@ name: enterprise-customer-relationship-management-data-synchronization-toolkit
 description: Syncs CRM data
 ---
 # 74 characters - exceeds limit
-# Truncated to "enterprise-customer-relationship-management-data-synch..."
-# Programmatic lookups fail silently
+# skills-ref validate ./skills/enterprise-customer-...
+# Error: Name cannot exceed 64 characters
 ```
 
 **Correct (concise name under limit):**
@@ -186,7 +267,8 @@ name: crm-sync
 description: Synchronizes enterprise CRM data across platforms. Use when importing, exporting, or reconciling customer records.
 ---
 # 8 characters - well under limit
-# Clear, memorable, works everywhere
+# skills-ref validate ./skills/crm-sync/
+# Validation passed
 ```
 
 **Naming strategy:**
@@ -195,13 +277,23 @@ description: Synchronizes enterprise CRM data across platforms. Use when importi
 - Focus on the action, not the domain
 - Target 15-30 characters for optimal readability
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+**Validation command:**
 
-### 1.4 Match Skill Name to Directory Name
+```bash
+# Check name length before creating skill
+echo -n "my-skill-name" | wc -c  # Should be <= 64
 
-**Impact: CRITICAL (prevents discovery failures and maintenance confusion)**
+# Or validate the full skill
+skills-ref validate ./skills/my-skill/
+```
 
-The `name` field in frontmatter must exactly match the containing directory name. Mismatches cause discovery failures on some systems and create maintenance confusion when updating skills.
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
+
+### 1.5 Match Skill Name to Directory Name
+
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
+
+The `name` field in frontmatter must exactly match the containing directory name. The skills-ref validator enforces this constraint using Unicode normalization (NFKC) to compare names.
 
 **Incorrect (name does not match directory):**
 
@@ -216,8 +308,8 @@ skills/
 name: pdf-processing     # Different from directory!
 description: Handles PDF files
 ---
-# Some discovery systems fail
-# Developers confused when searching for skill
+# skills-ref validate ./skills/pdf-tools/
+# Error: Name must match the skill directory name
 ```
 
 **Correct (name matches directory exactly):**
@@ -233,35 +325,164 @@ skills/
 name: pdf-processing     # Matches directory
 description: Handles PDF files
 ---
-# Consistent naming across filesystem and metadata
-# Easy to locate skill source from any reference
+# skills-ref validate ./skills/pdf-processing/
+# Validation passed
 ```
 
+**Unicode normalization:**
+
+The validator uses NFKC normalization, so these would match:
+- `caf\u00e9` (precomposed) matches `cafe\u0301` (decomposed)
+- Compatibility characters are normalized
+
 **Benefits:**
+- Passes skills-ref validation
 - Reliable discovery across all platforms
 - Simple mental model: directory = skill name
-- Easy grep/search for skill references
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
 
-### 1.5 Use Lowercase Hyphenated Skill Names
+### 1.6 Never Start or End Names with Hyphens
 
-**Impact: CRITICAL (prevents discovery failures and cross-platform issues)**
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
 
-The skill name must match the directory name and use lowercase with hyphens. Mixed case or special characters cause discovery failures on case-sensitive filesystems and break URL routing in skill registries.
+Skill names cannot start or end with hyphens. The skills-ref validator explicitly checks for this and rejects names with leading or trailing hyphens. This ensures consistent URL slugs and programmatic access patterns.
 
-**Incorrect (mixed case and spaces cause failures):**
+**Incorrect (leading hyphen):**
 
 ```yaml
 ---
-name: PDF Processing Tool
-description: Handles PDF files
+name: -pdf-processor
+description: Processes PDF files
 ---
-# Discovery fails on Linux/macOS due to case mismatch
-# Spaces break URL routing in plugin marketplaces
+# Validation error: name cannot start with hyphen
+# skills-ref validate ./skills/-pdf-processor/
+# Error: Name cannot start or end with hyphens
 ```
 
-**Correct (lowercase hyphenated matches directory):**
+**Incorrect (trailing hyphen):**
+
+```yaml
+---
+name: pdf-processor-
+description: Processes PDF files
+---
+# Validation error: name cannot end with hyphen
+# skills-ref validate ./skills/pdf-processor-/
+# Error: Name cannot start or end with hyphens
+```
+
+**Correct (no boundary hyphens):**
+
+```yaml
+---
+name: pdf-processor
+description: Processes PDF files
+---
+# Valid: hyphens only between words
+# skills-ref validate ./skills/pdf-processor/
+# Validation passed
+```
+
+**Validation command:**
+
+```bash
+# Install skills-ref (Python 3.11+)
+pip install skills-ref
+
+# Validate skill directory
+skills-ref validate ./skills/my-skill/
+```
+
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
+
+### 1.7 Only Use Allowed Frontmatter Fields
+
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
+
+SKILL.md frontmatter must only contain recognized fields. The skills-ref validator enforces a strict allowlist and rejects skills with unexpected fields. This ensures forward compatibility and prevents silent failures.
+
+**Allowed fields:**
+
+| Field | Required | Max Length | Description |
+|-------|----------|------------|-------------|
+| `name` | Yes | 64 chars | Skill identifier (lowercase, hyphens, digits) |
+| `description` | Yes | 1024 chars | What the skill does and when to use it |
+| `license` | No | - | License identifier (e.g., MIT, Apache-2.0) |
+| `allowed-tools` | No | - | Tool patterns the skill requires (experimental) |
+| `metadata` | No | - | Custom key-value pairs for client-specific data |
+| `compatibility` | No | 500 chars | Version or platform compatibility info |
+
+**Incorrect (unknown field):**
+
+```yaml
+---
+name: code-review
+description: Reviews code for quality issues
+author: John Doe
+version: 1.0.0
+---
+# Validation error: unexpected fields
+# skills-ref validate ./skills/code-review/
+# Error: Unexpected fields in frontmatter: author, version
+```
+
+**Correct (only allowed fields):**
+
+```yaml
+---
+name: code-review
+description: Reviews code for quality issues, security vulnerabilities, and performance problems. Use when reviewing PRs or auditing code.
+license: MIT
+metadata:
+  author: John Doe
+  version: 1.0.0
+---
+# Valid: custom data goes in metadata field
+# skills-ref validate ./skills/code-review/
+# Validation passed
+```
+
+**Migration guide:**
+
+| Old Field | Migration |
+|-----------|-----------|
+| `author` | Move to `metadata.author` |
+| `version` | Move to `metadata.version` |
+| `tags` | Move to `metadata.tags` |
+| `category` | Move to `metadata.category` |
+
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
+
+### 1.8 Use Lowercase Hyphenated Skill Names
+
+**Impact: CRITICAL (100% skill rejection by skills-ref validator)**
+
+The skill name must use lowercase letters, digits, and hyphens only. The skills-ref validator enforces this constraint and rejects names with uppercase letters, spaces, or special characters.
+
+**Incorrect (mixed case causes validation failure):**
+
+```yaml
+---
+name: PDF-Processing
+description: Handles PDF files
+---
+# skills-ref validate ./skills/PDF-Processing/
+# Error: Name must be lowercase
+```
+
+**Incorrect (spaces not allowed):**
+
+```yaml
+---
+name: pdf processing tool
+description: Handles PDF files
+---
+# skills-ref validate ./skills/pdf processing tool/
+# Error: Name can only contain letters, digits, and hyphens
+```
+
+**Correct (lowercase with hyphens):**
 
 ```yaml
 ---
@@ -269,17 +490,24 @@ name: pdf-processing
 description: Handles PDF files
 ---
 # Directory: skills/pdf-processing/SKILL.md
-# Works consistently across all platforms
+# skills-ref validate ./skills/pdf-processing/
+# Validation passed
 ```
 
+**Allowed characters:**
+- Lowercase letters (a-z)
+- Digits (0-9)
+- Hyphens (-)
+- Unicode letters for i18n support
+
 **Benefits:**
+- Passes skills-ref validation
 - Consistent discovery across Windows, macOS, and Linux
 - Valid URL slugs for plugin marketplaces
-- Predictable programmatic access via Automation API
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
 
-### 1.6 Use Valid YAML Frontmatter Syntax
+### 1.9 Use Valid YAML Frontmatter Syntax
 
 **Impact: CRITICAL (prevents 100% skill failures from syntax errors)**
 
@@ -546,9 +774,9 @@ Reference: [Anthropic Engineering: Agent Skills](https://www.anthropic.com/engin
 
 ### 2.6 Optimize Description Length for Discovery
 
-**Impact: CRITICAL (50-150 tokens saved per session (2-3× efficiency))**
+**Impact: CRITICAL (100% rejection if over 1024 chars, 50-150 tokens saved per session)**
 
-Descriptions have a 1024 character limit and are loaded into context at startup. Too short means missed triggers; too long wastes tokens on every conversation. Target 150-300 characters for optimal balance.
+The skills-ref validator enforces a 1024-character maximum for descriptions. Additionally, descriptions are loaded into context at startup, so efficiency matters. Target 150-300 characters for optimal balance between trigger coverage and token usage.
 
 **Incorrect (too short, misses triggers):**
 
@@ -562,16 +790,15 @@ description: Handles PDFs.
 # Misses most user requests
 ```
 
-**Incorrect (too long, wastes tokens):**
+**Incorrect (exceeds 1024-character limit):**
 
 ```yaml
 ---
 name: pdf-processing
-description: This comprehensive PDF processing skill handles all aspects of PDF document management including but not limited to text extraction using OCR and native text parsing, table extraction with structure preservation, form filling for both AcroForms and XFA forms, document merging and splitting, page manipulation including rotation and reordering, image extraction and conversion, PDF to image conversion supporting PNG JPEG and TIFF formats, compression and optimization, digital signature verification, and metadata extraction. This skill should be used whenever the user needs to work with PDF files in any capacity including reading extracting converting manipulating or creating PDF documents.
+description: This comprehensive PDF processing skill handles all aspects of PDF document management including but not limited to text extraction using OCR and native text parsing, table extraction with structure preservation, form filling for both AcroForms and XFA forms, document merging and splitting, page manipulation including rotation and reordering, image extraction and conversion, PDF to image conversion supporting PNG JPEG and TIFF formats, compression and optimization, digital signature verification, and metadata extraction. This skill should be used whenever the user needs to work with PDF files in any capacity including reading extracting converting manipulating or creating PDF documents. Additionally this skill supports batch processing of multiple PDF files, automated workflows for document processing pipelines, and integration with external services for enhanced functionality including cloud storage providers and document management systems...
 ---
-# 647 characters - excessive repetition
-# Loaded into every conversation start
-# Wastes ~150 tokens per session
+# skills-ref validate ./skills/pdf-processing/
+# Error: description cannot exceed 1024 characters
 ```
 
 **Correct (optimal length with key triggers):**
@@ -583,10 +810,19 @@ description: Extract text and tables from PDFs, fill forms, merge documents, and
 ---
 # 213 characters - includes key capabilities
 # Covers main trigger keywords
-# Efficient token usage
+# skills-ref validate ./skills/pdf-processing/
+# Validation passed
 ```
 
-Reference: [Claude Code Skills Docs](https://code.claude.com/docs/en/skills)
+**Validation command:**
+
+```bash
+# Check description length
+skills-ref read-properties ./skills/my-skill/ | jq '.description | length'
+# Should be <= 1024
+```
+
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
 
 ### 2.7 Write Descriptions in Third Person
 
@@ -2524,9 +2760,10 @@ Reference: [Semantic Versioning](https://semver.org/)
 
 ## References
 
-1. [https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
-2. [https://code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills)
-3. [https://github.com/anthropics/skills](https://github.com/anthropics/skills)
-4. [https://modelcontextprotocol.info/docs/best-practices/](https://modelcontextprotocol.info/docs/best-practices/)
-5. [https://www.promptingguide.ai/research/llm-agents](https://www.promptingguide.ai/research/llm-agents)
-6. [https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/)
+1. [https://github.com/agentskills/agentskills/tree/main/skills-ref](https://github.com/agentskills/agentskills/tree/main/skills-ref)
+2. [https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
+3. [https://code.claude.com/docs/en/skills](https://code.claude.com/docs/en/skills)
+4. [https://github.com/anthropics/skills](https://github.com/anthropics/skills)
+5. [https://modelcontextprotocol.info/docs/best-practices/](https://modelcontextprotocol.info/docs/best-practices/)
+6. [https://www.promptingguide.ai/research/llm-agents](https://www.promptingguide.ai/research/llm-agents)
+7. [https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/)

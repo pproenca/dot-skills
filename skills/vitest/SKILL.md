@@ -1,6 +1,6 @@
 ---
-name: vitest-best-practices
-description: Vitest testing framework performance optimization and best practices. This skill should be used when writing, reviewing, or refactoring Vitest tests to ensure optimal patterns. Triggers on tasks involving test setup, async testing, mocking, snapshots, test performance, and flaky test prevention.
+name: vitest
+description: Vitest testing framework performance optimization and best practices. This skill should be used when writing, reviewing, or refactoring Vitest tests to ensure optimal patterns. Triggers on tasks involving test setup, async testing, mocking, snapshots, test performance, and flaky test prevention. Not for Jest-specific APIs or Playwright/Cypress e2e testing.
 ---
 
 # Vitest Best Practices

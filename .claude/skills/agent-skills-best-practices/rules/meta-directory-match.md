@@ -1,13 +1,13 @@
 ---
 title: Match Skill Name to Directory Name
 impact: CRITICAL
-impactDescription: prevents discovery failures and maintenance confusion
-tags: meta, naming, directory, filesystem
+impactDescription: 100% skill rejection by skills-ref validator
+tags: meta, naming, directory, filesystem, skills-ref
 ---
 
 ## Match Skill Name to Directory Name
 
-The `name` field in frontmatter must exactly match the containing directory name. Mismatches cause discovery failures on some systems and create maintenance confusion when updating skills.
+The `name` field in frontmatter must exactly match the containing directory name. The skills-ref validator enforces this constraint using Unicode normalization (NFKC) to compare names.
 
 **Incorrect (name does not match directory):**
 
@@ -22,8 +22,8 @@ skills/
 name: pdf-processing     # Different from directory!
 description: Handles PDF files
 ---
-# Some discovery systems fail
-# Developers confused when searching for skill
+# skills-ref validate ./skills/pdf-tools/
+# Error: Name must match the skill directory name
 ```
 
 **Correct (name matches directory exactly):**
@@ -39,13 +39,19 @@ skills/
 name: pdf-processing     # Matches directory
 description: Handles PDF files
 ---
-# Consistent naming across filesystem and metadata
-# Easy to locate skill source from any reference
+# skills-ref validate ./skills/pdf-processing/
+# Validation passed
 ```
 
+**Unicode normalization:**
+
+The validator uses NFKC normalization, so these would match:
+- `caf\u00e9` (precomposed) matches `cafe\u0301` (decomposed)
+- Compatibility characters are normalized
+
 **Benefits:**
+- Passes skills-ref validation
 - Reliable discovery across all platforms
 - Simple mental model: directory = skill name
-- Easy grep/search for skill references
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)

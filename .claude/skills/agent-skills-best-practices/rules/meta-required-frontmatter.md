@@ -1,26 +1,33 @@
 ---
 title: Include All Required Frontmatter Fields
 impact: CRITICAL
-impactDescription: prevents 100% skill failures from missing metadata
-tags: meta, frontmatter, yaml, validation
+impactDescription: 100% skill rejection by skills-ref validator
+tags: meta, frontmatter, yaml, validation, skills-ref
 ---
 
 ## Include All Required Frontmatter Fields
 
-Every SKILL.md must have valid YAML frontmatter with `name` and `description` fields. Missing or malformed frontmatter causes silent loading failures—the skill appears in the directory but never activates.
+Every SKILL.md must have valid YAML frontmatter with `name` and `description` fields. The skills-ref validator requires both fields and rejects skills with missing or empty values.
 
 **Incorrect (missing description field):**
 
 ```yaml
 ---
 name: code-review
-# Missing description field
 ---
+# skills-ref validate ./skills/code-review/
+# Error: description is required
+```
 
-# Code Review Instructions
-...
-# Skill loads but never triggers automatically
-# Claude cannot determine when to use it
+**Incorrect (empty name):**
+
+```yaml
+---
+name: ""
+description: Reviews code for quality issues
+---
+# skills-ref validate ./skills/code-review/
+# Error: name must be non-empty
 ```
 
 **Correct (all required fields present):**
@@ -33,13 +40,23 @@ description: Reviews code for quality issues, security vulnerabilities, and perf
 
 # Code Review Instructions
 ...
-# Skill triggers reliably when user mentions code review
+# skills-ref validate ./skills/code-review/
+# Validation passed
 ```
 
-**Field requirements:**
+**Field requirements (per skills-ref):**
+
 | Field | Required | Max Length | Format |
 |-------|----------|------------|--------|
-| name | Yes | 64 chars | lowercase, hyphens, numbers |
-| description | Yes | 1024 chars | Third-person, trigger keywords |
+| name | Yes | 64 chars | lowercase, hyphens, digits |
+| description | Yes | 1024 chars | non-empty string |
 
-Reference: [Agent Skills - Claude Code Docs](https://code.claude.com/docs/en/skills)
+**Validation command:**
+
+```bash
+skills-ref validate ./skills/my-skill/
+# Or extract properties as JSON
+skills-ref read-properties ./skills/my-skill/
+```
+
+Reference: [skills-ref validator](https://github.com/agentskills/agentskills/tree/main/skills-ref)
