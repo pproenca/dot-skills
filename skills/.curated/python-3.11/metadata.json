@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Python Community",
+  "technology": "Python 3.11",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for Python 3.11+ applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (async I/O patterns, data structure selection) to incremental (Python idioms). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://docs.python.org/3/whatsnew/3.11.html",
+    "https://peps.python.org/pep-0008/",
+    "https://wiki.python.org/moin/PythonSpeed/PerformanceTips",
+    "https://realpython.com/async-io-python/",
+    "https://realpython.com/python-scope-legb-rule/",
+    "https://realpython.com/python-string-concatenation/",
+    "https://docs.python.org/3/tutorial/datastructures.html",
+    "https://github.com/python/cpython/blob/main/InternalDocs/exception_handling.md",
+    "https://www.datacamp.com/tutorial/python-generators",
+    "https://blog.jetbrains.com/pycharm/2025/11/10-smart-performance-hacks-for-faster-python-code/"
+  ]
+}
