@@ -23,11 +23,25 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 ### Skill Structure
 
 ```
-skills/<skill-name>/
-├── SKILL.md              # Required: Frontmatter + instructions
+skills/
+├── .curated/             # Vetted, production-ready skills
+│   └── <skill-name>/
+├── .experimental/        # Work-in-progress skills
+│   └── <skill-name>/
+└── .template/            # Skill template (SKILL.md.template)
+
+# Per-skill structure:
+<skill-name>/
+├── SKILL.md              # Required: Frontmatter + summary instructions
+├── AGENTS.md             # Optional: Full compiled rules document
+├── README.md             # Optional: Human-readable documentation
+├── CHANGELOG.md          # Optional: Version history
+├── metadata.json         # Optional: Structured metadata
 ├── scripts/              # Optional: Executable code
-├── references/           # Optional: Additional documentation
+├── references/           # Optional: Individual rule/reference files
+│   └── _sections.md      # Category structure and impact levels
 └── assets/               # Optional: Static resources
+    └── templates/        # Templates for rules or code
 ```
 
 ### SKILL.md Requirements
@@ -45,17 +59,34 @@ Optional frontmatter fields:
 ### Content Guidelines
 
 - Keep SKILL.md under 500 lines
-- Move detailed reference material to `references/`
-- Include clear trigger keywords in description
-- Provide usage examples
+- Move detailed reference material to `references/` (one file per rule)
+- Include clear trigger keywords in description (file extensions, error codes, CLI commands)
+- Provide a "When to Apply" section with usage contexts
+- Include "Rule Categories by Priority" table with impact levels
+- Use rule prefixes for namespacing (e.g., `type-`, `async-`, `module-`)
+- Compile full rules into AGENTS.md for agents that need expanded context
 
 ## Architecture Patterns
 
 Skills are self-contained modules that:
-1. Define agent capabilities via SKILL.md
-2. Optionally include executable scripts
-3. Optionally include reference documentation
-4. Are discovered and installed by `add-skill` CLI
+1. Define agent capabilities via SKILL.md with trigger-rich descriptions
+2. Organize rules by priority/category for progressive disclosure
+3. Optionally include executable scripts for automation
+4. Optionally include detailed reference files for on-demand loading
+5. Are discovered and installed by `add-skill` CLI
+
+### Skill Maturity Levels
+
+- **`.curated/`**: Production-ready skills with 40+ rules, comprehensive coverage
+- **`.experimental/`**: Work-in-progress skills, may have incomplete coverage
+
+### Rule Organization Pattern
+
+Best-practice skills follow a consistent structure:
+1. SKILL.md: Summary with quick reference (trigger keywords, rule index)
+2. references/: Individual rule files with detailed explanations and examples
+3. AGENTS.md: Compiled full document for agents needing expanded context
+4. metadata.json: Structured metadata for tooling
 
 ## Testing Strategy
 
@@ -65,13 +96,36 @@ Skills are self-contained modules that:
 
 ## Git Workflow
 
-- Main branch: `main`
+- Main branch: `master`
 - Feature branches for new skills
 - PR required for merging
 
 ## Domain Context
 
 This project follows the Agent Skills specification from agentskills.io. Skills are portable across multiple AI coding agents including Claude Code, Cursor, Codex, OpenCode, and Antigravity.
+
+### Current Skill Portfolio
+
+**Curated (Production-Ready):**
+- **Core TypeScript/React**: `typescript`, `react-19`, `nextjs-16-app-router`
+- **UI Libraries**: `shadcn-ui`, `frontend-design`, `terminal-ui`
+- **Forms & Validation**: `react-hook-form`, `zod`
+- **Data Fetching**: `tanstack-query`, `nuqs`
+- **Testing**: `test-vitest`, `test-playwright`, `test-tdd`, `test-msw`
+- **Development Practices**: `debugging`, `refactoring`, `feature-architecture`
+- **Meta**: `agent-skills` (skill authoring guidelines)
+- **Mobile**: `expo`
+
+**Experimental (Work-in-Progress):**
+- `feature-spec`, `orval`, `pulumi`
+
+### Technology Focus
+
+Primary focus on modern React/TypeScript web development ecosystem with emphasis on:
+- Type-safe development patterns
+- Testing best practices (unit, integration, E2E)
+- Performance optimization
+- Clean architecture and refactoring
 
 ## External Dependencies
 
