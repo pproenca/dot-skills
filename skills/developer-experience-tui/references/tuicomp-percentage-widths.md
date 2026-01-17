@@ -2,7 +2,7 @@
 title: Use Percentage Widths for Responsive Layouts
 impact: HIGH
 impactDescription: prevents overflow on 100% of terminal sizes
-tags: comp, responsive, width, percentage, layout
+tags: tuicomp, responsive, width, percentage, layout
 ---
 
 ## Use Percentage Widths for Responsive Layouts

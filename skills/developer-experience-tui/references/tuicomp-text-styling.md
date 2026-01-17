@@ -2,7 +2,7 @@
 title: Use Text Component for All Visible Content
 impact: HIGH
 impactDescription: prevents 100% of styling bugs from raw strings
-tags: comp, text, styling, colors, ink
+tags: tuicomp, text, styling, colors, ink
 ---
 
 ## Use Text Component for All Visible Content

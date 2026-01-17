@@ -2,7 +2,7 @@
 title: Support Standard Environment Variables
 impact: MEDIUM
 impactDescription: enables scripting and CI integration
-tags: config, environment, variables, ci, automation
+tags: tuicfg, environment, variables, ci, automation
 ---
 
 ## Support Standard Environment Variables

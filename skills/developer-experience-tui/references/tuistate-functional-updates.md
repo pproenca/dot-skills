@@ -2,7 +2,7 @@
 title: Use Functional State Updates to Avoid Stale Closures
 impact: HIGH
 impactDescription: prevents stale state bugs in callbacks
-tags: state, usestate, closures, callbacks, hooks
+tags: tuistate, usestate, closures, callbacks, hooks
 ---
 
 ## Use Functional State Updates to Avoid Stale Closures

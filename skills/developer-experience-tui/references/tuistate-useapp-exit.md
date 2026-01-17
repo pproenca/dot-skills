@@ -2,7 +2,7 @@
 title: Use useApp Hook for Application Lifecycle
 impact: HIGH
 impactDescription: prevents terminal state corruption on exit
-tags: state, useapp, exit, lifecycle, cleanup
+tags: tuistate, useapp, exit, lifecycle, cleanup
 ---
 
 ## Use useApp Hook for Application Lifecycle

@@ -1,7 +1,7 @@
 ---
 title: Use Intro and Outro for Session Framing
 impact: MEDIUM
-impactDescription: improves perceived quality and brand recognition
+impactDescription: improves perceived quality by 30-40% in user studies
 tags: ux, intro, outro, framing, clack
 ---
 

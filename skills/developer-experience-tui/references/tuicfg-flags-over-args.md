@@ -2,7 +2,7 @@
 title: Prefer Flags Over Positional Arguments
 impact: MEDIUM
 impactDescription: reduces user errors by 50% through self-documentation
-tags: config, flags, arguments, cli, parsing
+tags: tuicfg, flags, arguments, cli, parsing
 ---
 
 ## Prefer Flags Over Positional Arguments

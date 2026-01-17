@@ -2,7 +2,7 @@
 title: Use Static Component for Log Output
 impact: HIGH
 impactDescription: prevents log lines from re-rendering
-tags: comp, static, logs, output, scrollback
+tags: tuicomp, static, logs, output, scrollback
 ---
 
 ## Use Static Component for Log Output

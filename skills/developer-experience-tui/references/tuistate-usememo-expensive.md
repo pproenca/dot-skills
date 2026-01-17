@@ -2,7 +2,7 @@
 title: Memoize Expensive Computations with useMemo
 impact: MEDIUM
 impactDescription: avoids recalculating on every render
-tags: state, usememo, memoization, performance, computation
+tags: tuistate, usememo, memoization, performance, computation
 ---
 
 ## Memoize Expensive Computations with useMemo

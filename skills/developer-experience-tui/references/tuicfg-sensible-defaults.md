@@ -2,7 +2,7 @@
 title: Provide Sensible Defaults for All Options
 impact: MEDIUM
 impactDescription: reduces friction for common use cases
-tags: config, defaults, options, ux, cli
+tags: tuicfg, defaults, options, ux, cli
 ---
 
 ## Provide Sensible Defaults for All Options

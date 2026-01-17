@@ -2,7 +2,7 @@
 title: Use measureElement for Dynamic Sizing
 impact: HIGH
 impactDescription: enables responsive layouts based on content
-tags: comp, measure, dimensions, responsive, layout
+tags: tuicomp, measure, dimensions, responsive, layout
 ---
 
 ## Use measureElement for Dynamic Sizing

@@ -2,7 +2,7 @@
 title: Use Box Component with Flexbox for Layouts
 impact: HIGH
 impactDescription: eliminates manual position calculations
-tags: comp, box, flexbox, layout, ink
+tags: tuicomp, box, flexbox, layout, ink
 ---
 
 ## Use Box Component with Flexbox for Layouts

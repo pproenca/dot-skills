@@ -2,7 +2,7 @@
 title: Stabilize Callbacks with useCallback
 impact: MEDIUM
 impactDescription: prevents unnecessary re-renders in children
-tags: state, usecallback, memoization, performance, hooks
+tags: tuistate, usecallback, memoization, performance, hooks
 ---
 
 ## Stabilize Callbacks with useCallback

@@ -2,7 +2,7 @@
 title: Always Clean Up Effects on Unmount
 impact: HIGH
 impactDescription: prevents memory leaks and orphaned timers
-tags: state, useeffect, cleanup, memory, timers
+tags: tuistate, useeffect, cleanup, memory, timers
 ---
 
 ## Always Clean Up Effects on Unmount

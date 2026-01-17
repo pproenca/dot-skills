@@ -2,7 +2,7 @@
 title: Implement Comprehensive Help System
 impact: MEDIUM
 impactDescription: enables self-service and reduces support burden
-tags: config, help, documentation, cli, usage
+tags: tuicfg, help, documentation, cli, usage
 ---
 
 ## Implement Comprehensive Help System

@@ -2,7 +2,7 @@
 title: Support Machine-Readable Output Format
 impact: MEDIUM
 impactDescription: enables scripting and tool integration
-tags: config, json, output, machine, automation
+tags: tuicfg, json, output, machine, automation
 ---
 
 ## Support Machine-Readable Output Format

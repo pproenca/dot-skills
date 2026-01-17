@@ -2,7 +2,7 @@
 title: Use Border Styles for Visual Structure
 impact: MEDIUM
 impactDescription: reduces visual parsing time by 30-50%
-tags: comp, borders, styling, visual, box
+tags: tuicomp, borders, styling, visual, box
 ---
 
 ## Use Border Styles for Visual Structure
