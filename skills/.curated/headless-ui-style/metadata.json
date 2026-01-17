@@ -1,0 +1,61 @@
+{
+  "name": "headless-ui-style",
+  "version": "1.0.0",
+  "organization": "MUI",
+  "date": "2026-01-17",
+  "description": "MUI Base UI style guidelines for building headless React component libraries",
+  "abstract": "Comprehensive style guide for building headless React component libraries following MUI Base UI patterns. Covers component architecture, naming conventions, file organization, error handling, and code style for unstyled UI primitives.",
+  "source": {
+    "type": "codebase-extraction",
+    "repositories": [
+      {
+        "name": "base-ui",
+        "url": "https://github.com/mui/base-ui",
+        "path": "packages/",
+        "language": "TypeScript",
+        "files": 986
+      }
+    ],
+    "extractedAt": "2026-01-17"
+  },
+  "references": [
+    {
+      "title": "MUI Base UI Documentation",
+      "url": "https://base-ui.com/react/overview/",
+      "type": "documentation"
+    },
+    {
+      "title": "MUI Base UI GitHub Repository",
+      "url": "https://github.com/mui/base-ui",
+      "type": "source"
+    }
+  ],
+  "rules": {
+    "total": 48,
+    "byCategory": {
+      "component": 12,
+      "naming": 15,
+      "organization": 8,
+      "error-handling": 8,
+      "style": 5
+    },
+    "byImpact": {
+      "CRITICAL": 8,
+      "HIGH": 26,
+      "MEDIUM": 12,
+      "LOW": 2
+    }
+  },
+  "keywords": [
+    "headless",
+    "unstyled",
+    "component-library",
+    "react",
+    "typescript",
+    "compound-components",
+    "render-props",
+    "accessibility",
+    "mui",
+    "base-ui"
+  ]
+}
