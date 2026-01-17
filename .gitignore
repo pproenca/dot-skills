@@ -1,21 +1,52 @@
 # Dependencies
 node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
 
 # OS files
 .DS_Store
 Thumbs.db
+Desktop.ini
 
-# Editor directories
+# Editor/IDE
 .idea/
 .vscode/
 *.swp
 *.swo
+*~
+.project
+.settings/
 
 # Build outputs
 dist/
 build/
 *.zip
+*.tar.gz
 
 # Environment
 .env
-.env.local
+.env.*
+!.env.example
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Test & coverage
+coverage/
+.nyc_output/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Local agent configuration (user-specific)
+.claude/settings.local.json
+.cursor/
+.codex/
+.opencode/
+.agent/
