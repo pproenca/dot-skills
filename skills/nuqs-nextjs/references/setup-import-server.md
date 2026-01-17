@@ -1,7 +1,7 @@
 ---
 title: Import Server Utilities from nuqs/server
 impact: CRITICAL
-impactDescription: prevents 'use client' contamination in Server Components
+impactDescription: prevents RSC-to-client boundary contamination errors
 tags: setup, nuqs/server, imports, createSearchParamsCache, server-components
 ---
 

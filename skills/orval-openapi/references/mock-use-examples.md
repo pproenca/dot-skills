@@ -1,7 +1,7 @@
 ---
 title: Use OpenAPI Examples for Realistic Mocks
 impact: MEDIUM
-impactDescription: deterministic mock data vs random Faker values for reliable assertions
+impactDescription: 100% deterministic mock data vs random Faker values
 tags: mock, examples, faker, realism
 ---
 

@@ -2,7 +2,7 @@
 title: Use State Export/Import for Migrations
 impact: CRITICAL
 impactDescription: prevents resource recreation during refactoring
-tags: state, migration, export, import, refactoring
+tags: pstate, migration, export, import, refactoring
 ---
 
 ## Use State Export/Import for Migrations

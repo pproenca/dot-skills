@@ -1,7 +1,7 @@
 ---
 title: Use Interceptors for Cross-Cutting Concerns
 impact: HIGH
-impactDescription: 1 interceptor config vs duplicated logging in every API call
+impactDescription: O(1) interceptor config vs O(n) duplicated logging across API calls
 tags: mutator, interceptors, logging, retry
 ---
 

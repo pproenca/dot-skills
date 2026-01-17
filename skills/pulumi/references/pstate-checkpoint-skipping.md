@@ -2,7 +2,7 @@
 title: Enable Checkpoint Skipping for Large Production Stacks
 impact: CRITICAL
 impactDescription: up to 20× faster deployments
-tags: state, checkpoints, performance, large-stacks
+tags: pstate, checkpoints, performance, large-stacks
 ---
 
 ## Enable Checkpoint Skipping for Large Production Stacks

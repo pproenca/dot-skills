@@ -2,7 +2,7 @@
 title: Use Name Prefix Pattern for Unique Resource Names
 impact: HIGH
 impactDescription: prevents naming collisions across instances
-tags: comp, naming, uniqueness, conventions
+tags: pcomp, naming, uniqueness, conventions
 ---
 
 ## Use Name Prefix Pattern for Unique Resource Names

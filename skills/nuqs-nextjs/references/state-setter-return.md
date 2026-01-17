@@ -1,7 +1,7 @@
 ---
 title: Use Setter Return Value for URL Access
 impact: MEDIUM
-impactDescription: provides immediate access to resulting URL string
+impactDescription: enables accurate URL tracking for analytics/sharing
 tags: state, setter, return-value, url, analytics
 ---
 

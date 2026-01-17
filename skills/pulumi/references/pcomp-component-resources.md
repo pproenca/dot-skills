@@ -2,7 +2,7 @@
 title: Use ComponentResource for Reusable Abstractions
 impact: HIGH
 impactDescription: enables sharing, consistency, and maintainability
-tags: comp, component-resource, abstraction, reusability
+tags: pcomp, component-resource, abstraction, reusability
 ---
 
 ## Use ComponentResource for Reusable Abstractions

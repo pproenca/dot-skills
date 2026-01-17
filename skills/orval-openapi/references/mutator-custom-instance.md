@@ -1,7 +1,7 @@
 ---
 title: Use Custom Mutator for HTTP Client Configuration
 impact: HIGH
-impactDescription: 1 auth config vs N scattered header additions across components
+impactDescription: O(1) auth config vs O(n) scattered header additions across components
 tags: mutator, axios, fetch, authentication
 ---
 

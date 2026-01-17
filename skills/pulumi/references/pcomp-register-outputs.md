@@ -2,7 +2,7 @@
 title: Register Component Outputs Explicitly
 impact: HIGH
 impactDescription: enables stack outputs and cross-stack references
-tags: comp, outputs, register, exports
+tags: pcomp, outputs, register, exports
 ---
 
 ## Register Component Outputs Explicitly

@@ -1,7 +1,7 @@
 ---
 title: Add 'use client' Directive for Hooks
 impact: CRITICAL
-impactDescription: hooks throw in Server Components without directive
+impactDescription: prevents build-breaking hook errors in RSC
 tags: setup, use-client, server-components, client-components
 ---
 

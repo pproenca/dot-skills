@@ -2,7 +2,7 @@
 title: Import Existing Resources Before Managing
 impact: CRITICAL
 impactDescription: prevents duplicate resource creation
-tags: state, import, existing, migration
+tags: pstate, import, existing, migration
 ---
 
 ## Import Existing Resources Before Managing

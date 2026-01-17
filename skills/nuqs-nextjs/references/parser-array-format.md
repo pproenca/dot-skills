@@ -1,7 +1,7 @@
 ---
 title: Choose Correct Array Parser Format
 impact: CRITICAL
-impactDescription: determines URL format and compatibility with backend APIs
+impactDescription: prevents API integration failures from wrong URL format
 tags: parser, parseAsArrayOf, parseAsNativeArrayOf, arrays, url-format
 ---
 
@@ -9,32 +9,24 @@ tags: parser, parseAsArrayOf, parseAsNativeArrayOf, arrays, url-format
 
 nuqs offers two array formats with different URL representations. Choose based on your backend API expectations and URL readability requirements.
 
-**parseAsArrayOf (comma-separated):**
+**Incorrect (wrong format for backend):**
 
 ```tsx
 'use client'
-import { useQueryState, parseAsArrayOf, parseAsInteger } from 'nuqs'
+import { useQueryState, parseAsArrayOf, parseAsString } from 'nuqs'
 
-export default function MultiSelect() {
-  const [ids, setIds] = useQueryState(
-    'ids',
-    parseAsArrayOf(parseAsInteger).withDefault([])
+export default function TagFilter() {
+  const [tags, setTags] = useQueryState(
+    'tags',
+    parseAsArrayOf(parseAsString).withDefault([])
   )
-  // URL: ?ids=1,2,3
-  // State: [1, 2, 3]
-
-  return (
-    <div>
-      Selected: {ids.join(', ')}
-      <button onClick={() => setIds([...ids, ids.length + 1])}>
-        Add
-      </button>
-    </div>
-  )
+  // URL: ?tags=react,nextjs
+  // But backend expects: ?tag=react&tag=nextjs
+  // API receives single string "react,nextjs" instead of array!
 }
 ```
 
-**parseAsNativeArrayOf (repeated params):**
+**Correct (match backend expectations):**
 
 ```tsx
 'use client'
@@ -42,18 +34,16 @@ import { useQueryState, parseAsNativeArrayOf, parseAsString } from 'nuqs'
 
 export default function TagFilter() {
   const [tags, setTags] = useQueryState(
-    'tag',
+    'tag', // Note: singular key name
     parseAsNativeArrayOf(parseAsString).withDefault([])
   )
-  // URL: ?tag=react&tag=nextjs&tag=typescript
-  // State: ['react', 'nextjs', 'typescript']
+  // URL: ?tag=react&tag=nextjs
+  // Backend correctly receives array ['react', 'nextjs']
 
   return (
     <div>
       Tags: {tags.join(', ')}
-      <button onClick={() => setTags([...tags, 'new-tag'])}>
-        Add Tag
-      </button>
+      <button onClick={() => setTags([...tags, 'new-tag'])}>Add</button>
     </div>
   )
 }
@@ -63,15 +53,7 @@ export default function TagFilter() {
 
 | Format | URL Example | Use When |
 |--------|-------------|----------|
-| `parseAsArrayOf` | `?ids=1,2,3` | Compact URLs, numeric IDs |
-| `parseAsNativeArrayOf` | `?tag=a&tag=b` | Backend expects repeated params, standard form encoding |
-
-**Incorrect (wrong format for API):**
-
-```tsx
-// Backend expects: ?tag=a&tag=b
-const [tags] = useQueryState('tags', parseAsArrayOf(parseAsString))
-// Sends: ?tags=a,b - backend gets single string "a,b"
-```
+| `parseAsArrayOf` | `?ids=1,2,3` | Compact URLs, numeric IDs, custom backends |
+| `parseAsNativeArrayOf` | `?tag=a&tag=b` | Standard form encoding, PHP/Rails backends |
 
 Reference: [nuqs Array Parsers](https://nuqs.dev/docs/parsers)

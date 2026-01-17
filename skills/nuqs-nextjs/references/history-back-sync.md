@@ -1,7 +1,7 @@
 ---
 title: Handle Browser Back/Forward Navigation
 impact: MEDIUM
-impactDescription: ensures state stays in sync with URL on navigation
+impactDescription: prevents stale UI after browser navigation
 tags: history, back-button, forward, popstate, sync
 ---
 
@@ -9,7 +9,23 @@ tags: history, back-button, forward, popstate, sync
 
 nuqs automatically syncs state with URL when users navigate with browser back/forward buttons. Ensure your UI handles these state changes correctly.
 
-**Automatic sync (works out of the box):**
+**Incorrect (local state gets out of sync):**
+
+```tsx
+'use client'
+import { useState, useEffect } from 'react'
+import { useQueryState, parseAsInteger } from 'nuqs'
+
+export default function Pagination() {
+  const [urlPage] = useQueryState('page', parseAsInteger.withDefault(1))
+  const [localPage, setLocalPage] = useState(urlPage)
+  // User navigates back - urlPage updates but localPage doesn't!
+
+  return <p>Page {localPage}</p> // Shows stale value
+}
+```
+
+**Correct (use URL state directly):**
 
 ```tsx
 'use client'
@@ -30,63 +46,6 @@ export default function Pagination() {
     </div>
   )
 }
-```
-
-**Handling side effects on navigation:**
-
-```tsx
-'use client'
-import { useEffect } from 'react'
-import { useQueryState, parseAsInteger } from 'nuqs'
-
-export default function Pagination() {
-  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
-    history: 'push'
-  }))
-
-  // Side effect runs on any page change (including back/forward)
-  useEffect(() => {
-    analytics.track('page_view', { page })
-  }, [page])
-
-  return <p>Page {page}</p>
-}
-```
-
-**With loading states:**
-
-```tsx
-'use client'
-import { useTransition } from 'react'
-import { useQueryState, parseAsInteger } from 'nuqs'
-
-export default function Pagination() {
-  const [isLoading, startTransition] = useTransition()
-  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
-    history: 'push',
-    shallow: false,
-    startTransition
-  }))
-  // isLoading updates on back/forward too
-
-  return (
-    <div style={{ opacity: isLoading ? 0.5 : 1 }}>
-      <p>Page {page}</p>
-    </div>
-  )
-}
-```
-
-**Caveat with local state:**
-
-```tsx
-// If you have local state derived from URL, sync it
-const [page] = useQueryState('page', parseAsInteger.withDefault(1))
-const [localPage, setLocalPage] = useState(page)
-
-useEffect(() => {
-  setLocalPage(page) // Sync on back/forward
-}, [page])
 ```
 
 Reference: [nuqs Documentation](https://nuqs.dev/docs)

@@ -1,7 +1,7 @@
 ---
 title: Use createSearchParamsCache for Server Components
 impact: HIGH
-impactDescription: type-safe server access without prop drilling
+impactDescription: eliminates prop drilling across N component levels
 tags: server, createSearchParamsCache, server-components, type-safety
 ---
 

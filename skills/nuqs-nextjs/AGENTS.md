@@ -80,36 +80,28 @@ Incorrect parsers cause type mismatches, runtime errors, and hydration failures.
 
 ### 1.1 Choose Correct Array Parser Format
 
-**Impact: CRITICAL (determines URL format and compatibility with backend APIs)**
+**Impact: CRITICAL (prevents API integration failures from wrong URL format)**
 
 nuqs offers two array formats with different URL representations. Choose based on your backend API expectations and URL readability requirements.
 
-**parseAsArrayOf (comma-separated):**
+**Incorrect (wrong format for backend):**
 
 ```tsx
 'use client'
-import { useQueryState, parseAsArrayOf, parseAsInteger } from 'nuqs'
+import { useQueryState, parseAsArrayOf, parseAsString } from 'nuqs'
 
-export default function MultiSelect() {
-  const [ids, setIds] = useQueryState(
-    'ids',
-    parseAsArrayOf(parseAsInteger).withDefault([])
+export default function TagFilter() {
+  const [tags, setTags] = useQueryState(
+    'tags',
+    parseAsArrayOf(parseAsString).withDefault([])
   )
-  // URL: ?ids=1,2,3
-  // State: [1, 2, 3]
-
-  return (
-    <div>
-      Selected: {ids.join(', ')}
-      <button onClick={() => setIds([...ids, ids.length + 1])}>
-        Add
-      </button>
-    </div>
-  )
+  // URL: ?tags=react,nextjs
+  // But backend expects: ?tag=react&tag=nextjs
+  // API receives single string "react,nextjs" instead of array!
 }
 ```
 
-**parseAsNativeArrayOf (repeated params):**
+**Correct (match backend expectations):**
 
 ```tsx
 'use client'
@@ -117,18 +109,16 @@ import { useQueryState, parseAsNativeArrayOf, parseAsString } from 'nuqs'
 
 export default function TagFilter() {
   const [tags, setTags] = useQueryState(
-    'tag',
+    'tag', // Note: singular key name
     parseAsNativeArrayOf(parseAsString).withDefault([])
   )
-  // URL: ?tag=react&tag=nextjs&tag=typescript
-  // State: ['react', 'nextjs', 'typescript']
+  // URL: ?tag=react&tag=nextjs
+  // Backend correctly receives array ['react', 'nextjs']
 
   return (
     <div>
       Tags: {tags.join(', ')}
-      <button onClick={() => setTags([...tags, 'new-tag'])}>
-        Add Tag
-      </button>
+      <button onClick={() => setTags([...tags, 'new-tag'])}>Add</button>
     </div>
   )
 }
@@ -138,89 +128,59 @@ export default function TagFilter() {
 
 | Format | URL Example | Use When |
 |--------|-------------|----------|
-| `parseAsArrayOf` | `?ids=1,2,3` | Compact URLs, numeric IDs |
-| `parseAsNativeArrayOf` | `?tag=a&tag=b` | Backend expects repeated params, standard form encoding |
-
-**Incorrect (wrong format for API):**
-
-```tsx
-// Backend expects: ?tag=a&tag=b
-const [tags] = useQueryState('tags', parseAsArrayOf(parseAsString))
-// Sends: ?tags=a,b - backend gets single string "a,b"
-```
+| `parseAsArrayOf` | `?ids=1,2,3` | Compact URLs, numeric IDs, custom backends |
+| `parseAsNativeArrayOf` | `?tag=a&tag=b` | Standard form encoding, PHP/Rails backends |
 
 Reference: [nuqs Array Parsers](https://nuqs.dev/docs/parsers)
 
 ### 1.2 Select Appropriate Date Parser
 
-**Impact: CRITICAL (wrong format causes parsing failures and timezone issues)**
+**Impact: CRITICAL (prevents timezone bugs and parsing failures)**
 
 nuqs provides three date parsers with different URL formats and precision. Choose based on your requirements for time precision and URL readability.
 
-**parseAsTimestamp (milliseconds since epoch):**
-
-```tsx
-'use client'
-import { useQueryState, parseAsTimestamp } from 'nuqs'
-
-export default function EventFilter() {
-  const [since, setSince] = useQueryState('since', parseAsTimestamp)
-  // URL: ?since=1704067200000
-  // State: Date object
-  // Pros: Timezone-safe, precise
-  // Cons: Not human-readable
-
-  return (
-    <input
-      type="datetime-local"
-      value={since?.toISOString().slice(0, 16) ?? ''}
-      onChange={e => setSince(new Date(e.target.value))}
-    />
-  )
-}
-```
-
-**parseAsIsoDateTime (full ISO string):**
+**Incorrect (wrong parser for use case):**
 
 ```tsx
 'use client'
 import { useQueryState, parseAsIsoDateTime } from 'nuqs'
 
-export default function SchedulePicker() {
-  const [datetime, setDatetime] = useQueryState('datetime', parseAsIsoDateTime)
-  // URL: ?datetime=2024-01-01T12:00:00.000Z
-  // State: Date object
-  // Pros: Human-readable with time
-  // Cons: Longer URL, timezone in URL
+export default function DateRangePicker() {
+  const [startDate, setStartDate] = useQueryState('start', parseAsIsoDateTime)
+  // URL: ?start=2024-01-01T00:00:00.000Z
+  // Problem: User selected "Jan 1" but URL shows timezone complexity
+  // Better: Use parseAsIsoDate for date-only pickers
 
   return (
     <input
-      type="datetime-local"
-      value={datetime?.toISOString().slice(0, 16) ?? ''}
-      onChange={e => setDatetime(new Date(e.target.value))}
+      type="date"
+      value={startDate?.toISOString().slice(0, 10) ?? ''}
+      onChange={e => setStartDate(new Date(e.target.value))}
     />
   )
 }
 ```
 
-**parseAsIsoDate (date only, no time):**
+**Correct (match parser to use case):**
 
 ```tsx
 'use client'
-import { useQueryState, parseAsIsoDate } from 'nuqs'
+import { useQueryState, parseAsIsoDate, parseAsTimestamp } from 'nuqs'
 
 export default function DateRangePicker() {
-  const [date, setDate] = useQueryState('date', parseAsIsoDate)
-  // URL: ?date=2024-01-01
-  // State: Date object (time set to 00:00:00 local)
-  // Pros: Clean URL, date-only use cases
-  // Cons: No time precision
+  // For date-only picker: clean URL
+  const [startDate, setStartDate] = useQueryState('start', parseAsIsoDate)
+  // URL: ?start=2024-01-01
+
+  // For precise timestamps: use parseAsTimestamp
+  const [lastModified, setLastModified] = useQueryState('modified', parseAsTimestamp)
+  // URL: ?modified=1704067200000
 
   return (
     <input
       type="date"
-      value={date?.toISOString().slice(0, 10) ?? ''}
-      onChange={e => setDate(new Date(e.target.value))}
+      value={startDate?.toISOString().slice(0, 10) ?? ''}
+      onChange={e => setStartDate(new Date(e.target.value))}
     />
   )
 }
@@ -315,7 +275,7 @@ Reference: [nuqs Enum Parsers](https://nuqs.dev/docs/parsers)
 
 ### 1.4 Use parseAsHex for Color Values
 
-**Impact: MEDIUM (cleaner URLs and proper numeric handling for colors)**
+**Impact: MEDIUM (50% shorter URLs for color parameters)**
 
 When storing color values in URLs, `parseAsHex` provides cleaner hexadecimal representation instead of decimal numbers.
 
@@ -663,7 +623,7 @@ Missing NuqsAdapter or incorrect setup causes hooks to fail silently or throw. F
 
 ### 2.1 Add 'use client' Directive for Hooks
 
-**Impact: CRITICAL (hooks throw in Server Components without directive)**
+**Impact: CRITICAL (prevents build-breaking hook errors in RSC)**
 
 `useQueryState` and `useQueryStates` are React hooks that require client-side rendering. Using them in Server Components causes build errors.
 
@@ -797,7 +757,7 @@ Reference: [nuqs Documentation](https://nuqs.dev/docs)
 
 ### 2.3 Ensure Compatible Next.js Version
 
-**Impact: CRITICAL (older versions lack required router features)**
+**Impact: CRITICAL (prevents cryptic runtime errors from version mismatch)**
 
 nuqs requires specific Next.js versions depending on the router you use. Using incompatible versions causes runtime errors or missing functionality.
 
@@ -863,7 +823,7 @@ Reference: [nuqs Requirements](https://nuqs.dev/docs/getting-started)
 
 ### 2.4 Import Server Utilities from nuqs/server
 
-**Impact: CRITICAL (prevents 'use client' contamination in Server Components)**
+**Impact: CRITICAL (prevents RSC-to-client boundary contamination errors)**
 
 Server-side utilities like `createSearchParamsCache` must be imported from `nuqs/server`, not `nuqs`. The main `nuqs` export includes the `'use client'` directive which contaminates Server Components.
 
@@ -931,7 +891,7 @@ Reference: [nuqs Server-Side](https://nuqs.dev/docs/server-side)
 
 ### 2.5 Wrap App with NuqsAdapter
 
-**Impact: CRITICAL (hooks fail without adapter - no URL state sync)**
+**Impact: CRITICAL (prevents 100% of hook failures from missing provider)**
 
 nuqs requires the `NuqsAdapter` provider to function. Without it, `useQueryState` hooks won't sync with the URL and may throw errors.
 
@@ -1090,7 +1050,7 @@ Reference: [React Derived State](https://react.dev/learn/you-might-not-need-an-e
 
 ### 3.2 Clear URL Parameters with null
 
-**Impact: HIGH (removes parameter from URL instead of setting empty string)**
+**Impact: HIGH (reduces URL clutter by removing unnecessary parameters)**
 
 To remove a parameter from the URL, set it to `null`. Setting to empty string (`''`) or `0` keeps the parameter in the URL with that value.
 
@@ -1310,7 +1270,7 @@ Reference: [nuqs State Updates](https://nuqs.dev/docs)
 
 ### 3.5 Use Setter Return Value for URL Access
 
-**Impact: MEDIUM (provides immediate access to resulting URL string)**
+**Impact: MEDIUM (enables accurate URL tracking for analytics/sharing)**
 
 The state setter returns a Promise that resolves to the new URL search string. Use this for analytics, logging, or when you need the resulting URL immediately.
 
@@ -1691,7 +1651,7 @@ Reference: [Next.js 15 Migration](https://nextjs.org/docs/app/building-your-appl
 
 ### 4.3 Integrate useTransition for Loading States
 
-**Impact: HIGH (shows loading UI during server data fetching)**
+**Impact: HIGH (100% visibility into server fetch pending state)**
 
 When using `shallow: false`, integrate React's `useTransition` to track when the server is fetching new data. This enables loading indicators during URL-triggered server updates.
 
@@ -1783,7 +1743,7 @@ Reference: [nuqs useTransition Integration](https://nuqs.dev/docs/options)
 
 ### 4.4 Share Parsers Between Client and Server
 
-**Impact: HIGH (ensures consistent parsing across rendering contexts)**
+**Impact: HIGH (prevents client/server hydration mismatches)**
 
 Define parsers once and reuse them in both `createSearchParamsCache` (server) and `useQueryState` (client). This ensures consistent parsing behavior and prevents bugs from mismatched configurations.
 
@@ -1853,7 +1813,7 @@ Reference: [nuqs Documentation](https://nuqs.dev/docs)
 
 ### 4.5 Use createSearchParamsCache for Server Components
 
-**Impact: HIGH (type-safe server access without prop drilling)**
+**Impact: HIGH (eliminates prop drilling across N component levels)**
 
 In Server Components, use `createSearchParamsCache` to access URL parameters with type safety. This avoids prop drilling and provides the same parsers as client-side hooks.
 
@@ -2267,11 +2227,28 @@ Reference: [nuqs Throttling](https://nuqs.dev/docs/options)
 
 ### 5.4 Use clearOnDefault for Clean URLs
 
-**Impact: MEDIUM (removes redundant parameters from URL)**
+**Impact: MEDIUM (reduces URL length by 20-50% for default values)**
 
 By default, nuqs removes parameters from the URL when they match the default value. This keeps URLs clean. Set `clearOnDefault: false` only when you need the parameter always visible.
 
-**Default behavior (clean URLs):**
+**Incorrect (default always shown in URL):**
+
+```tsx
+'use client'
+import { useQueryState, parseAsInteger } from 'nuqs'
+
+export default function Pagination() {
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
+    clearOnDefault: false // Unnecessary!
+  }))
+  // URL always shows ?page=1 even on first page
+  // Clutters shareable URLs, hurts SEO
+
+  return <button onClick={() => setPage(1)}>First</button>
+}
+```
+
+**Correct (clean URLs by default):**
 
 ```tsx
 'use client'
@@ -2279,6 +2256,7 @@ import { useQueryState, parseAsInteger } from 'nuqs'
 
 export default function Pagination() {
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
+  // clearOnDefault: true (default)
   // page=1: URL is /search (clean)
   // page=2: URL is /search?page=2
 
@@ -2291,47 +2269,16 @@ export default function Pagination() {
 }
 ```
 
-**When to disable (parameter always visible):**
-
-```tsx
-'use client'
-import { useQueryState, parseAsString } from 'nuqs'
-
-export default function SortControl() {
-  const [sort, setSort] = useQueryState('sort', parseAsString.withDefault('relevance').withOptions({
-    clearOnDefault: false // Always show sort in URL
-  }))
-  // Even when sort='relevance' (default):
-  // URL is /search?sort=relevance
-
-  return (
-    <select value={sort} onChange={e => setSort(e.target.value)}>
-      <option value="relevance">Relevance</option>
-      <option value="date">Date</option>
-      <option value="price">Price</option>
-    </select>
-  )
-}
-```
-
-**Use cases for clearOnDefault: false:**
-- Explicit state documentation in URL
+**When clearOnDefault: false is appropriate:**
 - Analytics tracking requires all parameters
-- API expects all parameters in query string
-- Default value might change in future
-
-**URL comparison:**
-
-| Setting | Default State | Non-Default State |
-|---------|--------------|-------------------|
-| `clearOnDefault: true` (default) | `/search` | `/search?page=2` |
-| `clearOnDefault: false` | `/search?page=1` | `/search?page=2` |
+- API expects explicit parameter even for default
+- Debugging where you need to see all state
 
 Reference: [nuqs clearOnDefault](https://nuqs.dev/docs/options)
 
 ### 5.5 Use createSerializer for Link URLs
 
-**Impact: MEDIUM (type-safe URL generation without state hooks)**
+**Impact: MEDIUM (enables SSR-compatible URL generation without hooks)**
 
 When generating URLs for links or navigation without needing state, use `createSerializer`. This avoids unnecessary hook usage and works in Server Components.
 
@@ -2416,86 +2363,83 @@ History mode selection affects UX - push vs replace impacts back button behavior
 
 ### 6.1 Control Scroll Behavior on URL Changes
 
-**Impact: MEDIUM (prevents unwanted scroll jumps on state changes)**
+**Impact: MEDIUM (prevents jarring scroll jumps on state changes)**
 
 By default, nuqs doesn't scroll on URL changes. Use the `scroll` option to control whether state changes scroll to the top of the page.
 
-**Default (no scroll):**
+**Incorrect (unwanted scroll on filter change):**
 
 ```tsx
 'use client'
 import { useQueryState, parseAsString } from 'nuqs'
 
 export default function FilterPanel() {
-  const [filter, setFilter] = useQueryState('filter', parseAsString.withDefault(''))
-  // scroll: false (default)
-  // User stays at current scroll position when filtering
+  const [filter, setFilter] = useQueryState('filter', parseAsString.withDefault('').withOptions({
+    scroll: true // Bad for filters - user loses their place!
+  }))
 
   return (
     <select value={filter} onChange={e => setFilter(e.target.value)}>
       <option value="">All</option>
       <option value="active">Active</option>
-      <option value="completed">Completed</option>
     </select>
   )
 }
 ```
 
-**Enable scroll for navigation-like changes:**
+**Correct (no scroll for filters, scroll for pagination):**
 
 ```tsx
 'use client'
-import { useQueryState, parseAsInteger } from 'nuqs'
+import { useQueryState, parseAsString, parseAsInteger } from 'nuqs'
 
-export default function Pagination() {
+export default function SearchPage() {
+  // No scroll for filters - user stays in place
+  const [filter, setFilter] = useQueryState('filter', parseAsString.withDefault(''))
+
+  // Scroll for pagination - user sees new content from top
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
-    scroll: true, // Scroll to top on page change
+    scroll: true,
     history: 'push'
   }))
 
   return (
-    <nav>
-      <button onClick={() => setPage(p => p - 1)}>Previous</button>
-      <span>Page {page}</span>
-      <button onClick={() => setPage(p => p + 1)}>Next</button>
-    </nav>
+    <div>
+      <select value={filter} onChange={e => setFilter(e.target.value)}>
+        <option value="">All</option>
+        <option value="active">Active</option>
+      </select>
+      <button onClick={() => setPage(p => p + 1)}>Next Page</button>
+    </div>
   )
 }
-```
-
-**Override per-update:**
-
-```tsx
-// Usually no scroll
-const [tab, setTab] = useQueryState('tab', parseAsString.withDefault('overview'))
-
-// But scroll on tab change
-setTab('details', { scroll: true })
-
-// No scroll for internal update
-setTab('overview', { scroll: false })
-```
-
-**Combine with history for full navigation UX:**
-
-```tsx
-const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
-  scroll: true,
-  history: 'push',
-  shallow: false
-}))
-// Back button restores position, forward navigates and scrolls
 ```
 
 Reference: [nuqs Scroll Option](https://nuqs.dev/docs/options)
 
 ### 6.2 Handle Browser Back/Forward Navigation
 
-**Impact: MEDIUM (ensures state stays in sync with URL on navigation)**
+**Impact: MEDIUM (prevents stale UI after browser navigation)**
 
 nuqs automatically syncs state with URL when users navigate with browser back/forward buttons. Ensure your UI handles these state changes correctly.
 
-**Automatic sync (works out of the box):**
+**Incorrect (local state gets out of sync):**
+
+```tsx
+'use client'
+import { useState, useEffect } from 'react'
+import { useQueryState, parseAsInteger } from 'nuqs'
+
+export default function Pagination() {
+  const [urlPage] = useQueryState('page', parseAsInteger.withDefault(1))
+  const [localPage, setLocalPage] = useState(urlPage)
+  // User navigates back - urlPage updates but localPage doesn't!
+
+  return <p>Page {localPage}</p> // Shows stale value
+}
+```
+
+**Correct (use URL state directly):**
 
 ```tsx
 'use client'
@@ -2516,63 +2460,6 @@ export default function Pagination() {
     </div>
   )
 }
-```
-
-**Handling side effects on navigation:**
-
-```tsx
-'use client'
-import { useEffect } from 'react'
-import { useQueryState, parseAsInteger } from 'nuqs'
-
-export default function Pagination() {
-  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
-    history: 'push'
-  }))
-
-  // Side effect runs on any page change (including back/forward)
-  useEffect(() => {
-    analytics.track('page_view', { page })
-  }, [page])
-
-  return <p>Page {page}</p>
-}
-```
-
-**With loading states:**
-
-```tsx
-'use client'
-import { useTransition } from 'react'
-import { useQueryState, parseAsInteger } from 'nuqs'
-
-export default function Pagination() {
-  const [isLoading, startTransition] = useTransition()
-  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
-    history: 'push',
-    shallow: false,
-    startTransition
-  }))
-  // isLoading updates on back/forward too
-
-  return (
-    <div style={{ opacity: isLoading ? 0.5 : 1 }}>
-      <p>Page {page}</p>
-    </div>
-  )
-}
-```
-
-**Caveat with local state:**
-
-```tsx
-// If you have local state derived from URL, sync it
-const [page] = useQueryState('page', parseAsInteger.withDefault(1))
-const [localPage, setLocalPage] = useState(page)
-
-useEffect(() => {
-  setLocalPage(page) // Sync on back/forward
-}, [page])
 ```
 
 Reference: [nuqs Documentation](https://nuqs.dev/docs)
@@ -2742,103 +2629,82 @@ Debug logging, testing strategies, and common error diagnosis enable faster deve
 
 ### 7.1 Diagnose Common nuqs Errors
 
-**Impact: LOW-MEDIUM (faster debugging of frequent issues)**
+**Impact: LOW-MEDIUM (reduces debugging time from hours to minutes)**
 
 Reference for diagnosing frequent nuqs issues and their solutions.
 
-**Error: "Cannot read property 'push' of undefined"**
-
-Cause: Missing NuqsAdapter or incompatible Next.js version.
+**Incorrect (missing adapter causes cryptic error):**
 
 ```tsx
-// Fix: Add NuqsAdapter to layout
+// app/layout.tsx - Missing NuqsAdapter
+export default function RootLayout({ children }) {
+  return (
+    <html>
+      <body>{children}</body>
+    </html>
+  )
+}
+// Error: "Cannot read property 'push' of undefined"
+```
+
+**Correct (add NuqsAdapter):**
+
+```tsx
+// app/layout.tsx
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 
 export default function RootLayout({ children }) {
-  return <NuqsAdapter>{children}</NuqsAdapter>
+  return (
+    <html>
+      <body>
+        <NuqsAdapter>{children}</NuqsAdapter>
+      </body>
+    </html>
+  )
 }
 ```
 
-**Error: "Hooks can only be called inside Client Components"**
+**Other common errors and fixes:**
 
-Cause: Using `useQueryState` in a Server Component.
-
-```tsx
-// Fix: Add 'use client' directive
-'use client'
-
-import { useQueryState } from 'nuqs'
-```
-
-**Warning: "A component is changing an uncontrolled input"**
-
-Cause: Input value is `null` initially.
-
-```tsx
-// Fix: Provide fallback value
-const [query, setQuery] = useQueryState('q')
-<input value={query ?? ''} onChange={e => setQuery(e.target.value)} />
-```
-
-**Hydration mismatch errors**
-
-Cause: Server and client render different values.
-
-```tsx
-// Fix: Ensure same default on server and client
-// Use shared parsers with withDefault
-import { searchParams } from '@/lib/searchParams'
-const [page] = useQueryState('page', searchParams.page)
-```
-
-**URL not updating**
-
-Possible causes:
-1. Missing NuqsAdapter
-2. Next.js version too old
-3. `shallow: true` with server-side expectations
-
-```tsx
-// Fix: Check adapter and version, use shallow: false if needed
-const [query, setQuery] = useQueryState('q', parseAsString.withOptions({
-  shallow: false
-}))
-```
-
-**State undefined in Server Component**
-
-Cause: Forgot to call `parse()` before `get()`.
-
-```tsx
-// Fix: Always parse at page level
-const { q } = await searchParamsCache.parse(searchParams)
-// Then get() works in nested components
-```
+| Error | Cause | Fix |
+|-------|-------|-----|
+| "Hooks can only be called inside Client Components" | Missing 'use client' | Add `'use client'` directive |
+| "Uncontrolled input" warning | Value is null | Use `value={query ?? ''}` |
+| Hydration mismatch | Different defaults | Use shared parsers with withDefault |
+| URL not updating | Missing adapter or old Next.js | Check adapter and version |
+| State undefined in Server Component | Missing parse() | Call `parse()` before `get()` |
 
 Reference: [nuqs Documentation](https://nuqs.dev/docs)
 
 ### 7.2 Enable Debug Logging for Troubleshooting
 
-**Impact: LOW-MEDIUM (provides visibility into nuqs internal operations)**
+**Impact: LOW-MEDIUM (reduces debugging time by 5-10×)**
 
 Enable nuqs debug logs to understand state changes, URL updates, and timing. Useful for diagnosing issues with state synchronization or unexpected behavior.
 
-**Enable in browser console:**
+**Incorrect (no visibility into nuqs operations):**
+
+```tsx
+'use client'
+import { useQueryState, parseAsInteger } from 'nuqs'
+
+export default function Counter() {
+  const [count, setCount] = useQueryState('count', parseAsInteger.withDefault(0))
+  // Something's not working, but no way to see what nuqs is doing
+  // Have to guess and add console.logs everywhere
+
+  return <button onClick={() => setCount(c => c + 1)}>{count}</button>
+}
+```
+
+**Correct (enable debug logging):**
 
 ```javascript
-// Run in browser DevTools console
+// Run in browser DevTools console FIRST
 localStorage.debug = 'nuqs'
 // Then reload the page
-```
-
-**Log output format:**
-
-```
-[nuqs] useQueryState 'page' initialized with 1
-[nuqs] useQueryState 'page' updated to 2
-[nuq+] useQueryStates update: { lat: 48.8566, lng: 2.3522 }
-[nuqs] URL update throttled, scheduling...
-[nuqs] URL updated: ?page=2
+// Now you see: [nuqs] useQueryState 'count' initialized with 0
+// And: [nuqs] useQueryState 'count' updated to 1
 ```
 
 **Disable when done:**
@@ -2846,8 +2712,6 @@ localStorage.debug = 'nuqs'
 ```javascript
 // Run in browser DevTools console
 delete localStorage.debug
-// Or set to empty
-localStorage.debug = ''
 ```
 
 **Performance timing markers:**
@@ -2857,28 +2721,28 @@ Debug mode also records User Timing markers visible in the Performance tab:
 - `nuqs:serialize` - Time to serialize state to URL
 - `nuqs:update` - Time for URL update
 
-**Check timing in DevTools:**
-1. Open Performance tab
-2. Record while interacting with nuqs state
-3. Look for "nuqs:" markers in the Timings row
-
-**Migration note:** If upgrading from `next-usequerystate`, update the debug flag:
-
-```javascript
-if (localStorage.debug === 'next-usequerystate') {
-  localStorage.debug = 'nuqs'
-}
-```
-
 Reference: [nuqs Debugging](https://nuqs.dev/docs)
 
 ### 7.3 Test Components with URL State
 
-**Impact: LOW-MEDIUM (enables reliable testing of nuqs-dependent components)**
+**Impact: LOW-MEDIUM (enables reliable CI/CD testing of nuqs components)**
 
 Test components that use nuqs by providing the NuqsTestingAdapter and controlling URL state in tests.
 
-**Setup test adapter:**
+**Incorrect (test fails without adapter):**
+
+```tsx
+// components/Pagination.test.tsx
+import { render, screen } from '@testing-library/react'
+import Pagination from './Pagination'
+
+it('displays current page', () => {
+  render(<Pagination />) // Fails: no NuqsAdapter
+  expect(screen.getByText('Page 1')).toBeInTheDocument()
+})
+```
+
+**Correct (use NuqsTestingAdapter):**
 
 ```tsx
 // test/utils.tsx
@@ -2896,74 +2760,15 @@ export function renderWithNuqs(
     options
   )
 }
-```
 
-**Test with initial URL state:**
-
-```tsx
 // components/Pagination.test.tsx
 import { screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { renderWithNuqs } from '@/test/utils'
 import Pagination from './Pagination'
 
-describe('Pagination', () => {
-  it('displays current page from URL', () => {
-    renderWithNuqs(<Pagination />, {
-      searchParams: { page: '5' }
-    })
-
-    expect(screen.getByText('Page 5')).toBeInTheDocument()
-  })
-
-  it('updates page on click', async () => {
-    renderWithNuqs(<Pagination />)
-
-    await userEvent.click(screen.getByRole('button', { name: /next/i }))
-
-    expect(screen.getByText('Page 2')).toBeInTheDocument()
-  })
-})
-```
-
-**Test URL updates:**
-
-```tsx
-import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-
-it('updates URL on state change', async () => {
-  let capturedSearchParams = ''
-
-  render(
-    <NuqsTestingAdapter
-      searchParams={{ page: '1' }}
-      onUrlUpdate={({ searchParams }) => {
-        capturedSearchParams = searchParams.toString()
-      }}
-    >
-      <Pagination />
-    </NuqsTestingAdapter>
-  )
-
-  await userEvent.click(screen.getByRole('button', { name: /next/i }))
-
-  expect(capturedSearchParams).toBe('page=2')
-})
-```
-
-**With server cache testing:**
-
-```tsx
-import { searchParamsCache } from '@/lib/searchParams'
-
-it('parses search params on server', async () => {
-  const params = { q: 'react', page: '3' }
-  const { q, page } = await searchParamsCache.parse(Promise.resolve(params))
-
-  expect(q).toBe('react')
-  expect(page).toBe(3)
+it('displays current page from URL', () => {
+  renderWithNuqs(<Pagination />, { searchParams: { page: '5' } })
+  expect(screen.getByText('Page 5')).toBeInTheDocument()
 })
 ```
 
@@ -2979,37 +2784,50 @@ Custom parsers, serializers, URL key mapping for complex use cases requiring car
 
 ### 8.1 Create Custom Parsers for Complex Types
 
-**Impact: LOW (enables type-safe URL state for domain-specific types)**
+**Impact: LOW (prevents runtime errors from string coercion)**
 
 When built-in parsers don't fit your needs, create custom parsers with `createParser`. Define `parse`, `serialize`, and optionally `eq` for equality checking.
 
-**Custom parser structure:**
+**Incorrect (manual parsing in component):**
 
 ```tsx
-import { createParser } from 'nuqs'
-
-const myParser = createParser({
-  parse: (value: string) => /* convert string to your type */,
-  serialize: (value: MyType) => /* convert your type to string */,
-  eq: (a: MyType, b: MyType) => /* optional: compare for equality */
-})
-```
-
-**Example: TanStack Table sorting state**
-
-```tsx
-import { createParser, parseAsStringLiteral } from 'nuqs'
+'use client'
+import { useQueryState } from 'nuqs'
 
 interface SortState {
   id: string
   desc: boolean
 }
 
-export const parseAsSort = createParser<SortState>({
+export default function SortableTable() {
+  const [sortRaw, setSortRaw] = useQueryState('sort')
+  // Manual parsing scattered across component
+  const sort: SortState = sortRaw
+    ? { id: sortRaw.split(':')[0], desc: sortRaw.split(':')[1] === 'desc' }
+    : { id: 'name', desc: false }
+
+  const handleSort = (id: string) => {
+    // Manual serialization
+    setSortRaw(`${id}:${sort.id === id && !sort.desc ? 'desc' : 'asc'}`)
+  }
+}
+```
+
+**Correct (custom parser):**
+
+```tsx
+'use client'
+import { useQueryState, createParser } from 'nuqs'
+
+interface SortState {
+  id: string
+  desc: boolean
+}
+
+const parseAsSort = createParser<SortState>({
   parse(query) {
     const [id = '', direction = ''] = query.split(':')
-    const desc = direction === 'desc'
-    return { id, desc }
+    return { id, desc: direction === 'desc' }
   },
   serialize(value) {
     return `${value.id}:${value.desc ? 'desc' : 'asc'}`
@@ -3019,53 +2837,13 @@ export const parseAsSort = createParser<SortState>({
   }
 })
 
-// Usage
-const [sort, setSort] = useQueryState('sort', parseAsSort.withDefault({ id: 'name', desc: false }))
-// URL: ?sort=name:asc
-```
-
-**Example: Coordinate pair**
-
-```tsx
-import { createParser } from 'nuqs'
-
-interface Coordinates {
-  lat: number
-  lng: number
+export default function SortableTable() {
+  const [sort, setSort] = useQueryState(
+    'sort',
+    parseAsSort.withDefault({ id: 'name', desc: false })
+  )
+  // Type-safe, reusable, with proper equality checking
 }
-
-export const parseAsCoordinates = createParser<Coordinates>({
-  parse(query) {
-    const [lat, lng] = query.split(',').map(Number)
-    if (isNaN(lat) || isNaN(lng)) return null
-    return { lat, lng }
-  },
-  serialize({ lat, lng }) {
-    return `${lat},${lng}`
-  }
-})
-
-// Usage
-const [coords, setCoords] = useQueryState('coords', parseAsCoordinates)
-// URL: ?coords=48.8566,2.3522
-```
-
-**Example: Enum with validation**
-
-```tsx
-import { createParser } from 'nuqs'
-
-type Status = 'draft' | 'published' | 'archived'
-const validStatuses: Status[] = ['draft', 'published', 'archived']
-
-export const parseAsStatus = createParser<Status>({
-  parse(query) {
-    return validStatuses.includes(query as Status) ? (query as Status) : null
-  },
-  serialize(value) {
-    return value
-  }
-})
 ```
 
 Reference: [nuqs Custom Parsers](https://nuqs.dev/docs/parsers/making-your-own)
@@ -3162,11 +2940,29 @@ Reference: [nuqs Custom Parsers](https://nuqs.dev/docs/parsers/making-your-own)
 
 ### 8.3 Use Framework-Specific Adapters
 
-**Impact: LOW (enables nuqs in non-Next.js React applications)**
+**Impact: LOW (prevents URL sync failures in non-Next.js apps)**
 
 nuqs works with multiple React frameworks through adapters. Use the correct adapter for your framework to ensure proper URL synchronization.
 
-**React Router v6:**
+**Incorrect (wrong adapter for React Router):**
+
+```tsx
+// src/main.tsx
+import { NuqsAdapter } from 'nuqs/adapters/next/app' // Wrong!
+import { BrowserRouter } from 'react-router-dom'
+
+function App() {
+  return (
+    <BrowserRouter>
+      <NuqsAdapter> {/* This won't work with React Router */}
+        <Routes />
+      </NuqsAdapter>
+    </BrowserRouter>
+  )
+}
+```
+
+**Correct (React Router v6 adapter):**
 
 ```tsx
 // src/main.tsx
@@ -3180,75 +2976,6 @@ function App() {
         <Routes />
       </NuqsAdapter>
     </BrowserRouter>
-  )
-}
-```
-
-**React Router v7:**
-
-```tsx
-// src/main.tsx
-import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
-import { BrowserRouter } from 'react-router'
-
-function App() {
-  return (
-    <BrowserRouter>
-      <NuqsAdapter>
-        <Routes />
-      </NuqsAdapter>
-    </BrowserRouter>
-  )
-}
-```
-
-**Remix:**
-
-```tsx
-// app/root.tsx
-import { NuqsAdapter } from 'nuqs/adapters/remix'
-import { Outlet } from '@remix-run/react'
-
-export default function Root() {
-  return (
-    <html>
-      <body>
-        <NuqsAdapter>
-          <Outlet />
-        </NuqsAdapter>
-      </body>
-    </html>
-  )
-}
-```
-
-**Plain React (custom history):**
-
-```tsx
-// src/main.tsx
-import { NuqsAdapter } from 'nuqs/adapters/react'
-
-function App() {
-  return (
-    <NuqsAdapter>
-      <MyApp />
-    </NuqsAdapter>
-  )
-}
-// Uses window.history directly
-```
-
-**Testing adapter:**
-
-```tsx
-// test/setup.tsx
-import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
-
-function renderWithNuqs(ui, { searchParams = {} } = {}) {
-  return render(
-    <NuqsTestingAdapter searchParams={searchParams}>
-      {ui}
-    </NuqsTestingAdapter>
   )
 }
 ```
@@ -3269,11 +2996,11 @@ Reference: [nuqs Adapters](https://nuqs.dev/docs/adapters)
 
 ### 8.4 Use urlKeys for Shorter URLs
 
-**Impact: LOW (reduces URL length with abbreviated parameter names)**
+**Impact: LOW (reduces URL length by 50-70% for verbose params)**
 
 Map verbose parameter names to shorter URL keys for cleaner, more shareable URLs while keeping descriptive names in code.
 
-**Without urlKeys:**
+**Incorrect (verbose URL parameters):**
 
 ```tsx
 'use client'
@@ -3286,13 +3013,13 @@ export default function MapView() {
     zoomLevel: parseAsInteger.withDefault(10)
   })
   // URL: ?latitude=48.8566&longitude=2.3522&zoomLevel=12
-  // Long and harder to share
+  // Long, harder to share, uses more bandwidth
 
   return <Map {...coords} />
 }
 ```
 
-**With urlKeys:**
+**Correct (abbreviated URL keys):**
 
 ```tsx
 'use client'
@@ -3322,36 +3049,6 @@ export default function MapView() {
   return <Map {...coords} />
 }
 ```
-
-**With createSerializer:**
-
-```tsx
-import { createSerializer, parseAsFloat, parseAsInteger } from 'nuqs/server'
-
-const serialize = createSerializer(
-  {
-    latitude: parseAsFloat,
-    longitude: parseAsFloat,
-    zoomLevel: parseAsInteger
-  },
-  {
-    urlKeys: {
-      latitude: 'lat',
-      longitude: 'lng',
-      zoomLevel: 'z'
-    }
-  }
-)
-
-const url = serialize({ latitude: 48.8566, longitude: 2.3522, zoomLevel: 12 })
-// Result: lat=48.8566&lng=2.3522&z=12
-```
-
-**When to use urlKeys:**
-- Shareable URLs with length constraints
-- SEO-friendly short URLs
-- API compatibility with specific param names
-- Migration from existing URL structures
 
 Reference: [nuqs urlKeys](https://nuqs.dev/docs/utilities)
 

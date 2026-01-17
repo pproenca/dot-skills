@@ -2,7 +2,7 @@
 title: Use Managed Backend for Production Stacks
 impact: CRITICAL
 impactDescription: 10-50× faster state operations vs self-managed
-tags: state, backend, pulumi-cloud, performance
+tags: pstate, backend, pulumi-cloud, performance
 ---
 
 ## Use Managed Backend for Production Stacks

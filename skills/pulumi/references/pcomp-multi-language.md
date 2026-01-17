@@ -1,8 +1,8 @@
 ---
 title: Design Components for Multi-Language Consumption
 impact: HIGH
-impactDescription: 5× fewer component implementations
-tags: comp, multi-language, sdk, package
+impactDescription: reduces component implementations by 5×
+tags: pcomp, multi-language, sdk, package
 ---
 
 ## Design Components for Multi-Language Consumption

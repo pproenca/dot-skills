@@ -1,7 +1,7 @@
 ---
 title: Clear URL Parameters with null
 impact: HIGH
-impactDescription: removes parameter from URL instead of setting empty string
+impactDescription: reduces URL clutter by removing unnecessary parameters
 tags: state, null, clear, url-cleanup, reset
 ---
 

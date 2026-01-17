@@ -1,7 +1,7 @@
 ---
 title: Use createSerializer for Link URLs
 impact: MEDIUM
-impactDescription: type-safe URL generation without state hooks
+impactDescription: enables SSR-compatible URL generation without hooks
 tags: perf, createSerializer, links, navigation, ssr
 ---
 

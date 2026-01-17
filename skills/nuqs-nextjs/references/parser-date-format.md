@@ -1,7 +1,7 @@
 ---
 title: Select Appropriate Date Parser
 impact: CRITICAL
-impactDescription: wrong format causes parsing failures and timezone issues
+impactDescription: prevents timezone bugs and parsing failures
 tags: parser, parseAsTimestamp, parseAsIsoDateTime, parseAsIsoDate, dates
 ---
 
@@ -9,70 +9,48 @@ tags: parser, parseAsTimestamp, parseAsIsoDateTime, parseAsIsoDate, dates
 
 nuqs provides three date parsers with different URL formats and precision. Choose based on your requirements for time precision and URL readability.
 
-**parseAsTimestamp (milliseconds since epoch):**
-
-```tsx
-'use client'
-import { useQueryState, parseAsTimestamp } from 'nuqs'
-
-export default function EventFilter() {
-  const [since, setSince] = useQueryState('since', parseAsTimestamp)
-  // URL: ?since=1704067200000
-  // State: Date object
-  // Pros: Timezone-safe, precise
-  // Cons: Not human-readable
-
-  return (
-    <input
-      type="datetime-local"
-      value={since?.toISOString().slice(0, 16) ?? ''}
-      onChange={e => setSince(new Date(e.target.value))}
-    />
-  )
-}
-```
-
-**parseAsIsoDateTime (full ISO string):**
+**Incorrect (wrong parser for use case):**
 
 ```tsx
 'use client'
 import { useQueryState, parseAsIsoDateTime } from 'nuqs'
 
-export default function SchedulePicker() {
-  const [datetime, setDatetime] = useQueryState('datetime', parseAsIsoDateTime)
-  // URL: ?datetime=2024-01-01T12:00:00.000Z
-  // State: Date object
-  // Pros: Human-readable with time
-  // Cons: Longer URL, timezone in URL
+export default function DateRangePicker() {
+  const [startDate, setStartDate] = useQueryState('start', parseAsIsoDateTime)
+  // URL: ?start=2024-01-01T00:00:00.000Z
+  // Problem: User selected "Jan 1" but URL shows timezone complexity
+  // Better: Use parseAsIsoDate for date-only pickers
 
   return (
     <input
-      type="datetime-local"
-      value={datetime?.toISOString().slice(0, 16) ?? ''}
-      onChange={e => setDatetime(new Date(e.target.value))}
+      type="date"
+      value={startDate?.toISOString().slice(0, 10) ?? ''}
+      onChange={e => setStartDate(new Date(e.target.value))}
     />
   )
 }
 ```
 
-**parseAsIsoDate (date only, no time):**
+**Correct (match parser to use case):**
 
 ```tsx
 'use client'
-import { useQueryState, parseAsIsoDate } from 'nuqs'
+import { useQueryState, parseAsIsoDate, parseAsTimestamp } from 'nuqs'
 
 export default function DateRangePicker() {
-  const [date, setDate] = useQueryState('date', parseAsIsoDate)
-  // URL: ?date=2024-01-01
-  // State: Date object (time set to 00:00:00 local)
-  // Pros: Clean URL, date-only use cases
-  // Cons: No time precision
+  // For date-only picker: clean URL
+  const [startDate, setStartDate] = useQueryState('start', parseAsIsoDate)
+  // URL: ?start=2024-01-01
+
+  // For precise timestamps: use parseAsTimestamp
+  const [lastModified, setLastModified] = useQueryState('modified', parseAsTimestamp)
+  // URL: ?modified=1704067200000
 
   return (
     <input
       type="date"
-      value={date?.toISOString().slice(0, 10) ?? ''}
-      onChange={e => setDate(new Date(e.target.value))}
+      value={startDate?.toISOString().slice(0, 10) ?? ''}
+      onChange={e => setStartDate(new Date(e.target.value))}
     />
   )
 }

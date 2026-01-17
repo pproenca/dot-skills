@@ -2,7 +2,7 @@
 title: Use Transformations for Cross-Cutting Concerns
 impact: HIGH
 impactDescription: 100% compliance with zero code changes
-tags: comp, transformations, cross-cutting, standards
+tags: pcomp, transformations, cross-cutting, standards
 ---
 
 ## Use Transformations for Cross-Cutting Concerns

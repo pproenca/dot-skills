@@ -1,7 +1,7 @@
 ---
 title: Test Components with URL State
 impact: LOW-MEDIUM
-impactDescription: enables reliable testing of nuqs-dependent components
+impactDescription: enables reliable CI/CD testing of nuqs components
 tags: debug, testing, jest, vitest, react-testing-library
 ---
 
@@ -9,7 +9,20 @@ tags: debug, testing, jest, vitest, react-testing-library
 
 Test components that use nuqs by providing the NuqsTestingAdapter and controlling URL state in tests.
 
-**Setup test adapter:**
+**Incorrect (test fails without adapter):**
+
+```tsx
+// components/Pagination.test.tsx
+import { render, screen } from '@testing-library/react'
+import Pagination from './Pagination'
+
+it('displays current page', () => {
+  render(<Pagination />) // Fails: no NuqsAdapter
+  expect(screen.getByText('Page 1')).toBeInTheDocument()
+})
+```
+
+**Correct (use NuqsTestingAdapter):**
 
 ```tsx
 // test/utils.tsx
@@ -27,74 +40,15 @@ export function renderWithNuqs(
     options
   )
 }
-```
 
-**Test with initial URL state:**
-
-```tsx
 // components/Pagination.test.tsx
 import { screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
 import { renderWithNuqs } from '@/test/utils'
 import Pagination from './Pagination'
 
-describe('Pagination', () => {
-  it('displays current page from URL', () => {
-    renderWithNuqs(<Pagination />, {
-      searchParams: { page: '5' }
-    })
-
-    expect(screen.getByText('Page 5')).toBeInTheDocument()
-  })
-
-  it('updates page on click', async () => {
-    renderWithNuqs(<Pagination />)
-
-    await userEvent.click(screen.getByRole('button', { name: /next/i }))
-
-    expect(screen.getByText('Page 2')).toBeInTheDocument()
-  })
-})
-```
-
-**Test URL updates:**
-
-```tsx
-import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
-import { render, screen } from '@testing-library/react'
-import userEvent from '@testing-library/user-event'
-
-it('updates URL on state change', async () => {
-  let capturedSearchParams = ''
-
-  render(
-    <NuqsTestingAdapter
-      searchParams={{ page: '1' }}
-      onUrlUpdate={({ searchParams }) => {
-        capturedSearchParams = searchParams.toString()
-      }}
-    >
-      <Pagination />
-    </NuqsTestingAdapter>
-  )
-
-  await userEvent.click(screen.getByRole('button', { name: /next/i }))
-
-  expect(capturedSearchParams).toBe('page=2')
-})
-```
-
-**With server cache testing:**
-
-```tsx
-import { searchParamsCache } from '@/lib/searchParams'
-
-it('parses search params on server', async () => {
-  const params = { q: 'react', page: '3' }
-  const { q, page } = await searchParamsCache.parse(Promise.resolve(params))
-
-  expect(q).toBe('react')
-  expect(page).toBe(3)
+it('displays current page from URL', () => {
+  renderWithNuqs(<Pagination />, { searchParams: { page: '5' } })
+  expect(screen.getByText('Page 5')).toBeInTheDocument()
 })
 ```
 

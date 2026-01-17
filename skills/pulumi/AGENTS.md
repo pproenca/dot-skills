@@ -4,10 +4,7 @@
 Pulumi Community  
 January 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
-> but guidance here is optimized for automation and consistency by AI-assisted workflows.
+> **Note:** This Pulumi best practices guide is primarily for agents and LLMs to follow when maintaining, generating, or refactoring codebases. Humans may also find it useful, but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
 

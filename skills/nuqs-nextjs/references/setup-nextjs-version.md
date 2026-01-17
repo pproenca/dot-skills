@@ -1,7 +1,7 @@
 ---
 title: Ensure Compatible Next.js Version
 impact: CRITICAL
-impactDescription: older versions lack required router features
+impactDescription: prevents cryptic runtime errors from version mismatch
 tags: setup, nextjs, version, compatibility, app-router
 ---
 

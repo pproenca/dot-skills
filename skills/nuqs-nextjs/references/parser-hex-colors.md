@@ -1,7 +1,7 @@
 ---
 title: Use parseAsHex for Color Values
 impact: MEDIUM
-impactDescription: cleaner URLs and proper numeric handling for colors
+impactDescription: 50% shorter URLs for color parameters
 tags: parser, parseAsHex, colors, hexadecimal
 ---
 

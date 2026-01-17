@@ -2,7 +2,7 @@
 title: Keep Stacks Under 500 Resources
 impact: CRITICAL
 impactDescription: 10-100× faster preview and deployment
-tags: state, stack-size, performance, architecture
+tags: pstate, stack-size, performance, architecture
 ---
 
 ## Keep Stacks Under 500 Resources

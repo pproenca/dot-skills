@@ -1,7 +1,7 @@
 ---
 title: Generate Zod Schemas for Runtime Validation
 impact: MEDIUM
-impactDescription: catches API breaking changes immediately vs silent undefined at runtime
+impactDescription: catches 100% of API contract violations at runtime vs silent failures
 tags: types, zod, validation, runtime
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use clearOnDefault for Clean URLs
 impact: MEDIUM
-impactDescription: removes redundant parameters from URL
+impactDescription: reduces URL length by 20-50% for default values
 tags: perf, clearOnDefault, url-cleanup, defaults, seo
 ---
 
@@ -9,7 +9,24 @@ tags: perf, clearOnDefault, url-cleanup, defaults, seo
 
 By default, nuqs removes parameters from the URL when they match the default value. This keeps URLs clean. Set `clearOnDefault: false` only when you need the parameter always visible.
 
-**Default behavior (clean URLs):**
+**Incorrect (default always shown in URL):**
+
+```tsx
+'use client'
+import { useQueryState, parseAsInteger } from 'nuqs'
+
+export default function Pagination() {
+  const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1).withOptions({
+    clearOnDefault: false // Unnecessary!
+  }))
+  // URL always shows ?page=1 even on first page
+  // Clutters shareable URLs, hurts SEO
+
+  return <button onClick={() => setPage(1)}>First</button>
+}
+```
+
+**Correct (clean URLs by default):**
 
 ```tsx
 'use client'
@@ -17,6 +34,7 @@ import { useQueryState, parseAsInteger } from 'nuqs'
 
 export default function Pagination() {
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1))
+  // clearOnDefault: true (default)
   // page=1: URL is /search (clean)
   // page=2: URL is /search?page=2
 
@@ -29,40 +47,9 @@ export default function Pagination() {
 }
 ```
 
-**When to disable (parameter always visible):**
-
-```tsx
-'use client'
-import { useQueryState, parseAsString } from 'nuqs'
-
-export default function SortControl() {
-  const [sort, setSort] = useQueryState('sort', parseAsString.withDefault('relevance').withOptions({
-    clearOnDefault: false // Always show sort in URL
-  }))
-  // Even when sort='relevance' (default):
-  // URL is /search?sort=relevance
-
-  return (
-    <select value={sort} onChange={e => setSort(e.target.value)}>
-      <option value="relevance">Relevance</option>
-      <option value="date">Date</option>
-      <option value="price">Price</option>
-    </select>
-  )
-}
-```
-
-**Use cases for clearOnDefault: false:**
-- Explicit state documentation in URL
+**When clearOnDefault: false is appropriate:**
 - Analytics tracking requires all parameters
-- API expects all parameters in query string
-- Default value might change in future
-
-**URL comparison:**
-
-| Setting | Default State | Non-Default State |
-|---------|--------------|-------------------|
-| `clearOnDefault: true` (default) | `/search` | `/search?page=2` |
-| `clearOnDefault: false` | `/search?page=1` | `/search?page=2` |
+- API expects explicit parameter even for default
+- Debugging where you need to see all state
 
 Reference: [nuqs clearOnDefault](https://nuqs.dev/docs/options)

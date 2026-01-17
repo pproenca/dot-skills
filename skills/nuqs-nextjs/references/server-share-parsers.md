@@ -1,7 +1,7 @@
 ---
 title: Share Parsers Between Client and Server
 impact: HIGH
-impactDescription: ensures consistent parsing across rendering contexts
+impactDescription: prevents client/server hydration mismatches
 tags: server, parsers, shared, consistency, client-server
 ---
 

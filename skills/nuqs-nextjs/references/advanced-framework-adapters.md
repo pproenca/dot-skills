@@ -1,7 +1,7 @@
 ---
 title: Use Framework-Specific Adapters
 impact: LOW
-impactDescription: enables nuqs in non-Next.js React applications
+impactDescription: prevents URL sync failures in non-Next.js apps
 tags: advanced, adapters, remix, react-router, frameworks
 ---
 
@@ -9,7 +9,25 @@ tags: advanced, adapters, remix, react-router, frameworks
 
 nuqs works with multiple React frameworks through adapters. Use the correct adapter for your framework to ensure proper URL synchronization.
 
-**React Router v6:**
+**Incorrect (wrong adapter for React Router):**
+
+```tsx
+// src/main.tsx
+import { NuqsAdapter } from 'nuqs/adapters/next/app' // Wrong!
+import { BrowserRouter } from 'react-router-dom'
+
+function App() {
+  return (
+    <BrowserRouter>
+      <NuqsAdapter> {/* This won't work with React Router */}
+        <Routes />
+      </NuqsAdapter>
+    </BrowserRouter>
+  )
+}
+```
+
+**Correct (React Router v6 adapter):**
 
 ```tsx
 // src/main.tsx
@@ -23,75 +41,6 @@ function App() {
         <Routes />
       </NuqsAdapter>
     </BrowserRouter>
-  )
-}
-```
-
-**React Router v7:**
-
-```tsx
-// src/main.tsx
-import { NuqsAdapter } from 'nuqs/adapters/react-router/v7'
-import { BrowserRouter } from 'react-router'
-
-function App() {
-  return (
-    <BrowserRouter>
-      <NuqsAdapter>
-        <Routes />
-      </NuqsAdapter>
-    </BrowserRouter>
-  )
-}
-```
-
-**Remix:**
-
-```tsx
-// app/root.tsx
-import { NuqsAdapter } from 'nuqs/adapters/remix'
-import { Outlet } from '@remix-run/react'
-
-export default function Root() {
-  return (
-    <html>
-      <body>
-        <NuqsAdapter>
-          <Outlet />
-        </NuqsAdapter>
-      </body>
-    </html>
-  )
-}
-```
-
-**Plain React (custom history):**
-
-```tsx
-// src/main.tsx
-import { NuqsAdapter } from 'nuqs/adapters/react'
-
-function App() {
-  return (
-    <NuqsAdapter>
-      <MyApp />
-    </NuqsAdapter>
-  )
-}
-// Uses window.history directly
-```
-
-**Testing adapter:**
-
-```tsx
-// test/setup.tsx
-import { NuqsTestingAdapter } from 'nuqs/adapters/testing'
-
-function renderWithNuqs(ui, { searchParams = {} } = {}) {
-  return render(
-    <NuqsTestingAdapter searchParams={searchParams}>
-      {ui}
-    </NuqsTestingAdapter>
   )
 }
 ```

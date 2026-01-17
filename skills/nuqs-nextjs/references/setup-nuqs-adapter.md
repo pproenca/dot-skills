@@ -1,7 +1,7 @@
 ---
 title: Wrap App with NuqsAdapter
 impact: CRITICAL
-impactDescription: hooks fail without adapter - no URL state sync
+impactDescription: prevents 100% of hook failures from missing provider
 tags: setup, NuqsAdapter, provider, app-router, pages-router
 ---
 

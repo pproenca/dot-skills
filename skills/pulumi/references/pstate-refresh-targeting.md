@@ -2,7 +2,7 @@
 title: Use Targeted Refresh Instead of Full Stack Refresh
 impact: CRITICAL
 impactDescription: 10-100× faster refresh operations
-tags: state, refresh, targeting, performance
+tags: pstate, refresh, targeting, performance
 ---
 
 ## Use Targeted Refresh Instead of Full Stack Refresh

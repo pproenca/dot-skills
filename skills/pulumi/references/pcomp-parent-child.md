@@ -2,7 +2,7 @@
 title: Pass Parent Option to Child Resources
 impact: HIGH
 impactDescription: prevents orphaned resources and enables cascading deletes
-tags: comp, parent, hierarchy, resource-options
+tags: pcomp, parent, hierarchy, resource-options
 ---
 
 ## Pass Parent Option to Child Resources

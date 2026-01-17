@@ -692,7 +692,7 @@ Reference: [Orval Formatting Options](https://orval.dev/reference/configuration/
 
 ### 2.4 Select Client Based on Framework Requirements
 
-**Impact: CRITICAL (determines bundle size, DX, and caching capabilities)**
+**Impact: CRITICAL (2-5× bundle size difference between client options)**
 
 Choose the right client option for your framework. Each generates different code with different dependencies and capabilities.
 
@@ -1482,7 +1482,7 @@ Reference: [Axios Interceptors](https://axios-http.com/docs/interceptors)
 
 ### 4.4 Use Custom Mutator for HTTP Client Configuration
 
-**Impact: HIGH (centralizes auth, error handling, and cross-cutting concerns)**
+**Impact: HIGH (O(1) auth config vs O(n) scattered header additions across components)**
 
 Create a custom mutator to centralize HTTP client configuration. This is where authentication, error handling, base URLs, and request/response transformations belong.
 
@@ -1642,7 +1642,7 @@ Reference: [Orval Fetch Client](https://orval.dev/guides/fetch-client)
 
 ### 4.6 Use Interceptors for Cross-Cutting Concerns
 
-**Impact: HIGH (centralizes logging, retry logic, and request timing)**
+**Impact: HIGH (O(1) interceptor config vs O(n) duplicated logging across API calls)**
 
 Configure Axios interceptors in your mutator for cross-cutting concerns like logging, retry logic, and request timing. This keeps generated code clean while adding observability.
 
@@ -1813,7 +1813,7 @@ Reference: [Orval Query Options](https://orval.dev/guides/react-query)
 
 ### 5.2 Enable Infinite Queries for Paginated Endpoints
 
-**Impact: MEDIUM-HIGH (proper infinite scroll without manual pagination state)**
+**Impact: MEDIUM-HIGH (eliminates manual page state management and data accumulation logic)**
 
 Enable infinite query generation for paginated endpoints. Manual pagination with regular queries leads to complex state management and poor UX.
 
@@ -2282,7 +2282,7 @@ Reference: [Orval useBigInt](https://orval.dev/reference/configuration/output)
 
 ### 6.2 Enable useDates for Date Type Generation
 
-**Impact: MEDIUM (generates Date types instead of string for date fields)**
+**Impact: MEDIUM (enables Date methods (getFullYear, toISOString) without manual parsing)**
 
 Enable `useDates` to generate TypeScript Date types for date/datetime fields. Without it, all date fields are typed as `string`, losing type safety.
 
@@ -2440,7 +2440,7 @@ Reference: [Orval Zod Strict Mode](https://orval.dev/reference/configuration/out
 
 ### 6.4 Generate Zod Schemas for Runtime Validation
 
-**Impact: MEDIUM (catches API contract violations at runtime)**
+**Impact: MEDIUM (catches 100% of API contract violations at runtime vs silent failures)**
 
 Generate Zod schemas alongside TypeScript types to validate API responses at runtime. TypeScript types are erased at runtime; Zod catches contract violations in production.
 
@@ -2600,7 +2600,7 @@ MSW setup, Faker configuration, and testing patterns enable reliable frontend de
 
 ### 7.1 Configure Mock Response Delays
 
-**Impact: MEDIUM (simulates network latency for realistic testing)**
+**Impact: MEDIUM (exposes loading state bugs hidden by 0ms response times)**
 
 Configure appropriate mock delays to simulate real network conditions. Instant responses hide loading state bugs and race conditions.
 
@@ -2951,7 +2951,7 @@ Reference: [MSW Documentation](https://mswjs.io/docs/)
 
 ### 7.5 Use OpenAPI Examples for Realistic Mocks
 
-**Impact: MEDIUM (generates realistic mock data from spec examples)**
+**Impact: MEDIUM (100% deterministic mock data vs random Faker values)**
 
 Configure mocks to use examples from your OpenAPI spec. This produces more realistic and consistent mock data than random Faker values.
 
@@ -3043,7 +3043,7 @@ Transformers, operation overrides, and edge case handling for complex integratio
 
 ### 8.1 Configure Form Data Serialization
 
-**Impact: LOW (handles file uploads and multipart forms correctly)**
+**Impact: LOW (prevents 400 errors from incorrect array serialization in form uploads)**
 
 Configure form data handling for file upload and multipart form endpoints. The default serialization may not match your API's expectations for arrays and nested objects.
 
@@ -3125,7 +3125,7 @@ Reference: [Orval formData Options](https://orval.dev/reference/configuration/ou
 
 ### 8.2 Override Settings per Operation
 
-**Impact: LOW (customizes individual endpoints without affecting others)**
+**Impact: LOW (O(1) config changes per endpoint vs O(n) global modifications)**
 
 Use operation-specific overrides when certain endpoints need different configuration. This is cleaner than using a transformer for simple customizations.
 
@@ -3290,7 +3290,7 @@ Reference: [Orval Input Transformer](https://orval.dev/reference/configuration/i
 
 ### 8.4 Use Output Transformer for Generated Code Modification
 
-**Impact: LOW (adds custom logic to all N generated functions automatically)**
+**Impact: LOW (O(1) transformer config vs O(n) manual modifications across generated functions)**
 
 Use an output transformer to modify generated code before it's written. This enables adding custom logic, modifying function signatures, or injecting metadata.
 

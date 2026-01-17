@@ -1,7 +1,7 @@
 ---
 title: Use Output Transformer for Generated Code Modification
 impact: LOW
-impactDescription: 1 transformer vs N manual modifications across all generated functions
+impactDescription: O(1) transformer config vs O(n) manual modifications across generated functions
 tags: adv, transformer, output, generation
 ---
 
