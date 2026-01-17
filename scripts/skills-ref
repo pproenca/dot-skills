@@ -1,0 +1,511 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# skills-ref - Validate and inspect Agent Skills
+# Port of https://github.com/agentskills/agentskills/tree/main/skills-ref
+
+VERSION="1.0.0"
+
+# Global counters (reset per skill)
+ERRORS=0
+WARNINGS=0
+
+# Terminal colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+BOLD='\033[1m'
+NC='\033[0m' # No Color
+
+# Output helpers
+pass() { echo -e "${GREEN}✓${NC} $1"; }
+fail() { echo -e "${RED}✗${NC} $1"; ERRORS=$((ERRORS + 1)); }
+warn() { echo -e "${YELLOW}!${NC} $1"; WARNINGS=$((WARNINGS + 1)); }
+info() { echo -e "${BLUE}→${NC} $1"; }
+
+# Extract YAML frontmatter as JSON using Node.js
+extract_frontmatter() {
+  local file="$1"
+  node -e "
+    const fs = require('fs');
+    const content = fs.readFileSync(process.argv[1], 'utf8');
+    const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
+    if (!match) {
+      console.log('{}');
+      process.exit(0);
+    }
+    const yaml = match[1];
+    const result = {};
+    let currentKey = null;
+    let multilineValue = '';
+    let inMultiline = false;
+
+    yaml.split('\\n').forEach((line, i, lines) => {
+      // Skip comments
+      if (line.trim().startsWith('#')) return;
+
+      // Check for key: value pattern
+      const keyMatch = line.match(/^([a-zA-Z_-]+):\\s*(.*)$/);
+      if (keyMatch && !inMultiline) {
+        const [, key, value] = keyMatch;
+        if (value.trim()) {
+          // Remove surrounding quotes if present
+          result[key] = value.trim().replace(/^[\"']|[\"']$/g, '');
+        } else {
+          // Could be start of multiline or nested object - store empty
+          result[key] = '';
+        }
+        currentKey = key;
+      }
+    });
+
+    console.log(JSON.stringify(result));
+  " "$file"
+}
+
+# Get a specific property from frontmatter JSON
+get_property() {
+  local json="$1"
+  local prop="$2"
+  echo "$json" | node -pe "JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'))['$prop'] || ''"
+}
+
+# Validate skill name
+validate_name() {
+  local name="$1"
+  local dir_name="$2"
+  local has_errors=0
+
+  # Rule: meta-name-format - lowercase alphanumeric + hyphens
+  if ! [[ "$name" =~ ^[a-z0-9-]+$ ]]; then
+    fail "Name must be lowercase alphanumeric with hyphens only: '$name'"
+    has_errors=1
+  fi
+
+  # Rule: meta-name-length - 1-64 characters
+  if [ ${#name} -lt 1 ] || [ ${#name} -gt 64 ]; then
+    fail "Name must be 1-64 characters: '$name' (${#name} chars)"
+    has_errors=1
+  fi
+
+  # Rule: meta-name-hyphen-boundaries - no leading/trailing hyphens
+  if [[ "$name" == -* ]] || [[ "$name" == *- ]]; then
+    fail "Name cannot start or end with hyphen: '$name'"
+    has_errors=1
+  fi
+
+  # Rule: meta-name-no-consecutive-hyphens
+  if [[ "$name" == *--* ]]; then
+    fail "Name cannot contain consecutive hyphens: '$name'"
+    has_errors=1
+  fi
+
+  # Rule: meta-directory-match
+  if [ "$name" != "$dir_name" ]; then
+    fail "Name '$name' must match directory name '$dir_name'"
+    has_errors=1
+  fi
+
+  if [ $has_errors -eq 0 ]; then
+    pass "Name validation passed: '$name'"
+  fi
+
+  return $has_errors
+}
+
+# Validate description
+validate_description() {
+  local desc="$1"
+  local has_errors=0
+
+  # Rule: non-empty
+  if [ -z "$desc" ]; then
+    fail "Description is required"
+    has_errors=1
+  fi
+
+  # Rule: max 1024 chars
+  if [ ${#desc} -gt 1024 ]; then
+    fail "Description exceeds 1024 characters (${#desc} chars)"
+    has_errors=1
+  fi
+
+  if [ $has_errors -eq 0 ]; then
+    pass "Description validation passed (${#desc} chars)"
+  fi
+
+  return $has_errors
+}
+
+# Validate SKILL.md line count
+validate_line_count() {
+  local file="$1"
+  local lines
+  lines=$(wc -l < "$file" | tr -d ' ')
+
+  # Rule: struct-line-limit - under 500 lines per project conventions
+  if [ "$lines" -gt 500 ]; then
+    fail "SKILL.md exceeds 500 lines ($lines lines)"
+    return 1
+  fi
+
+  pass "Line count OK ($lines/500 lines)"
+  return 0
+}
+
+# Validate reference consistency - Quick Reference entries match files in references/
+validate_references_consistency() {
+  local skill_dir="$1"
+  local skill_md="$skill_dir/SKILL.md"
+  local refs_dir="$skill_dir/references"
+
+  # Skip if no references directory
+  if [ ! -d "$refs_dir" ]; then
+    info "No references/ directory (optional)"
+    return 0
+  fi
+
+  # Extract rule slugs from Quick Reference list items only
+  # Format: "- `rule-slug` - Description"
+  # This avoids picking up cross-skill references in prose text
+  local quick_ref_rules
+  quick_ref_rules=$(grep -E '^- `[a-z]+-[a-z0-9-]+`' "$skill_md" 2>/dev/null | \
+    grep -oE '`[a-z]+-[a-z0-9-]+`' | tr -d '`' | sort -u || true)
+
+  # Get actual reference files (excluding _*.md like _sections.md)
+  local ref_files
+  ref_files=$(ls "$refs_dir"/*.md 2>/dev/null | xargs -n1 basename 2>/dev/null | grep -v '^_' | sed 's/\.md$//' | sort || true)
+
+  if [ -z "$quick_ref_rules" ] && [ -z "$ref_files" ]; then
+    info "No rules in Quick Reference or reference files"
+    return 0
+  fi
+
+  local has_errors=0
+
+  # Find rules in Quick Reference but missing files
+  if [ -n "$quick_ref_rules" ]; then
+    local missing_files
+    missing_files=$(comm -23 <(echo "$quick_ref_rules") <(echo "$ref_files") || true)
+    if [ -n "$missing_files" ]; then
+      fail "Rules in Quick Reference missing reference files:"
+      echo "$missing_files" | while read -r rule; do
+        [ -n "$rule" ] && echo "       - $rule → references/$rule.md (missing)"
+      done
+      has_errors=1
+    fi
+  fi
+
+  # Find reference files not mentioned in Quick Reference (warning only)
+  if [ -n "$ref_files" ] && [ -n "$quick_ref_rules" ]; then
+    local orphan_files
+    orphan_files=$(comm -13 <(echo "$quick_ref_rules") <(echo "$ref_files") || true)
+    if [ -n "$orphan_files" ]; then
+      warn "Reference files not in Quick Reference (may be intentional):"
+      echo "$orphan_files" | while read -r rule; do
+        [ -n "$rule" ] && echo "       - references/$rule.md"
+      done
+    fi
+  fi
+
+  if [ $has_errors -eq 0 ]; then
+    pass "Reference consistency OK"
+  fi
+
+  return $has_errors
+}
+
+# Check AGENTS.md presence for curated skills
+validate_agents_md() {
+  local skill_dir="$1"
+  local category
+  category=$(basename "$(dirname "$skill_dir")")
+
+  if [ "$category" = ".curated" ]; then
+    if [ ! -f "$skill_dir/AGENTS.md" ]; then
+      warn "Curated skill missing AGENTS.md (recommended)"
+    else
+      pass "AGENTS.md present"
+    fi
+  fi
+}
+
+# Command: validate <skill_dir>
+cmd_validate() {
+  local skill_dir="${1:-.}"
+  local skill_md="$skill_dir/SKILL.md"
+
+  # Resolve to absolute path
+  skill_dir=$(cd "$skill_dir" 2>/dev/null && pwd) || {
+    fail "Directory not found: $1"
+    exit 1
+  }
+  skill_md="$skill_dir/SKILL.md"
+
+  if [ ! -f "$skill_md" ]; then
+    fail "SKILL.md not found at $skill_dir"
+    exit 1
+  fi
+
+  local dir_name
+  dir_name=$(basename "$skill_dir")
+
+  local frontmatter
+  frontmatter=$(extract_frontmatter "$skill_md")
+
+  local name
+  name=$(get_property "$frontmatter" "name")
+
+  local description
+  description=$(get_property "$frontmatter" "description")
+
+  echo ""
+  echo -e "${BOLD}Validating: $skill_dir${NC}"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  # Reset counters
+  ERRORS=0
+  WARNINGS=0
+
+  # Run all validations (continue even if some fail)
+  validate_name "$name" "$dir_name" || true
+  validate_description "$description" || true
+  validate_line_count "$skill_md" || true
+  validate_references_consistency "$skill_dir" || true
+  validate_agents_md "$skill_dir"
+
+  echo ""
+  if [ $ERRORS -gt 0 ]; then
+    echo -e "${RED}FAILED${NC} with $ERRORS error(s), $WARNINGS warning(s)"
+    return 1
+  else
+    echo -e "${GREEN}PASSED${NC} with $WARNINGS warning(s)"
+    return 0
+  fi
+}
+
+# Command: validate-all [root]
+cmd_validate_all() {
+  local skills_root="${1:-./skills}"
+  local total=0
+  local passed=0
+  local failed=0
+  local failed_skills=""
+
+  echo ""
+  echo -e "${BOLD}Validating all skills in $skills_root${NC}"
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+
+  # Find all SKILL.md files
+  while IFS= read -r skill_md; do
+    local skill_dir
+    skill_dir=$(dirname "$skill_md")
+    total=$((total + 1))
+
+    if cmd_validate "$skill_dir"; then
+      passed=$((passed + 1))
+    else
+      failed=$((failed + 1))
+      failed_skills="$failed_skills\n  - $(basename "$skill_dir")"
+    fi
+  done < <(find "$skills_root" -name "SKILL.md" -type f | grep -v "\.template" | sort)
+
+  echo ""
+  echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+  if [ $failed -eq 0 ]; then
+    echo -e "${GREEN}Summary: $passed/$total passed${NC}"
+  else
+    echo -e "${RED}Summary: $passed/$total passed, $failed failed${NC}"
+    echo -e "Failed skills:$failed_skills"
+  fi
+
+  [ $failed -eq 0 ]
+}
+
+# Command: read-properties <skill_dir>
+cmd_read_properties() {
+  local skill_dir="${1:-.}"
+  local skill_md="$skill_dir/SKILL.md"
+
+  # Resolve to absolute path
+  skill_dir=$(cd "$skill_dir" 2>/dev/null && pwd) || {
+    echo '{"error": "Directory not found"}' >&2
+    exit 1
+  }
+  skill_md="$skill_dir/SKILL.md"
+
+  if [ ! -f "$skill_md" ]; then
+    echo '{"error": "SKILL.md not found"}' >&2
+    exit 1
+  fi
+
+  # Output full JSON including computed properties
+  node -e "
+    const fs = require('fs');
+    const path = require('path');
+    const content = fs.readFileSync(process.argv[1], 'utf8');
+    const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
+
+    const skillDir = process.argv[2];
+    const result = {
+      _source: process.argv[1],
+      _directory: path.basename(skillDir),
+      _lineCount: content.split('\\n').length,
+      _category: path.basename(path.dirname(skillDir))
+    };
+
+    if (match) {
+      const yaml = match[1];
+      yaml.split('\\n').forEach(line => {
+        if (line.trim().startsWith('#')) return;
+        const keyMatch = line.match(/^([a-zA-Z_-]+):\\s*(.*)$/);
+        if (keyMatch) {
+          const [, key, value] = keyMatch;
+          if (value.trim()) {
+            result[key] = value.trim().replace(/^[\"']|[\"']$/g, '');
+          }
+        }
+      });
+    }
+
+    // Check for AGENTS.md
+    result._hasAgentsMd = fs.existsSync(path.join(skillDir, 'AGENTS.md'));
+
+    // Check for references/
+    const refsDir = path.join(skillDir, 'references');
+    if (fs.existsSync(refsDir)) {
+      result._referenceCount = fs.readdirSync(refsDir)
+        .filter(f => f.endsWith('.md') && !f.startsWith('_')).length;
+    } else {
+      result._referenceCount = 0;
+    }
+
+    console.log(JSON.stringify(result, null, 2));
+  " "$skill_md" "$skill_dir"
+}
+
+# Command: to-prompt <skill_dirs...>
+cmd_to_prompt() {
+  if [ $# -eq 0 ]; then
+    echo "Usage: skills-ref to-prompt <skill_dir> [skill_dir...]" >&2
+    exit 1
+  fi
+
+  echo '<?xml version="1.0" encoding="UTF-8"?>'
+  echo '<skills>'
+
+  for skill_dir in "$@"; do
+    local skill_md="$skill_dir/SKILL.md"
+    if [ ! -f "$skill_md" ]; then
+      echo "  <!-- Skipped: $skill_dir (no SKILL.md) -->"
+      continue
+    fi
+
+    # Use Node.js to properly escape content and extract fields
+    node -e "
+      const fs = require('fs');
+      const content = fs.readFileSync(process.argv[1], 'utf8');
+      const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
+
+      let name = '';
+      let description = '';
+
+      if (match) {
+        const yaml = match[1];
+        yaml.split('\\n').forEach(line => {
+          const nameMatch = line.match(/^name:\\s*(.*)$/);
+          const descMatch = line.match(/^description:\\s*(.*)$/);
+          if (nameMatch) name = nameMatch[1].trim().replace(/^[\"']|[\"']$/g, '');
+          if (descMatch) description = descMatch[1].trim().replace(/^[\"']|[\"']$/g, '');
+        });
+      }
+
+      // Get content after frontmatter
+      const afterFrontmatter = content.replace(/^---[\\s\\S]*?---\\n/, '').trim();
+
+      // Escape XML special chars in description
+      const escapeXml = (s) => s
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/\"/g, '&quot;');
+
+      console.log('  <skill name=\"' + escapeXml(name) + '\">');
+      console.log('    <description>' + escapeXml(description) + '</description>');
+      console.log('    <content><![CDATA[');
+      console.log(afterFrontmatter);
+      console.log(']]></content>');
+      console.log('  </skill>');
+    " "$skill_md"
+  done
+
+  echo '</skills>'
+}
+
+# Command: help
+cmd_help() {
+  cat <<EOF
+skills-ref v$VERSION - Validate and inspect Agent Skills
+
+Usage:
+  skills-ref validate <skill_dir>      Validate a single skill
+  skills-ref validate-all [root]       Validate all skills (default: ./skills)
+  skills-ref read-properties <dir>     Output skill properties as JSON
+  skills-ref to-prompt <dirs...>       Generate XML prompt blocks
+
+Options:
+  --version, -v    Show version
+  --help, -h       Show this help
+
+Examples:
+  scripts/skills-ref validate skills/.curated/typescript
+  scripts/skills-ref validate-all
+  scripts/skills-ref read-properties skills/.curated/agent-skills
+  scripts/skills-ref to-prompt skills/.curated/typescript skills/.curated/zod
+
+Validation Rules:
+  - Name: lowercase alphanumeric with hyphens, 1-64 chars
+  - Name: no leading/trailing/consecutive hyphens
+  - Name: must match directory name
+  - Description: required, max 1024 chars
+  - SKILL.md: under 500 lines
+  - References: Quick Reference entries should have matching files
+  - AGENTS.md: recommended for curated skills
+EOF
+}
+
+# Main dispatch
+main() {
+  case "${1:-help}" in
+    validate)
+      shift
+      cmd_validate "${1:-.}"
+      ;;
+    validate-all)
+      shift
+      cmd_validate_all "${1:-./skills}"
+      ;;
+    read-properties)
+      shift
+      cmd_read_properties "${1:-.}"
+      ;;
+    to-prompt)
+      shift
+      cmd_to_prompt "$@"
+      ;;
+    --version|-v)
+      echo "skills-ref v$VERSION"
+      ;;
+    help|--help|-h)
+      cmd_help
+      ;;
+    *)
+      echo "Unknown command: $1" >&2
+      echo "Run 'skills-ref --help' for usage" >&2
+      exit 1
+      ;;
+  esac
+}
+
+main "$@"
