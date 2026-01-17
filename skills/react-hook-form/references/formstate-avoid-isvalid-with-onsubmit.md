@@ -2,7 +2,7 @@
 title: Avoid isValid with onSubmit Mode for Button State
 impact: MEDIUM
 impactDescription: prevents validation on every render for button disabled state
-tags: state, isValid, onSubmit, validation-mode
+tags: formstate, isValid, onSubmit, validation-mode
 ---
 
 ## Avoid isValid with onSubmit Mode for Button State

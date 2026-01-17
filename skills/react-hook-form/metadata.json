@@ -1,6 +1,6 @@
 {
   "version": "0.1.0",
-  "organization": "community",
+  "organization": "Community",
   "technology": "React Hook Form",
   "date": "January 2026",
   "abstract": "Comprehensive performance optimization guide for React Hook Form applications, designed for AI agents and LLMs. Contains 41 rules across 8 categories, prioritized by impact from critical (form configuration, field subscriptions) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",

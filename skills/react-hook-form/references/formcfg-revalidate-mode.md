@@ -2,7 +2,7 @@
 title: Set reValidateMode to onBlur for Post-Submit Performance
 impact: CRITICAL
 impactDescription: reduces re-renders after initial submission by 80%+
-tags: config, revalidate-mode, re-renders, useForm
+tags: formcfg, revalidate-mode, re-renders, useForm
 ---
 
 ## Set reValidateMode to onBlur for Post-Submit Performance

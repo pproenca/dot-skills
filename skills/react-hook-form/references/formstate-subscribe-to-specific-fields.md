@@ -2,7 +2,7 @@
 title: Subscribe to Specific Field Names in useFormState
 impact: MEDIUM
 impactDescription: reduces re-renders to only relevant field changes
-tags: state, useFormState, name, specific-fields
+tags: formstate, useFormState, name, specific-fields
 ---
 
 ## Subscribe to Specific Field Names in useFormState

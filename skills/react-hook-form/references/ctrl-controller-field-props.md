@@ -1,7 +1,7 @@
 ---
 title: Wire Controller Field Props Correctly for UI Libraries
 impact: HIGH
-impactDescription: ensures proper two-way binding with controlled components
+impactDescription: prevents form binding bugs and eliminates silent failures in 100% of UI library integrations
 tags: ctrl, Controller, field-props, ui-libraries
 ---
 

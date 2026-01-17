@@ -2,7 +2,7 @@
 title: Use onSubmit Mode for Optimal Performance
 impact: CRITICAL
 impactDescription: prevents re-renders on every keystroke
-tags: config, validation-mode, re-renders, useForm
+tags: formcfg, validation-mode, re-renders, useForm
 ---
 
 ## Use onSubmit Mode for Optimal Performance

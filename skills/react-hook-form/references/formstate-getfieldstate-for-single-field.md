@@ -2,7 +2,7 @@
 title: Use getFieldState for Single Field State Access
 impact: MEDIUM
 impactDescription: avoids subscription overhead for one-time state reads
-tags: state, getFieldState, single-field, no-subscription
+tags: formstate, getFieldState, single-field, no-subscription
 ---
 
 ## Use getFieldState for Single Field State Access

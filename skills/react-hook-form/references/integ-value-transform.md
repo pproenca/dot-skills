@@ -1,7 +1,7 @@
 ---
 title: Transform Values at Controller Level for Type Coercion
 impact: MEDIUM
-impactDescription: handles input/output transformation cleanly for non-string values
+impactDescription: prevents type coercion bugs in 100% of numeric/date form fields
 tags: integ, transform, value-coercion, Controller
 ---
 

@@ -101,15 +101,12 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/query-key-factories.md
-rules/cache-staletime-gctime.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- Reference files: `references/{prefix}-{slug}.md`
 
-Each rule file contains:
+Each reference file contains:
 - Brief explanation of why it matters
 - Incorrect code example with explanation
 - Correct code example with explanation

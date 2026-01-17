@@ -2,7 +2,7 @@
 title: Enable shouldUnregister for Dynamic Form Memory Efficiency
 impact: HIGH
 impactDescription: reduces memory usage for forms with frequently mounted/unmounted fields
-tags: config, should-unregister, dynamic-forms, memory
+tags: formcfg, should-unregister, dynamic-forms, memory
 ---
 
 ## Enable shouldUnregister for Dynamic Form Memory Efficiency

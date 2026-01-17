@@ -2,7 +2,7 @@
 title: Always Provide defaultValues for Form Initialization
 impact: CRITICAL
 impactDescription: prevents undefined state bugs and enables reset() functionality
-tags: config, default-values, initialization, useForm
+tags: formcfg, default-values, initialization, useForm
 ---
 
 ## Always Provide defaultValues for Form Initialization

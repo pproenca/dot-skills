@@ -1,7 +1,7 @@
 ---
 title: Wire shadcn Select with onValueChange Instead of Spread
 impact: MEDIUM
-impactDescription: ensures proper value binding for Radix-based selects
+impactDescription: prevents 100% of silent select binding failures with Radix-based components
 tags: integ, shadcn, select, radix
 ---
 

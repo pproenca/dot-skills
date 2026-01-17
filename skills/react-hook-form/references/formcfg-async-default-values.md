@@ -2,7 +2,7 @@
 title: Use Async defaultValues for Server Data
 impact: CRITICAL
 impactDescription: eliminates manual useEffect reset patterns
-tags: config, async, default-values, data-fetching
+tags: formcfg, async, default-values, data-fetching
 ---
 
 ## Use Async defaultValues for Server Data

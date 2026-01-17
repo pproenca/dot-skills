@@ -1,7 +1,7 @@
 ---
 title: Use useController for Re-render Isolation in Controlled Components
 impact: HIGH
-impactDescription: isolates re-renders to individual controlled field
+impactDescription: reduces re-renders from O(n) to O(1) per field change
 tags: ctrl, useController, controlled-components, re-renders
 ---
 

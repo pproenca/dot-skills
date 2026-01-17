@@ -2,7 +2,7 @@
 title: Destructure formState Properties Before Render
 impact: MEDIUM
 impactDescription: enables Proxy subscription optimization
-tags: state, formState, destructure, proxy, subscription
+tags: formstate, formState, destructure, proxy, subscription
 ---
 
 ## Destructure formState Properties Before Render

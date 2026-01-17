@@ -2,7 +2,7 @@
 title: Avoid useForm Return Object in useEffect Dependencies
 impact: CRITICAL
 impactDescription: prevents infinite render loops
-tags: config, useEffect, dependencies, infinite-loop
+tags: formcfg, useEffect, dependencies, infinite-loop
 ---
 
 ## Avoid useForm Return Object in useEffect Dependencies

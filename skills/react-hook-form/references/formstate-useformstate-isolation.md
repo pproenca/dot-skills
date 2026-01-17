@@ -2,7 +2,7 @@
 title: Use useFormState for Isolated State Subscriptions
 impact: MEDIUM
 impactDescription: prevents parent re-renders from state access in children
-tags: state, useFormState, isolation, re-renders
+tags: formstate, useFormState, isolation, re-renders
 ---
 
 ## Use useFormState for Isolated State Subscriptions
