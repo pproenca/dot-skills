@@ -1,6 +1,6 @@
 ---
-name: vitest
-description: Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots, and test performance. This skill should be used when writing or debugging Vitest tests. This skill does NOT cover TDD methodology (use test-driven-development skill), API mocking with MSW (use mswjs skill), or Jest-specific APIs.
+name: test-vitest
+description: Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots, and test performance. This skill should be used when writing or debugging Vitest tests. This skill does NOT cover TDD methodology (use test-tdd skill), API mocking with MSW (use test-msw skill), or Jest-specific APIs.
 ---
 
 # Vitest Best Practices
@@ -111,9 +111,9 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For TDD methodology, see `test-driven-development` skill
-- For API mocking with MSW, see `mswjs` skill
-- For TypeScript testing patterns, see `typescript-best-practices` skill
+- For TDD methodology, see `test-tdd` skill
+- For API mocking with MSW, see `test-msw` skill
+- For TypeScript testing patterns, see `typescript` skill
 
 ## Full Compiled Document
 

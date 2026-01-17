@@ -1,5 +1,5 @@
 ---
-name: orval-openapi-best-practices
+name: orval
 description: Orval OpenAPI TypeScript client generation best practices. This skill should be used when configuring Orval, generating TypeScript clients from OpenAPI specs, setting up React Query/SWR hooks, creating custom mutators, or writing MSW mocks. Triggers on tasks involving orval.config.ts, OpenAPI codegen, API client setup, or mock generation.
 ---
 
@@ -108,8 +108,8 @@ Read individual reference files for detailed explanations and code examples:
 ## Related Skills
 
 - For consuming generated hooks, see `tanstack-query` skill
-- For mocking generated API clients, see `mswjs` skill
-- For schema validation, see `zod-schema` skill
+- For mocking generated API clients, see `test-msw` skill
+- For schema validation, see `zod` skill
 
 ## Full Compiled Document
 

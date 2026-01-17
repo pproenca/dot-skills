@@ -1,6 +1,6 @@
 ---
-name: tdd-best-practices
-description: Test-Driven Development methodology and red-green-refactor workflow. This skill should be used when practicing TDD, designing tests before implementation, or reviewing test-first approaches. This skill does NOT cover Vitest framework specifics (use vitest skill) or API mocking with MSW (use mswjs skill).
+name: test-tdd
+description: Test-Driven Development methodology and red-green-refactor workflow. This skill should be used when practicing TDD, designing tests before implementation, or reviewing test-first approaches. This skill does NOT cover Vitest framework specifics (use test-vitest skill) or API mocking with MSW (use test-msw skill).
 ---
 
 # Community Test-Driven Development Best Practices
@@ -108,8 +108,8 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For Vitest framework specifics, see `vitest` skill
-- For API mocking with MSW, see `mswjs` skill
+- For Vitest framework specifics, see `test-vitest` skill
+- For API mocking with MSW, see `test-msw` skill
 
 ## Full Compiled Document
 

@@ -1,6 +1,6 @@
 ---
-name: tanstack-query-best-practices
-description: TanStack Query v5 performance optimization for data fetching, caching, mutations, and query patterns. This skill should be used when using useQuery, useMutation, queryClient, prefetch patterns, or TanStack Query caching. This skill does NOT cover generating query hooks from OpenAPI (use orval-openapi skill) or mocking API responses in tests (use mswjs skill).
+name: tanstack-query
+description: TanStack Query v5 performance optimization for data fetching, caching, mutations, and query patterns. This skill should be used when using useQuery, useMutation, queryClient, prefetch patterns, or TanStack Query caching. This skill does NOT cover generating query hooks from OpenAPI (use orval skill) or mocking API responses in tests (use test-msw skill).
 license: MIT
 metadata:
   author: community
@@ -114,8 +114,8 @@ Each reference file contains:
 
 ## Related Skills
 
-- For generating type-safe query hooks, see `orval-openapi` skill
-- For mocking API responses in tests, see `mswjs` skill
+- For generating type-safe query hooks, see `orval` skill
+- For mocking API responses in tests, see `test-msw` skill
 - For React 19 data fetching patterns, see `react-19` skill
 
 ## Full Compiled Document

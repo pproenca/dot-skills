@@ -1,5 +1,5 @@
 ---
-name: feature-spec-planning-best-practices
+name: feature-spec
 description: Feature specification and planning guidelines for software engineers. This skill should be used when writing PRDs, defining requirements, managing scope, prioritizing features, or handling change requests. Triggers on tasks involving feature planning, specification writing, stakeholder alignment, or scope management.
 ---
 

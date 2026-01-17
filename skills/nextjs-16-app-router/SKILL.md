@@ -1,5 +1,5 @@
 ---
-name: nextjs-16-app-router-best-practices
+name: nextjs-16-app-router
 description: Next.js 16 App Router performance optimization guidelines. This skill should be used when writing Next.js 16 code, configuring caching, implementing Server Components in Next.js, setting up App Router routing, or configuring next.config.js. This skill does NOT cover generic React 19 patterns (use react-19 skill) or non-Next.js server rendering.
 ---
 

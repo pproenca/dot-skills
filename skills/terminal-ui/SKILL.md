@@ -1,6 +1,6 @@
 ---
-name: devex-developer-experience-tui-best-practices
-description: Developer Experience TUI performance and UX guidelines for TypeScript applications using Ink and Clack. This skill should be used when writing, reviewing, or refactoring terminal user interfaces to ensure optimal rendering, input handling, and user experience patterns. Triggers on tasks involving TUI components, CLI prompts, terminal rendering, keyboard input handling, or developer tooling.
+name: terminal-ui
+description: Terminal User Interface (TUI) performance and UX guidelines for TypeScript applications using Ink and Clack. This skill should be used when building CLI tools, interactive terminal prompts, or developer tooling with TUI components. Triggers on tasks involving TUI components, CLI prompts, terminal rendering, keyboard input handling, or developer tooling.
 ---
 
 # DevEx Developer Experience TUI Best Practices

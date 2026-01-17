@@ -1,5 +1,5 @@
 ---
-name: agent-skills-best-practices
+name: agent-skills
 description: AI agent skill design and development best practices. This skill should be used when creating, reviewing, or refactoring Claude Code skills, MCP tools, or LLM agent capabilities. Triggers on tasks involving skill metadata, SKILL.md files, tool descriptions, progressive disclosure, trigger optimization, or agent skill testing.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: react-hook-form-best-practices
+name: react-hook-form
 description: React Hook Form performance optimization for client-side form validation using useForm, useWatch, useController, and useFieldArray. This skill should be used when building client-side controlled forms with React Hook Form library. This skill does NOT cover React 19 Server Actions, useActionState, or server-side form handling (use react-19 skill for those).
 ---
 
@@ -107,9 +107,9 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For schema validation with Zod resolver, see `zod-schema` skill
+- For schema validation with Zod resolver, see `zod` skill
 - For React 19 server actions, see `react-19` skill
-- For UI/UX form design, see `ui-ux-frontend-design` skill
+- For UI/UX form design, see `frontend-design` skill
 
 ## Full Compiled Document
 

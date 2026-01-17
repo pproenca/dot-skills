@@ -1,5 +1,5 @@
 ---
-name: expo-react-native-best-practices
+name: expo
 description: Expo React Native performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring Expo React Native code to ensure optimal performance patterns. Triggers on tasks involving React Native components, navigation, lists, images, animations, bundle optimization, or mobile performance improvements.
 ---
 

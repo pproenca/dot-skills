@@ -1,5 +1,5 @@
 ---
-name: code-refactor-best-practices
+name: refactoring
 description: Code refactoring best practices based on Martin Fowler's catalog and Clean Code principles. This skill should be used when refactoring existing code, improving code structure, reducing complexity, eliminating code smells, or reviewing code for maintainability. Triggers on tasks involving extract method, rename, decompose conditional, reduce coupling, or improve readability.
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: feature-based-architecture
+name: feature-architecture
 description: React feature-based architecture guidelines for scalable applications. This skill should be used when writing, reviewing, or refactoring React code to ensure proper feature organization. Triggers on tasks involving project structure, feature organization, module boundaries, cross-feature imports, data fetching patterns, or component composition.
 ---
 
@@ -108,7 +108,7 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For feature planning, see `feature-spec-planning` skill
+- For feature planning, see `feature-spec` skill
 - For data fetching, see `tanstack-query` skill
 - For React component patterns, see `react-19` skill
 

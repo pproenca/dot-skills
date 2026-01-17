@@ -1,5 +1,5 @@
 ---
-name: pulumi-best-practices
+name: pulumi
 description: Pulumi infrastructure as code performance and reliability guidelines. This skill should be used when writing, reviewing, or refactoring Pulumi code to ensure optimal deployment performance and infrastructure reliability. Triggers on tasks involving Pulumi stacks, components, state management, secrets configuration, resource lifecycle options, or CI/CD automation.
 ---
 

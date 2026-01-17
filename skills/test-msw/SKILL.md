@@ -1,6 +1,6 @@
 ---
-name: mswjs-best-practices
-description: MSW (Mock Service Worker) best practices for API mocking in tests. This skill should be used when setting up MSW, writing request handlers, or mocking HTTP APIs. This skill does NOT cover general testing patterns (use vitest or test-driven-development skills) or test methodology.
+name: test-msw
+description: MSW (Mock Service Worker) best practices for API mocking in tests. This skill should be used when setting up MSW, writing request handlers, or mocking HTTP APIs. This skill does NOT cover general testing patterns (use test-vitest or test-tdd skills) or test methodology.
 ---
 
 # MSW Best Practices
@@ -111,9 +111,9 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For generating MSW mocks from OpenAPI, see `orval-openapi` skill
+- For generating MSW mocks from OpenAPI, see `orval` skill
 - For consuming mocked APIs, see `tanstack-query` skill
-- For test methodology, see `vitest` or `test-driven-development` skills
+- For test methodology, see `test-vitest` or `test-tdd` skills
 
 ## Full Compiled Document
 
