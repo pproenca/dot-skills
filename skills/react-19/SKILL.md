@@ -97,13 +97,12 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/conc-use-transition.md
-rules/rsc-server-client-boundary.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- Example: [conc-use-transition](references/conc-use-transition.md)
+- Example: [rsc-server-client-boundary](references/rsc-server-client-boundary.md)
 
 ## Related Skills
 
