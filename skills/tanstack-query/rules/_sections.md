@@ -5,7 +5,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ---
 
-## 1. Query Key Structure (query)
+## 1. Query Key Structure (tquery)
 
 **Impact:** CRITICAL
 **Description:** Query key structure cascades through cache lookups, invalidation patterns, and request deduplication—wrong structure means broken cache management.

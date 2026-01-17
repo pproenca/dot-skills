@@ -1,6 +1,6 @@
 ---
 name: vitest
-description: Vitest testing framework performance optimization and best practices. This skill should be used when writing, reviewing, or refactoring Vitest tests to ensure optimal patterns. Triggers on tasks involving test setup, async testing, mocking, snapshots, test performance, and flaky test prevention. Not for Jest-specific APIs or Playwright/Cypress e2e testing.
+description: Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots, and test performance. This skill should be used when writing or debugging Vitest tests. This skill does NOT cover TDD methodology (use test-driven-development skill), API mocking with MSW (use mswjs skill), or Jest-specific APIs.
 ---
 
 # Vitest Best Practices
@@ -109,6 +109,12 @@ rules/async-await-assertions.md
 rules/mock-vi-mock-hoisting.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For TDD methodology, see `test-driven-development` skill
+- For API mocking with MSW, see `mswjs` skill
+- For TypeScript testing patterns, see `typescript-best-practices` skill
 
 ## Full Compiled Document
 

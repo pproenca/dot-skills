@@ -10,7 +10,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** CRITICAL
 **Description:** Complex types, deep generics, and large unions cause quadratic compilation time. Simplifying type definitions yields the largest compile-time gains.
 
-## 2. Compiler Configuration (config)
+## 2. Compiler Configuration (tscfg)
 
 **Impact:** CRITICAL
 **Description:** Misconfigured tsconfig causes full rebuilds and unnecessary file scanning. Proper configuration reduces compile time by 50-80%.

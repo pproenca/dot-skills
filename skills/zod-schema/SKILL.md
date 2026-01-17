@@ -1,6 +1,6 @@
 ---
 name: zod-schema
-description: Zod schema validation best practices and performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring Zod schemas to ensure type safety, proper error handling, and optimal validation patterns. Triggers on tasks involving schema definition, parsing, type inference, error handling, object composition, refinements, transforms, and bundle optimization.
+description: Zod schema validation best practices for type safety, parsing, and error handling. This skill should be used when defining z.object schemas, using z.string validations, safeParse, or z.infer. This skill does NOT cover React Hook Form integration patterns (use react-hook-form skill) or OpenAPI client generation (use orval-openapi skill).
 ---
 
 # Zod Best Practices
@@ -113,6 +113,11 @@ rules/_sections.md
 ## Full Compiled Document
 
 For the complete guide with all rules expanded: `AGENTS.md`
+
+## Related Skills
+
+- For React Hook Form integration, see `react-hook-form` skill
+- For API client generation, see `orval-openapi` skill
 
 ## Sources
 

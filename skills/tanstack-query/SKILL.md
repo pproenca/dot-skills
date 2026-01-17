@@ -1,6 +1,6 @@
 ---
 name: tanstack-query-best-practices
-description: TanStack Query v5 performance optimization and best practices. This skill should be used when writing, reviewing, or refactoring code using TanStack Query (React Query). Triggers on tasks involving data fetching, caching, mutations, prefetching, infinite queries, or query optimization.
+description: TanStack Query v5 performance optimization for data fetching, caching, mutations, and query patterns. This skill should be used when using useQuery, useMutation, queryClient, prefetch patterns, or TanStack Query caching. This skill does NOT cover generating query hooks from OpenAPI (use orval-openapi skill) or mocking API responses in tests (use mswjs skill).
 license: MIT
 metadata:
   author: community
@@ -24,7 +24,7 @@ Reference these guidelines when:
 
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
-| 1 | Query Key Structure | CRITICAL | `query-` |
+| 1 | Query Key Structure | CRITICAL | `tquery-` |
 | 2 | Caching Configuration | CRITICAL | `cache-` |
 | 3 | Mutation Patterns | HIGH | `mutation-` |
 | 4 | Prefetching & Waterfalls | HIGH | `prefetch-` |
@@ -37,12 +37,12 @@ Reference these guidelines when:
 
 ### 1. Query Key Structure (CRITICAL)
 
-- `query-key-factories` - Use centralized query key factories
-- `query-hierarchical-keys` - Structure keys from generic to specific
-- `query-always-arrays` - Always use array query keys
-- `query-serializable-objects` - Use serializable objects in keys
-- `query-options-pattern` - Use queryOptions for type-safe sharing
-- `query-colocate-keys` - Colocate query keys with features
+- `tquery-key-factories` - Use centralized query key factories
+- `tquery-hierarchical-keys` - Structure keys from generic to specific
+- `tquery-always-arrays` - Always use array query keys
+- `tquery-serializable-objects` - Use serializable objects in keys
+- `tquery-options-pattern` - Use queryOptions for type-safe sharing
+- `tquery-colocate-keys` - Colocate query keys with features
 
 ### 2. Caching Configuration (CRITICAL)
 
@@ -114,6 +114,12 @@ Each rule file contains:
 - Incorrect code example with explanation
 - Correct code example with explanation
 - Additional context and references
+
+## Related Skills
+
+- For generating type-safe query hooks, see `orval-openapi` skill
+- For mocking API responses in tests, see `mswjs` skill
+- For React 19 data fetching patterns, see `react-19` skill
 
 ## Full Compiled Document
 

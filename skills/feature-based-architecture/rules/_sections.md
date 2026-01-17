@@ -20,17 +20,17 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** HIGH
 **Description:** Maintains feature isolation preventing changes in one area from causing regressions across the codebase.
 
-## 4. Data Fetching (query)
+## 4. Data Fetching (fquery)
 
 **Impact:** HIGH
 **Description:** Keeps data logic domain-focused and prevents N+1 query patterns that multiply as features grow.
 
-## 5. Component Organization (comp)
+## 5. Component Organization (fcomp)
 
 **Impact:** MEDIUM-HIGH
 **Description:** Single-responsibility components enable parallel development and isolated testing.
 
-## 6. State Management (state)
+## 6. State Management (fstate)
 
 **Impact:** MEDIUM
 **Description:** Feature-scoped state prevents global coupling and enables features to be developed independently.

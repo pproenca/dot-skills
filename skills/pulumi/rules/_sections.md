@@ -5,7 +5,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ---
 
-## 1. State Management and Backend (state)
+## 1. State Management and Backend (pstate)
 
 **Impact:** CRITICAL
 **Description:** State operations run on every preview/update. Poor backend choice or state bloat causes 10-50× slowdowns on large stacks.
@@ -15,7 +15,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** CRITICAL
 **Description:** Dependency chains determine deployment parallelism. Sequential dependencies cascade into multiplicative deployment times.
 
-## 3. Component Design (comp)
+## 3. Component Design (pcomp)
 
 **Impact:** HIGH
 **Description:** Well-designed components enable reuse and enforce standards. Poor abstractions leak complexity and cause maintenance overhead.

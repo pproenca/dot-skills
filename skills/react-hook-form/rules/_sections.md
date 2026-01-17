@@ -5,7 +5,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ---
 
-## 1. Form Configuration (config)
+## 1. Form Configuration (formcfg)
 
 **Impact:** CRITICAL
 **Description:** Initial useForm setup determines validation timing, re-render boundaries, and default value caching. Incorrect mode selection causes re-renders on every keystroke.
@@ -30,7 +30,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** MEDIUM-HIGH
 **Description:** Dynamic field management requires proper key handling and state isolation to prevent stale data and excess re-renders during CRUD operations.
 
-## 6. State Management (state)
+## 6. State Management (formstate)
 
 **Impact:** MEDIUM
 **Description:** FormState access via Proxy subscription optimization requires explicit destructuring. Accessing entire formState object disables optimization.

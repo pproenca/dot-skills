@@ -1,20 +1,22 @@
 ---
-name: systematic-debugging
-description: Comprehensive debugging methodology and best practices for finding and fixing bugs systematically. This skill should be used when debugging code, investigating errors, troubleshooting issues, or reviewing debugging approaches. Triggers on tasks involving bug fixes, error investigation, debugging sessions, or troubleshooting.
+name: debugging
+description: Comprehensive debugging methodology for finding and fixing bugs. This skill should be used when debugging code, investigating errors, troubleshooting issues, performing root cause analysis, or responding to incidents. Covers systematic reproduction, hypothesis-driven investigation, and root cause analysis techniques.
 ---
 
-# Systematic Debugging Best Practices
+# Debugging Best Practices
 
-Comprehensive debugging methodology guide for software engineers, containing 42 rules across 8 categories prioritized by impact. Based on research from Andreas Zeller's "Why Programs Fail" and academic debugging curricula.
+Comprehensive debugging methodology guide for software engineers, containing 54 rules across 10 categories prioritized by impact. Based on research from Andreas Zeller's "Why Programs Fail" and academic debugging curricula.
 
 ## When to Apply
 
 Reference these guidelines when:
 - Investigating a bug or unexpected behavior
+- Debugging code during development
 - Code produces wrong results or crashes
 - Performance issues need root cause analysis
-- Reviewing someone's debugging approach
-- Teaching debugging techniques
+- Triaging incoming bug reports and prioritizing fixes
+- Conducting root cause analysis for incidents
+- Reviewing debugging approaches or code for common bug patterns
 
 ## Rule Categories by Priority
 
@@ -25,9 +27,11 @@ Reference these guidelines when:
 | 3 | Observation Techniques | HIGH | `obs-` |
 | 4 | Root Cause Analysis | HIGH | `rca-` |
 | 5 | Tool Mastery | MEDIUM-HIGH | `tool-` |
-| 6 | Fix Verification | MEDIUM | `verify-` |
-| 7 | Anti-Patterns | MEDIUM | `anti-` |
-| 8 | Prevention & Learning | LOW-MEDIUM | `prev-` |
+| 6 | Bug Triage and Classification | MEDIUM | `triage-` |
+| 7 | Common Bug Patterns | MEDIUM | `pattern-` |
+| 8 | Fix Verification | MEDIUM | `verify-` |
+| 9 | Anti-Patterns | MEDIUM | `anti-` |
+| 10 | Prevention & Learning | LOW-MEDIUM | `prev-` |
 
 ## Quick Reference
 
@@ -75,14 +79,32 @@ Reference these guidelines when:
 - `tool-memory-inspection` - Inspect memory and object state
 - `tool-exception-breakpoints` - Use exception breakpoints
 
-### 6. Fix Verification (MEDIUM)
+### 6. Bug Triage and Classification (MEDIUM)
+
+- `triage-severity-vs-priority` - Separate severity from priority
+- `triage-user-impact-assessment` - Assess user impact before prioritizing
+- `triage-reproducibility-matters` - Factor reproducibility into triage
+- `triage-quick-wins-first` - Identify and ship quick wins first
+- `triage-duplicate-detection` - Detect and link duplicate bug reports
+
+### 7. Common Bug Patterns (MEDIUM)
+
+- `pattern-null-pointer` - Recognize null pointer patterns
+- `pattern-off-by-one` - Spot off-by-one errors
+- `pattern-race-condition` - Identify race condition symptoms
+- `pattern-memory-leak` - Detect memory leak patterns
+- `pattern-type-coercion` - Watch for type coercion bugs
+- `pattern-async-await-errors` - Catch async/await error handling mistakes
+- `pattern-timezone-issues` - Recognize timezone and date bugs
+
+### 8. Fix Verification (MEDIUM)
 
 - `verify-reproduce-fix` - Verify with original reproduction
 - `verify-regression-check` - Check for regressions
 - `verify-understand-why-fix-works` - Understand why fix works
 - `verify-add-test` - Add test to prevent recurrence
 
-### 7. Anti-Patterns (MEDIUM)
+### 9. Anti-Patterns (MEDIUM)
 
 - `anti-shotgun-debugging` - Avoid shotgun debugging
 - `anti-quick-patch` - Avoid quick patches without understanding
@@ -90,7 +112,7 @@ Reference these guidelines when:
 - `anti-debug-fatigue` - Recognize debugging fatigue
 - `anti-blame-tool` - Don't blame the tool too quickly
 
-### 8. Prevention & Learning (LOW-MEDIUM)
+### 10. Prevention & Learning (LOW-MEDIUM)
 
 - `prev-document-solution` - Document bug solutions
 - `prev-postmortem` - Conduct blameless postmortems

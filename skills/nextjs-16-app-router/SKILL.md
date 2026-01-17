@@ -1,6 +1,6 @@
 ---
 name: nextjs-16-app-router-best-practices
-description: Next.js 16 App Router performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring Next.js App Router code to ensure optimal performance patterns. Triggers on tasks involving server components, caching, streaming, server actions, routing, or App Router architecture.
+description: Next.js 16 App Router performance optimization guidelines. This skill should be used when writing Next.js 16 code, configuring caching, implementing Server Components in Next.js, setting up App Router routing, or configuring next.config.js. This skill does NOT cover generic React 19 patterns (use react-19 skill) or non-Next.js server rendering.
 ---
 
 # Next.js Community Next.js 16 App Router Best Practices
@@ -104,6 +104,12 @@ rules/build-dynamic-imports.md
 rules/cache-use-cache-directive.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For React 19 fundamentals, see `react-19` skill
+- For data fetching patterns, see `tanstack-query` skill
+- For client-side forms, see `react-hook-form` skill
 
 ## Full Compiled Document
 

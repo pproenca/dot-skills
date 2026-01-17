@@ -24,9 +24,9 @@ Reference these guidelines when:
 | 1 | Directory Structure | CRITICAL | `struct-` |
 | 2 | Import & Dependencies | CRITICAL | `import-` |
 | 3 | Module Boundaries | HIGH | `bound-` |
-| 4 | Data Fetching | HIGH | `query-` |
-| 5 | Component Organization | MEDIUM-HIGH | `comp-` |
-| 6 | State Management | MEDIUM | `state-` |
+| 4 | Data Fetching | HIGH | `fquery-` |
+| 5 | Component Organization | MEDIUM-HIGH | `fcomp-` |
+| 6 | State Management | MEDIUM | `fstate-` |
 | 7 | Testing Strategy | MEDIUM | `test-` |
 | 8 | Naming Conventions | LOW | `name-` |
 
@@ -61,29 +61,29 @@ Reference these guidelines when:
 
 ### 4. Data Fetching (HIGH)
 
-- `query-single-responsibility` - Keep query functions single-purpose
-- `query-colocate-with-feature` - Colocate data fetching with features
-- `query-parallel-fetching` - Fetch independent data in parallel
-- `query-avoid-n-plus-one` - Avoid N+1 query patterns
-- `query-feature-scoped-keys` - Use feature-scoped query keys
-- `query-server-component-fetching` - Fetch at server component level
+- `fquery-single-responsibility` - Keep query functions single-purpose
+- `fquery-colocate-with-feature` - Colocate data fetching with features
+- `fquery-parallel-fetching` - Fetch independent data in parallel
+- `fquery-avoid-n-plus-one` - Avoid N+1 query patterns
+- `fquery-feature-scoped-keys` - Use feature-scoped query keys
+- `fquery-server-component-fetching` - Fetch at server component level
 
 ### 5. Component Organization (MEDIUM-HIGH)
 
-- `comp-single-responsibility` - Apply single responsibility to components
-- `comp-composition-over-props` - Prefer composition over prop drilling
-- `comp-container-presentational` - Separate container and presentational concerns
-- `comp-props-as-data-boundary` - Use props as feature boundaries
-- `comp-colocate-styles` - Colocate styles with components
-- `comp-error-boundaries` - Use feature-level error boundaries
+- `fcomp-single-responsibility` - Apply single responsibility to components
+- `fcomp-composition-over-props` - Prefer composition over prop drilling
+- `fcomp-container-presentational` - Separate container and presentational concerns
+- `fcomp-props-as-data-boundary` - Use props as feature boundaries
+- `fcomp-colocate-styles` - Colocate styles with components
+- `fcomp-error-boundaries` - Use feature-level error boundaries
 
 ### 6. State Management (MEDIUM)
 
-- `state-feature-scoped-stores` - Scope state stores to features
-- `state-server-state-separation` - Separate server state from client state
-- `state-lift-minimally` - Lift state only as high as necessary
-- `state-context-sparingly` - Use context sparingly for feature state
-- `state-reset-on-unmount` - Reset feature state on unmount
+- `fstate-feature-scoped-stores` - Scope state stores to features
+- `fstate-server-state-separation` - Separate server state from client state
+- `fstate-lift-minimally` - Lift state only as high as necessary
+- `fstate-context-sparingly` - Use context sparingly for feature state
+- `fstate-reset-on-unmount` - Reset feature state on unmount
 
 ### 7. Testing Strategy (MEDIUM)
 
@@ -106,6 +106,12 @@ Read individual rule files for detailed explanations and code examples:
 rules/{prefix}-{slug}.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For feature planning, see `feature-spec-planning` skill
+- For data fetching, see `tanstack-query` skill
+- For React component patterns, see `react-19` skill
 
 ## Full Compiled Document
 

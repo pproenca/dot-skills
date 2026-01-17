@@ -22,11 +22,11 @@ Reference these guidelines when:
 |----------|----------|--------|--------|
 | 1 | Rendering & Output | CRITICAL | `render-` |
 | 2 | Input & Keyboard | CRITICAL | `input-` |
-| 3 | Component Patterns | HIGH | `comp-` |
-| 4 | State & Lifecycle | HIGH | `state-` |
+| 3 | Component Patterns | HIGH | `tuicomp-` |
+| 4 | State & Lifecycle | HIGH | `tuistate-` |
 | 5 | Prompt Design | MEDIUM-HIGH | `prompt-` |
 | 6 | UX & Feedback | MEDIUM | `ux-` |
-| 7 | Configuration & CLI | MEDIUM | `config-` |
+| 7 | Configuration & CLI | MEDIUM | `tuicfg-` |
 | 8 | Robustness & Compatibility | LOW-MEDIUM | `robust-` |
 
 ## Quick Reference
@@ -50,20 +50,20 @@ Reference these guidelines when:
 
 ### 3. Component Patterns (HIGH)
 
-- `comp-box-flexbox` - Use Box Component with Flexbox for Layouts
-- `comp-text-styling` - Use Text Component for All Visible Content
-- `comp-measure-element` - Use measureElement for Dynamic Sizing
-- `comp-static-for-logs` - Use Static Component for Log Output
-- `comp-percentage-widths` - Use Percentage Widths for Responsive Layouts
-- `comp-border-styles` - Use Border Styles for Visual Structure
+- `tuicomp-box-flexbox` - Use Box Component with Flexbox for Layouts
+- `tuicomp-text-styling` - Use Text Component for All Visible Content
+- `tuicomp-measure-element` - Use measureElement for Dynamic Sizing
+- `tuicomp-static-for-logs` - Use Static Component for Log Output
+- `tuicomp-percentage-widths` - Use Percentage Widths for Responsive Layouts
+- `tuicomp-border-styles` - Use Border Styles for Visual Structure
 
 ### 4. State & Lifecycle (HIGH)
 
-- `state-useapp-exit` - Use useApp Hook for Application Lifecycle
-- `state-cleanup-effects` - Always Clean Up Effects on Unmount
-- `state-functional-updates` - Use Functional State Updates to Avoid Stale Closures
-- `state-usecallback-stable` - Stabilize Callbacks with useCallback
-- `state-usememo-expensive` - Memoize Expensive Computations with useMemo
+- `tuistate-useapp-exit` - Use useApp Hook for Application Lifecycle
+- `tuistate-cleanup-effects` - Always Clean Up Effects on Unmount
+- `tuistate-functional-updates` - Use Functional State Updates to Avoid Stale Closures
+- `tuistate-usecallback-stable` - Stabilize Callbacks with useCallback
+- `tuistate-usememo-expensive` - Memoize Expensive Computations with useMemo
 
 ### 5. Prompt Design (MEDIUM-HIGH)
 
@@ -83,11 +83,11 @@ Reference these guidelines when:
 
 ### 7. Configuration & CLI (MEDIUM)
 
-- `config-sensible-defaults` - Provide Sensible Defaults for All Options
-- `config-env-vars` - Support Standard Environment Variables
-- `config-flags-over-args` - Prefer Flags Over Positional Arguments
-- `config-help-system` - Implement Comprehensive Help System
-- `config-json-output` - Support Machine-Readable Output Format
+- `tuicfg-sensible-defaults` - Provide Sensible Defaults for All Options
+- `tuicfg-env-vars` - Support Standard Environment Variables
+- `tuicfg-flags-over-args` - Prefer Flags Over Positional Arguments
+- `tuicfg-help-system` - Implement Comprehensive Help System
+- `tuicfg-json-output` - Support Machine-Readable Output Format
 
 ### 8. Robustness & Compatibility (LOW-MEDIUM)
 

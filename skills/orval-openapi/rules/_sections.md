@@ -10,7 +10,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** CRITICAL
 **Description:** Poor specification quality cascades into broken types, missing models, and runtime errors. Fixing upstream prevents downstream pain.
 
-## 2. Configuration Architecture (config)
+## 2. Configuration Architecture (orvalcfg)
 
 **Impact:** CRITICAL
 **Description:** Wrong mode, client, or structure choices multiply into bundle bloat, poor developer experience, and maintenance nightmares.
@@ -25,7 +25,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** HIGH
 **Description:** HTTP client setup affects authentication, error handling, request/response transformation, and cross-cutting concerns.
 
-## 5. Query Library Integration (query)
+## 5. Query Library Integration (oquery)
 
 **Impact:** MEDIUM-HIGH
 **Description:** React Query, SWR, and Vue Query hook patterns affect caching behavior, refetching strategies, and UI state management.

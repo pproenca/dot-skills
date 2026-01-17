@@ -3,7 +3,7 @@
   "organization": "dot-skills",
   "technology": "Debugging",
   "date": "January 2025",
-  "abstract": "Comprehensive debugging methodology guide for software engineers, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (problem definition, hypothesis-driven search) to incremental (prevention and learning). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct approaches, and specific impact metrics to guide systematic bug investigation.",
+  "abstract": "Comprehensive debugging methodology guide for software engineers, designed for AI agents and LLMs. Contains 54 rules across 10 categories, prioritized by impact from critical (problem definition, hypothesis-driven search) to incremental (prevention and learning). Includes bug triage, common bug patterns, and root cause analysis. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct approaches, and specific impact metrics to guide systematic bug investigation.",
   "references": [
     "https://www.whyprogramsfail.com/",
     "https://web.mit.edu/6.031/www/sp17/classes/11-debugging/",

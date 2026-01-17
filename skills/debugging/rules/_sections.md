@@ -30,17 +30,27 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** MEDIUM-HIGH
 **Description:** Advanced debugger features like conditional breakpoints, watchpoints, and memory inspection provide 10× faster insight than print statement debugging.
 
-## 6. Fix Verification (verify)
+## 6. Bug Triage and Classification (triage)
+
+**Impact:** MEDIUM
+**Description:** Proper severity and priority classification ensures development resources focus on highest-impact issues. Distinguish technical severity from business priority to make informed decisions.
+
+## 7. Common Bug Patterns (pattern)
+
+**Impact:** MEDIUM
+**Description:** Recognizing classic bug patterns—null pointers, race conditions, off-by-one errors, memory leaks—enables faster diagnosis by matching symptoms to known causes.
+
+## 8. Fix Verification (verify)
 
 **Impact:** MEDIUM
 **Description:** Confirming fixes actually resolve the root cause and don't introduce regressions prevents bug ping-pong and ensures permanent resolution.
 
-## 7. Anti-Patterns (anti)
+## 9. Anti-Patterns (anti)
 
 **Impact:** MEDIUM
 **Description:** Recognizing and avoiding shotgun debugging, quick patches, assumption traps, and other counterproductive habits saves hours of wasted effort.
 
-## 8. Prevention & Learning (prev)
+## 10. Prevention & Learning (prev)
 
 **Impact:** LOW-MEDIUM
 **Description:** Post-mortems, defensive coding, and knowledge sharing reduce future debugging time by 40-60% through systematic learning from past issues.

@@ -1,6 +1,6 @@
 ---
 name: react-19-best-practices
-description: React 19 performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring React 19 code to ensure optimal performance patterns. Triggers on tasks involving concurrent rendering, server components, actions, hooks, memoization, or React architecture.
+description: React 19 performance optimization guidelines for concurrent rendering, Server Components, actions, hooks, and memoization. This skill should be used when writing React 19 components, using concurrent features, or optimizing re-renders. This skill does NOT cover Next.js-specific features like App Router, next.config.js, or Next.js caching (use nextjs-16-app-router skill). For client-side form validation with React Hook Form, use react-hook-form skill.
 ---
 
 # React Community React 19 Best Practices
@@ -24,10 +24,10 @@ Reference these guidelines when:
 | 2 | Server Components | CRITICAL | `rsc-` |
 | 3 | Actions & Forms | HIGH | `form-` |
 | 4 | Data Fetching | HIGH | `data-` |
-| 5 | State Management | MEDIUM-HIGH | `state-` |
+| 5 | State Management | MEDIUM-HIGH | `rstate-` |
 | 6 | Memoization & Performance | MEDIUM | `memo-` |
 | 7 | Effects & Events | MEDIUM | `effect-` |
-| 8 | Component Patterns | LOW-MEDIUM | `comp-` |
+| 8 | Component Patterns | LOW-MEDIUM | `rcomp-` |
 
 ## Quick Reference
 
@@ -66,11 +66,11 @@ Reference these guidelines when:
 
 ### 5. State Management (MEDIUM-HIGH)
 
-- `state-functional-updates` - Use Functional State Updates for Derived Values
-- `state-lazy-initialization` - Use Lazy Initialization for Expensive Initial State
-- `state-use-reducer` - Use useReducer for Complex State Logic
-- `state-context-optimization` - Split Context to Prevent Unnecessary Re-renders
-- `state-derived-values` - Calculate Derived Values During Render
+- `rstate-functional-updates` - Use Functional State Updates for Derived Values
+- `rstate-lazy-initialization` - Use Lazy Initialization for Expensive Initial State
+- `rstate-use-reducer` - Use useReducer for Complex State Logic
+- `rstate-context-optimization` - Split Context to Prevent Unnecessary Re-renders
+- `rstate-derived-values` - Calculate Derived Values During Render
 
 ### 6. Memoization & Performance (MEDIUM)
 
@@ -90,10 +90,10 @@ Reference these guidelines when:
 
 ### 8. Component Patterns (LOW-MEDIUM)
 
-- `comp-composition` - Prefer Composition Over Props Explosion
-- `comp-render-props` - Use Render Props for Inversion of Control
-- `comp-controlled-components` - Choose Controlled vs Uncontrolled Appropriately
-- `comp-key-reset` - Use Key to Reset Component State
+- `rcomp-composition` - Prefer Composition Over Props Explosion
+- `rcomp-render-props` - Use Render Props for Inversion of Control
+- `rcomp-controlled-components` - Choose Controlled vs Uncontrolled Appropriately
+- `rcomp-key-reset` - Use Key to Reset Component State
 
 ## How to Use
 
@@ -104,6 +104,12 @@ rules/conc-use-transition.md
 rules/rsc-server-client-boundary.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For Next.js 16 App Router, see `nextjs-16-app-router` skill
+- For client-side form handling, see `react-hook-form` skill
+- For data caching with TanStack Query, see `tanstack-query` skill
 
 ## Full Compiled Document
 

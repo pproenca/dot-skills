@@ -21,7 +21,7 @@ Reference these guidelines when:
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
 | 1 | Type System Performance | CRITICAL | `type-` |
-| 2 | Compiler Configuration | CRITICAL | `config-` |
+| 2 | Compiler Configuration | CRITICAL | `tscfg-` |
 | 3 | Async Patterns | HIGH | `async-` |
 | 4 | Module Organization | HIGH | `module-` |
 | 5 | Type Safety Patterns | MEDIUM-HIGH | `safety-` |
@@ -43,12 +43,12 @@ Reference these guidelines when:
 
 ### 2. Compiler Configuration (CRITICAL)
 
-- `config-enable-incremental` - Enable incremental compilation for 50-90% faster rebuilds
-- `config-skip-lib-check` - Skip declaration file checking for 20-40% faster builds
-- `config-isolate-modules` - Enable single-file transpilation for bundler integration
-- `config-project-references` - Split large codebases into independent projects
-- `config-exclude-properly` - Configure include/exclude to avoid scanning unnecessary files
-- `config-strict-function-types` - Enable strict mode for optimized variance checks
+- `tscfg-enable-incremental` - Enable incremental compilation for 50-90% faster rebuilds
+- `tscfg-skip-lib-check` - Skip declaration file checking for 20-40% faster builds
+- `tscfg-isolate-modules` - Enable single-file transpilation for bundler integration
+- `tscfg-project-references` - Split large codebases into independent projects
+- `tscfg-exclude-properly` - Configure include/exclude to avoid scanning unnecessary files
+- `tscfg-strict-function-types` - Enable strict mode for optimized variance checks
 
 ### 3. Async Patterns (HIGH)
 

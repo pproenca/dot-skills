@@ -1,6 +1,6 @@
 ---
 name: react-hook-form-best-practices
-description: React Hook Form performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring React Hook Form code to ensure optimal performance patterns. Triggers on tasks involving form validation, useForm, useWatch, useController, useFieldArray, FormProvider, Zod resolver, or controlled component integration.
+description: React Hook Form performance optimization for client-side form validation using useForm, useWatch, useController, and useFieldArray. This skill should be used when building client-side controlled forms with React Hook Form library. This skill does NOT cover React 19 Server Actions, useActionState, or server-side form handling (use react-19 skill for those).
 ---
 
 # React Hook Form Best Practices
@@ -21,12 +21,12 @@ Reference these guidelines when:
 
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
-| 1 | Form Configuration | CRITICAL | `config-` |
+| 1 | Form Configuration | CRITICAL | `formcfg-` |
 | 2 | Field Subscription | CRITICAL | `sub-` |
 | 3 | Controlled Components | HIGH | `ctrl-` |
 | 4 | Validation Patterns | HIGH | `valid-` |
 | 5 | Field Arrays | MEDIUM-HIGH | `array-` |
-| 6 | State Management | MEDIUM | `state-` |
+| 6 | State Management | MEDIUM | `formstate-` |
 | 7 | Integration Patterns | MEDIUM | `integ-` |
 | 8 | Advanced Patterns | LOW | `adv-` |
 
@@ -34,12 +34,12 @@ Reference these guidelines when:
 
 ### 1. Form Configuration (CRITICAL)
 
-- `config-validation-mode` - Use onSubmit mode for optimal performance
-- `config-revalidate-mode` - Set reValidateMode to onBlur for post-submit performance
-- `config-default-values` - Always provide defaultValues for form initialization
-- `config-async-default-values` - Use async defaultValues for server data
-- `config-should-unregister` - Enable shouldUnregister for dynamic form memory efficiency
-- `config-useeffect-dependency` - Avoid useForm return object in useEffect dependencies
+- `formcfg-validation-mode` - Use onSubmit mode for optimal performance
+- `formcfg-revalidate-mode` - Set reValidateMode to onBlur for post-submit performance
+- `formcfg-default-values` - Always provide defaultValues for form initialization
+- `formcfg-async-default-values` - Use async defaultValues for server data
+- `formcfg-should-unregister` - Enable shouldUnregister for dynamic form memory efficiency
+- `formcfg-useeffect-dependency` - Avoid useForm return object in useEffect dependencies
 
 ### 2. Field Subscription (CRITICAL)
 
@@ -78,11 +78,11 @@ Reference these guidelines when:
 
 ### 6. State Management (MEDIUM)
 
-- `state-destructure-formstate` - Destructure formState properties before render
-- `state-useformstate-isolation` - Use useFormState for isolated state subscriptions
-- `state-getfieldstate-for-single-field` - Use getFieldState for single field state access
-- `state-subscribe-to-specific-fields` - Subscribe to specific field names in useFormState
-- `state-avoid-isvalid-with-onsubmit` - Avoid isValid with onSubmit mode for button state
+- `formstate-destructure-formstate` - Destructure formState properties before render
+- `formstate-useformstate-isolation` - Use useFormState for isolated state subscriptions
+- `formstate-getfieldstate-for-single-field` - Use getFieldState for single field state access
+- `formstate-subscribe-to-specific-fields` - Subscribe to specific field names in useFormState
+- `formstate-avoid-isvalid-with-onsubmit` - Avoid isValid with onSubmit mode for button state
 
 ### 7. Integration Patterns (MEDIUM)
 
@@ -106,6 +106,12 @@ rules/config-validation-mode.md
 rules/sub-usewatch-over-watch.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For schema validation with Zod resolver, see `zod-schema` skill
+- For React 19 server actions, see `react-19` skill
+- For UI/UX form design, see `ui-ux-frontend-design` skill
 
 ## Full Compiled Document
 

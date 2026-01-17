@@ -1,6 +1,6 @@
 ---
 name: tdd-best-practices
-description: Test-Driven Development best practices and patterns. This skill should be used when writing tests, implementing TDD workflow, reviewing test code, refactoring test suites, or optimizing test strategies. Triggers on tasks involving unit tests, integration tests, test design, mocking, assertions, test organization, or test-first development.
+description: Test-Driven Development methodology and red-green-refactor workflow. This skill should be used when practicing TDD, designing tests before implementation, or reviewing test-first approaches. This skill does NOT cover Vitest framework specifics (use vitest skill) or API mocking with MSW (use mswjs skill).
 ---
 
 # Community Test-Driven Development Best Practices
@@ -106,6 +106,11 @@ rules/cycle-write-test-first.md
 rules/design-aaa-pattern.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For Vitest framework specifics, see `vitest` skill
+- For API mocking with MSW, see `mswjs` skill
 
 ## Full Compiled Document
 

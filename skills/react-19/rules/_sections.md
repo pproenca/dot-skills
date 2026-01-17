@@ -25,7 +25,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** HIGH
 **Description:** The use() hook, Suspense for data, and cache() for deduplication enable efficient async data patterns.
 
-## 5. State Management (state)
+## 5. State Management (rstate)
 
 **Impact:** MEDIUM-HIGH
 **Description:** Proper useState patterns, useReducer for complex state, and context optimization prevent unnecessary re-renders.
@@ -40,7 +40,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** MEDIUM
 **Description:** Proper useEffect patterns, useEffectEvent for non-reactive logic, and avoiding unnecessary effects improve reliability.
 
-## 8. Component Patterns (comp)
+## 8. Component Patterns (rcomp)
 
 **Impact:** LOW-MEDIUM
 **Description:** Composition over inheritance, render props, and children patterns enable flexible, reusable components.

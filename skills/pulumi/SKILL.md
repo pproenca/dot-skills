@@ -20,9 +20,9 @@ Reference these guidelines when:
 
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
-| 1 | State Management and Backend | CRITICAL | `state-` |
+| 1 | State Management and Backend | CRITICAL | `pstate-` |
 | 2 | Resource Graph Optimization | CRITICAL | `graph-` |
-| 3 | Component Design | HIGH | `comp-` |
+| 3 | Component Design | HIGH | `pcomp-` |
 | 4 | Secrets and Configuration | HIGH | `secrets-` |
 | 5 | Stack Organization | MEDIUM-HIGH | `stack-` |
 | 6 | Resource Options and Lifecycle | MEDIUM | `lifecycle-` |
@@ -33,12 +33,12 @@ Reference these guidelines when:
 
 ### 1. State Management and Backend (CRITICAL)
 
-- `state-backend-selection` - Use managed backend for production stacks
-- `state-checkpoint-skipping` - Enable checkpoint skipping for large stacks
-- `state-stack-size` - Keep stacks under 500 resources
-- `state-refresh-targeting` - Use targeted refresh instead of full stack
-- `state-export-import` - Use state export/import for migrations
-- `state-import-existing` - Import existing resources before managing
+- `pstate-backend-selection` - Use managed backend for production stacks
+- `pstate-checkpoint-skipping` - Enable checkpoint skipping for large stacks
+- `pstate-stack-size` - Keep stacks under 500 resources
+- `pstate-refresh-targeting` - Use targeted refresh instead of full stack
+- `pstate-export-import` - Use state export/import for migrations
+- `pstate-import-existing` - Import existing resources before managing
 
 ### 2. Resource Graph Optimization (CRITICAL)
 
@@ -51,12 +51,12 @@ Reference these guidelines when:
 
 ### 3. Component Design (HIGH)
 
-- `comp-component-resources` - Use ComponentResource for reusable abstractions
-- `comp-parent-child` - Pass parent option to child resources
-- `comp-unique-naming` - Use name prefix pattern for unique resource names
-- `comp-register-outputs` - Register component outputs explicitly
-- `comp-multi-language` - Design components for multi-language consumption
-- `comp-transformations` - Use transformations for cross-cutting concerns
+- `pcomp-component-resources` - Use ComponentResource for reusable abstractions
+- `pcomp-parent-child` - Pass parent option to child resources
+- `pcomp-unique-naming` - Use name prefix pattern for unique resource names
+- `pcomp-register-outputs` - Register component outputs explicitly
+- `pcomp-multi-language` - Design components for multi-language consumption
+- `pcomp-transformations` - Use transformations for cross-cutting concerns
 
 ### 4. Secrets and Configuration (HIGH)
 

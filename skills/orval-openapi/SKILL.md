@@ -21,10 +21,10 @@ Reference these guidelines when:
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
 | 1 | OpenAPI Specification Quality | CRITICAL | `spec-` |
-| 2 | Configuration Architecture | CRITICAL | `config-` |
+| 2 | Configuration Architecture | CRITICAL | `orvalcfg-` |
 | 3 | Output Structure & Organization | HIGH | `output-` |
 | 4 | Custom Client & Mutators | HIGH | `mutator-` |
-| 5 | Query Library Integration | MEDIUM-HIGH | `query-` |
+| 5 | Query Library Integration | MEDIUM-HIGH | `oquery-` |
 | 6 | Type Safety & Validation | MEDIUM | `types-` |
 | 7 | Mock Generation & Testing | MEDIUM | `mock-` |
 | 8 | Advanced Patterns | LOW | `adv-` |
@@ -41,12 +41,12 @@ Reference these guidelines when:
 
 ### 2. Configuration Architecture (CRITICAL)
 
-- `config-mode-selection` - Choose output mode based on API size
-- `config-client-selection` - Select client based on framework requirements
-- `config-separate-schemas` - Separate schemas into dedicated directory
-- `config-input-validation` - Validate OpenAPI spec before generation
-- `config-baseurl-setup` - Configure base URL properly
-- `config-prettier-format` - Enable automatic code formatting
+- `orvalcfg-mode-selection` - Choose output mode based on API size
+- `orvalcfg-client-selection` - Select client based on framework requirements
+- `orvalcfg-separate-schemas` - Separate schemas into dedicated directory
+- `orvalcfg-input-validation` - Validate OpenAPI spec before generation
+- `orvalcfg-baseurl-setup` - Configure base URL properly
+- `orvalcfg-prettier-format` - Enable automatic code formatting
 
 ### 3. Output Structure & Organization (HIGH)
 
@@ -67,12 +67,12 @@ Reference these guidelines when:
 
 ### 5. Query Library Integration (MEDIUM-HIGH)
 
-- `query-hook-options` - Configure default query options globally
-- `query-key-export` - Export query keys for cache invalidation
-- `query-infinite-queries` - Enable infinite queries for paginated endpoints
-- `query-suspense-support` - Enable suspense mode for streaming UX
-- `query-signal-cancellation` - Pass AbortSignal for request cancellation
-- `query-mutation-callbacks` - Use generated mutation options types
+- `oquery-hook-options` - Configure default query options globally
+- `oquery-key-export` - Export query keys for cache invalidation
+- `oquery-infinite-queries` - Enable infinite queries for paginated endpoints
+- `oquery-suspense-support` - Enable suspense mode for streaming UX
+- `oquery-signal-cancellation` - Pass AbortSignal for request cancellation
+- `oquery-mutation-callbacks` - Use generated mutation options types
 
 ### 6. Type Safety & Validation (MEDIUM)
 
@@ -106,6 +106,12 @@ rules/spec-operationid-unique.md
 rules/config-mode-selection.md
 rules/_sections.md
 ```
+
+## Related Skills
+
+- For consuming generated hooks, see `tanstack-query` skill
+- For mocking generated API clients, see `mswjs` skill
+- For schema validation, see `zod-schema` skill
 
 ## Full Compiled Document
 
