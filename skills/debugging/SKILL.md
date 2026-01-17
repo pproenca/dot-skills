@@ -1,6 +1,6 @@
 ---
 name: debugging
-description: Comprehensive debugging methodology for finding and fixing bugs. This skill should be used when debugging code, investigating errors, troubleshooting issues, performing root cause analysis, or responding to incidents. Covers systematic reproduction, hypothesis-driven investigation, and root cause analysis techniques.
+description: Comprehensive debugging methodology for finding and fixing bugs. This skill should be used when debugging code, investigating errors, troubleshooting issues, performing root cause analysis, or responding to incidents. Covers systematic reproduction, hypothesis-driven investigation, and root cause analysis techniques. Use when encountering exceptions, stack traces, crashes, segfaults, undefined behavior, or when bug reports need investigation.
 ---
 
 # Debugging Best Practices

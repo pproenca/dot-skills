@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Playwright + Next.js",
+  "date": "January 2026",
+  "abstract": "Comprehensive testing best practices guide for Playwright with Next.js applications, designed for AI agents and LLMs. Contains 43 rules across 8 categories, prioritized by impact from critical (test architecture, stable selectors) to incremental (debugging, CI integration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide reliable, fast, and maintainable E2E test development.",
+  "references": [
+    "https://playwright.dev",
+    "https://playwright.dev/docs/best-practices",
+    "https://nextjs.org/docs/pages/guides/testing/playwright",
+    "https://www.browserstack.com/guide/playwright-best-practices",
+    "https://betterstack.com/community/guides/testing/avoid-flaky-playwright-tests/"
+  ]
+}
