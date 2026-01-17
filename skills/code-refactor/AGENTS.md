@@ -3747,3 +3747,16 @@ Reference: [Simplify Conditional Expression](https://refactoring.com/catalog/con
 2. [https://refactoring.guru/refactoring/smells](https://refactoring.guru/refactoring/smells)
 3. [https://martinfowler.com/books/refactoring.html](https://martinfowler.com/books/refactoring.html)
 4. [https://en.wikipedia.org/wiki/SOLID](https://en.wikipedia.org/wiki/SOLID)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |
