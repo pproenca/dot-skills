@@ -14,16 +14,19 @@ expo-react-native/
 ├── AGENTS.md             # Compiled comprehensive guide
 ├── metadata.json         # Version, organization, references
 ├── README.md             # This file
-└── rules/
-    ├── _sections.md      # Category definitions
-    ├── launch-*.md       # Launch time optimization rules
-    ├── bundle-*.md       # Bundle size optimization rules
-    ├── list-*.md         # List virtualization rules
-    ├── image-*.md        # Image optimization rules
-    ├── nav-*.md          # Navigation performance rules
-    ├── rerender-*.md     # Re-render prevention rules
-    ├── anim-*.md         # Animation performance rules
-    └── mem-*.md          # Memory management rules
+├── references/
+│   ├── _sections.md      # Category definitions
+│   ├── launch-*.md       # Launch time optimization rules
+│   ├── bundle-*.md       # Bundle size optimization rules
+│   ├── list-*.md         # List virtualization rules
+│   ├── image-*.md        # Image optimization rules
+│   ├── nav-*.md          # Navigation performance rules
+│   ├── rerender-*.md     # Re-render prevention rules
+│   ├── anim-*.md         # Animation performance rules
+│   └── mem-*.md          # Memory management rules
+└── assets/
+    └── templates/
+        └── _template.md  # Template for new rules
 ```
 
 ## Getting Started
@@ -49,8 +52,8 @@ pnpm validate
 ## Creating a New Rule
 
 1. Identify which category the rule belongs to (see table below)
-2. Create a new file in `rules/` with the appropriate prefix
-3. Follow the template structure from `rules/_template.md`
+2. Create a new file in `references/` with the appropriate prefix
+3. Follow the template structure from `assets/templates/_template.md`
 4. Run validation to ensure compliance
 
 ### Prefix Reference

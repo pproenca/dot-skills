@@ -4243,3 +4243,16 @@ Reference: [Expo Camera Documentation](https://docs.expo.dev/versions/latest/sdk
 5. [https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/](https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/)
 6. [https://shopify.github.io/flash-list/](https://shopify.github.io/flash-list/)
 7. [https://reactnative.dev/blog/2024/10/23/the-new-architecture-is-here](https://reactnative.dev/blog/2024/10/23/the-new-architecture-is-here)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |

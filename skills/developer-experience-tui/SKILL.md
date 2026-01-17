@@ -99,13 +99,12 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/render-single-write.md
-rules/input-useinput-hook.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- [render-single-write](references/render-single-write.md) - Example rule file
+- [input-useinput-hook](references/input-useinput-hook.md) - Example rule file
 
 ## Full Compiled Document
 

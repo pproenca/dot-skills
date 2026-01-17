@@ -105,13 +105,11 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/launch-splash-screen-control.md
-rules/list-use-flashlist.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- Example rules: [launch-splash-screen-control](references/launch-splash-screen-control.md), [list-use-flashlist](references/list-use-flashlist.md)
 
 ## Full Compiled Document
 

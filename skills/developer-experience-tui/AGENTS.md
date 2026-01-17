@@ -3420,3 +3420,16 @@ Reference: [clig.dev - Exit codes](https://clig.dev/#exit-codes)
 3. [https://github.com/vadimdemedes/ink-ui](https://github.com/vadimdemedes/ink-ui)
 4. [https://clig.dev/](https://clig.dev/)
 5. [https://textual.textualize.io/blog/2024/12/12/algorithms-for-high-performance-terminal-apps/](https://textual.textualize.io/blog/2024/12/12/algorithms-for-high-performance-terminal-apps/)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |
