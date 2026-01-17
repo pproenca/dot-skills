@@ -4,9 +4,9 @@
 Community  
 January 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
+> **Note:**
+> This document is mainly for agents and LLMs to follow when practicing test-driven development,
+> writing tests, or refactoring test suites. Humans may also find it useful,
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
