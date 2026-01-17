@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "shadcn/ui Community",
+  "technology": "shadcn/ui",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for shadcn/ui applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (component architecture, accessibility preservation) to incremental (state management). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://ui.shadcn.com/",
+    "https://www.radix-ui.com/primitives/docs/overview/accessibility",
+    "https://vercel.com/academy/shadcn-ui",
+    "https://react-hook-form.com/",
+    "https://tailwindcss.com/",
+    "https://cva.style/docs",
+    "https://tanstack.com/table/latest",
+    "https://tanstack.com/virtual/latest"
+  ]
+}
