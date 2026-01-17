@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "Next.js Community",
+  "technology": "Next.js 16 App Router",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for Next.js 16 App Router applications, designed for AI agents and LLMs. Contains 40+ rules across 8 categories, prioritized by impact from critical (build optimization, caching strategy) to incremental (client components). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://nextjs.org/docs",
+    "https://nextjs.org/blog/next-16",
+    "https://react.dev",
+    "https://vercel.com/blog"
+  ]
+}
