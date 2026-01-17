@@ -99,13 +99,12 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/cycle-write-test-first.md
-rules/design-aaa-pattern.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- [cycle-write-test-first](references/cycle-write-test-first.md) - Write the Test Before the Implementation
+- [design-aaa-pattern](references/design-aaa-pattern.md) - Follow the Arrange-Act-Assert Pattern
 
 ## Related Skills
 
