@@ -2,7 +2,7 @@
 title: Enable strictFunctionTypes for Faster Variance Checks
 impact: CRITICAL
 impactDescription: enables optimized variance checking
-tags: config, strict, strictFunctionTypes, variance, performance
+tags: tscfg, strict, strictFunctionTypes, variance, performance
 ---
 
 ## Enable strictFunctionTypes for Faster Variance Checks

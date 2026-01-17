@@ -2,7 +2,7 @@
 title: Enable skipLibCheck for Faster Builds
 impact: CRITICAL
 impactDescription: 20-40% faster compilation
-tags: config, skipLibCheck, tsconfig, declaration-files, performance
+tags: tscfg, skipLibCheck, tsconfig, declaration-files, performance
 ---
 
 ## Enable skipLibCheck for Faster Builds

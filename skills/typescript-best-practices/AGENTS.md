@@ -1,12 +1,12 @@
 # TypeScript
 
-**Version 0.1.0**  
+**Version 0.1.1**  
 TypeScript Best Practices  
 January 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
+> **Note:**
+> This TypeScript guide is for agents and LLMs to follow when maintaining,
+> generating, or refactoring codebases. Humans may also find it useful,
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
@@ -3351,3 +3351,16 @@ Reference: [TypeScript 4.1 Template Literal Types](https://www.typescriptlang.or
 2. [https://www.typescriptlang.org/docs/handbook/](https://www.typescriptlang.org/docs/handbook/)
 3. [https://v8.dev/blog](https://v8.dev/blog)
 4. [https://nodejs.org/en/learn/diagnostics/memory](https://nodejs.org/en/learn/diagnostics/memory)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |

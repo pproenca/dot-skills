@@ -2,7 +2,7 @@
 title: Configure Include and Exclude Properly
 impact: CRITICAL
 impactDescription: prevents scanning thousands of unnecessary files
-tags: config, include, exclude, tsconfig, file-discovery
+tags: tscfg, include, exclude, tsconfig, file-discovery
 ---
 
 ## Configure Include and Exclude Properly

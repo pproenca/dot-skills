@@ -2,7 +2,7 @@
 title: Use isolatedModules for Single-File Transpilation
 impact: CRITICAL
 impactDescription: 80-90% faster transpilation with bundlers
-tags: config, isolatedModules, transpilation, bundlers, performance
+tags: tscfg, isolatedModules, transpilation, bundlers, performance
 ---
 
 ## Use isolatedModules for Single-File Transpilation

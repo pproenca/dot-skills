@@ -2687,3 +2687,16 @@ Reference: [MDN will-change](https://developer.mozilla.org/en-US/docs/Web/CSS/wi
 5. [https://developers.google.com/search/docs/appearance/core-web-vitals](https://developers.google.com/search/docs/appearance/core-web-vitals)
 6. [https://baymard.com/](https://baymard.com/)
 7. [https://m3.material.io/](https://m3.material.io/)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |

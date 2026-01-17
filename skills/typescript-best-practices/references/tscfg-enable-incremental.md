@@ -2,7 +2,7 @@
 title: Enable Incremental Compilation
 impact: CRITICAL
 impactDescription: 50-90% faster rebuilds
-tags: config, incremental, tsconfig, compilation, caching
+tags: tscfg, incremental, tsconfig, compilation, caching
 ---
 
 ## Enable Incremental Compilation

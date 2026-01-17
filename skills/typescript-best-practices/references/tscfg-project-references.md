@@ -2,7 +2,7 @@
 title: Use Project References for Large Codebases
 impact: CRITICAL
 impactDescription: 60-80% faster incremental builds
-tags: config, project-references, monorepo, tsconfig, compilation
+tags: tscfg, project-references, monorepo, tsconfig, compilation
 ---
 
 ## Use Project References for Large Codebases
