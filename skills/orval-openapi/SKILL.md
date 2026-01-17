@@ -99,13 +99,11 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/spec-operationid-unique.md
-rules/config-mode-selection.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- Example: [spec-operationid-unique](references/spec-operationid-unique.md)
 
 ## Related Skills
 

@@ -4,9 +4,9 @@
 Orval Community  
 January 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
+> **Note:**
+> This Orval OpenAPI document is mainly for agents and LLMs to follow when maintaining,
+> generating, or refactoring codebases. Humans may also find it useful,
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
@@ -3376,3 +3376,16 @@ Reference: [Orval Output Transformer](https://orval.dev/reference/configuration/
 3. [https://tanstack.com/query/latest](https://tanstack.com/query/latest)
 4. [https://mswjs.io](https://mswjs.io)
 5. [https://axios-http.com](https://axios-http.com)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |

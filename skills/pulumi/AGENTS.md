@@ -4,9 +4,9 @@
 Pulumi Community  
 January 2026
 
-> **Note:**
-> This document is mainly for agents and LLMs to follow when maintaining,
-> generating, or refactoring Pulumi infrastructure code. Humans may also find it useful,
+> **Note:**  
+> This document is mainly for agents and LLMs to follow when maintaining,  
+> generating, or refactoring codebases. Humans may also find it useful,  
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
@@ -2961,3 +2961,16 @@ jobs:
 7. [https://www.pulumi.com/docs/iac/guides/testing/](https://www.pulumi.com/docs/iac/guides/testing/)
 8. [https://www.pulumi.com/blog/amazing-performance/](https://www.pulumi.com/blog/amazing-performance/)
 9. [https://www.pulumi.com/blog/journaling/](https://www.pulumi.com/blog/journaling/)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |

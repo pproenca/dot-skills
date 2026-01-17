@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "nuqs",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for nuqs (type-safe URL query state management) in Next.js applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (parser configuration, adapter setup) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://nuqs.dev",
+    "https://github.com/47ng/nuqs",
+    "https://nextjs.org/docs",
+    "https://react.dev"
+  ]
+}
