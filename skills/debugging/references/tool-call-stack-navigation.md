@@ -1,7 +1,7 @@
 ---
 title: Navigate the Call Stack
 impact: MEDIUM-HIGH
-impactDescription: Reveals execution path and parent context; essential for understanding "how did I get here"
+impactDescription: 3× faster context discovery; reveals parameter values at each call level
 tags: tool, call-stack, debugger, context, navigation
 ---
 
@@ -46,7 +46,7 @@ def process_line_item(item, order):
 
 **Call stack navigation techniques:**
 
-```
+```text
 ┌─────────────────────────────────────────────┐
 │ Call Stack                                  │
 ├─────────────────────────────────────────────┤

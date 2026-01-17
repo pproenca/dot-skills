@@ -7,7 +7,7 @@ tags: obs, breakpoints, debugger, inspection, interactive
 
 ## Use Breakpoints Strategically
 
-Place breakpoints at decision points and state transitions, not randomly. Strategic breakpoints let you inspect program state interactively, which is far more powerful than static print statements.
+Place breakpoints at decision points and state transitions, not randomly. Strategic breakpoints let you inspect program state interactively, enabling deeper exploration than static print statements.
 
 **Incorrect (breakpoints everywhere):**
 

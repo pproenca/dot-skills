@@ -32,7 +32,7 @@ Long debugging sessions lead to diminishing returns. Recognize when you're tired
 # Fatigue check:
 # - Am I making progress? No, last 30 minutes unproductive
 # - Am I frustrated? Yes
-# - Have I tried the same thing twice? Yes
+# - Have I tried the same approach twice? Yes
 # - When did I last take a break? 2 hours ago
 
 # Decision: Take a break

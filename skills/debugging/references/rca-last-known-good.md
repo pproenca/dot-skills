@@ -1,13 +1,13 @@
 ---
 title: Find the Last Known Good State
 impact: HIGH
-impactDescription: Establishes baseline for comparison; narrows when bug was introduced
+impactDescription: O(log n) regression detection via git bisect; establishes working baseline
 tags: rca, regression, baseline, good-state, git-bisect
 ---
 
 ## Find the Last Known Good State
 
-Identify when the code last worked correctly. Comparing working vs broken states reveals what changed and caused the bug. This is especially powerful for regressions.
+Identify when the code last worked correctly. Comparing working vs broken states reveals what changed and caused the bug. This is especially effective for regressions.
 
 **Incorrect (debugging without baseline):**
 

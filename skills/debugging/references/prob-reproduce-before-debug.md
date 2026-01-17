@@ -16,10 +16,10 @@ Never start debugging until you can reliably reproduce the bug. Without reproduc
 # Developer immediately starts reading save code...
 
 def save_data(data):
-    # Hmm, maybe it's this null check?
+    # Check if this null check helps
     if data is None:  # Add defensive check
         return False
-    # Or maybe the file permission?
+    # Check the file permission
     with open(self.path, 'w') as f:  # Add try/except?
         json.dump(data, f)
     # Hours later: still no idea what causes the crash

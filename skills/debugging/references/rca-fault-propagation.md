@@ -1,7 +1,7 @@
 ---
 title: Trace Fault Propagation Chains
 impact: HIGH
-impactDescription: Finds original defect location even when symptom is far from cause
+impactDescription: 2-3× faster root cause discovery; traces infection chain from symptom to origin
 tags: rca, propagation, chain, cause-effect, origin
 ---
 
@@ -57,7 +57,7 @@ def authenticate(request):
 
 **Propagation chain diagram:**
 
-```
+```text
 DEFECT (Origin)           INFECTION (Propagation)        FAILURE (Symptom)
 ┌─────────────────┐      ┌─────────────────────┐      ┌────────────────┐
 │ Missing header  │ ───► │ user = None         │ ───► │ NPE in render  │

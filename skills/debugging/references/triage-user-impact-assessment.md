@@ -1,7 +1,7 @@
 ---
 title: Assess User Impact Before Prioritizing
 impact: MEDIUM
-impactDescription: 10× more user value per development hour
+impactDescription: 10× improvement in value delivered per engineering hour
 tags: triage, impact, users, assessment
 ---
 

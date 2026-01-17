@@ -1,7 +1,7 @@
 ---
 title: Read Stack Traces Bottom to Top
 impact: HIGH
-impactDescription: Directly points to error location; reveals call chain context
+impactDescription: 5-10× faster error localization; reveals full call chain context
 tags: obs, stack-trace, errors, exceptions, call-chain
 ---
 
@@ -48,12 +48,12 @@ json.decoder.JSONDecodeError: Expecting value: line 1 column 1
 # 1. BOTTOM: JSONDecodeError on empty/invalid JSON
 # 2. UP: In parse_input, calling json.loads(text)
 # 3. UP: Called from process_request with request.body
-# Question: What was request.body? Probably empty string.
+# Question: What was request.body? Likely an empty string.
 ```
 
 **Stack trace reading strategy:**
 
-```
+```text
 BOTTOM (Error Location):
 └── What exception? What message?
 └── What line threw it?

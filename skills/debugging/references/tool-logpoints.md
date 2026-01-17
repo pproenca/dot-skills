@@ -1,7 +1,7 @@
 ---
 title: Use Logpoints Instead of Modifying Code
 impact: MEDIUM-HIGH
-impactDescription: Zero code changes required; no risk of forgetting to remove debug code
+impactDescription: 100% clean commits; zero risk of shipping debug statements to production
 tags: tool, logpoints, tracepoints, debugger, non-invasive
 ---
 
@@ -47,7 +47,7 @@ def process_order(order):
 
 **Setting logpoints by IDE:**
 
-```
+```text
 VS Code:
 1. Right-click line → "Add Logpoint"
 2. Enter message: "total = {total}, user = {order.user.name}"

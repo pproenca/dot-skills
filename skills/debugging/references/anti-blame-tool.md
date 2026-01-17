@@ -1,11 +1,11 @@
 ---
-title: Don't Blame the Tool Too Quickly
+title: Avoid Blaming the Tool Too Quickly
 impact: MEDIUM
 impactDescription: 95%+ of bugs are in your code, not libraries; premature blame wastes time
 tags: anti, blame, libraries, framework, assumptions
 ---
 
-## Don't Blame the Tool Too Quickly
+## Avoid Blaming the Tool Too Quickly
 
 When debugging, assume the bug is in your code, not in the framework, library, or language. While tools do have bugs, they're far less common than bugs in application code. Blaming the tool prematurely stops productive investigation.
 

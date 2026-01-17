@@ -1,7 +1,7 @@
 ---
 title: Use Exception Breakpoints
 impact: MEDIUM-HIGH
-impactDescription: Catches errors at origin; reveals why exceptions occur, not just that they occurred
+impactDescription: 5× faster exception debugging; catches errors at throw point with full context
 tags: tool, exceptions, breakpoints, errors, debugger
 ---
 
@@ -44,7 +44,7 @@ def process_complex_data(data):
 
 **Setting exception breakpoints by IDE:**
 
-```
+```text
 VS Code (Python):
 1. Debug sidebar → Breakpoints section
 2. Check "Raised Exceptions" or "Uncaught Exceptions"

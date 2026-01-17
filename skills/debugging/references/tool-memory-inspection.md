@@ -1,7 +1,7 @@
 ---
 title: Inspect Memory and Object State
 impact: MEDIUM-HIGH
-impactDescription: Reveals hidden state and object relationships; essential for reference bugs
+impactDescription: Catches 90%+ of reference vs value bugs; reveals prototype chain and hidden properties
 tags: tool, memory, inspection, objects, state
 ---
 

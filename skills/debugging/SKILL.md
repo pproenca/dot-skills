@@ -3,7 +3,7 @@ name: debugging
 description: Comprehensive debugging methodology for finding and fixing bugs. This skill should be used when debugging code, investigating errors, troubleshooting issues, performing root cause analysis, or responding to incidents. Covers systematic reproduction, hypothesis-driven investigation, and root cause analysis techniques. Use when encountering exceptions, stack traces, crashes, segfaults, undefined behavior, or when bug reports need investigation.
 ---
 
-# Debugging Best Practices
+# dot-skills Debugging Best Practices
 
 Comprehensive debugging methodology guide for software engineers, containing 54 rules across 10 categories prioritized by impact. Based on research from Andreas Zeller's "Why Programs Fail" and academic debugging curricula.
 
@@ -121,14 +121,12 @@ Reference these guidelines when:
 
 ## How to Use
 
-Read individual rule files for detailed explanations and code examples:
+Read individual reference files for detailed explanations and code examples:
 
-```
-rules/prob-reproduce-before-debug.md
-rules/hypo-binary-search.md
-rules/_sections.md
-```
+- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Rule template](assets/templates/_template.md) - Template for adding new rules
+- Example rules: [prob-reproduce-before-debug](references/prob-reproduce-before-debug.md), [hypo-binary-search](references/hypo-binary-search.md)
 
 ## Full Compiled Document
 
-For the complete guide with all rules expanded: `AGENTS.md`
+For the complete guide with all rules expanded: [AGENTS.md](AGENTS.md)

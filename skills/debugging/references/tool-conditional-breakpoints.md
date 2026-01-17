@@ -42,7 +42,7 @@ def calculate_balances(users):
 
 **Setting conditional breakpoints by IDE:**
 
-```
+```text
 VS Code:
 1. Right-click breakpoint → "Edit Breakpoint"
 2. Enter expression: user.id === "user_5432"

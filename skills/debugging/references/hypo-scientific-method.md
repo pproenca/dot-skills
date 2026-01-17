@@ -17,8 +17,8 @@ Debug like a scientist: observe, hypothesize, predict, test, conclude. This syst
 def calculate_total(cart):
     total = 0
     for item in cart.items:
-        total += item.price * item.quantity  # Maybe this?
-    return total + cart.shipping  # Or this?
+        total += item.price * item.quantity  # Check this
+    return total + cart.shipping  # Or check this
 
 # Developer starts adding random print statements
 print(f"total: {total}")  # Looks right...

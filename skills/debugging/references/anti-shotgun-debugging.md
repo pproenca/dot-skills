@@ -15,20 +15,20 @@ Don't make random changes hoping something will fix the bug. Shotgun debugging w
 # Bug: User registration fails
 
 def register_user(data):
-    # Try adding a sleep?
+    # Try adding a sleep
     time.sleep(0.5)
 
-    # Maybe it's the encoding?
+    # Try encoding fix
     data = data.encode('utf-8').decode('utf-8')
 
-    # Could be null?
+    # Try null check
     if data is None:
         data = {}
 
-    # Let's try lowercase?
+    # Try lowercase
     data['email'] = data.get('email', '').lower()
 
-    # Maybe add retry?
+    # Try adding retry
     for attempt in range(3):
         try:
             return create_user(data)

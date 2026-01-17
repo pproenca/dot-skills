@@ -13,7 +13,7 @@ When you know a bug exists somewhere in a code path, use binary search to find i
 
 ```javascript
 // Bug: Data is corrupted somewhere in this pipeline
-function processData(input) {
+function transformOrder(input) {
   const step1 = validate(input);      // Check here... OK
   const step2 = normalize(step1);     // Check here... OK
   const step3 = transform(step2);     // Check here... OK
@@ -31,7 +31,7 @@ function processData(input) {
 
 ```javascript
 // Bug: Data is corrupted somewhere in this 8-step pipeline
-function processData(input) {
+function transformOrder(input) {
   const step1 = validate(input);
   const step2 = normalize(step1);
   const step3 = transform(step2);

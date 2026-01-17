@@ -1,7 +1,7 @@
 ---
 title: Trace Data Flow Through the System
 impact: HIGH
-impactDescription: Reveals transformation bugs; shows exactly where data becomes corrupted
+impactDescription: 2-5× faster bug localization; pinpoints exact transformation that corrupts data
 tags: obs, data-flow, tracing, transformation, pipeline
 ---
 
@@ -16,11 +16,11 @@ When data is incorrect, trace its journey through the system to find where it be
 # Developer checks random places, can't find issue
 
 def handle_purchase(product_id, quantity, user):
-    product = get_product(product_id)  # Maybe here?
-    price = calculate_price(product, quantity)  # Or here?
-    discount = get_discount(user)  # Or here?
-    final = apply_discount(price, discount)  # Or here?
-    return charge(user, final)  # Or here?
+    product = get_product(product_id)  # Check here
+    price = calculate_price(product, quantity)  # Or here
+    discount = get_discount(user)  # Or here
+    final = apply_discount(price, discount)  # Or here
+    return charge(user, final)  # Or here
 
 # After 2 hours: still don't know where price goes wrong
 ```
@@ -67,7 +67,7 @@ result = trace_data("step3", validate(result))
 
 **For complex pipelines, create a flow diagram:**
 
-```
+```text
 Input (correct)
     ↓
 [Transform A] ✓

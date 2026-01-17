@@ -59,7 +59,7 @@ class UserService:
 
 **Common boundary types to examine:**
 
-```
+```text
 ┌─────────────────────────────────────────────────────────────┐
 │  Frontend ←──────────────────────────────────→ API         │
 │            • JSON serialization                             │

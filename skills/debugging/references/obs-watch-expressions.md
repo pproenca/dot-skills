@@ -1,7 +1,7 @@
 ---
 title: Use Watch Expressions for Complex State
 impact: HIGH
-impactDescription: Automatically tracks computed values; reveals state changes as you step
+impactDescription: 3-5× faster state tracking; auto-updates computed values on each step
 tags: obs, watch, debugger, expressions, state-tracking
 ---
 

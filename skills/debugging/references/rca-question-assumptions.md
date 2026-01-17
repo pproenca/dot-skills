@@ -19,9 +19,9 @@ function getOrderTotal(orderId) {
   return order.total;  // ASSUMPTION: order.total is always current
 
   // Developer assumes:
-  // - orders.get() returns live data (maybe it's cached?)
-  // - order.total is calculated (maybe it's stale?)
-  // - total means the same thing everywhere (maybe it's pre-tax here?)
+  // - orders.get() returns live data (but is it cached?)
+  // - order.total is calculated (but is it stale?)
+  // - total means the same thing everywhere (but is it pre-tax here?)
   // Spends hours looking at calculation logic when data is just stale
 }
 ```

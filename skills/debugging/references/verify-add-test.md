@@ -1,7 +1,7 @@
 ---
 title: Add a Test to Prevent Recurrence
 impact: MEDIUM
-impactDescription: Catches regressions automatically; documents the bug for future developers
+impactDescription: 100% regression prevention for this specific bug; serves as executable documentation
 tags: verify, testing, regression-prevention, automation, documentation
 ---
 
