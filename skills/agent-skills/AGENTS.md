@@ -2767,3 +2767,16 @@ Reference: [Semantic Versioning](https://semver.org/)
 5. [https://modelcontextprotocol.info/docs/best-practices/](https://modelcontextprotocol.info/docs/best-practices/)
 6. [https://www.promptingguide.ai/research/llm-agents](https://www.promptingguide.ai/research/llm-agents)
 7. [https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/)
+
+---
+
+## Source Files
+
+This document was compiled from individual reference files. For detailed editing or extension:
+
+| File | Description |
+|------|-------------|
+| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
+| [SKILL.md](SKILL.md) | Quick reference entry point |
+| [metadata.json](metadata.json) | Version and reference URLs |

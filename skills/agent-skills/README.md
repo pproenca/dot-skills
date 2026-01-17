@@ -4,11 +4,11 @@ Comprehensive design and development guide for AI agent skills, including Claude
 
 ## Overview
 
-This skill contains 43 rules across 8 categories, organized by impact level:
+This skill contains 46 rules across 8 categories, organized by impact level:
 
 | Category | Rules | Impact |
 |----------|-------|--------|
-| Skill Metadata Design | 6 | CRITICAL |
+| Skill Metadata Design | 9 | CRITICAL |
 | Description Engineering | 7 | CRITICAL |
 | Content Structure | 6 | HIGH |
 | Trigger Optimization | 5 | HIGH |
@@ -25,17 +25,19 @@ agent-skills/
 ├── AGENTS.md             # Compiled comprehensive guide
 ├── metadata.json         # Version, references, metadata
 ├── README.md             # This file
-└── rules/
-    ├── _sections.md      # Category definitions
-    ├── _template.md      # Rule template
-    ├── meta-*.md         # Skill metadata rules (6)
-    ├── desc-*.md         # Description engineering rules (7)
-    ├── struct-*.md       # Content structure rules (6)
-    ├── trigger-*.md      # Trigger optimization rules (5)
-    ├── prog-*.md         # Progressive disclosure rules (5)
-    ├── mcp-*.md          # MCP tool design rules (6)
-    ├── test-*.md         # Testing rules (4)
-    └── maint-*.md        # Maintenance rules (4)
+├── references/
+│   ├── _sections.md      # Category definitions
+│   ├── meta-*.md         # Skill metadata rules (9)
+│   ├── desc-*.md         # Description engineering rules (7)
+│   ├── struct-*.md       # Content structure rules (6)
+│   ├── trigger-*.md      # Trigger optimization rules (5)
+│   ├── prog-*.md         # Progressive disclosure rules (5)
+│   ├── mcp-*.md          # MCP tool design rules (6)
+│   ├── test-*.md         # Testing rules (4)
+│   └── maint-*.md        # Maintenance rules (4)
+└── assets/
+    └── templates/
+        └── _template.md  # Rule template
 ```
 
 ## Getting Started
@@ -65,7 +67,7 @@ pnpm validate
 
 1. Determine the category based on the rule's primary concern
 2. Use the appropriate prefix from the table below
-3. Copy `rules/_template.md` as your starting point
+3. Copy `assets/templates/_template.md` as your starting point
 4. Fill in frontmatter and content
 
 ### Prefix Reference
@@ -142,7 +144,7 @@ Examples:
 ## Contributing
 
 1. Check existing rules to avoid duplication
-2. Use the rule template (`rules/_template.md`)
+2. Use the rule template (`assets/templates/_template.md`)
 3. Include both incorrect and correct examples
 4. Quantify impact where possible
 5. Reference authoritative sources
