@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "Google",
+  "technology": "JavaScript",
+  "date": "January 2026",
+  "abstract": "Comprehensive JavaScript style and best practices guide based on Google's official JavaScript Style Guide, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (module system, language features) to incremental (formatting). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://google.github.io/styleguide/jsguide.html",
+    "https://tc39.es/ecma262/",
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript"
+  ]
+}
