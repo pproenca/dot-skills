@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Chrome Developer Relations",
+  "technology": "Chrome Extensions",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for Chrome Extensions (Manifest V3), designed for AI agents and LLMs. Contains 40+ rules across 8 categories, prioritized by impact from critical (service worker lifecycle, content script optimization) to incremental (API usage patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://developer.chrome.com/docs/extensions/",
+    "https://developer.chrome.com/docs/extensions/develop/migrate",
+    "https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle",
+    "https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts",
+    "https://developer.chrome.com/docs/extensions/reference/api/storage",
+    "https://developer.chrome.com/docs/extensions/develop/concepts/messaging",
+    "https://developer.chrome.com/blog/longer-esw-lifetimes",
+    "https://developer.chrome.com/blog/Offscreen-Documents-in-Manifest-v3"
+  ]
+}
