@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "Google",
+  "technology": "TypeScript",
+  "date": "January 2026",
+  "abstract": "Comprehensive TypeScript style guide based on Google's internal standards, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (module organization, type safety) to incremental (literals and coercion). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://google.github.io/styleguide/tsguide.html",
+    "https://www.typescriptlang.org/docs/handbook/",
+    "https://google.github.io/styleguide/jsguide.html"
+  ]
+}
