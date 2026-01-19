@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Facebook/Meta",
+  "technology": "jscodeshift",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for jscodeshift codemod development, designed for AI agents and LLMs. Contains 40+ rules across 8 categories, prioritized by impact from critical (parser configuration, AST traversal) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated codemod creation and code generation.",
+  "references": [
+    "https://github.com/facebook/jscodeshift",
+    "https://jscodeshift.com/",
+    "https://jscodeshift.com/build/api-reference/",
+    "https://martinfowler.com/articles/codemods-api-refactoring.html",
+    "https://github.com/benjamn/ast-types",
+    "https://github.com/benjamn/recast",
+    "https://astexplorer.net/"
+  ]
+}
