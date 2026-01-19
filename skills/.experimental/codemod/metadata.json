@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Codemod Community",
+  "technology": "Codemod",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for Codemod (JSSG, ast-grep, workflows), designed for AI agents and LLMs. Contains 48 rules across 11 categories, prioritized by impact from critical (AST understanding, pattern efficiency, parsing strategy) to incremental (security, package structure). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://docs.codemod.com",
+    "https://ast-grep.github.io",
+    "https://github.com/codemod/codemod",
+    "https://github.com/facebook/jscodeshift",
+    "https://martinfowler.com/articles/codemods-api-refactoring.html",
+    "https://www.hypermod.io/docs/guides/best-practices"
+  ]
+}
