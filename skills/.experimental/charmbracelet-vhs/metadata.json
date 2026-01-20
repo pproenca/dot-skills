@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "Charmbracelet",
+  "technology": "VHS",
+  "category": "devtools",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for VHS terminal recordings, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (configuration structure, dependency management) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific guidance to create professional, portable, and optimized terminal GIFs and videos.",
+  "references": [
+    "https://github.com/charmbracelet/vhs",
+    "https://github.com/charmbracelet/vhs/blob/main/README.md",
+    "https://github.com/charmbracelet/vhs-action",
+    "https://github.com/charmbracelet/vhs/tree/main/examples"
+  ]
+}
