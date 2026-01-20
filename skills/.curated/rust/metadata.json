@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Rust",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for Rust applications, designed for AI agents and LLMs. Contains 42+ rules across 8 categories, prioritized by impact from critical (memory allocation, ownership patterns) to incremental (micro-optimizations). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://nnethercote.github.io/perf-book/",
+    "https://rust-lang.github.io/api-guidelines/",
+    "https://doc.rust-lang.org/nomicon/",
+    "https://doc.rust-lang.org/book/",
+    "https://tokio.rs/tokio/tutorial",
+    "https://doc.rust-lang.org/reference/behavior-considered-undefined.html",
+    "https://www.scylladb.com/2022/01/12/async-rust-in-practice-performance-pitfalls-profiling/",
+    "https://rustc-dev-guide.rust-lang.org/"
+  ]
+}
