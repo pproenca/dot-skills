@@ -14,5 +14,6 @@
     "https://react-hook-form.com/docs/useformstate",
     "https://github.com/react-hook-form/resolvers",
     "https://ui.shadcn.com/docs/components/form"
-  ]
+  ],
+  "category": "Frontend"
 }

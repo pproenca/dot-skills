@@ -9,5 +9,6 @@
     "https://www.typescriptlang.org/docs/handbook/",
     "https://v8.dev/blog",
     "https://nodejs.org/en/learn/diagnostics/memory"
-  ]
+  ],
+  "category": "Lang"
 }

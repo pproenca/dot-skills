@@ -10,5 +10,6 @@
     "https://tanstack.com/query/latest",
     "https://mswjs.io",
     "https://axios-http.com"
-  ]
+  ],
+  "category": "API"
 }

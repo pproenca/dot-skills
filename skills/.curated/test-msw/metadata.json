@@ -10,5 +10,6 @@
     "https://mswjs.io/docs/migrations/1.x-to-2.x/",
     "https://mswjs.io/docs/runbook/",
     "https://github.com/mswjs/msw"
-  ]
+  ],
+  "category": "Testing"
 }

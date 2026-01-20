@@ -12,5 +12,6 @@
     "https://github.com/benjamn/ast-types",
     "https://github.com/benjamn/recast",
     "https://astexplorer.net/"
-  ]
+  ],
+  "category": "DevEx"
 }

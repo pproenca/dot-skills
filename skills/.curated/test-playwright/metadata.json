@@ -10,5 +10,6 @@
     "https://nextjs.org/docs/pages/guides/testing/playwright",
     "https://www.browserstack.com/guide/playwright-best-practices",
     "https://betterstack.com/community/guides/testing/avoid-flaky-playwright-tests/"
-  ]
+  ],
+  "category": "Testing"
 }

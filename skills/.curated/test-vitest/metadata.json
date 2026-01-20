@@ -12,5 +12,6 @@
     "https://vitest.dev/guide/browser/component-testing",
     "https://trunk.io/blog/how-to-avoid-and-detect-flaky-tests-in-vitest",
     "https://mswjs.io/docs/"
-  ]
+  ],
+  "category": "Testing"
 }

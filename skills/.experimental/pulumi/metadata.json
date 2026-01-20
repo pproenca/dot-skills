@@ -14,5 +14,6 @@
     "https://www.pulumi.com/docs/iac/guides/testing/",
     "https://www.pulumi.com/blog/amazing-performance/",
     "https://www.pulumi.com/blog/journaling/"
-  ]
+  ],
+  "category": "Infra"
 }

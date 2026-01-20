@@ -11,5 +11,6 @@
     "https://tailwindcss.com/docs/functions-and-directives",
     "https://tailwindcss.com/docs/theme",
     "https://github.com/tailwindlabs/tailwindcss"
-  ]
+  ],
+  "category": "Frontend"
 }

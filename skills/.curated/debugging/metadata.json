@@ -12,5 +12,6 @@
     "https://developer.chrome.com/docs/devtools/javascript/reference/",
     "https://rubberduckdebugging.com/",
     "https://git-scm.com/docs/git-bisect"
-  ]
+  ],
+  "category": "DevEx"
 }

@@ -15,5 +15,6 @@
     "https://github.com/python/cpython/blob/main/InternalDocs/exception_handling.md",
     "https://www.datacamp.com/tutorial/python-generators",
     "https://blog.jetbrains.com/pycharm/2025/11/10-smart-performance-hacks-for-faster-python-code/"
-  ]
+  ],
+  "category": "Lang"
 }

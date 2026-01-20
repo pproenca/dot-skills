@@ -13,5 +13,6 @@
     "https://cva.style/docs",
     "https://tanstack.com/table/latest",
     "https://tanstack.com/virtual/latest"
-  ]
+  ],
+  "category": "Frontend"
 }

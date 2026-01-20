@@ -9,5 +9,6 @@
     "https://refactoring.guru/refactoring/smells",
     "https://martinfowler.com/books/refactoring.html",
     "https://en.wikipedia.org/wiki/SOLID"
-  ]
+  ],
+  "category": "DevEx"
 }

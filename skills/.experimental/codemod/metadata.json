@@ -11,5 +11,6 @@
     "https://github.com/facebook/jscodeshift",
     "https://martinfowler.com/articles/codemods-api-refactoring.html",
     "https://www.hypermod.io/docs/guides/best-practices"
-  ]
+  ],
+  "category": "DevEx"
 }

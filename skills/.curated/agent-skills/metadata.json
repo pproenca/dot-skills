@@ -12,5 +12,6 @@
     "https://modelcontextprotocol.info/docs/best-practices/",
     "https://www.promptingguide.ai/research/llm-agents",
     "https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/"
-  ]
+  ],
+  "category": "DevEx"
 }

@@ -13,5 +13,6 @@
     "https://owasp.org/www-project-application-security-verification-standard/",
     "https://adr.github.io/",
     "https://sre.google/sre-book/service-level-objectives/"
-  ]
+  ],
+  "category": "DevEx"
 }

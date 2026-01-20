@@ -8,5 +8,6 @@
     "https://google.github.io/styleguide/tsguide.html",
     "https://www.typescriptlang.org/docs/handbook/",
     "https://google.github.io/styleguide/jsguide.html"
-  ]
+  ],
+  "category": "Lang"
 }

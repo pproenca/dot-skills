@@ -10,5 +10,6 @@
     "https://github.com/vadimdemedes/ink-ui",
     "https://clig.dev/",
     "https://textual.textualize.io/blog/2024/12/12/algorithms-for-high-performance-terminal-apps/"
-  ]
+  ],
+  "category": "CLI"
 }

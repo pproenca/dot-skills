@@ -12,5 +12,6 @@
     "https://semaphore.io/blog/aaa-pattern-test-automation",
     "https://docs.pytest.org/en/stable/how-to/fixtures.html",
     "https://martinfowler.com/articles/practical-test-pyramid.html"
-  ]
+  ],
+  "category": "Testing"
 }

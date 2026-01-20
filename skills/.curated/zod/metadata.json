@@ -64,5 +64,6 @@
     }
   ],
   "totalRules": 43,
-  "zodVersion": "4.x"
+  "zodVersion": "4.x",
+  "category": "API"
 }
