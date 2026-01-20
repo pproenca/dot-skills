@@ -1,0 +1,12 @@
+{
+  "version": "2.1.1",
+  "organization": "WikiProject AI Cleanup",
+  "technology": "Human Writing Style",
+  "date": "January 2026",
+  "abstract": "Writing editor skill that identifies and removes signs of AI-generated text to make writing sound more natural and human. Based on Wikipedia's comprehensive 'Signs of AI writing' guide. Detects and fixes 24 patterns across 6 categories including: content patterns (inflated symbolism, promotional language, vague attributions), language patterns (AI vocabulary, copula avoidance, negative parallelisms), style patterns (em dash overuse, rule of three, boldface overuse), communication patterns (sycophantic tone, knowledge-cutoff disclaimers), and filler/hedging. Also emphasizes adding personality and voice to avoid sterile, soulless writing.",
+  "references": [
+    "https://en.wikipedia.org/wiki/Wikipedia:Signs_of_AI_writing",
+    "https://en.wikipedia.org/wiki/Wikipedia:WikiProject_AI_Cleanup"
+  ],
+  "category": "Writing"
+}
