@@ -1,23 +1,34 @@
 ---
 name: skill-authoring
-description: AI agent skill design and development best practices. This skill should be used when creating, reviewing, or refactoring Claude Code skills, MCP tools, or LLM agent capabilities. Triggers on "create a skill", "make a new skill", "build a claude code extension", "write skill instructions", "skill template", skill metadata, SKILL.md files, tool descriptions, progressive disclosure, trigger optimization, or agent skill testing.
+description: Design and development best practices for Claude Code skills, MCP tools, and AI agent capabilities. Use when creating skills, writing SKILL.md files, designing tool descriptions, or optimizing triggers. Triggers on "create a skill", "skill template", "write skill instructions", SKILL.md, metadata.json, progressive disclosure, trigger optimization, MCP tool design, or skill testing. Does NOT cover specific frameworks or languages (use dedicated skills).
 ---
 
-# Anthropic Community Agent Skills Best Practices
+# AI Agent Skills Best Practices
 
-Comprehensive design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 46 rules across 8 categories, prioritized by impact to guide skill creation, review, and optimization. Validated against the official [skills-ref library](https://github.com/agentskills/agentskills/tree/main/skills-ref) specification.
+Design and development guide for AI agent skills, including Claude Code skills and MCP tools. Contains 46 rules across 8 categories, prioritized by impact to guide skill creation, review, and optimization.
 
 ## When to Apply
 
-Reference these guidelines when:
 - Creating new Claude Code skills or MCP tools
-- Writing SKILL.md metadata and descriptions
+- Writing or reviewing SKILL.md metadata and descriptions
 - Optimizing skill trigger reliability
-- Structuring skill content for progressive disclosure
+- Structuring content for progressive disclosure
 - Testing skill activation and behavior
-- Validating skills against skills-ref specification
+- Designing tool interfaces for agent workflows
 
-## Rule Categories by Priority
+## Core Principles
+
+**1. Descriptions drive activation.** Claude selects skills based on description matching against user intent. Include specific capabilities, trigger keywords, and negative cases. A skill with a vague description activates inconsistently or never.
+
+**2. Front-load critical instructions.** Claude may truncate long content. Place non-negotiable rules in the first 100 lines. Bury important constraints at the end and they get ignored.
+
+**3. Progressive disclosure saves tokens.** Load detailed content only when needed. A 2000-line skill wastes context on every activation. Structure as: SKILL.md (overview) → references/ (details) → scripts/ (execution).
+
+**4. Test activation, not just execution.** A skill that works perfectly but never triggers provides zero value. Test with real user phrases, synonyms, and edge cases before deployment.
+
+**5. One skill per domain.** Overlapping skills create activation conflicts. Split by clear boundaries (language, framework, workflow stage) with distinct trigger keywords.
+
+## Rule Categories
 
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
@@ -39,7 +50,7 @@ Reference these guidelines when:
 - `meta-name-no-consecutive-hyphens` - Avoid consecutive hyphens in names
 - `meta-name-uniqueness` - Ensure skill names are globally unique
 - `meta-required-frontmatter` - Include all required frontmatter fields
-- `meta-allowed-frontmatter-fields` - Only use allowed frontmatter fields
+- `meta-allowed-frontmatter-fields` - Use only allowed frontmatter fields
 - `meta-frontmatter-yaml-syntax` - Use valid YAML frontmatter syntax
 - `meta-name-length` - Keep skill names under 64 characters
 - `meta-directory-match` - Match skill name to directory name
@@ -102,14 +113,27 @@ Reference these guidelines when:
 - `maint-plugin-packaging` - Package skills as plugins for distribution
 - `maint-audit-security` - Audit skills before installing from external sources
 
-## How to Use
+## Creating Rules
 
-Read individual reference files for detailed explanations and code examples:
+Copy [assets/templates/_template.md](assets/templates/_template.md) and follow the frontmatter schema:
 
-- [Section definitions](references/_sections.md) - Category structure and impact levels
-- [Rule template](assets/templates/_template.md) - Template for adding new rules
-- Reference files: `references/{prefix}-{slug}.md`
+```yaml
+---
+title: Rule Title Here
+impact: CRITICAL|HIGH|MEDIUM-HIGH|MEDIUM|LOW-MEDIUM|LOW
+impactDescription: Quantified impact (e.g., "2-10x improvement")
+tags: prefix, technique, related-concepts
+---
+```
 
-## Full Compiled Document
+Reference files use the pattern: `references/{prefix}-{slug}.md`
 
-For the complete guide with all rules expanded: `AGENTS.md`
+## References
+
+- [skills-ref specification](https://github.com/agentskills/agentskills/tree/main/skills-ref)
+- [Anthropic Engineering: Agent Skills](https://www.anthropic.com/engineering/equipping-agents-for-the-real-world-with-agent-skills)
+- [Claude Code Skills Documentation](https://code.claude.com/docs/en/skills)
+- [Anthropic Skills Repository](https://github.com/anthropics/skills)
+- [MCP Best Practices](https://modelcontextprotocol.info/docs/best-practices/)
+- [Prompt Engineering Guide: LLM Agents](https://www.promptingguide.ai/research/llm-agents)
+- [Claude Skills Deep Dive](https://leehanchung.github.io/blogs/2025/10/26/claude-skills-deep-dive/)

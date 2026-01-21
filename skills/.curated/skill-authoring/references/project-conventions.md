@@ -28,8 +28,6 @@ This project adds:
 ```
 skill-name/
 ├── SKILL.md          (required - skill entry point)
-├── AGENTS.md         (extension - compiled full guide)
-├── README.md         (extension - contributor docs)
 ├── metadata.json     (extension - project metadata)
 ├── references/
 │   ├── _sections.md  (extension - category definitions)
@@ -41,8 +39,6 @@ skill-name/
 
 | File | Purpose |
 |------|---------|
-| `AGENTS.md` | Full compiled document with all rules expanded inline |
-| `README.md` | Documentation for contributors (not loaded by Claude) |
 | `metadata.json` | Version, organization, build metadata |
 | `_sections.md` | Category definitions and ordering |
 
