@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "React Best Practices",
+  "technology": "React",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for React 19 applications, designed for AI agents and LLMs. Contains 40 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://react.dev",
+    "https://react.dev/blog/2024/12/05/react-19",
+    "https://react.dev/blog/2025/10/01/react-19-2",
+    "https://react.dev/learn/you-might-not-need-an-effect",
+    "https://github.com/facebook/react"
+  ],
+  "category": "Framework"
+}
