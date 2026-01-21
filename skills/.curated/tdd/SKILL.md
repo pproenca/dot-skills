@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-Driven Development methodology and red-green-refactor workflow (formerly test-tdd). This skill should be used when practicing TDD, designing tests before implementation, or reviewing test-first approaches. This skill does NOT cover Vitest framework specifics (use test-vitest skill) or API mocking with MSW (use test-msw skill).
+description: Test-Driven Development methodology and red-green-refactor workflow (formerly test-tdd). This skill should be used when practicing TDD, writing tests first, designing tests before implementation, or reviewing test-first approaches. Triggers on "write tests first", "test before code", "red green refactor", "test driven development". This skill does NOT cover Vitest framework specifics (use vitest skill) or API mocking with MSW (use msw skill).
 ---
 
 # Community Test-Driven Development Best Practices
@@ -15,6 +15,13 @@ Reference these guidelines when:
 - Designing test structure and organization
 - Creating test data and fixtures
 - Reviewing or refactoring existing test suites
+
+## TDD Workflow
+
+1. **RED**: Write a failing test that defines desired behavior
+2. **GREEN**: Write minimal code to make the test pass
+3. **REFACTOR**: Clean up code while keeping tests green
+4. Repeat for each new behavior
 
 ## Rule Categories by Priority
 
@@ -108,8 +115,8 @@ Read individual reference files for detailed explanations and code examples:
 
 ## Related Skills
 
-- For Vitest framework specifics, see `test-vitest` skill
-- For API mocking with MSW, see `test-msw` skill
+- For Vitest framework specifics, see `vitest` skill
+- For API mocking with MSW, see `msw` skill
 
 ## Full Compiled Document
 
