@@ -24,16 +24,9 @@ impl Buffer {
 
 ```rust
 impl Buffer {
-    /// Creates a new empty buffer
     fn new() -> Self { /* ... */ }
-
-    /// Creates a buffer with pre-allocated capacity
     fn with_capacity(capacity: usize) -> Self { /* ... */ }
-
-    /// Converts a String into a Buffer, consuming it
     fn from_string(s: String) -> Self { /* ... */ }  // Or impl From<String>
-
-    /// Creates a copy of another buffer
     fn clone_from(other: &Buffer) -> Self { /* ... */ }
 }
 ```
