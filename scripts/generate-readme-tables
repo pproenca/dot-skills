@@ -1,0 +1,220 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# generate-readme-tables - Generate skill tables for README.md
+#
+# Usage:
+#   scripts/generate-readme-tables          # Output tables to stdout
+#   scripts/generate-readme-tables --update # Update README.md in place
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+ROOT_DIR="$(dirname "$SCRIPT_DIR")"
+README_FILE="$ROOT_DIR/README.md"
+
+# Extract first sentence of description from SKILL.md frontmatter
+extract_description() {
+  local skill_dir="$1"
+  local skill_md="$skill_dir/SKILL.md"
+
+  if [[ ! -f "$skill_md" ]]; then
+    echo "No description"
+    return
+  fi
+
+  node -e "
+    const fs = require('fs');
+    const content = fs.readFileSync(process.argv[1], 'utf8');
+    const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
+    if (!match) {
+      console.log('No description');
+      process.exit(0);
+    }
+    const yaml = match[1];
+
+    let desc = '';
+
+    // Find description field - single line (not starting with | or >)
+    const descMatch = yaml.match(/^description:\\s*([^\\n]+)$/m);
+    if (descMatch && !descMatch[1].trim().match(/^[|>]/)) {
+      desc = descMatch[1].trim();
+    } else {
+      // Check for multiline description (| or >)
+      // Match 'description: |' or 'description: >' followed by indented content
+      const multiMatch = yaml.match(/^description:\\s*[|>]-?\\s*$/m);
+      if (multiMatch) {
+        // Find the position and get subsequent indented lines
+        const descIndex = yaml.indexOf(multiMatch[0]);
+        const afterDesc = yaml.substring(descIndex + multiMatch[0].length);
+        const lines = [];
+        for (const line of afterDesc.split('\\n')) {
+          // Stop at non-indented line that looks like a new key
+          if (line.match(/^[a-zA-Z_-]+:/)) break;
+          // Only include indented lines with content
+          if (line.match(/^\\s+\\S/)) {
+            lines.push(line.trim());
+          }
+          // Stop if we hit an empty line after content
+          if (lines.length > 0 && line.trim() === '') break;
+        }
+        desc = lines.join(' ');
+      }
+    }
+
+    if (!desc) {
+      console.log('No description');
+      process.exit(0);
+    }
+
+    // Clean up the description
+    // Remove (formerly xyz) parentheticals, keeping trailing period
+    desc = desc.replace(/\\s*\\(formerly [^)]+\\)/g, '');
+    desc = desc.replace(/\\s+/g, ' ').trim();  // Normalize whitespace
+
+    // Get first sentence - stop at period followed by:
+    // - 'This skill' or 'Use when' trigger phrases
+    // - Any capitalized word (start of new sentence)
+    let firstSentence = desc;
+    const cutPoints = [
+      desc.search(/\\.\\s*This skill/i),
+      desc.search(/\\.\\s*Use when/i),
+      desc.search(/\\.\\s*Triggers? on/i),
+      desc.search(/\\.\\s*Covers? /i),
+      desc.search(/\\.\\s+[A-Z][a-z]/),  // Period followed by capitalized word
+    ].filter(i => i > 0);
+
+    if (cutPoints.length > 0) {
+      const cutAt = Math.min(...cutPoints);
+      firstSentence = desc.substring(0, cutAt);
+    }
+
+    // Truncate if still too long
+    if (firstSentence.length > 100) {
+      // Try to cut at a word boundary
+      const truncated = firstSentence.substring(0, 97);
+      const lastSpace = truncated.lastIndexOf(' ');
+      firstSentence = (lastSpace > 50 ? truncated.substring(0, lastSpace) : truncated) + '...';
+    }
+
+    // Clean up trailing period
+    firstSentence = firstSentence.trim().replace(/\\.$/, '');
+
+    // Escape pipe characters for markdown table
+    firstSentence = firstSentence.replace(/\\|/g, '\\\\|');
+
+    console.log(firstSentence);
+  " "$skill_md"
+}
+
+# Generate table for a skill directory
+generate_table() {
+  local skills_dir="$1"
+  local path_prefix="$2"
+
+  echo "| Skill | Description |"
+  echo "|-------|-------------|"
+
+  # List skill directories, sorted
+  for skill_dir in "$skills_dir"/*/; do
+    # Skip non-directories and special entries
+    [[ ! -d "$skill_dir" ]] && continue
+    local name
+    name=$(basename "$skill_dir")
+    [[ "$name" == "experimental" ]] && continue  # Skip nested experimental dir
+    [[ "$name" == ".gitkeep" ]] && continue
+
+    local desc
+    desc=$(extract_description "$skill_dir")
+
+    echo "| [$name]($path_prefix/$name) | $desc |"
+  done | sort -t'|' -k2
+}
+
+# Generate all tables
+generate_all_tables() {
+  echo "### Curated Skills"
+  echo ""
+  generate_table "$ROOT_DIR/skills/.curated" "skills/.curated"
+  echo ""
+  echo "### Experimental Skills"
+  echo ""
+  generate_table "$ROOT_DIR/skills/.experimental" "skills/.experimental"
+}
+
+# Update README.md in place
+update_readme() {
+  local start_marker="<!-- SKILLS-TABLE:START -->"
+  local end_marker="<!-- SKILLS-TABLE:END -->"
+
+  if ! grep -q "$start_marker" "$README_FILE"; then
+    echo "Error: Could not find $start_marker in README.md" >&2
+    echo "Add the following markers to README.md where you want the tables:" >&2
+    echo "" >&2
+    echo "  $start_marker" >&2
+    echo "  $end_marker" >&2
+    exit 1
+  fi
+
+  # Generate new content to a temp file
+  local content_file
+  content_file=$(mktemp)
+  generate_all_tables > "$content_file"
+
+  # Create output temp file
+  local tmp_file
+  tmp_file=$(mktemp)
+
+  # Process README: copy until start marker, insert new content, skip until end marker, copy rest
+  local state="before"
+  while IFS= read -r line; do
+    case "$state" in
+      before)
+        echo "$line"
+        if [[ "$line" == "$start_marker" ]]; then
+          cat "$content_file"
+          state="inside"
+        fi
+        ;;
+      inside)
+        if [[ "$line" == "$end_marker" ]]; then
+          echo "$line"
+          state="after"
+        fi
+        # Skip lines inside the markers
+        ;;
+      after)
+        echo "$line"
+        ;;
+    esac
+  done < "$README_FILE" > "$tmp_file"
+
+  mv "$tmp_file" "$README_FILE"
+  rm -f "$content_file"
+  echo "Updated README.md with skill tables"
+}
+
+# Main
+case "${1:-}" in
+  --update|-u)
+    update_readme
+    ;;
+  --help|-h)
+    echo "Usage: $(basename "$0") [--update]"
+    echo ""
+    echo "Generate skill tables for README.md"
+    echo ""
+    echo "Options:"
+    echo "  --update, -u  Update README.md in place (requires markers)"
+    echo "  --help, -h    Show this help"
+    echo ""
+    echo "To enable --update, add these markers to README.md:"
+    echo "  <!-- SKILLS-TABLE:START -->"
+    echo "  <!-- SKILLS-TABLE:END -->"
+    ;;
+  "")
+    generate_all_tables
+    ;;
+  *)
+    echo "Unknown option: $1" >&2
+    exit 1
+    ;;
+esac

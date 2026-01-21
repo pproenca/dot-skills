@@ -1,5 +1,5 @@
 ---
-name: google-typescript-style-guide
+name: ts-google
 description: Google TypeScript style guide for writing clean, consistent, type-safe code. This skill should be used when writing, reviewing, or refactoring TypeScript code. Triggers on TypeScript files, type annotations, module imports, class design, and code style decisions.
 ---
 

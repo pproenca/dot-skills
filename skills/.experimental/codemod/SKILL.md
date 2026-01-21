@@ -1,5 +1,5 @@
 ---
-name: codemod-best-practices
+name: codemod
 description: Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable code transformations. This skill should be used when writing, reviewing, or debugging codemods, AST transformations, or automated refactoring tools. Triggers on tasks involving codemod, ast-grep, JSSG, code transformation, or automated migration.
 ---
 

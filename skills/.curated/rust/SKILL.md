@@ -1,5 +1,5 @@
 ---
-name: rust-best-practices
+name: rust
 description: Rust performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring Rust code to ensure optimal performance patterns. Triggers on tasks involving memory allocation, ownership, borrowing, iterators, async code, or performance optimization.
 ---
 

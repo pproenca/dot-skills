@@ -1,5 +1,5 @@
 ---
-name: facebook-jscodeshift-best-practices
+name: jscodeshift
 description: jscodeshift codemod development best practices from Facebook/Meta. This skill should be used when writing, reviewing, or debugging jscodeshift codemods. Triggers on tasks involving AST transformation, code migration, automated refactoring, or codemod development.
 ---
 
