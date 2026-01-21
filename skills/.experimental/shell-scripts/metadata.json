@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Shell Scripts (Bash/POSIX)",
+  "category": "scripting",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for shell scripting (bash and POSIX sh), designed for AI agents and LLMs. Contains 48 rules across 9 categories, prioritized by impact from critical (safety & security, portability) to incremental (style & formatting). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://google.github.io/styleguide/shellguide.html",
+    "https://www.shellcheck.net/",
+    "https://mywiki.wooledge.org/",
+    "https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html",
+    "http://www.etalabs.net/sh_tricks.html",
+    "https://developer.apple.com/library/archive/documentation/OpenSource/Conceptual/ShellScripting/ShellScriptSecurity/ShellScriptSecurity.html"
+  ]
+}
