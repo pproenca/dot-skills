@@ -1,9 +1,9 @@
 ---
-name: uncle-bob-clean-architecture-best-practices
+name: clean-architecture
 description: Clean Architecture principles and best practices from Robert C. Martin's book. This skill should be used when designing software systems, reviewing code structure, or refactoring applications to achieve better separation of concerns. Triggers on tasks involving layers, boundaries, dependency direction, entities, use cases, or system architecture.
 ---
 
-# Uncle Bob Clean Architecture Best Practices
+# Clean Architecture Best Practices
 
 Comprehensive guide to Clean Architecture principles for designing maintainable, testable software systems. Based on Robert C. Martin's "Clean Architecture: A Craftsman's Guide to Software Structure and Design." Contains 42 rules across 8 categories, prioritized by architectural impact.
 
