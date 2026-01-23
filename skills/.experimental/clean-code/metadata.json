@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "Robert C. Martin (Uncle Bob)",
+  "technology": "Software Craftsmanship",
+  "date": "January 2026",
+  "abstract": "Comprehensive software craftsmanship guide based on Robert C. Martin's 'Clean Code: A Handbook of Agile Software Craftsmanship'. Contains 45 rules across 8 categories covering naming, functions, comments, formatting, objects, error handling, testing, and class design. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and rationale to guide code reviews, refactoring decisions, and new development.",
+  "references": [
+    "https://www.oreilly.com/library/view/clean-code-a/9780136083238/",
+    "https://blog.cleancoder.com/",
+    "https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882"
+  ]
+}
