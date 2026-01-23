@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "Uncle Bob (Robert C. Martin)",
+  "technology": "Clean Architecture",
+  "date": "January 2026",
+  "abstract": "Comprehensive guide to Clean Architecture principles for designing maintainable, testable software systems. Based on Robert C. Martin's 'Clean Architecture: A Craftsman's Guide to Software Structure and Design.' Contains 42 rules across 8 categories, prioritized by impact from critical (dependency direction, entity design) to incremental (testing architecture). Each rule includes detailed explanations, language-agnostic code examples comparing incorrect vs. correct implementations, and specific impact descriptions.",
+  "references": [
+    "https://blog.cleancoder.com/uncle-bob/2012/08/13/the-clean-architecture.html",
+    "https://www.oreilly.com/library/view/clean-architecture-a/9780134494272/",
+    "https://github.com/serodriguez68/clean-architecture",
+    "https://www.milanjovanovic.tech/blog/screaming-architecture",
+    "https://martinfowler.com/bliki/AnemicDomainModel.html"
+  ]
+}
