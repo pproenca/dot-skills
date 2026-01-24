@@ -1,18 +1,19 @@
 # ast-grep
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 ast-grep Community  
 January 2026
 
-> **Note:** This ast-grep guide is primarily for agents and LLMs to follow when writing,
-> reviewing, or debugging rules. Humans may also find it useful,
+> **Note:**  
+> This document is mainly for agents and LLMs to follow when maintaining,  
+> generating, or refactoring codebases. Humans may also find it useful,  
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
 
 ## Abstract
 
-Comprehensive best practices guide for ast-grep rule writing and usage, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (pattern correctness, meta variable usage) to incremental (testing and debugging). Each rule includes detailed explanations, YAML examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated rule generation and code transformation.
+Comprehensive best practices guide for ast-grep rule writing and usage, designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (pattern correctness, meta variable usage) to incremental (testing and debugging). Each rule includes detailed explanations, YAML examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated rule generation and code transformation. Includes workflow guidance for systematic rule development.
 
 ---
 
@@ -25,7 +26,9 @@ Comprehensive best practices guide for ast-grep rule writing and usage, designed
    - 1.4 [Configure Pattern Strictness Appropriately](#14-configure-pattern-strictness-appropriately)
    - 1.5 [Use Context and Selector for Code Fragments](#15-use-context-and-selector-for-code-fragments)
    - 1.6 [Use Debug Query to Inspect AST Structure](#16-use-debug-query-to-inspect-ast-structure)
-   - 1.7 [Use Valid Parseable Code as Patterns](#17-use-valid-parseable-code-as-patterns)
+   - 1.7 [Use nthChild for Index-Based Positional Matching](#17-use-nthchild-for-index-based-positional-matching)
+   - 1.8 [Use Range for Character Position Matching](#18-use-range-for-character-position-matching)
+   - 1.9 [Use Valid Parseable Code as Patterns](#19-use-valid-parseable-code-as-patterns)
 2. [Meta Variable Usage](#2-meta-variable-usage) — **CRITICAL**
    - 2.1 [Follow Meta Variable Naming Conventions](#21-follow-meta-variable-naming-conventions)
    - 2.2 [Match Single AST Nodes with Meta Variables](#22-match-single-ast-nodes-with-meta-variables)
@@ -36,10 +39,12 @@ Comprehensive best practices guide for ast-grep rule writing and usage, designed
 3. [Rule Composition](#3-rule-composition) — **HIGH**
    - 3.1 [Use All for AND Logic Between Rules](#31-use-all-for-and-logic-between-rules)
    - 3.2 [Use Any for OR Logic Between Rules](#32-use-any-for-or-logic-between-rules)
-   - 3.3 [Use Has for Child Node Requirements](#33-use-has-for-child-node-requirements)
-   - 3.4 [Use Inside for Contextual Matching](#34-use-inside-for-contextual-matching)
-   - 3.5 [Use Matches for Rule Reusability](#35-use-matches-for-rule-reusability)
-   - 3.6 [Use Not for Exclusion Patterns](#36-use-not-for-exclusion-patterns)
+   - 3.3 [Use Field to Target Specific Sub-Nodes](#33-use-field-to-target-specific-sub-nodes)
+   - 3.4 [Use Has for Child Node Requirements](#34-use-has-for-child-node-requirements)
+   - 3.5 [Use Inside for Contextual Matching](#35-use-inside-for-contextual-matching)
+   - 3.6 [Use Matches for Rule Reusability](#36-use-matches-for-rule-reusability)
+   - 3.7 [Use Not for Exclusion Patterns](#37-use-not-for-exclusion-patterns)
+   - 3.8 [Use Precedes and Follows for Sequential Positioning](#38-use-precedes-and-follows-for-sequential-positioning)
 4. [Constraint Design](#4-constraint-design) — **HIGH**
    - 4.1 [Avoid Constraints Inside Not Rules](#41-avoid-constraints-inside-not-rules)
    - 4.2 [Understand Constraints Apply After Matching](#42-understand-constraints-apply-after-matching)
@@ -314,7 +319,171 @@ rule:
 
 Reference: [CLI Reference](https://ast-grep.github.io/reference/cli.html)
 
-### 1.7 Use Valid Parseable Code as Patterns
+### 1.7 Use nthChild for Index-Based Positional Matching
+
+**Impact: MEDIUM (enables matching elements by position in sequences)**
+
+The `nthChild` atomic rule matches nodes by their position among siblings. Use it to target specific elements in arrays, function parameters, or statement sequences.
+
+**Incorrect (pattern can't express position):**
+
+```yaml
+id: find-first-param
+language: javascript
+rule:
+  pattern: function $NAME($FIRST, $$$REST) {}
+# Only works if function has 2+ params
+# Can't match first param of single-param function
+```
+
+**Correct (nthChild targets by position):**
+
+```yaml
+id: find-first-param
+language: javascript
+rule:
+  kind: formal_parameters
+  has:
+    kind: identifier
+    nthChild: 1  # 1-based index, matches first child
+```
+
+**Index patterns (An+B formula):**
+
+```yaml
+# Match first element
+nthChild: 1
+
+# Match last element
+nthChild:
+  position: 1
+  reverse: true
+
+# Match every other element (2nd, 4th, 6th...)
+nthChild: 2n
+
+# Match odd elements (1st, 3rd, 5th...)
+nthChild: 2n+1
+
+# Match first three elements
+nthChild:
+  position: -n+3
+```
+
+**Common use cases:**
+
+```yaml
+# Match second argument in function calls
+id: find-second-arg
+rule:
+  kind: arguments
+  has:
+    nthChild: 2
+
+# Match last statement in block
+id: find-last-statement
+rule:
+  kind: statement_block
+  has:
+    kind: expression_statement
+    nthChild:
+      position: 1
+      reverse: true
+```
+
+**Note:** `nthChild` uses 1-based indexing (first element is 1, not 0). Use `reverse: true` to count from the end.
+
+Reference: [Atomic Rules](https://ast-grep.github.io/reference/rule.html#nthchild)
+
+### 1.8 Use Range for Character Position Matching
+
+**Impact: LOW-MEDIUM (enables location-based code targeting)**
+
+The `range` atomic rule matches nodes by their character position in the source file. Use it for precise location-based targeting when other methods are insufficient.
+
+**Incorrect (trying to match by line number with pattern):**
+
+```yaml
+id: find-at-line
+language: javascript
+rule:
+  pattern: $EXPR  # No way to filter by location
+```
+
+**Correct (range targets by position):**
+
+```yaml
+id: find-in-range
+language: javascript
+rule:
+  kind: expression_statement
+  range:
+    start:
+      line: 10
+      column: 0
+    end:
+      line: 20
+      column: 0
+```
+
+**Range specification:**
+
+```yaml
+# Match node starting at specific position
+range:
+  start:
+    line: 5      # 0-based line number
+    column: 4    # 0-based column number
+
+# Match node within range
+range:
+  start:
+    line: 10
+    column: 0
+  end:
+    line: 50
+    column: 0
+```
+
+**Practical use cases:**
+
+```yaml
+# Match code in specific function (by known position)
+id: audit-function
+rule:
+  kind: function_declaration
+  range:
+    start:
+      line: 100
+    end:
+      line: 150
+
+# Match imports at top of file
+id: find-early-imports
+rule:
+  kind: import_statement
+  range:
+    end:
+      line: 20  # First 20 lines
+```
+
+**When NOT to use range:**
+
+- For structural matching (use `pattern` or `kind` instead)
+- For context-based matching (use `inside` instead)
+- When code positions may change (range is brittle)
+
+**When to use range:**
+
+- Auditing specific code regions
+- Generating reports with location context
+- Combining with other rules for precise targeting
+
+**Note:** Line and column numbers are 0-based. Range matching is fragile to code changes - prefer structural patterns when possible.
+
+Reference: [Atomic Rules](https://ast-grep.github.io/reference/rule.html#range)
+
+### 1.9 Use Valid Parseable Code as Patterns
 
 **Impact: CRITICAL (prevents silent pattern failures)**
 
@@ -730,7 +899,136 @@ rule:
 
 Reference: [Composite Rules](https://ast-grep.github.io/reference/rule.html#composite-rules)
 
-### 3.3 Use Has for Child Node Requirements
+### 3.3 Use Field to Target Specific Sub-Nodes
+
+**Impact: HIGH (reduces false positives by 50-80% in relational rules)**
+
+The `field` option in relational rules (`inside`, `has`) restricts matching to specific named children of AST nodes. Use it to distinguish between function bodies, parameters, conditions, and other structural elements.
+
+**Incorrect (matches anywhere in function):**
+
+```yaml
+id: find-return-in-function
+language: javascript
+rule:
+  pattern: return $VAL
+  inside:
+    kind: function_declaration
+# Matches returns in body AND nested functions
+```
+
+**Correct (field targets specific child):**
+
+```yaml
+id: find-direct-return
+language: javascript
+rule:
+  kind: function_declaration
+  has:
+    field: body  # Only check the body field
+    has:
+      pattern: return $VAL
+```
+
+**Common AST fields by node type:**
+
+```yaml
+# function_declaration fields
+- name: identifier
+- parameters: formal_parameters
+- body: statement_block
+
+# if_statement fields
+- condition: parenthesized_expression
+- consequence: statement_block
+- alternative: else_clause
+
+# for_statement fields
+- initializer: variable_declaration
+- condition: expression
+- increment: update_expression
+- body: statement_block
+
+# call_expression fields
+- function: identifier/member_expression
+- arguments: arguments
+```
+
+**Targeting function parameters vs body:**
+
+```yaml
+# Match only in parameters (not in body)
+id: find-destructured-param
+language: javascript
+rule:
+  kind: function_declaration
+  has:
+    field: parameters
+    has:
+      kind: object_pattern
+
+# Match only in body (not in parameters)
+id: find-await-in-body
+language: javascript
+rule:
+  kind: function_declaration
+  has:
+    field: body
+    has:
+      pattern: await $EXPR
+```
+
+**Targeting if statement parts:**
+
+```yaml
+# Match in condition only
+id: find-assignment-in-condition
+language: javascript
+rule:
+  kind: if_statement
+  has:
+    field: condition
+    has:
+      pattern: $VAR = $VAL  # Assignment, not comparison
+
+# Match in consequence only
+id: find-return-in-if-body
+language: javascript
+rule:
+  kind: if_statement
+  has:
+    field: consequence
+    has:
+      pattern: return $VAL
+```
+
+**Combining field with stopBy:**
+
+```yaml
+# Match return directly in function body, not nested
+id: find-top-level-return
+language: javascript
+rule:
+  kind: function_declaration
+  has:
+    field: body
+    has:
+      pattern: return $VAL
+      stopBy: neighbor  # Direct child of body only
+```
+
+**When to use field:**
+
+- Distinguishing function parameters from body
+- Targeting if/while conditions vs their bodies
+- Matching loop initializers, conditions, or increments separately
+- Any case where position within parent matters
+
+**Tip:** Use `--debug-query=ast` to discover field names for your target language.
+
+Reference: [Relational Rules](https://ast-grep.github.io/reference/rule.html#field)
+
+### 3.4 Use Has for Child Node Requirements
 
 **Impact: HIGH (reduces false positives by 60-80%)**
 
@@ -794,7 +1092,7 @@ rule:
 
 Reference: [Relational Rules](https://ast-grep.github.io/reference/rule.html#relational-rules)
 
-### 3.4 Use Inside for Contextual Matching
+### 3.5 Use Inside for Contextual Matching
 
 **Impact: HIGH (reduces false positives by 70-95%)**
 
@@ -850,7 +1148,7 @@ rule:
 
 Reference: [Relational Rules](https://ast-grep.github.io/reference/rule.html#relational-rules)
 
-### 3.5 Use Matches for Rule Reusability
+### 3.6 Use Matches for Rule Reusability
 
 **Impact: HIGH (enables DRY rule composition)**
 
@@ -913,7 +1211,7 @@ rule:
 
 Reference: [Utility Rules](https://ast-grep.github.io/guide/project/utility-rule.html)
 
-### 3.6 Use Not for Exclusion Patterns
+### 3.7 Use Not for Exclusion Patterns
 
 **Impact: HIGH (reduces false positives by 30-70%)**
 
@@ -976,6 +1274,115 @@ rule:
 ```
 
 Reference: [Composite Rules](https://ast-grep.github.io/reference/rule.html#composite-rules)
+
+### 3.8 Use Precedes and Follows for Sequential Positioning
+
+**Impact: HIGH (enables matching statement order and sequences)**
+
+The `precedes` and `follows` relational rules match nodes based on their order among siblings. Use them to find patterns that depend on statement sequence.
+
+**Incorrect (pattern can't express order):**
+
+```yaml
+id: find-ordered-calls
+language: javascript
+rule:
+  all:
+    - pattern: setup()
+    - pattern: execute()
+# Matches both but doesn't verify order
+```
+
+**Correct (precedes enforces order):**
+
+```yaml
+id: find-setup-before-execute
+language: javascript
+rule:
+  pattern: setup()
+  precedes:
+    pattern: execute()
+```
+
+**Understanding precedes vs follows:**
+
+```yaml
+# "A precedes B" means A comes before B
+rule:
+  pattern: $FIRST
+  precedes:
+    pattern: $SECOND
+
+# "A follows B" means A comes after B
+rule:
+  pattern: $SECOND
+  follows:
+    pattern: $FIRST
+
+# Both match the same relationship, different anchor node
+```
+
+**Controlling search depth with stopBy:**
+
+```yaml
+# Match immediate next sibling only
+rule:
+  pattern: const $VAR = $VAL
+  precedes:
+    pattern: console.log($VAR)
+    stopBy: neighbor  # Must be immediate next statement
+
+# Match anywhere after in same block
+rule:
+  pattern: const $VAR = $VAL
+  precedes:
+    pattern: console.log($VAR)
+    stopBy: end  # Can have statements between
+```
+
+**Practical examples:**
+
+```yaml
+# Find variable declaration followed by its usage
+id: find-immediate-use
+language: javascript
+rule:
+  pattern: const $VAR = $VAL
+  precedes:
+    pattern: $VAR
+    stopBy: neighbor
+
+# Find return not at end of function
+id: find-early-return
+language: javascript
+rule:
+  pattern: return $VAL
+  precedes:
+    kind: expression_statement
+    stopBy: end
+  inside:
+    kind: statement_block
+
+# Find missing cleanup after resource allocation
+id: find-unclosed-resource
+language: javascript
+rule:
+  pattern: const $HANDLE = open($PATH)
+  not:
+    precedes:
+      pattern: $HANDLE.close()
+      stopBy: end
+```
+
+**Key behaviors:**
+
+- `precedes` anchors on the first node, searches forward
+- `follows` anchors on the second node, searches backward
+- Both operate only among siblings (same parent)
+- Use `stopBy: neighbor` for immediate adjacency
+- Use `stopBy: end` for anywhere in sequence
+
+Reference: [Relational Rules](https://ast-grep.github.io/reference/rule.html#precedes)
 
 ---
 
@@ -2342,7 +2749,8 @@ Reference: [Testing Rules](https://ast-grep.github.io/guide/project/test-rule.ht
 2. [https://ast-grep.github.io/guide/rule-config.html](https://ast-grep.github.io/guide/rule-config.html)
 3. [https://ast-grep.github.io/reference/cli.html](https://ast-grep.github.io/reference/cli.html)
 4. [https://github.com/ast-grep/ast-grep](https://github.com/ast-grep/ast-grep)
-5. [https://github.com/coderabbitai/ast-grep-essentials](https://github.com/coderabbitai/ast-grep-essentials)
+5. [https://github.com/ast-grep/agent-skill](https://github.com/ast-grep/agent-skill)
+6. [https://github.com/coderabbitai/ast-grep-essentials](https://github.com/coderabbitai/ast-grep-essentials)
 
 ---
 

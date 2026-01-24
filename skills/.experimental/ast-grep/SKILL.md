@@ -5,7 +5,7 @@ description: ast-grep rule writing and usage best practices. This skill should b
 
 # ast-grep Community Best Practices
 
-Comprehensive best practices guide for ast-grep rule writing and usage, maintained by the ast-grep community. Contains 42 rules across 8 categories, prioritized by impact to guide automated rule generation and code transformation.
+Comprehensive best practices guide for ast-grep rule writing and usage, maintained by the ast-grep community. Contains 46 rules across 8 categories, prioritized by impact to guide automated rule generation and code transformation.
 
 ## When to Apply
 
@@ -15,6 +15,64 @@ Reference these guidelines when:
 - Optimizing rule performance for large codebases
 - Setting up ast-grep projects with proper organization
 - Reviewing ast-grep rules for correctness and maintainability
+
+## General Workflow
+
+Follow this workflow when creating ast-grep rules for code search:
+
+### Step 1: Understand the Query
+
+Clarify what you want to find:
+- Target programming language
+- Edge cases to handle
+- What to include vs exclude
+
+### Step 2: Create Example Code
+
+Write a sample code snippet representing the desired match pattern.
+
+### Step 3: Write the ast-grep Rule
+
+Choose the right approach:
+- Use `pattern` for simple structures
+- Use `kind` with `has`/`inside` for complex structures
+- Combine with `all`, `any`, or `not` for compound queries
+- **Always use `stopBy: end` for relational rules** (`inside`, `has`) to ensure complete search
+
+### Step 4: Test the Rule
+
+```bash
+# Inspect AST structure
+ast-grep run --pattern '[code]' --lang [language] --debug-query=ast
+
+# Test inline rule
+echo "[code]" | ast-grep scan --inline-rules "[rule]" --stdin
+
+# Test from file
+ast-grep scan --rule [file.yml] [path]
+```
+
+### Step 5: Search the Codebase
+
+Deploy the validated rule:
+```bash
+# Search with pattern (simple matches)
+ast-grep run --pattern '[pattern]' --lang [language] [path]
+
+# Search with rule file (complex queries)
+ast-grep scan --rule [file.yml] [path]
+
+# Apply fixes interactively
+ast-grep scan --rule [file.yml] --interactive [path]
+```
+
+### Quick Tips
+
+1. **Always use `stopBy: end`** - Ensures complete subtree traversal for relational rules
+2. **Start simple, add complexity** - Begin with patterns, progress to kinds, then relational rules
+3. **Debug with AST inspection** - Use `--debug-query=ast` to verify structure matching
+4. **Escape in inline rules** - Use `\$VAR` or single quotes for shell commands
+5. **Test in playground first** - Use https://ast-grep.github.io/playground.html for rapid iteration
 
 ## Rule Categories by Priority
 
@@ -40,6 +98,8 @@ Reference these guidelines when:
 - [`pattern-strictness-levels`](references/pattern-strictness-levels.md) - Configure pattern strictness appropriately
 - [`pattern-kind-vs-pattern`](references/pattern-kind-vs-pattern.md) - Choose kind or pattern based on specificity needs
 - [`pattern-debug-ast`](references/pattern-debug-ast.md) - Use debug query to inspect AST structure
+- [`pattern-nthchild-matching`](references/pattern-nthchild-matching.md) - Use nthChild for index-based positional matching
+- [`pattern-range-matching`](references/pattern-range-matching.md) - Use range for character position matching
 
 ### 2. Meta Variable Usage (CRITICAL)
 
@@ -58,6 +118,8 @@ Reference these guidelines when:
 - [`compose-inside-for-context`](references/compose-inside-for-context.md) - Use inside for contextual matching
 - [`compose-has-for-children`](references/compose-has-for-children.md) - Use has for child node requirements
 - [`compose-matches-for-reuse`](references/compose-matches-for-reuse.md) - Use matches for rule reusability
+- [`compose-precedes-follows`](references/compose-precedes-follows.md) - Use precedes and follows for sequential positioning
+- [`compose-field-targeting`](references/compose-field-targeting.md) - Use field to target specific sub-nodes
 
 ### 4. Constraint Design (HIGH)
 

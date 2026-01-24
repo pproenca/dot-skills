@@ -1,14 +1,15 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "ast-grep Community",
   "technology": "ast-grep",
   "date": "January 2026",
-  "abstract": "Comprehensive best practices guide for ast-grep rule writing and usage, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (pattern correctness, meta variable usage) to incremental (testing and debugging). Each rule includes detailed explanations, YAML examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated rule generation and code transformation.",
+  "abstract": "Comprehensive best practices guide for ast-grep rule writing and usage, designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (pattern correctness, meta variable usage) to incremental (testing and debugging). Each rule includes detailed explanations, YAML examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated rule generation and code transformation. Includes workflow guidance for systematic rule development.",
   "references": [
     "https://ast-grep.github.io/",
     "https://ast-grep.github.io/guide/rule-config.html",
     "https://ast-grep.github.io/reference/cli.html",
     "https://github.com/ast-grep/ast-grep",
+    "https://github.com/ast-grep/agent-skill",
     "https://github.com/coderabbitai/ast-grep-essentials"
   ]
 }
