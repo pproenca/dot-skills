@@ -1,6 +1,6 @@
 ---
-name: uncle-bob-clean-code-best-practices
-description: Clean Code principles from Robert C. Martin's seminal handbook. This skill should be used when writing, reviewing, or refactoring code to ensure maintainable, readable, and professional-quality implementations. Triggers on code reviews, refactoring tasks, naming discussions, function design, error handling, and test writing.
+name: clean-code
+description: Use when writing, reviewing, or refactoring code for maintainability and readability. Triggers on code reviews, naming discussions, function design, error handling, and test writing. Based on Robert C. Martin's Clean Code handbook.
 ---
 
 # Robert C. Martin (Uncle Bob) Clean Code Best Practices
