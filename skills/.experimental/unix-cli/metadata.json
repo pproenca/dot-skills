@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "UNIX/POSIX Standards",
+  "technology": "UNIX CLI",
+  "date": "January 2026",
+  "abstract": "Comprehensive guidelines for building command-line tools that follow UNIX conventions, designed for AI agents and LLMs. Contains 44 rules across 8 categories, prioritized by impact from critical (argument handling, exit codes, output streams) to incremental (configuration and environment). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html",
+    "https://www.gnu.org/prep/standards/standards.html",
+    "https://clig.dev/",
+    "https://man.freebsd.org/cgi/man.cgi?query=sysexits",
+    "https://www.gnu.org/prep/standards/html_node/Errors.html",
+    "https://12factor.net/",
+    "https://no-color.org/",
+    "https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html"
+  ]
+}
