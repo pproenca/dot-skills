@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Rust Clap",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for building CLI applications in Rust using clap. Contains 42 rules across 8 categories, prioritized by impact from critical (type-driven design, derive API patterns) to incremental (testing patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific guidance to help build robust, user-friendly command-line tools.",
+  "references": [
+    "https://docs.rs/clap/latest/clap/",
+    "https://docs.rs/clap/latest/clap/_derive/_tutorial/index.html",
+    "https://docs.rs/clap/latest/clap/_faq/index.html",
+    "https://github.com/clap-rs/clap",
+    "https://rust-cli-recommendations.sunshowers.io/handling-arguments.html",
+    "https://rust-cli.github.io/book/",
+    "https://docs.rs/clap_complete/",
+    "https://docs.rs/assert_cmd/"
+  ]
+}
