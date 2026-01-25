@@ -1,5 +1,5 @@
 ---
-name: unix-cli-best-practices
+name: unix-cli
 description: UNIX command-line interface guidelines for building tools that follow POSIX conventions, proper exit codes, stream handling, and the UNIX philosophy. This skill should be used when writing, reviewing, or designing CLI tools to ensure they integrate properly with the UNIX tool chain. Triggers on tasks involving CLI tools, command-line arguments, exit codes, stdout/stderr, signals, or shell scripts.
 ---
 

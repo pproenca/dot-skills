@@ -1,5 +1,5 @@
 ---
-name: rust-clap-best-practices
+name: rust-clap
 description: Rust Clap CLI argument parsing best practices. This skill should be used when writing, reviewing, or refactoring Rust CLI applications using clap. Triggers on tasks involving argument parsing, CLI design, subcommands, and command-line interfaces in Rust.
 ---
 
