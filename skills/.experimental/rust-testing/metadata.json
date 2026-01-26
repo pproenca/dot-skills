@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "Rust Community",
+  "technology": "Rust Testing",
+  "date": "January 2026",
+  "abstract": "Comprehensive testing guide for Rust applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (test organization, mocking patterns) to incremental (performance optimization). Each rule includes detailed explanations, production-realistic examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated test generation and refactoring.",
+  "references": [
+    "https://doc.rust-lang.org/book/ch11-00-testing.html",
+    "https://doc.rust-lang.org/rust-by-example/testing.html",
+    "https://rust-cli.github.io/book/tutorial/testing.html",
+    "https://tokio.rs/tokio/topics/testing",
+    "https://docs.rs/mockall/latest/mockall/",
+    "https://docs.rs/proptest/latest/proptest/",
+    "https://docs.rs/assert_cmd",
+    "https://docs.rs/rstest",
+    "https://nexte.st/"
+  ]
+}
