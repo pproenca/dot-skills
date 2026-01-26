@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Vite",
+  "technology": "Vite",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for Vite applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (dependency pre-bundling, plugin performance, bundle optimization) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://vite.dev/guide/performance",
+    "https://vite.dev/config/build-options",
+    "https://vite.dev/guide/dep-pre-bundling",
+    "https://vite.dev/config/dep-optimization-options",
+    "https://vite.dev/guide/build",
+    "https://vite.dev/guide/ssr",
+    "https://lightningcss.dev/docs.html",
+    "https://rolldown.rs"
+  ]
+}
