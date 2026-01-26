@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Rust Community",
+  "technology": "Rust System Event-Driven Programming",
+  "date": "January 2026",
+  "abstract": "Comprehensive best practices guide for event-driven system programming in Rust, covering async runtimes, channels, threading, sockets, terminals, signals, and streaming I/O. Contains 42 rules across 8 categories, prioritized by impact from critical (async patterns, channel communication) to incremental (event loop architecture). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://tokio.rs/tokio/tutorial",
+    "https://rust-lang.github.io/async-book/",
+    "https://rust-lang.github.io/api-guidelines/",
+    "https://docs.rs/crossterm/latest/crossterm/",
+    "https://docs.rs/mio/latest/mio/",
+    "https://doc.rust-lang.org/std/sync/",
+    "https://docs.rs/nix/latest/nix/",
+    "https://doc.rust-lang.org/nomicon/"
+  ]
+}
