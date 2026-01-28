@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Code Simplification",
+  "date": "January 2026",
+  "abstract": "Comprehensive code simplification guide for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (context discovery, behavior preservation) to incremental (language idioms). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://refactoring.com/catalog/",
+    "https://www.amazon.com/Clean-Code-Handbook-Software-Craftsmanship/dp/0132350882",
+    "https://google.github.io/styleguide/",
+    "https://rust-lang.github.io/api-guidelines/",
+    "https://www.typescriptlang.org/docs/handbook/",
+    "https://go.dev/doc/effective_go",
+    "https://peps.python.org/pep-0008/"
+  ]
+}

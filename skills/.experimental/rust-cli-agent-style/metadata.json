@@ -1,0 +1,51 @@
+{
+  "name": "rust-cli-agent-style",
+  "version": "1.0.0",
+  "technology": "Rust CLI Agent",
+  "organization": "OpenAI Codex",
+  "date": "2026-01-28",
+  "abstract": "Coding patterns extracted from OpenAI Codex Rust codebase - a production CLI/agent system with 50 crates, 787 Rust files, strict error handling (deny unwrap/expect), tokio async runtime, and thiserror/anyhow error patterns.",
+  "description": "Coding style patterns extracted from OpenAI Codex Rust codebase - a production CLI/agent system with 50 crates and 787 Rust files",
+  "source": {
+    "repository": "https://github.com/openai/codex",
+    "subdirectory": "codex-rs",
+    "commit": "main",
+    "analyzedAt": "2026-01-28",
+    "fileCount": 787,
+    "crateCount": 50
+  },
+  "language": "rust",
+  "rustEdition": "2024",
+  "categories": [
+    "error-handling",
+    "organization",
+    "component",
+    "naming",
+    "style",
+    "cross-crate"
+  ],
+  "ruleCount": 54,
+  "keyDependencies": [
+    "tokio",
+    "serde",
+    "thiserror",
+    "anyhow",
+    "clap",
+    "tracing",
+    "ratatui",
+    "reqwest",
+    "axum"
+  ],
+  "references": [
+    "https://github.com/openai/codex"
+  ],
+  "tags": [
+    "rust",
+    "cli",
+    "async",
+    "tokio",
+    "production",
+    "agent",
+    "workspace"
+  ]
+}
