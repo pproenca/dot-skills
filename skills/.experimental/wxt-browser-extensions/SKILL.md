@@ -1,5 +1,5 @@
 ---
-name: wxt-browser-extensions-best-practices
+name: wxt-browser-extensions
 description: WXT browser extension performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring WXT browser extension code to ensure optimal performance patterns. Triggers on tasks involving WXT, browser extensions, content scripts, service workers, messaging, and extension APIs.
 ---
 
