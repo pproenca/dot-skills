@@ -1,5 +1,5 @@
 ---
-name: vite-best-practices
+name: vite
 description: Vite performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring Vite configuration and projects to ensure optimal performance patterns. Triggers on tasks involving Vite config, build optimization, dependency pre-bundling, plugin development, bundle analysis, or HMR issues.
 ---
 
