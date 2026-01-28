@@ -1,11 +1,11 @@
 ---
-name: chrome-ext
-description: Chrome Extensions (Manifest V3) performance optimization guidelines (formerly chrome-extensions). This skill should be used when writing, reviewing, or refactoring Chrome extension code to ensure optimal performance patterns. Triggers on tasks involving service workers, content scripts, message passing, storage APIs, or extension development.
+name: chrome-extension
+description: Chrome Extensions (Manifest V3) performance and code quality guidelines. Use when writing, reviewing, or refactoring Chrome extension code including service workers, content scripts, message passing, storage APIs, TypeScript patterns, and testing.
 ---
 
-# Chrome Developer Relations Chrome Extensions Best Practices
+# Chrome Extension Best Practices
 
-Comprehensive performance optimization guide for Chrome Extensions (Manifest V3), maintained by Chrome Developer Relations. Contains 40+ rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance and code quality guide for Chrome Extensions (Manifest V3). Contains 67 rules across 12 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -28,6 +28,10 @@ Reference these guidelines when:
 | 6 | Memory Management | MEDIUM | `mem-` |
 | 7 | UI Performance | MEDIUM | `ui-` |
 | 8 | API Usage Patterns | LOW-MEDIUM | `api-` |
+| 9 | Code Style & Naming | MEDIUM | `style-` |
+| 10 | Component Patterns | MEDIUM | `comp-` |
+| 11 | Error Handling | HIGH | `err-` |
+| 12 | Testing Patterns | MEDIUM | `test-` |
 
 ## Quick Reference
 
@@ -95,6 +99,44 @@ Reference these guidelines when:
 - [`api-use-alarms-minperiod`](references/api-use-alarms-minperiod.md) - Respect alarms API minimum period
 - [`api-handle-context-invalidated`](references/api-handle-context-invalidated.md) - Handle extension context invalidated errors
 - [`api-use-declarative-content`](references/api-use-declarative-content.md) - Use declarative content API for page actions
+
+### 9. Code Style & Naming (MEDIUM)
+
+- [`style-boolean-naming`](references/style-boolean-naming.md) - Use is/has/should prefixes for boolean variables
+- [`style-cache-naming`](references/style-cache-naming.md) - Use consistent cache variable naming
+- [`style-constants`](references/style-constants.md) - Define constants for magic values
+- [`style-directory-structure`](references/style-directory-structure.md) - Organize code by feature/layer
+- [`style-file-naming`](references/style-file-naming.md) - Use consistent file naming conventions
+- [`style-function-naming`](references/style-function-naming.md) - Use descriptive function names
+- [`style-import-type`](references/style-import-type.md) - Use type-only imports for types
+- [`style-index-entry-points`](references/style-index-entry-points.md) - Use index files for module entry points
+- [`style-message-enums`](references/style-message-enums.md) - Use enums for message types
+- [`style-type-naming`](references/style-type-naming.md) - Use PascalCase for types and interfaces
+
+### 10. Component Patterns (MEDIUM)
+
+- [`comp-adapter-interface`](references/comp-adapter-interface.md) - Use adapter pattern for browser APIs
+- [`comp-content-script-structure`](references/comp-content-script-structure.md) - Structure content scripts consistently
+- [`comp-css-class-patterns`](references/comp-css-class-patterns.md) - Use BEM or prefixed CSS classes
+- [`comp-manager-class`](references/comp-manager-class.md) - Use manager classes for complex state
+- [`comp-type-guards`](references/comp-type-guards.md) - Use type guards for runtime validation
+- [`comp-ui-components`](references/comp-ui-components.md) - Create reusable UI components
+
+### 11. Error Handling (HIGH)
+
+- [`err-context-invalidation`](references/err-context-invalidation.md) - Handle extension context invalidation
+- [`err-early-return`](references/err-early-return.md) - Use early returns for error handling
+- [`err-null-coalescing`](references/err-null-coalescing.md) - Use nullish coalescing for defaults
+- [`err-promise-barrier`](references/err-promise-barrier.md) - Use promise barriers for coordination
+- [`err-storage-operations`](references/err-storage-operations.md) - Handle storage operation failures
+- [`err-url-parsing`](references/err-url-parsing.md) - Safely parse URLs with try/catch
+- [`err-validation-pattern`](references/err-validation-pattern.md) - Validate inputs at boundaries
+
+### 12. Testing Patterns (MEDIUM)
+
+- [`test-browser-api-mocking`](references/test-browser-api-mocking.md) - Mock chrome APIs in tests
+- [`test-organization`](references/test-organization.md) - Organize tests by feature
+- [`test-validation-functions`](references/test-validation-functions.md) - Test validation functions thoroughly
 
 ## How to Use
 

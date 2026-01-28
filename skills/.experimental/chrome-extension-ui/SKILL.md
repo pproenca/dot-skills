@@ -1,6 +1,6 @@
 ---
-name: chrome-extensions-ux-ui-best-practices
-description: Chrome Extensions UX/UI design and implementation guidelines. This skill should be used when building, reviewing, or refactoring Chrome extension user interfaces including popups, side panels, content scripts, and options pages. Triggers on tasks involving browser extensions, manifest v3, chrome APIs, extension UI.
+name: chrome-extension-ui
+description: Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content scripts, and options pages. Triggers on tasks involving browser extension UI, manifest v3, chrome APIs.
 ---
 
 # Chrome Extensions UX/UI Best Practices

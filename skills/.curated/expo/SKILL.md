@@ -5,7 +5,7 @@ description: Expo React Native performance optimization guidelines. This skill s
 
 # Community Expo React Native Best Practices
 
-Comprehensive performance optimization guide for Expo React Native applications. Contains 42 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for Expo React Native applications. Contains 54 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -24,10 +24,11 @@ Reference these guidelines when:
 | 2 | Bundle Size Optimization | CRITICAL | `bundle-` |
 | 3 | List Virtualization | HIGH | `list-` |
 | 4 | Image Optimization | HIGH | `image-` |
-| 5 | Navigation Performance | MEDIUM-HIGH | `nav-` |
-| 6 | Re-render Prevention | MEDIUM | `rerender-` |
-| 7 | Animation Performance | MEDIUM | `anim-` |
-| 8 | Memory Management | LOW-MEDIUM | `mem-` |
+| 5 | Data Fetching Patterns | HIGH | `data-` |
+| 6 | Navigation Performance | MEDIUM-HIGH | `nav-` |
+| 7 | Re-render Prevention | MEDIUM | `rerender-` |
+| 8 | Animation Performance | MEDIUM | `anim-` |
+| 9 | Memory Management | LOW-MEDIUM | `mem-` |
 
 ## Quick Reference
 
@@ -69,7 +70,16 @@ Reference these guidelines when:
 - `image-preload-critical` - Preload critical above-the-fold images
 - `image-lazy-load-offscreen` - Lazy load off-screen images
 
-### 5. Navigation Performance (MEDIUM-HIGH)
+### 5. Data Fetching Patterns (HIGH)
+
+- `data-parallel-fetching` - Fetch independent data in parallel
+- `data-request-deduplication` - Deduplicate concurrent requests
+- `data-abort-requests` - Abort requests on component unmount
+- `data-pagination` - Implement efficient pagination strategies
+- `data-cache-strategies` - Use appropriate caching strategies
+- `data-optimistic-updates` - Apply optimistic updates for responsiveness
+
+### 6. Navigation Performance (MEDIUM-HIGH)
 
 - `nav-use-native-stack` - Use native stack navigator
 - `nav-unmount-inactive-screens` - Unmount inactive tab screens
@@ -77,7 +87,7 @@ Reference these guidelines when:
 - `nav-optimize-screen-options` - Optimize screen options
 - `nav-avoid-deep-nesting` - Avoid deeply nested navigators
 
-### 6. Re-render Prevention (MEDIUM)
+### 7. Re-render Prevention (MEDIUM)
 
 - `rerender-use-memo-components` - Memoize expensive components with React.memo
 - `rerender-use-callback` - Stabilize callbacks with useCallback
@@ -87,7 +97,7 @@ Reference these guidelines when:
 - `rerender-use-react-compiler` - Enable React Compiler for automatic memoization
 - `rerender-avoid-anonymous-components` - Avoid anonymous components in JSX
 
-### 7. Animation Performance (MEDIUM)
+### 8. Animation Performance (MEDIUM)
 
 - `anim-use-reanimated` - Use Reanimated for UI thread animations
 - `anim-use-native-driver` - Enable useNativeDriver for Animated API
@@ -95,7 +105,7 @@ Reference these guidelines when:
 - `anim-gesture-handler-integration` - Use Gesture Handler with Reanimated
 - `anim-interaction-manager` - Defer heavy work during animations
 
-### 8. Memory Management (LOW-MEDIUM)
+### 9. Memory Management (LOW-MEDIUM)
 
 - `mem-cleanup-useeffect` - Clean up subscriptions and timers
 - `mem-abort-fetch-requests` - Abort fetch requests on unmount

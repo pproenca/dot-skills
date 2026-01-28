@@ -1,8 +1,12 @@
 {
+  "name": "chrome-extension-ui",
+  "description": "Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content scripts, and options pages",
   "version": "0.1.0",
   "organization": "Chrome Extensions Community",
   "technology": "Chrome Extensions",
   "date": "January 2026",
+  "tags": ["chrome", "extension", "ui", "ux", "popup", "side-panel", "accessibility"],
+  "totalRules": 42,
   "abstract": "Comprehensive UX/UI design guide for Chrome Extensions, optimized for Manifest V3. Contains 42 rules across 8 categories, prioritized by impact from critical (component selection, accessibility) to incremental (icons and branding). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide extension development and code review.",
   "references": [
     "https://developer.chrome.com/docs/extensions/develop/ui",
