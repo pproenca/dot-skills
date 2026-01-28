@@ -2,7 +2,7 @@
 title: Use aria-invalid for Form Error States
 impact: HIGH
 impactDescription: announces validation errors to screen readers
-tags: access, form, aria-invalid, validation, error
+tags: ally, form, aria-invalid, validation, error
 ---
 
 ## Use aria-invalid for Form Error States

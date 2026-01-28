@@ -1,5 +1,5 @@
 ---
-name: rust-testing-best-practices
+name: rust-testing
 description: Rust testing patterns for CLI applications, libraries, and frameworks. This skill should be used when writing, reviewing, or refactoring Rust tests including unit tests, integration tests, mocking, async testing, and CI integration. Triggers on tasks involving Rust testing, cargo test, mockall, proptest, tokio test, or test organization.
 ---
 

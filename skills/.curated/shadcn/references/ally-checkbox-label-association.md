@@ -2,7 +2,7 @@
 title: Wrap Checkbox with Label for Click Target
 impact: HIGH
 impactDescription: expands clickable area and provides screen reader context
-tags: access, checkbox, label, form, click-target
+tags: ally, checkbox, label, form, click-target
 ---
 
 ## Wrap Checkbox with Label for Click Target

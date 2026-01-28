@@ -2,7 +2,7 @@
 title: Always Include DialogTitle for Screen Readers
 impact: HIGH
 impactDescription: required for ARIA labeling and screen reader announcements
-tags: access, dialog, aria, screen-reader, title
+tags: ally, dialog, aria, screen-reader, title
 ---
 
 ## Always Include DialogTitle for Screen Readers

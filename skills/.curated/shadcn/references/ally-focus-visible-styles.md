@@ -2,7 +2,7 @@
 title: Preserve Focus Visible Styles for Keyboard Navigation
 impact: MEDIUM-HIGH
 impactDescription: required for keyboard users to track focus position
-tags: access, focus, keyboard, navigation, ring
+tags: ally, focus, keyboard, navigation, ring
 ---
 
 ## Preserve Focus Visible Styles for Keyboard Navigation

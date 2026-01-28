@@ -2,7 +2,7 @@
 title: Associate Labels with Form Controls
 impact: HIGH
 impactDescription: enables screen reader announcements and click-to-focus
-tags: access, form, label, input, accessibility
+tags: ally, form, label, input, accessibility
 ---
 
 ## Associate Labels with Form Controls
