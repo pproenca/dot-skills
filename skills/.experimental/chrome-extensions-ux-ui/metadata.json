@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Chrome Extensions Community",
+  "technology": "Chrome Extensions",
+  "date": "January 2026",
+  "abstract": "Comprehensive UX/UI design guide for Chrome Extensions, optimized for Manifest V3. Contains 42 rules across 8 categories, prioritized by impact from critical (component selection, accessibility) to incremental (icons and branding). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide extension development and code review.",
+  "references": [
+    "https://developer.chrome.com/docs/extensions/develop/ui",
+    "https://developer.chrome.com/docs/extensions/mv3/a11y/",
+    "https://developer.chrome.com/docs/webstore/best-practices",
+    "https://developer.chrome.com/docs/extensions/develop/ui/add-popup",
+    "https://developer.chrome.com/docs/extensions/reference/api/sidePanel",
+    "https://developer.chrome.com/docs/extensions/develop/concepts/content-scripts",
+    "https://developer.chrome.com/docs/webstore/branding",
+    "https://www.w3.org/WAI/WCAG21/Understanding/"
+  ]
+}
