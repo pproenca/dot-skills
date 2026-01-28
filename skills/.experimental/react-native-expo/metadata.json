@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "React Native with Expo",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for React Native applications built with Expo, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (app startup, bundle size, list virtualization) to incremental (memory management). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://expo.dev/blog/best-practices-for-reducing-lag-in-expo-apps",
+    "https://reactnative.dev/docs/performance",
+    "https://reactnative.dev/docs/optimizing-flatlist-configuration",
+    "https://docs.expo.dev/versions/latest/sdk/image/",
+    "https://docs.expo.dev/router/reference/async-routes/",
+    "https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/",
+    "https://www.callstack.com/ebooks/the-ultimate-guide-to-react-native-optimization",
+    "https://blog.sentry.io/react-native-performance-strategies-tools/",
+    "https://shopify.github.io/flash-list/",
+    "https://tanstack.com/query/latest/docs/react/overview"
+  ]
+}
