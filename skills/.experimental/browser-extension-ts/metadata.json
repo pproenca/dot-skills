@@ -1,0 +1,40 @@
+{
+  "name": "browser-extension-ts",
+  "technology": "Browser Extension TypeScript",
+  "version": "1.0.0",
+  "organization": "Extracted from Dark Reader",
+  "date": "2026-01-28",
+  "abstract": "TypeScript patterns and best practices for building cross-browser extensions (Chrome, Firefox, Edge). Covers Manifest V3 service workers, content script architecture, cross-context messaging, error handling for extension edge cases, and testing strategies. Patterns extracted from Dark Reader, a popular open-source browser extension.",
+  "description": "TypeScript browser extension development patterns extracted from Dark Reader",
+  "sources": [
+    {
+      "name": "darkreader",
+      "url": "https://github.com/darkreader/darkreader",
+      "type": "git",
+      "files": 310,
+      "language": "typescript"
+    }
+  ],
+  "references": [
+    "https://github.com/darkreader/darkreader",
+    "https://developer.chrome.com/docs/extensions/mv3/",
+    "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions"
+  ],
+  "categories": [
+    "style",
+    "comp",
+    "err",
+    "mv3",
+    "test"
+  ],
+  "totalRules": 31,
+  "tags": [
+    "browser-extension",
+    "typescript",
+    "chrome",
+    "firefox",
+    "manifest-v3",
+    "content-scripts",
+    "background-scripts"
+  ]
+}
