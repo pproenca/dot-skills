@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Zustand",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance and architecture guide for Zustand state management in React applications, designed for AI agents and LLMs. Contains 43 rules across 8 categories, prioritized by impact from critical (store architecture, selector optimization) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://zustand.docs.pmnd.rs/",
+    "https://github.com/pmndrs/zustand",
+    "https://tkdodo.eu/blog/working-with-zustand",
+    "https://tkdodo.eu/blog/zustand-and-react-context",
+    "https://zustand.docs.pmnd.rs/guides/prevent-rerenders-with-use-shallow",
+    "https://zustand.docs.pmnd.rs/middlewares/persist"
+  ]
+}
