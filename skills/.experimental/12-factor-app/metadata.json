@@ -1,0 +1,15 @@
+{
+  "name": "12-factor-app",
+  "version": "0.1.0",
+  "organization": "Twelve-Factor Community",
+  "technology": "Cloud-Native Applications",
+  "date": "January 2026",
+  "abstract": "The Twelve-Factor App methodology for building modern, scalable software-as-a-service applications. Contains 51 rules across 12 categories covering codebase management, dependency isolation, configuration, backing services, build/release/run separation, stateless processes, port binding, concurrency, disposability, dev/prod parity, logging, and admin processes. Each rule provides actionable guidance for AI agents to generate cloud-native, deployment-ready code.",
+  "references": [
+    "https://12factor.net/",
+    "https://github.com/twelve-factor/twelve-factor",
+    "https://www.heroku.com/",
+    "https://kubernetes.io/docs/concepts/",
+    "https://www.docker.com/"
+  ]
+}
