@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Framer Motion",
+  "date": "January 2026",
+  "abstract": "Comprehensive performance optimization guide for Framer Motion animations in React applications, designed for AI agents and LLMs. Contains 42 rules across 9 categories, prioritized by impact from critical (bundle optimization, re-render prevention) to incremental (exit animations). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://motion.dev/docs",
+    "https://motion.dev/docs/react-reduce-bundle-size",
+    "https://motion.dev/docs/performance",
+    "https://motion.dev/docs/react-motion-value",
+    "https://motion.dev/docs/react-layout-animations",
+    "https://motion.dev/docs/react-scroll-animations",
+    "https://motion.dev/docs/react-gestures",
+    "https://motion.dev/docs/react-transitions"
+  ]
+}
