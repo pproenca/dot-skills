@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Knip",
+  "date": "January 2026",
+  "abstract": "Comprehensive guide for detecting and removing dead code in JavaScript and TypeScript projects using Knip. Contains 43 rules across 8 categories, prioritized by impact from critical (configuration and entry points) to incremental (performance optimization). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct configurations, and specific guidance for monorepos, CI integration, and auto-fix workflows.",
+  "references": [
+    "https://knip.dev",
+    "https://github.com/webpro-nl/knip",
+    "https://knip.dev/reference/configuration",
+    "https://knip.dev/guides/handling-issues",
+    "https://knip.dev/features/monorepos-and-workspaces",
+    "https://knip.dev/features/auto-fix",
+    "https://knip.dev/guides/using-knip-in-ci",
+    "https://effectivetypescript.com/2023/07/29/knip/"
+  ]
+}
