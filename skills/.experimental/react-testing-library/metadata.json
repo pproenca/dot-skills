@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Testing Library",
+  "technology": "React Testing Library",
+  "date": "January 2026",
+  "abstract": "Comprehensive testing best practices guide for React Testing Library, designed for AI agents and LLMs. Contains 43 rules across 9 categories, prioritized by impact from critical (query selection, async handling, anti-patterns) to incremental (accessibility testing). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact descriptions to guide test writing and code review.",
+  "references": [
+    "https://testing-library.com/docs/guiding-principles",
+    "https://testing-library.com/docs/queries/about",
+    "https://testing-library.com/docs/user-event/intro",
+    "https://testing-library.com/docs/react-testing-library/api",
+    "https://kentcdodds.com/blog/common-mistakes-with-react-testing-library",
+    "https://github.com/testing-library/jest-dom"
+  ]
+}
