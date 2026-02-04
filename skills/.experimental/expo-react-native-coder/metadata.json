@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Expo React Native Coder",
+  "technology": "Expo React Native",
+  "date": "February 2026",
+  "abstract": "Comprehensive feature development guide for Expo React Native applications, designed for AI agents and LLMs. Contains 50+ rules across 10 categories covering project setup, routing, screens, data fetching, authentication, deep linking, native UX, forms, assets, and testing. Includes production-ready templates for common features like tab layouts, authentication flows, list screens, and form handling.",
+  "references": [
+    "https://docs.expo.dev",
+    "https://docs.expo.dev/router/introduction/",
+    "https://docs.expo.dev/develop/authentication/",
+    "https://docs.expo.dev/linking/overview/",
+    "https://reactnative.dev/docs/getting-started",
+    "https://react.dev"
+  ]
+}
