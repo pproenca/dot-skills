@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Uniwind",
+  "technology": "Uniwind",
+  "date": "February 2026",
+  "abstract": "Comprehensive best practices guide for Uniwind, the fastest Tailwind CSS bindings for React Native. Contains 45+ rules across 8 categories, prioritized by impact from critical (build-time configuration, theme architecture) to incremental (migration compatibility). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://docs.uniwind.dev",
+    "https://github.com/uni-stack/uniwind",
+    "https://uniwind.dev",
+    "https://tailwindcss.com/docs/theme",
+    "https://docs.expo.dev/versions/latest/sdk/safe-area-context/",
+    "https://reactnative.dev"
+  ]
+}
