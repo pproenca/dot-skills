@@ -1,5 +1,5 @@
 ---
-name: twelve-factor-app
+name: 12-factor-app
 description: The Twelve-Factor App methodology for building scalable, maintainable cloud-native applications. Use when designing backend services, APIs, microservices, or any software-as-a-service application. Triggers on deployment patterns, configuration management, process architecture, logging, and infrastructure decisions.
 ---
 
