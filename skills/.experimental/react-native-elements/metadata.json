@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "React Native Elements",
+  "date": "February 2026",
+  "abstract": "Comprehensive best practices guide for React Native Elements applications, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (import setup, theme architecture) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://reactnativeelements.com/docs",
+    "https://github.com/react-native-elements/react-native-elements",
+    "https://reactnative.dev/docs/performance",
+    "https://reactnative.dev/docs/optimizing-flatlist-configuration",
+    "https://www.callstack.com/ebooks/the-ultimate-guide-to-react-native-optimization"
+  ]
+}
