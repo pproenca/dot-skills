@@ -112,11 +112,78 @@ Reference these guidelines when:
 | noisereduce | ML noise reduction | `pip install noisereduce` |
 | Audacity | Visual editing | `brew install audacity` |
 
+## Workflow Scripts (Recommended)
+
+Use the bundled scripts to generate objective baselines, create a workflow plan, and verify results.
+
+- `scripts/preflight_audio.py` - Generate a forensic preflight report (JSON or Markdown).
+- `scripts/plan_from_preflight.py` - Create a workflow plan template from the preflight report.
+- `scripts/compare_audio.py` - Compare objective metrics between baseline and processed audio.
+
+Example usage:
+
+```bash
+# 1) Analyze and capture baseline metrics
+python3 skills/.experimental/audio-voice-recovery/scripts/preflight_audio.py evidence.wav --out preflight.json
+
+# 2) Generate a workflow plan template
+python3 skills/.experimental/audio-voice-recovery/scripts/plan_from_preflight.py --preflight preflight.json --out plan.md
+
+# 3) Compare baseline vs processed metrics
+python3 skills/.experimental/audio-voice-recovery/scripts/compare_audio.py \
+  --before evidence.wav \
+  --after enhanced.wav \
+  --format md \
+  --out comparison.md
+```
+
+## Forensic Preflight Workflow (Do This Before Any Changes)
+
+Align preflight with SWGDE Best Practices for the Enhancement of Digital Audio (20-a-001) and SWGDE Best Practices for Forensic Audio (08-a-001).
+Establish an objective baseline state and plan the workflow so processing does not introduce clipping, artifacts, or false "done" confidence.
+Use `scripts/preflight_audio.py` to capture baseline metrics and preserve the report with the case file.
+
+Capture and record before processing:
+- Record evidence identity and integrity: path, filename, file size, SHA-256 checksum, source, format/container, codec
+- Record signal integrity: sample rate, bit depth, channels, duration
+- Measure baseline loudness and levels: LUFS/LKFS, true peak, peak, RMS, dynamic range, DC offset
+- Detect clipping and document clipped-sample percentage, peak headroom, exact time ranges
+- Identify noise profile: stationary vs non-stationary, dominant noise bands, SNR estimate
+- Locate the region of interest (ROI) and document time ranges and changes over time
+- Inspect spectral content and estimate speech-band energy and intelligibility risk
+- Scan for temporal defects: dropouts, discontinuities, splices, drift
+- Evaluate channel correlation and phase anomalies (if stereo)
+- Extract and preserve metadata: timestamps, device/model tags, embedded notes
+
+Procedure:
+1. Prepare a forensic working copy, verify hashes, and preserve the original untouched.
+2. Locate ROI and target signal; document exact time ranges and changes across the recording.
+3. Assess challenges to intelligibility and signal quality; map challenges to mitigation strategies.
+4. Identify required processing and plan a workflow order that avoids unwanted artifacts.
+   Generate a plan draft with `scripts/plan_from_preflight.py` and complete it with case-specific decisions.
+5. Measure baseline loudness and true peak per ITU-R BS.1770 / EBU R 128 and record peak/RMS/DC offset.
+6. Detect clipping and dropouts; if clipping is present, declip first or pause and document limitations.
+7. Inspect spectral content and noise type; collect representative noise profile segments and estimate SNR.
+8. If stereo, evaluate channel correlation and phase; document anomalies.
+9. Create a baseline listening log (multiple devices) and define success criteria for intelligibility and listenability.
+
+Failure-pattern guardrails:
+- Do not process until every preflight field is captured.
+- Document every process, setting, software version, and time segment to enable repeatability.
+- Compare each processed output to the unprocessed input and assess progress toward intelligibility and listenability.
+- Avoid over-processing; review removed signal (filter residue) to avoid removing target signal components.
+- Keep intermediate files uncompressed and preserve sample rate/bit depth when moving between tools.
+- Perform a final review against the original; if unsatisfactory, revise or stop and report limitations.
+- If the request is not achievable, communicate limitations and do not declare completion.
+- Require objective metrics and A/B listening before declaring completion.
+- Do not rely solely on objective metrics; corroborate with critical listening.
+- Take listening breaks to avoid ear fatigue during extended reviews.
+
 ## Quick Enhancement Pipeline
 
 ```bash
-# 1. Analyze original
-ffprobe -v error -show_format -show_streams evidence.wav
+# 1. Analyze original (run preflight and capture baseline metrics)
+python3 skills/.experimental/audio-voice-recovery/scripts/preflight_audio.py evidence.wav --out preflight.json
 
 # 2. Create working copy with checksum
 cp evidence.wav working.wav
@@ -136,6 +203,13 @@ whisper enhanced.wav --model large-v3 --language en
 
 # 5. Verify original unchanged
 sha256sum -c evidence.sha256
+
+# 6. Verify improvement (objective comparison + A/B listening)
+python3 skills/.experimental/audio-voice-recovery/scripts/compare_audio.py \
+  --before evidence.wav \
+  --after enhanced.wav \
+  --format md \
+  --out comparison.md
 ```
 
 ## How to Use
