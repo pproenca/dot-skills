@@ -1,0 +1,36 @@
+{
+  "name": "develop-in-swift",
+  "version": "1.0.0",
+  "organization": "Apple",
+  "date": "2025-02-05",
+  "abstract": "Comprehensive guide for Swift and SwiftUI app development based on Apple's official Develop in Swift Tutorials, covering Swift fundamentals, SwiftUI views, SwiftData persistence, and app distribution.",
+  "description": "Swift and SwiftUI best practices from Apple's Develop in Swift Tutorials",
+  "source": {
+    "type": "documentation",
+    "url": "https://developer.apple.com/tutorials/develop-in-swift/",
+    "name": "Apple Develop in Swift Tutorials",
+    "extractedAt": "2025-02-05"
+  },
+  "categories": 13,
+  "rules": 41,
+  "platforms": ["iOS", "iPadOS", "macOS", "visionOS", "watchOS", "tvOS"],
+  "minimumSwiftVersion": "5.9",
+  "minimumXcodeVersion": "15.0",
+  "topics": [
+    "Swift fundamentals",
+    "SwiftUI views",
+    "State management",
+    "SwiftData persistence",
+    "Navigation patterns",
+    "Accessibility",
+    "Machine learning",
+    "Spatial computing",
+    "App distribution"
+  ],
+  "references": [
+    "https://developer.apple.com/tutorials/develop-in-swift/",
+    "https://developer.apple.com/documentation/swiftui/",
+    "https://developer.apple.com/documentation/swiftdata/",
+    "https://www.swift.org/"
+  ]
+}
