@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "Forensic Audio Research",
+  "technology": "Audio Voice Recovery",
+  "date": "February 2026",
+  "abstract": "Comprehensive audio forensics and voice recovery guide designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (signal preservation, noise profiling) to operational (tool integration, batch automation). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific impact metrics. Covers the complete pipeline from evidence handling through noise reduction, voice enhancement, transcription, and forensic authentication using tools like FFmpeg, SoX, Whisper, RNNoise, and Python audio libraries.",
+  "references": [
+    "https://www.swgde.org/documents/published-complete-listing/23-a-001-technical-notes-on-ffmpeg-for-forensic-audio-examination/",
+    "https://github.com/openai/whisper",
+    "https://jmvalin.ca/demo/rnnoise/",
+    "https://www.izotope.com/en/products/rx/features",
+    "https://en.wikipedia.org/wiki/Wiener_filter",
+    "https://en.wikipedia.org/wiki/Electrical_network_frequency_analysis",
+    "https://librosa.org/",
+    "https://cedaraudio.com/",
+    "https://en.wikipedia.org/wiki/Audio_forensics",
+    "https://podcast.adobe.com/enhance",
+    "https://ffmpeg.org/ffmpeg-filters.html",
+    "http://sox.sourceforge.net/sox.html"
+  ]
+}
