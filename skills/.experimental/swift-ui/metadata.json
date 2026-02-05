@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple Design Patterns",
+  "technology": "SwiftUI",
+  "date": "February 2026",
+  "abstract": "Comprehensive guide for building Apple-quality iOS app UIs with SwiftUI, designed for AI agents and LLMs. Contains 50+ rules across 9 categories, from critical state management and HIG-compliant visual design to navigation patterns, animations, accessibility, and platform integration. Each rule includes detailed explanations with incorrect vs. correct implementations to enable principal-level one-shot native app development matching Apple's Weather, Calendar, Photos, and Notes apps.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://developer.apple.com/documentation/swiftui",
+    "https://developer.apple.com/videos/play/wwdc2025/256/",
+    "https://developer.apple.com/videos/play/wwdc2025/306/",
+    "https://developer.apple.com/videos/play/wwdc2023/10158/",
+    "https://developer.apple.com/sf-symbols/",
+    "https://medium.com/airbnb-engineering/understanding-and-improving-swiftui-performance-37b77ac61896",
+    "https://fatbobman.com/en/"
+  ]
+}
