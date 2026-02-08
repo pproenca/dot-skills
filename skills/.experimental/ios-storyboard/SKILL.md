@@ -1,5 +1,5 @@
 ---
-name: ios-storyboard-best-practices
+name: ios-storyboard
 description: iOS Storyboard and Interface Builder best practices for Xcode UI design. This skill should be used when writing, reviewing, or building iOS user interfaces using Xcode Storyboards. Triggers on tasks involving Auto Layout constraints, segues, size classes, UIStackView, Interface Builder, storyboard architecture, accessibility in IB, and storyboard version control.
 ---
 
