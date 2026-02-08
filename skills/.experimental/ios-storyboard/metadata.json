@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "iOS Design Principles",
+  "technology": "Xcode Storyboard & Interface Builder",
+  "date": "February 2026",
+  "abstract": "Comprehensive UI design and architecture guide for Xcode Storyboard and Interface Builder, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (storyboard architecture, Auto Layout constraints) to incremental (debugging and inspection). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines",
+    "https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/",
+    "https://developer.apple.com/library/archive/featuredarticles/ViewControllerPGforiPhoneOS/UsingSegues.html",
+    "https://developer.apple.com/documentation/uikit/uistackview",
+    "https://developer.apple.com/documentation/uikit/uiaccessibilitytraits",
+    "https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/DebuggingTricksandTips.html",
+    "https://www.kodeco.com/5055364-ios-storyboards-getting-started",
+    "https://blog.supereasyapps.com/30-auto-layout-best-practices/"
+  ]
+}
