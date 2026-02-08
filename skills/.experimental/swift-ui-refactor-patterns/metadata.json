@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple Developer Patterns",
+  "technology": "SwiftUI Refactoring",
+  "date": "February 2026",
+  "abstract": "Comprehensive refactoring guide for SwiftUI applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (API modernization, state architecture) to incremental (performance optimization). Each rule includes detailed explanations, real-world before/after examples comparing legacy vs. modern implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://developer.apple.com/documentation/swiftui/migrating-from-the-observable-object-protocol-to-the-observable-macro",
+    "https://developer.apple.com/documentation/swiftui/migrating-to-new-navigation-types",
+    "https://developer.apple.com/videos/play/wwdc2023/10160/",
+    "https://developer.apple.com/videos/play/wwdc2024/10150/",
+    "https://developer.apple.com/documentation/Xcode/understanding-and-improving-swiftui-performance",
+    "https://medium.com/airbnb-engineering/understanding-and-improving-swiftui-performance-37b77ac61896",
+    "https://www.swiftbysundell.com/articles/avoiding-massive-swiftui-views/",
+    "https://www.swiftbysundell.com/articles/avoiding-anyview-in-swiftui/",
+    "https://www.avanderlee.com/optimization/refactoring-swift-best-practices/",
+    "https://www.jessesquires.com/blog/2024/09/09/swift-observable-macro/",
+    "https://www.donnywals.com/comparing-observable-to-observableobjects/",
+    "https://holyswift.app/three-ways-to-refactor-massive-swiftui-views/"
+  ]
+}
