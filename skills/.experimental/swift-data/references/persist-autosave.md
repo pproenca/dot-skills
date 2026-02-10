@@ -24,10 +24,9 @@ func importFriends(from data: [FriendData], container: ModelContainer) {
 }
 ```
 
-**Correct (explicit save or autosave enabled):**
+**Correct (explicit save — recommended for batch operations):**
 
 ```swift
-// Option 1: Explicit save
 func importFriends(from data: [FriendData], container: ModelContainer) throws {
     let context = ModelContext(container)
 
@@ -35,20 +34,11 @@ func importFriends(from data: [FriendData], container: ModelContainer) throws {
         let friend = Friend(name: item.name, birthday: item.birthday)
         context.insert(friend)
     }
-    try context.save()  // Persists all changes immediately
-}
-
-// Option 2: Enable autosave
-func importFriends(from data: [FriendData], container: ModelContainer) {
-    let context = ModelContext(container)
-    context.autosaveEnabled = true  // SwiftData will save automatically
-
-    for item in data {
-        let friend = Friend(name: item.name, birthday: item.birthday)
-        context.insert(friend)
-    }
+    try context.save()  // Persists all changes atomically
 }
 ```
+
+**Alternative:** For long-running producers where partial persistence is acceptable, you can enable autosave: `context.autosaveEnabled = true`. Avoid this for imports — autosave may fire mid-import, persisting an incomplete dataset if the import fails halfway.
 
 **When NOT to use:**
 - The `@Environment(\.modelContext)` context already has autosave — no action needed

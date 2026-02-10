@@ -5,7 +5,7 @@ description: SwiftData data modeling, persistence, and state management guidelin
 
 # Apple Developer SwiftData Best Practices
 
-Comprehensive data modeling, persistence, and state management guide for Swift and SwiftUI applications using SwiftData, sourced from official Apple Developer tutorials and WWDC sessions. Contains 48 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive data modeling, persistence, and state management guide for Swift and SwiftUI applications using SwiftData, sourced from official Apple Developer tutorials and WWDC sessions. Contains 48 rules across 8 categories (after merging duplicates and adding concurrency coverage), prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -34,7 +34,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 ## Troubleshooting
 
 - Data not persisting -> `persist-model-macro`, `persist-container-setup`, `persist-autosave`, `schema-configuration`
-- List not updating -> `query-property-wrapper`, `state-query-view-updates`, `state-wrapper-views`
+- List not updating -> `query-property-wrapper`, `state-wrapper-views`
 - Duplicates -> `schema-unique-attributes`, `schema-unique-macro`
 - Widget/extension can’t see data -> `persist-app-group`, `schema-configuration`
 
@@ -62,6 +62,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 - [`model-computed-properties`](references/model-computed-properties.md) - Use computed properties for derived data
 - [`model-defaults`](references/model-defaults.md) - Provide sensible default values for model properties
 - [`model-transient`](references/model-transient.md) - Mark non-persistent properties with @Transient
+- [`model-external-storage`](references/model-external-storage.md) - Use external storage for large binary data
 
 ### 2. Persistence Setup (CRITICAL)
 
@@ -72,6 +73,8 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 - [`persist-enumerate-batch`](references/persist-enumerate-batch.md) - Use ModelContext.enumerate for large traversals
 - [`persist-in-memory-config`](references/persist-in-memory-config.md) - Use in-memory configuration for tests and previews
 - [`persist-app-group`](references/persist-app-group.md) - Use App Groups for shared data storage
+- [`persist-model-actor`](references/persist-model-actor.md) - Use @ModelActor for background SwiftData work
+- [`persist-identifier-transfer`](references/persist-identifier-transfer.md) - Pass PersistentIdentifier across actors
 
 ### 3. Querying & Filtering (HIGH)
 
@@ -82,6 +85,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 - [`query-fetch-descriptor`](references/query-fetch-descriptor.md) - Use FetchDescriptor outside SwiftUI views
 - [`query-fetch-tuning`](references/query-fetch-tuning.md) - Tune FetchDescriptor paging and pending-change behavior
 - [`query-localized-search`](references/query-localized-search.md) - Use localizedStandardContains for search
+- [`query-expression`](references/query-expression.md) - Use #Expression for reusable predicate components (iOS 18+)
 
 ### 4. CRUD Operations (HIGH)
 
@@ -104,8 +108,6 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 ### 6. SwiftUI State Flow (MEDIUM)
 
 - [`state-bindable`](references/state-bindable.md) - Use @Bindable for two-way model binding
-- [`state-environment-context`](references/state-environment-context.md) - Access ModelContext via @Environment for mutations
-- [`state-query-view-updates`](references/state-query-view-updates.md) - Leverage @Query for automatic view updates
 - [`state-local-state`](references/state-local-state.md) - Use @State for view-local transient data
 - [`state-wrapper-views`](references/state-wrapper-views.md) - Extract wrapper views for dynamic query state
 

@@ -1,7 +1,7 @@
 ---
 title: Use Arrays for One-to-Many Relationships
 impact: MEDIUM-HIGH
-impactDescription: aligns relationship modeling with Apple’s SwiftData examples and common SwiftUI iteration patterns
+impactDescription: prevents O(n) Set-to-Array conversion on every ForEach render and aligns with Apple's canonical patterns
 tags: rel, one-to-many, array, relationship
 ---
 

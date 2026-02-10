@@ -80,4 +80,4 @@ formatPrice(toCents(price))  // OK: '$29.99'
 - Validated strings (email, URL, slug)
 - Sensitive data that needs tracking
 
-Reference: [TypeScript Handbook - Branded Types](https://www.typescriptlang.org/docs/handbook/2/types-from-types.html)
+Reference: [TypeScript Playground - Nominal Typing](https://www.typescriptlang.org/play/typescript/language-extensions/nominal-typing.ts.html)

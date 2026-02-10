@@ -62,6 +62,8 @@ struct FriendList: View {
 }
 ```
 
+**Important:** This pattern inserts the model before the sheet appears. With autosave enabled, an empty record may persist if the app is killed before the user cancels. Always pair this with a cancel handler that deletes the unsaved model — see [`crud-cancel-delete`](crud-cancel-delete.md).
+
 **Benefits:**
 - Clear modal context signals "you are creating something new"
 - `.interactiveDismissDisabled()` prevents accidental swipe-to-dismiss

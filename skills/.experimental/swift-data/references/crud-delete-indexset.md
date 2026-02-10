@@ -1,7 +1,7 @@
 ---
 title: Delete Using IndexSet with onDelete Modifier
 impact: HIGH
-impactDescription: ensures swipe-to-delete removes records from database, not just UI
+impactDescription: prevents orphaned records — swipe-to-delete removes from database, not just UI
 tags: crud, delete, indexset, ondelete, list
 ---
 

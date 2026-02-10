@@ -7,20 +7,20 @@ tags: async, defer, promises, optimization, performance
 
 ## Defer await Until Value Is Needed
 
-Start async operations immediately but defer `await` until the value is actually required. This allows work to proceed while promises resolve in the background.
+Start async operations immediately but defer `await` until the value is actually required. This allows independent work to proceed while promises resolve in the background.
 
-**Incorrect (blocks immediately):**
+**Incorrect (blocks immediately, serializes independent work):**
 
 ```typescript
 async function processOrder(orderId: string): Promise<OrderResult> {
   const order = await fetchOrder(orderId)  // Blocks here
-  const inventory = await checkInventory(order.items)  // Must wait for order
+  const config = await loadProcessingConfig()  // Waits for order first, unnecessarily
 
-  // Could have started inventory check earlier
+  // config doesn't depend on order — these could run in parallel
   if (order.priority === 'express') {
-    return processExpress(order, inventory)
+    return processExpress(order, config)
   }
-  return processStandard(order, inventory)
+  return processStandard(order, config)
 }
 ```
 
@@ -28,18 +28,15 @@ async function processOrder(orderId: string): Promise<OrderResult> {
 
 ```typescript
 async function processOrder(orderId: string): Promise<OrderResult> {
-  const orderPromise = fetchOrder(orderId)  // Start immediately, don't await
-
-  // Do other work while order fetches
-  const config = loadProcessingConfig()
+  const orderPromise = fetchOrder(orderId)  // Start immediately
+  const config = await loadProcessingConfig()  // Runs while order fetches
 
   const order = await orderPromise  // Now await when needed
-  const inventory = await checkInventory(order.items)
 
   if (order.priority === 'express') {
-    return processExpress(order, inventory)
+    return processExpress(order, config)
   }
-  return processStandard(order, inventory)
+  return processStandard(order, config)
 }
 ```
 

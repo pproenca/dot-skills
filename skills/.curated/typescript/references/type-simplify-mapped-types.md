@@ -1,7 +1,7 @@
 ---
 title: Simplify Complex Mapped Types
-impact: CRITICAL
-impactDescription: reduces type computation by 50-80%
+impact: HIGH
+impactDescription: reduces type computation by 50-80% when applicable
 tags: type, mapped-types, simplification, utility-types, performance
 ---
 

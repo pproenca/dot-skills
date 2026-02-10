@@ -1,61 +1,63 @@
 ---
 title: Avoid Unnecessary async/await
 impact: HIGH
-impactDescription: eliminates microtask queue overhead
-tags: async, promises, overhead, optimization, performance
+impactDescription: eliminates trivial Promise wrappers and improves stack traces
+tags: async, promises, overhead, optimization, return-await
 ---
 
 ## Avoid Unnecessary async/await
 
-Every `async` function wraps its return in a Promise, and every `await` schedules a microtask. For functions that just return a Promise, skip the wrapper.
+Remove `async` from functions that only wrap a single Promise without using `await` for control flow. However, prefer `return await` over bare `return` inside try/catch blocks — it ensures errors are caught and produces better stack traces.
 
-**Incorrect (unnecessary Promise wrapping):**
+**Incorrect (trivial async wrapper with no logic):**
 
 ```typescript
 async function getUser(userId: string): Promise<User> {
-  return await userRepository.findById(userId)
-  // Creates extra Promise + microtask for no benefit
+  return userRepository.findById(userId)
+  // async keyword creates unnecessary Promise wrapper
+  // No await, no try/catch — async adds nothing here
 }
 
-async function getUserName(userId: string): Promise<string> {
-  const user = await getUser(userId)
-  return user.name
-  // Another unnecessary async wrapper
-}
-
-// Chain of 3 async functions = 3 extra microtasks
-async function displayUserName(userId: string): Promise<void> {
-  const name = await getUserName(userId)
-  console.log(name)
+async function deleteUser(userId: string): Promise<void> {
+  return userRepository.delete(userId)
+  // Same pattern — async is pure overhead
 }
 ```
 
-**Correct (direct Promise return):**
+**Correct (remove async when it adds nothing):**
 
 ```typescript
 function getUser(userId: string): Promise<User> {
   return userRepository.findById(userId)
-  // Returns Promise directly, no wrapping
+  // Direct Promise return, no wrapper
 }
 
-function getUserName(userId: string): Promise<string> {
-  return getUser(userId).then(user => user.name)
-  // Single Promise chain
-}
-
-// Only use async where you need sequential await
-async function displayUserName(userId: string): Promise<void> {
-  const name = await getUserName(userId)
-  console.log(name)
+function deleteUser(userId: string): Promise<void> {
+  return userRepository.delete(userId)
 }
 ```
 
-**When async/await IS needed:**
+**Keep async + return await in try/catch:**
+
+```typescript
+// Correct — return await ensures the error is caught
+async function getUser(userId: string): Promise<User> {
+  try {
+    return await userRepository.findById(userId)
+    // Without await, rejected promise skips the catch block
+  } catch (error) {
+    logger.error('Failed to fetch user', { userId, error })
+    throw new UserNotFoundError(userId)
+  }
+}
+```
+
+**When async IS needed:**
 - Multiple sequential await statements
-- Try/catch around await
+- Try/catch around await (use `return await` here)
 - Conditional await logic
-- Better readability for complex flows
+- Complex control flow with early returns
 
-**Note:** Modern V8 optimizes simple `return await` patterns, but the overhead still exists for function setup. The bigger win is avoiding async wrappers that don't need them.
+**Note:** ESLint deprecated `no-return-await` in v8.46.0 because `return await` is both safe and produces better stack traces. Use the `@typescript-eslint/return-await` rule with `in-try-catch` setting for nuanced control.
 
-Reference: [V8 Blog - Fast Async](https://v8.dev/blog/fast-async)
+Reference: [ESLint no-return-await deprecation](https://eslint.org/docs/latest/rules/no-return-await)

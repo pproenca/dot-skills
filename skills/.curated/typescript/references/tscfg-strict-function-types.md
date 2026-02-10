@@ -62,4 +62,4 @@ interface StrictEmitter<T> {
 }
 ```
 
-Reference: [TypeScript Performance Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#controlling-types-inclusion)
+Reference: [TypeScript 2.6 - Strict Function Types](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-2-6.html#strict-function-types)

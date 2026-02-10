@@ -1,5 +1,5 @@
 ---
-title: Use #Unique for Compound Uniqueness (iOS 18+)
+title: "Use #Unique for Compound Uniqueness (iOS 18+)"
 impact: LOW-MEDIUM
 impactDescription: avoids duplicates by enforcing compound identity and enabling upsert on collision
 tags: schema, unique, macro, compound, upsert

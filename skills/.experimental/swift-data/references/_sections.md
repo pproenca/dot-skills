@@ -13,7 +13,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 2. Persistence Setup (persist)
 
 **Impact:** CRITICAL
-**Description:** ModelContainer and ModelContext configuration determines whether data survives app launches. Incorrect setup silently loses user data.
+**Description:** ModelContainer, ModelContext, and @ModelActor configuration determines whether data survives app launches and whether concurrent access is safe. Incorrect setup silently loses user data or causes crashes.
 
 ## 3. Querying & Filtering (query)
 

@@ -7,51 +7,49 @@ tags: type, unions, compilation, performance, discriminated-unions
 
 ## Avoid Large Union Types
 
-Union type checking is quadratic—TypeScript compares each union member pairwise. Unions with more than 12 elements cause measurable compilation slowdowns. Use discriminated unions or base types instead.
+Union type checking is quadratic — TypeScript compares each union member pairwise. Unions with 50+ elements cause measurable compilation slowdowns and IDE lag. This commonly occurs with generated types (GraphQL schemas, API response codes, database enums).
 
-**Incorrect (large union, O(n²) checks):**
-
-```typescript
-type HttpStatus =
-  | 100 | 101 | 102 | 103
-  | 200 | 201 | 202 | 203 | 204 | 205 | 206
-  | 300 | 301 | 302 | 303 | 304 | 307 | 308
-  | 400 | 401 | 402 | 403 | 404 | 405 | 406 | 407 | 408 | 409 | 410
-  | 500 | 501 | 502 | 503 | 504 | 505
-// 35+ members = 1000+ pairwise comparisons
-
-type EventType = 'click' | 'hover' | 'focus' | /* ...50 more events... */
-```
-
-**Correct (discriminated union with base interface):**
+**Incorrect (large generated union, O(n²) checks):**
 
 ```typescript
-interface HttpStatusBase {
-  code: number
-  category: 'info' | 'success' | 'redirect' | 'clientError' | 'serverError'
-}
-
-interface SuccessStatus extends HttpStatusBase {
-  category: 'success'
-  code: 200 | 201 | 202 | 203 | 204
-}
-
-interface ClientErrorStatus extends HttpStatusBase {
-  category: 'clientError'
-  code: 400 | 401 | 403 | 404
-}
-
-type HttpStatus = SuccessStatus | ClientErrorStatus // Small union of interfaces
+// Auto-generated from GraphQL schema — 200+ event types
+type AnalyticsEvent =
+  | 'page_view' | 'button_click' | 'form_submit' | 'scroll_depth'
+  | 'video_play' | 'video_pause' | 'video_complete' | 'ad_impression'
+  // ... 200 more event types from analytics schema
+// 200 members = 40,000 pairwise comparisons per usage
 ```
 
-**Alternative (branded number type):**
+**Correct (branded string type with runtime validation):**
 
 ```typescript
-type HttpStatusCode = number & { readonly brand: unique symbol }
+type AnalyticsEvent = string & { readonly __brand: 'AnalyticsEvent' }
 
-function isValidStatus(code: number): code is HttpStatusCode {
-  return code >= 100 && code < 600
+const VALID_EVENTS = new Set(['page_view', 'button_click', 'form_submit', /* ... */])
+
+function createEvent(name: string): AnalyticsEvent {
+  if (!VALID_EVENTS.has(name)) {
+    throw new Error(`Unknown event: ${name}`)
+  }
+  return name as AnalyticsEvent
 }
 ```
+
+**For moderately large unions (20-50 members), use discriminated unions:**
+
+```typescript
+// Group related values into categories
+type UserEvent = { category: 'user'; action: 'login' | 'logout' | 'signup' }
+type PageEvent = { category: 'page'; action: 'view' | 'scroll' | 'leave' }
+type FormEvent = { category: 'form'; action: 'submit' | 'validate' | 'reset' }
+
+type AppEvent = UserEvent | PageEvent | FormEvent
+// Small union of 3 interfaces instead of 9+ string literals
+```
+
+**When flat unions are fine:**
+- Small unions (< 20 members) have negligible cost
+- Unions of primitive literals used in few places
+- `string | number | boolean` style utility unions
 
 Reference: [TypeScript Performance Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#preferring-base-types-over-unions)

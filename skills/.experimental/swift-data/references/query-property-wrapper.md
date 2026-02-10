@@ -7,7 +7,7 @@ tags: query, property-wrapper, swiftui, swiftdata
 
 ## Use @Query for Declarative Data Fetching
 
-`@Query` fetches SwiftData models and automatically updates the view when underlying data changes. Manual fetching with `context.fetch()` in views misses updates and requires extra state management.
+`@Query` fetches SwiftData models and automatically updates the view when underlying data changes — no `onAppear`, `NotificationCenter`, or manual refresh logic needed. Manual fetching with `context.fetch()` in views misses updates, requires extra state management, and inevitably produces stale UI states.
 
 **Incorrect (manual fetch misses live updates):**
 

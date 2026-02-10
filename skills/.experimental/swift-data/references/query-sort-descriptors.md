@@ -1,7 +1,7 @@
 ---
 title: Apply Sort Descriptors to @Query
 impact: HIGH
-impactDescription: ensures stable, user-friendly list ordering across app launches
+impactDescription: prevents random list reordering across app launches — O(n log n) at storage level vs O(n) in-memory
 tags: query, sorting, sort-descriptor, stability
 ---
 

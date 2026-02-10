@@ -31,24 +31,37 @@ const processor = createDataProcessor(hugeDataset)
 setInterval(processor, 1000)  // Runs forever, 100MB never freed
 ```
 
-**Correct (extract only needed data):**
+**Correct (closure captures only what it needs):**
 
 ```typescript
 function createDataProcessor(largeDataset: DataRecord[]): () => void {
-  // Extract only what the closure needs
-  const pendingIds = new Set(largeDataset.map(r => r.id))
-  const recordById = new Map(largeDataset.map(r => [r.id, r]))
+  // Build a queue of just the IDs and a lookup for individual records
+  const pendingQueue: string[] = largeDataset.map(r => r.id)
+  const getRecord = (id: string): DataRecord | undefined =>
+    largeDataset.find(r => r.id === id)
 
-  // largeDataset can now be GC'd if caller releases it
+  // Release the array reference — closure only captures pendingQueue and getRecord
+  // Caller should also release their reference to largeDataset
   return function processNext(): void {
-    const nextId = pendingIds.values().next().value
+    const nextId = pendingQueue.shift()
     if (nextId) {
-      pendingIds.delete(nextId)
-      const record = recordById.get(nextId)
-      if (record) {
-        sendToServer(record)
-        recordById.delete(nextId)  // Allow record to be GC'd
-      }
+      const record = getRecord(nextId)
+      if (record) sendToServer(record)
+    }
+  }
+}
+```
+
+**Better pattern — accept an iterator to avoid holding the full dataset:**
+
+```typescript
+function createDataProcessor(records: Iterable<DataRecord>): () => void {
+  const iterator = records[Symbol.iterator]()
+
+  return function processNext(): void {
+    const { value, done } = iterator.next()
+    if (!done) {
+      sendToServer(value)
     }
   }
 }
@@ -68,7 +81,7 @@ class Dashboard {
   }
 }
 
-// Correct - remove listener when done, or use weak reference pattern
+// Correct - remove listener when done
 class Dashboard {
   private largeCache: Map<string, Data> = new Map()
   private resizeHandler: () => void

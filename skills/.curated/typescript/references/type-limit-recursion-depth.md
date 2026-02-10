@@ -1,7 +1,7 @@
 ---
 title: Limit Type Recursion Depth
-impact: CRITICAL
-impactDescription: prevents exponential type expansion
+impact: HIGH
+impactDescription: prevents exponential type expansion when applicable
 tags: type, recursion, generics, depth, performance
 ---
 

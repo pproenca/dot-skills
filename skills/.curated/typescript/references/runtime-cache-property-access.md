@@ -1,30 +1,24 @@
 ---
 title: Cache Property Access in Loops
 impact: LOW-MEDIUM
-impactDescription: reduces property lookups by N×
+impactDescription: reduces property lookups by N× in hot paths
 tags: runtime, loops, caching, property-access, optimization
 ---
 
 ## Cache Property Access in Loops
 
-Repeated property access inside loops adds overhead. Cache frequently accessed properties before the loop, especially for nested properties and array lengths.
+Cache deeply nested or polymorphic property access before hot loops. **Note:** Modern V8's inline caches optimize monomorphic access efficiently — this optimization is only meaningful for 10,000+ iterations with deeply nested or polymorphic properties.
 
-**Incorrect (repeated property access):**
+**Incorrect (repeated nested access in hot loop):**
 
 ```typescript
 function processOrders(orders: Order[], config: AppConfig): ProcessedOrder[] {
   const results: ProcessedOrder[] = []
 
-  for (let i = 0; i < orders.length; i++) {  // orders.length accessed each iteration
-    const tax = orders[i].total * config.tax.rate  // Nested access each time
-    const shipping = config.shipping.rates[orders[i].region]  // Multiple nested accesses
-
-    results.push({
-      ...orders[i],
-      tax,
-      shipping,
-      final: orders[i].total + tax + shipping
-    })
+  for (const order of orders) {
+    const tax = order.total * config.tax.rate  // Nested access each iteration
+    const shipping = config.shipping.rates[order.region]  // Nested access again
+    results.push({ ...order, tax, shipping, final: order.total + tax + shipping })
   }
 
   return results
@@ -36,50 +30,36 @@ function processOrders(orders: Order[], config: AppConfig): ProcessedOrder[] {
 ```typescript
 function processOrders(orders: Order[], config: AppConfig): ProcessedOrder[] {
   const results: ProcessedOrder[] = []
-  const { length } = orders
-  const { rate: taxRate } = config.tax
-  const { rates: shippingRates } = config.shipping
+  const taxRate = config.tax.rate
+  const shippingRates = config.shipping.rates
 
-  for (let i = 0; i < length; i++) {
-    const order = orders[i]
+  for (const order of orders) {
     const tax = order.total * taxRate
     const shipping = shippingRates[order.region]
-
-    results.push({
-      ...order,
-      tax,
-      shipping,
-      final: order.total + tax + shipping
-    })
+    results.push({ ...order, tax, shipping, final: order.total + tax + shipping })
   }
 
   return results
 }
 ```
 
-**For functional loops:**
+**When V8 handles it automatically (no caching needed):**
 
 ```typescript
-// Property access is implicit but still repeated
-orders.forEach(order => {
-  const tax = order.total * config.tax.rate
-})
-
-// Cache outside the callback
-const taxRate = config.tax.rate
-orders.forEach(order => {
-  const tax = order.total * taxRate
-})
+// Monomorphic — all objects have same shape, V8 ICs optimize this
+function sumOrders(orders: Order[]): number {
+  let total = 0
+  for (let i = 0; i < orders.length; i++) {  // orders.length is fine
+    total += orders[i].total  // Same shape every time
+  }
+  return total
+}
 ```
 
-**When this matters:**
-- Large arrays (1000+ items)
-- Hot paths executed frequently
-- Deeply nested property access
-
-**When to skip optimization:**
-- Small arrays or infrequent execution
+**When to skip this optimization:**
+- Arrays under 1,000 items
+- Monomorphic objects (same shape/class)
+- Non-hot paths executed infrequently
 - When readability suffers significantly
-- Modern engines optimize many common patterns
 
 Reference: [V8 Hidden Classes](https://v8.dev/blog/fast-properties)

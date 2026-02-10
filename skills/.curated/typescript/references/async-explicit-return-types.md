@@ -73,4 +73,4 @@ async function fetchUserOrders(userId: string): Promise<Result<Order[]>> {
 - Better IDE autocomplete for consumers
 - Self-documenting API contracts
 
-Reference: [TypeScript Handbook - Async Functions](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-1-7.html)
+Reference: [TypeScript Performance Wiki - Using Type Annotations](https://github.com/microsoft/TypeScript/wiki/Performance#using-type-annotations)

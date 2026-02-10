@@ -7,7 +7,7 @@ tags: rel, cascade, delete-rule, relationship, data-integrity
 
 ## Configure Cascade Delete Rules for Owned Relationships
 
-When a parent model owns its children (e.g., a trip owns its accommodations), use `@Relationship(.cascade)` so deleting the parent also deletes all children. Without an explicit cascade rule, SwiftData uses the default nullify behavior, which sets the child's reference to nil but leaves the child record in the store — orphaned and inaccessible forever.
+When a parent model owns its children (e.g., a trip owns its accommodations), use `@Relationship(deleteRule: .cascade)` so deleting the parent also deletes all children. Without an explicit cascade rule, SwiftData uses the default nullify behavior, which sets the child's reference to nil but leaves the child record in the store — orphaned and inaccessible forever.
 
 **Incorrect (default delete rule — deleting trip orphans accommodations):**
 
@@ -43,7 +43,7 @@ import SwiftData
 
 @Model class Trip {
     var name: String
-    @Relationship(.cascade) var accommodations: [Accommodation] = []
+    @Relationship(deleteRule: .cascade) var accommodations: [Accommodation] = []
 
     init(name: String) {
         self.name = name

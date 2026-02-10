@@ -46,5 +46,6 @@ struct Player: Codable {
 - Eliminates an entire class of index-out-of-range crashes
 - Makes the data model self-documenting
 - Simplifies iteration — `for player in players` vs. `for i in 0..<names.count`
+- `Codable` conformance is required because SwiftData stores embedded value types as JSON blobs in the SQLite store
 
 Reference: [Develop in Swift — Model Data with Custom Types](https://developer.apple.com/tutorials/develop-in-swift/model-data-with-custom-types)

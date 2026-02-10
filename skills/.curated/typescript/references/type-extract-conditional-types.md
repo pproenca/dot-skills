@@ -23,8 +23,8 @@ function processResponse<T>(
   return response.data
 }
 
-function getResult<T>(value: T): T extends Promise<infer R> ? R : T {
-  // Re-evaluated for each getResult() usage
+function getFirstItem<T>(collection: T): T extends Array<infer U> ? U : T {
+  // Re-evaluated for each getFirstItem() usage
 }
 ```
 
@@ -42,10 +42,10 @@ function processResponse<T>(response: T): ExtractData<T> {
   return response.data
 }
 
-type Awaited<T> = T extends Promise<infer R> ? R : T
+type UnwrapArray<T> = T extends Array<infer U> ? U : T
 
-function getResult<T>(value: T): Awaited<T> {
-  // Reuses cached Awaited<T> computation
+function getFirstItem<T>(collection: T): UnwrapArray<T> {
+  // Reuses cached UnwrapArray<T> computation
 }
 ```
 

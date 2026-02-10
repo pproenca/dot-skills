@@ -47,27 +47,15 @@ struct TripEditView: View {
 }
 ```
 
-**Correct (enable undo and use it to cancel an edit session):**
+**Prerequisite:** Enable undo on the container: `.modelContainer(for: Trip.self, isUndoEnabled: true)`
+
+**Correct (undo grouping for cancel-on-edit):**
 
 ```swift
-import SwiftUI
-import SwiftData
-
-@main
-struct TripsApp: App {
-    var body: some Scene {
-        WindowGroup {
-            ContentView()
-        }
-        .modelContainer(for: Trip.self, isUndoEnabled: true)
-    }
-}
-
 struct TripEditView: View {
     @Environment(\.dismiss) private var dismiss
     @Environment(\.undoManager) private var undoManager
     @Bindable var trip: Trip
-
     @State private var didBeginUndoGroup = false
 
     var body: some View {
@@ -77,15 +65,11 @@ struct TripEditView: View {
             DatePicker("End", selection: $trip.endDate)
         }
         .onAppear {
-            // Scope undo to this sheet to avoid undoing unrelated actions.
             undoManager?.removeAllActions()
-
             undoManager?.beginUndoGrouping()
-            undoManager?.setActionName("Edit Trip")
             didBeginUndoGroup = true
         }
         .onDisappear {
-            // Avoid leaking a grouping level if the sheet is dismissed interactively.
             if didBeginUndoGroup {
                 undoManager?.endUndoGrouping()
                 didBeginUndoGroup = false
@@ -98,14 +82,12 @@ struct TripEditView: View {
                         undoManager?.endUndoGrouping()
                         didBeginUndoGroup = false
                     }
-
                     if undoManager?.canUndo == true {
-                        undoManager?.undo() // Revert the whole edit session.
+                        undoManager?.undo()
                     }
                     dismiss()
                 }
             }
-
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
                     if didBeginUndoGroup {

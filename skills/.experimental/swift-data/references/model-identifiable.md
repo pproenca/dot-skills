@@ -1,7 +1,7 @@
 ---
 title: Conform Models to Identifiable with UUID
-impact: CRITICAL
-impactDescription: prevents incorrect list diffing and data corruption in ForEach
+impact: MEDIUM
+impactDescription: prevents incorrect list diffing in ForEach for non-@Model types
 tags: model, identifiable, uuid, swiftui
 ---
 

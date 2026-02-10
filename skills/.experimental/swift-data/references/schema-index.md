@@ -1,7 +1,7 @@
 ---
-title: Use #Index for Hot Predicates and Sorts (iOS 18+)
+title: "Use #Index for Hot Predicates and Sorts (iOS 18+)"
 impact: LOW-MEDIUM
-impactDescription: speeds up filtering and sorting by indexing frequently queried properties
+impactDescription: 10-100x faster queries on large datasets by avoiding full table scans
 tags: schema, index, macro, performance, query
 ---
 

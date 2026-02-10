@@ -70,8 +70,10 @@ export default {
 ```
 
 **Code patterns blocked by isolatedModules:**
-- `const enum` (use regular `enum` instead)
+- `const enum` (use regular `enum` or union types instead)
 - `export =` / `import =` syntax
 - Re-exporting types without `type` keyword
+
+**Note:** With `erasableSyntaxOnly` (TypeScript 5.8+), regular enums are also blocked. Use union types (`type Status = 'active' | 'inactive'`) as the universal safe alternative. See `tscfg-erasable-syntax-only.md`.
 
 Reference: [TypeScript Performance Wiki](https://github.com/microsoft/TypeScript/wiki/Performance#isolated-file-emit)
