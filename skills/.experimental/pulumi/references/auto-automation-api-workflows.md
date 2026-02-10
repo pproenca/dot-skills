@@ -36,24 +36,31 @@ pulumi up --yes
 
 ```typescript
 // deploy.ts
-import { LocalWorkspace, Stack } from "@pulumi/pulumi/automation";
+import { LocalWorkspace } from "@pulumi/pulumi/automation";
 
 async function deployInfrastructure() {
-  const workspace = await LocalWorkspace.create({ workDir: "." });
-
   // Deploy networking first
-  const networkStack = await Stack.createOrSelect("networking", workspace);
+  const networkStack = await LocalWorkspace.createOrSelectStack({
+    stackName: "networking",
+    workDir: "./networking",
+  });
   const networkResult = await networkStack.up();
   const vpcId = networkResult.outputs.vpcId.value;
 
   // Deploy database with networking outputs
-  const dbStack = await Stack.createOrSelect("database", workspace);
+  const dbStack = await LocalWorkspace.createOrSelectStack({
+    stackName: "database",
+    workDir: "./database",
+  });
   await dbStack.setConfig("vpcId", { value: vpcId });
   const dbResult = await dbStack.up();
   const dbEndpoint = dbResult.outputs.endpoint.value;
 
   // Deploy application with database outputs
-  const appStack = await Stack.createOrSelect("application", workspace);
+  const appStack = await LocalWorkspace.createOrSelectStack({
+    stackName: "application",
+    workDir: "./application",
+  });
   await appStack.setConfig("dbEndpoint", { value: dbEndpoint });
   await appStack.up();
 

@@ -48,6 +48,10 @@ class ApiGateway extends pulumi.ComponentResource {
       description: args.description,
     }, { parent: this });
 
+    const deployment = new aws.apigateway.Deployment(`${name}-deployment`, {
+      restApi: api.id,
+    }, { parent: this });
+
     const stage = new aws.apigateway.Stage(`${name}-stage`, {
       restApi: api.id,
       stageName: args.stageName ?? "v1",

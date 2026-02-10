@@ -29,14 +29,6 @@ pulumi refresh --target "**:aws:s3/bucket:Bucket::*"
 # Takes seconds, queries only relevant resources
 ```
 
-**Alternative (skip refresh entirely when safe):**
-
-```bash
-# When you know state matches reality
-pulumi up --skip-preview
-# Useful in CI/CD after successful previous deployment
-```
-
 **When to use full refresh:**
 - After manual changes in cloud console
 - Recovering from failed deployments

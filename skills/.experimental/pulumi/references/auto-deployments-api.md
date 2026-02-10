@@ -52,19 +52,22 @@ backend:
 ```
 
 ```typescript
-// Trigger deployment via API
-import { PulumiService } from "@pulumi/pulumi-service";
+// Configure deployment settings via Pulumi Service Provider
+import * as pulumiservice from "@pulumi/pulumiservice";
 
-const service = new PulumiService();
-await service.createDeployment({
+const settings = new pulumiservice.DeploymentSettings("prod-settings", {
   organization: "my-org",
   project: "my-project",
   stack: "prod",
-  operation: "update",
-  // OIDC authentication - no static credentials
   operationContext: {
     oidc: {
-      aws: { roleArn: "arn:aws:iam::123456:role/pulumi-deploy" },
+      aws: { roleArn: "arn:aws:iam::123456789:role/pulumi-deploy" },
+    },
+  },
+  sourceContext: {
+    git: {
+      repoUrl: "https://github.com/my-org/my-infra",
+      branch: "refs/heads/main",
     },
   },
 });

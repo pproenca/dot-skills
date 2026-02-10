@@ -18,13 +18,10 @@ pulumi up
 # Most time spent on state persistence, not resource provisioning
 ```
 
-**Correct (checkpoint skipping with journaling):**
+**Correct (checkpoint skipping for large stacks):**
 
 ```bash
-# Enable journaling for diff-based state updates
-export PULUMI_OPTIMIZED_CHECKPOINT_WRITE=true
-
-# For very large stacks with proper recovery procedures
+# Skip intermediate checkpoints, save only final state
 export PULUMI_SKIP_CHECKPOINTS=true
 pulumi up
 # Same stack completes in 2-5 minutes

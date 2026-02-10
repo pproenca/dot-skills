@@ -57,16 +57,15 @@ jobs:
 **Correct (Pulumi Deployments drift detection):**
 
 ```typescript
-// Enable via Pulumi Cloud API
-const deployment = await pulumiService.createDeployment({
+// Enable via Pulumi Service Provider
+import * as pulumiservice from "@pulumi/pulumiservice";
+
+const driftSchedule = new pulumiservice.DriftSchedule("prod-drift", {
   organization: "my-org",
   project: "my-project",
   stack: "prod",
-  operation: "refresh",
-  // Schedule for automatic drift detection
-  schedule: {
-    cron: "0 */6 * * *",
-  },
+  scheduleCron: "0 */6 * * *",
+  autoRemediate: false, // Set to true to auto-fix drift
 });
 ```
 

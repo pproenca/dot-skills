@@ -37,10 +37,10 @@ const instance = new aws.ec2.Instance("server", {
 **Correct (transformation for automatic tagging):**
 
 ```typescript
-// transformations/tagging.ts
-const autoTagTransformation: pulumi.ResourceTransformation = (args) => {
-  // Only apply to resources that support tags
-  if (args.type.startsWith("aws:") && args.props.tags !== undefined) {
+// transforms/tagging.ts
+const autoTagTransform: pulumi.ResourceTransform = (args) => {
+  // Only apply to AWS resources that support tags
+  if (args.type.startsWith("aws:")) {
     const defaultTags = {
       Environment: pulumi.getStack(),
       Team: "platform",
@@ -51,7 +51,7 @@ const autoTagTransformation: pulumi.ResourceTransformation = (args) => {
     return {
       props: {
         ...args.props,
-        tags: { ...defaultTags, ...args.props.tags },
+        tags: { ...defaultTags, ...(args.props.tags ?? {}) },
       },
       opts: args.opts,
     };
@@ -59,8 +59,8 @@ const autoTagTransformation: pulumi.ResourceTransformation = (args) => {
   return undefined;
 };
 
-// Apply transformation at stack level
-pulumi.runtime.registerStackTransformation(autoTagTransformation);
+// Apply transform at stack level
+pulumi.runtime.registerResourceTransform(autoTagTransform);
 
 // Resources automatically get tags
 const bucket = new aws.s3.Bucket("data", {});

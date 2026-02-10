@@ -60,21 +60,24 @@ async function safeDeploy() {
 }
 ```
 
-**Correct (require specific change types):**
+**Correct (limit allowed change types):**
 
 ```typescript
 const preview = await stack.preview();
+const changes = preview.changeSummary;
 
-// For a migration, require exactly these changes
-const expectedCreates = ["aws:rds/instance:Instance"];
-const actualCreates = preview.steps
-  .filter(s => s.op === "create")
-  .map(s => s.type);
-
-if (!arraysEqual(expectedCreates, actualCreates)) {
+// For a migration, only allow creates (no updates or deletes)
+if (changes.update && changes.update > 0) {
   throw new Error(
-    `Expected to create: ${expectedCreates.join(", ")}\n` +
-    `Actually creating: ${actualCreates.join(", ")}`
+    `Migration should only create resources, but ${changes.update} would be updated.`
   );
 }
+
+if (changes.delete && changes.delete > 0) {
+  throw new Error(
+    `Migration should only create resources, but ${changes.delete} would be deleted.`
+  );
+}
+
+console.log(`Migration preview: ${changes.create ?? 0} resources to create`);
 ```

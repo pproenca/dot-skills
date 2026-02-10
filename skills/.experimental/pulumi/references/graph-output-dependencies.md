@@ -41,6 +41,10 @@ const subnet = new aws.ec2.Subnet("subnet", {
 
 ```typescript
 const vpc = new aws.ec2.Vpc("main", { cidrBlock: "10.0.0.0/16" });
+const subnet = new aws.ec2.Subnet("subnet", {
+  vpcId: vpc.id,
+  cidrBlock: "10.0.1.0/24",
+});
 const sg = new aws.ec2.SecurityGroup("sg", { vpcId: vpc.id });
 
 const instance = new aws.ec2.Instance("server", {
