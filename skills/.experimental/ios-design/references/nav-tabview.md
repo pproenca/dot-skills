@@ -1,7 +1,7 @@
 ---
 title: Organize App Sections with TabView
 impact: HIGH
-impactDescription: provides familiar iOS navigation pattern for top-level sections
+impactDescription: enables familiar iOS tab navigation for 3-5 app sections; maintains independent navigation state per tab
 tags: nav, tabview, tabs, organization, structure
 ---
 
@@ -23,7 +23,7 @@ struct AppView: View {
 }
 ```
 
-**Correct (properly configured tabs):**
+**Correct (iOS 18+ Tab struct API):**
 
 ```swift
 struct AppView: View {
@@ -31,29 +31,23 @@ struct AppView: View {
 
     var body: some View {
         TabView(selection: $selectedTab) {
-            NavigationStack {
-                HomeView()
+            Tab("Home", systemImage: "house", value: .home) {
+                NavigationStack {
+                    HomeView()
+                }
             }
-            .tabItem {
-                Label("Home", systemImage: "house")
-            }
-            .tag(Tab.home)
 
-            NavigationStack {
-                SearchView()
+            Tab("Search", systemImage: "magnifyingglass", value: .search) {
+                NavigationStack {
+                    SearchView()
+                }
             }
-            .tabItem {
-                Label("Search", systemImage: "magnifyingglass")
-            }
-            .tag(Tab.search)
 
-            NavigationStack {
-                ProfileView()
+            Tab("Profile", systemImage: "person", value: .profile) {
+                NavigationStack {
+                    ProfileView()
+                }
             }
-            .tabItem {
-                Label("Profile", systemImage: "person")
-            }
-            .tag(Tab.profile)
         }
     }
 }
@@ -66,8 +60,8 @@ enum Tab: Hashable {
 **Tab badge for notifications:**
 
 ```swift
-.tabItem {
-    Label("Inbox", systemImage: "envelope")
+Tab("Inbox", systemImage: "envelope", value: .inbox) {
+    InboxView()
 }
 .badge(unreadCount)  // Shows red badge
 ```

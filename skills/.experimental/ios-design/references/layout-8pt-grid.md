@@ -1,7 +1,7 @@
 ---
 title: Use 8pt Grid for Spacing
 impact: HIGH
-impactDescription: creates consistent visual rhythm and scalable layouts
+impactDescription: reduces spacing inconsistency with 8pt multiples; enables predictable layouts across all device sizes
 tags: layout, spacing, grid, margins, padding
 ---
 

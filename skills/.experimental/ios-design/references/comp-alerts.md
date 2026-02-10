@@ -1,7 +1,7 @@
 ---
 title: Use Alerts Sparingly for Critical Information
 impact: HIGH
-impactDescription: reserves alerts for truly important decisions
+impactDescription: prevents alert misuse; alerts reserved for 1-2 critical user decisions
 tags: comp, alerts, confirmation, dialogs
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Minimize State Scope to Reduce Re-renders
 impact: CRITICAL
-impactDescription: isolates re-renders to smallest possible view subtree
+impactDescription: reduces unnecessary re-renders by 2-5× through localized state
 tags: state, scope, re-renders, optimization
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use System Typography Styles
 impact: CRITICAL
-impactDescription: ensures Dynamic Type support, visual consistency, and San Francisco font scaling
+impactDescription: prevents accessibility failures from hardcoded font sizes; enables automatic Dynamic Type scaling across 11+ text styles
 tags: design, typography, fonts, dynamic-type, hig, text-style
 ---
 
@@ -75,9 +75,13 @@ label.adjustsFontForContentSizeCategory = true
 **Customizing while preserving scaling:**
 
 ```swift
-Text("Custom Title")
+Text("Heavy Title")
     .font(.title.weight(.heavy))
+
+Text("Italic Body")
     .font(.body.italic())
+
+Text("Mono Headline")
     .font(.headline.monospaced())
 ```
 

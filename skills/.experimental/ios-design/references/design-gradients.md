@@ -1,7 +1,7 @@
 ---
 title: Apply Gradients for Visual Depth
 impact: HIGH
-impactDescription: gradients create visual hierarchy and polish with minimal code
+impactDescription: enables visual depth with 1-3 line gradient code; avoids flat background monotony
 tags: design, gradients, visual-design, backgrounds, theming, styling
 ---
 

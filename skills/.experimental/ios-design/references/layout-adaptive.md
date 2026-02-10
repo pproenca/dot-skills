@@ -1,7 +1,7 @@
 ---
 title: Use Adaptive Layouts for Different Size Classes
 impact: HIGH
-impactDescription: ensures proper display across iPhone and iPad in all orientations
+impactDescription: prevents broken layouts on iPad; adapts to 4+ size class combinations
 tags: layout, adaptive, size-class, responsive
 ---
 

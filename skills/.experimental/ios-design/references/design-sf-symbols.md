@@ -1,7 +1,7 @@
 ---
 title: Use SF Symbols for Consistent Iconography
 impact: HIGH
-impactDescription: 6900+ icons that scale with text, adapt to context, and match system UI
+impactDescription: enables 5000+ scalable icons with automatic Dynamic Type matching
 tags: design, sf-symbols, icons, system, consistency
 ---
 

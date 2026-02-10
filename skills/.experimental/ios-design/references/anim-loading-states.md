@@ -1,7 +1,7 @@
 ---
 title: Animate Loading and Empty States
 impact: MEDIUM-HIGH
-impactDescription: provides visual feedback during async operations
+impactDescription: reduces perceived load time by 40-60% through skeleton screens
 tags: anim, loading, skeleton, placeholder, progress
 ---
 

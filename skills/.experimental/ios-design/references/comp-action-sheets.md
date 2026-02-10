@@ -1,7 +1,7 @@
 ---
 title: Use Action Sheets for Contextual Choices
 impact: MEDIUM-HIGH
-impactDescription: presents choices in context without full screen interruption
+impactDescription: prevents modal confusion; action sheets handle 3-10 contextual options
 tags: comp, action-sheet, choices, context-menu
 ---
 

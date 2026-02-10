@@ -1,7 +1,7 @@
 ---
 title: Use Tab Bar for Top-Level Navigation
 impact: CRITICAL
-impactDescription: provides familiar iOS navigation pattern for main app sections
+impactDescription: prevents tab bar with 6+ tabs; enforces 3-5 tab iOS convention
 tags: nav, tab-bar, structure, primary-navigation
 ---
 

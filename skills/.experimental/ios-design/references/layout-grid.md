@@ -1,7 +1,7 @@
 ---
 title: "Use Grid for Aligned Tabular Layouts"
 impact: CRITICAL
-impactDescription: "Grid automatically aligns columns across rows, eliminating manual width calculations"
+impactDescription: "enables tabular alignment for 2-4 columns without manual offset calculations"
 tags: layout, grid, tables, alignment, settings
 ---
 

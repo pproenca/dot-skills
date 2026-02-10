@@ -1,7 +1,7 @@
 ---
 title: Design Clear Navigation Hierarchy
 impact: HIGH
-impactDescription: helps users understand where they are and how to navigate
+impactDescription: prevents flat navigation; enables drill-down for 3+ levels of content
 tags: nav, hierarchy, information-architecture, wayfinding
 ---
 

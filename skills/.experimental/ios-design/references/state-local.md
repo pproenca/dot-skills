@@ -43,11 +43,24 @@ struct CounterView: View {
 }
 ```
 
+**Always mark @State as private** — when left non-private, parent views can set values through the memberwise initializer, silently overwriting state on every re-render:
+
+```swift
+// Wrong: non-private @State exposed in initializer
+struct Section: View {
+    @State var isExpanded = false
+}
+Section(isExpanded: true) // overwrites on every parent re-render
+
+// Right: private prevents external mutation
+struct Section: View {
+    @State private var isExpanded = false
+}
+```
+
 **When NOT to use @State:**
-- For reference types (classes) - use @State with @Observable instead
-- For data that needs to be shared with parent views - use @Binding
-- For app-wide data - use @Environment
+- For reference types (classes) — use @State with @Observable instead
+- For data shared with parent views — use @Binding
+- For app-wide data — use @Environment
 
-**Note:** Always mark @State properties as `private` since they should only be modified by the owning view.
-
-Reference: [State Management in SwiftUI](https://developers-heaven.net/blog/state-management-in-swiftui-state-binding-observable-and-environment/)
+Reference: [Managing user interface state - Apple](https://developer.apple.com/documentation/swiftui/managing-user-interface-state)

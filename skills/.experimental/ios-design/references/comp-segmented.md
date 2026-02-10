@@ -1,7 +1,7 @@
 ---
 title: Use Segmented Controls for Mutually Exclusive Options
 impact: MEDIUM
-impactDescription: provides quick switching between related views
+impactDescription: enables instant switching between 2-5 views without navigation
 tags: comp, segmented-control, picker, toggle
 ---
 

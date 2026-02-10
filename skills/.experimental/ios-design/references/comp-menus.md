@@ -1,7 +1,7 @@
 ---
 title: Use Menus for Secondary Actions
 impact: MEDIUM
-impactDescription: organizes actions without cluttering the interface
+impactDescription: enables right-click/long-press menus with 2-8 contextual actions
 tags: comp, menu, context-menu, overflow
 ---
 

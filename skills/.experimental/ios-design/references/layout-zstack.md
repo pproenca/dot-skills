@@ -1,7 +1,7 @@
 ---
 title: "Use ZStack for Layered View Composition"
 impact: CRITICAL
-impactDescription: "ZStack layers views front-to-back, enabling overlays, badges, and background effects"
+impactDescription: "enables overlay patterns for badges, watermarks, and loading states"
 tags: layout, zstack, layering, overlays, composition
 ---
 

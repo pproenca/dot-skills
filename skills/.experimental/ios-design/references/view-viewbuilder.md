@@ -19,7 +19,7 @@ struct Card: View {
         content
             .padding()
             .background(.background.secondary)
-            .cornerRadius(12)
+            .clipShape(.rect(cornerRadius: 12))
     }
 }
 
@@ -41,7 +41,7 @@ struct Card<Content: View>: View {
         content
             .padding()
             .background(.background.secondary)
-            .cornerRadius(12)
+            .clipShape(.rect(cornerRadius: 12))
     }
 }
 

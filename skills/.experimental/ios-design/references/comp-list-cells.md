@@ -60,7 +60,7 @@ List {
                 Text(item.name)
                 Text(item.subtitle)
                     .font(.subheadline)
-                    .foregroundColor(.secondary)
+                    .foregroundStyle(.secondary)
             }
         }
     }
@@ -79,24 +79,7 @@ List {
         Text("Version")
         Spacer()
         Text("2.1.0")
-            .foregroundColor(.secondary)
-    }
-}
-
-// Cell with image
-List {
-    ForEach(contacts) { contact in
-        HStack {
-            contact.avatar
-                .frame(width: 44, height: 44)
-                .clipShape(Circle())
-            VStack(alignment: .leading) {
-                Text(contact.name)
-                Text(contact.email)
-                    .font(.subheadline)
-                    .foregroundColor(.secondary)
-            }
-        }
+            .foregroundStyle(.secondary)
     }
 }
 ```

@@ -1,7 +1,7 @@
 ---
 title: Show Scroll Indicators for Long Content
 impact: LOW
-impactDescription: helps users understand content extent and position
+impactDescription: controls scroll indicator visibility; prevents visual clutter in custom UIs
 tags: layout, scroll, indicators, navigation
 ---
 

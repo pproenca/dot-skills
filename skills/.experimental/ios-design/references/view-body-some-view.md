@@ -1,7 +1,7 @@
 ---
 title: Return some View from body Property
-impact: CRITICAL
-impactDescription: foundation of every SwiftUI view, defines view hierarchy, enables type system
+impact: LOW
+impactDescription: prevents compiler errors from missing View protocol conformance; enables SwiftUI declarative diffing
 tags: view, swiftui, view-protocol, opaque-type, struct, composition
 ---
 

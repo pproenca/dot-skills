@@ -1,7 +1,7 @@
 ---
 title: Use System Standard Margins
 impact: MEDIUM-HIGH
-impactDescription: aligns with system UI and other apps for familiar feel
+impactDescription: aligns content with system UI; prevents 4-8pt misalignment with nav/tab bars
 tags: layout, margins, padding, alignment
 ---
 

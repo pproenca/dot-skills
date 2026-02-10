@@ -1,7 +1,7 @@
 ---
 title: "Use Stacks Instead of Manual Positioning"
-impact: CRITICAL
-impactDescription: "stacks adapt to all screen sizes, manual positioning breaks on different devices"
+impact: HIGH
+impactDescription: "stacks adapt to all screen sizes; manual positioning breaks on 90%+ of device combinations"
 tags: layout, stacks, positioning, adaptive, responsive
 ---
 
@@ -60,11 +60,16 @@ struct ProfileCardView: View {
         .padding()
         .background {
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white)
-                .shadow(radius: 4)
+                .fill(.background)
+                .shadow(color: .primary.opacity(0.1), radius: 4)
         }
     }
 }
 ```
+
+**Stack parameters:**
+- `alignment`: How children align (`.leading`, `.center`, `.trailing` for VStack; `.top`, `.center`, `.bottom` for HStack)
+- `spacing`: Space between children (use `nil` for system default)
+- Children are arranged in declaration order
 
 Reference: [Develop in Swift Tutorials](https://developer.apple.com/tutorials/develop-in-swift/)

@@ -78,4 +78,4 @@ struct AdaptiveView: View {
 }
 ```
 
-Reference: [SwiftUI Data Flow 2023](https://troz.net/post/2023/swiftui-data-flow-2023/)
+Reference: [Managing model data in your app - Apple](https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app)

@@ -61,4 +61,4 @@ struct ProfileView: View {
 - `@ObservedObject` -> remove wrapper (just pass the object)
 - `@EnvironmentObject` -> `@Environment(MyType.self)`
 
-Reference: [SwiftUI Data Flow with Observation](https://www.swiftyplace.com/blog/swiftui-observation)
+Reference: [Migrating from ObservableObject to Observable - Apple](https://developer.apple.com/documentation/swiftui/migrating-from-the-observable-object-protocol-to-the-observable-macro)

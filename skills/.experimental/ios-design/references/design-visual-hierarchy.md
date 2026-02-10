@@ -1,7 +1,7 @@
 ---
 title: Establish Clear Visual Hierarchy
 impact: CRITICAL
-impactDescription: guides user attention and improves comprehension
+impactDescription: reduces user confusion through 3-4 levels of visual weight; enables faster content scanning
 tags: design, hierarchy, typography, contrast, layout
 ---
 

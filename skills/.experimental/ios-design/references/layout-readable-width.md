@@ -25,27 +25,23 @@ ScrollView {
 **Correct (constrained readable width):**
 
 ```swift
-// Using readableContentGuide
+// Constrain to readable width (~70 chars at body size)
 ScrollView {
     VStack(alignment: .leading) {
         Text(longArticleText)
     }
-    .frame(maxWidth: .readableContentMaxWidth)
+    .frame(maxWidth: 672) // Approximates readable content width
     .padding(.horizontal)
 }
 
-// UIKit equivalent
-textView.translatesAutoresizingMaskIntoConstraints = false
-NSLayoutConstraint.activate([
-    textView.leadingAnchor.constraint(
-        equalTo: view.readableContentGuide.leadingAnchor),
-    textView.trailingAnchor.constraint(
-        equalTo: view.readableContentGuide.trailingAnchor)
-])
-
-// Manual max width for custom layouts
-Text(content)
-    .frame(maxWidth: 672) // ~70 chars at body size
+// Using dynamicTypeSize to limit scaling on iPad
+ScrollView {
+    VStack(alignment: .leading) {
+        Text(longArticleText)
+    }
+    .frame(maxWidth: 672)
+    .dynamicTypeSize(...DynamicTypeSize.xxxLarge)
+}
 ```
 
 **Readable width behavior:**

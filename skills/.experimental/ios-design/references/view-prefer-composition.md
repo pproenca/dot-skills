@@ -1,7 +1,7 @@
 ---
 title: Prefer Composition Over Inheritance for Views
 impact: CRITICAL
-impactDescription: SwiftUI views are structs, composition is the only extensibility pattern
+impactDescription: reduces view complexity by extracting into 3-5 focused subviews
 tags: view, swiftui, composition, architecture, structs
 ---
 

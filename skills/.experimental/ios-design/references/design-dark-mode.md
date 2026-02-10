@@ -1,7 +1,7 @@
 ---
 title: Support Dark Mode from Day One
 impact: CRITICAL
-impactDescription: required for App Store quality, respects user system preference
+impactDescription: prevents invisible text/controls for 80%+ of iOS users who enable Dark Mode
 tags: design, dark-mode, colors, images, appearance, theming
 ---
 
@@ -22,7 +22,7 @@ struct ProfileCard: View {
                 .foregroundColor(.black)  // Invisible in Dark Mode
         }
         .background(Color.white)  // Harsh in Dark Mode
-        .cornerRadius(12)
+        .clipShape(.rect(cornerRadius: 12))
         .shadow(color: .gray, radius: 4)  // Wrong shadow color
     }
 }
@@ -50,8 +50,7 @@ struct ProfileCard: View {
             Text(user.name)
                 .foregroundStyle(.primary)  // Adapts automatically
         }
-        .background(.background.secondary)  // System background
-        .cornerRadius(12)
+        .background(.background.secondary, in: .rect(cornerRadius: 12))
         .shadow(color: .primary.opacity(0.1), radius: 4)  // Adaptive shadow
     }
 }
@@ -60,15 +59,14 @@ struct ProfileCard: View {
 **Testing both appearances:**
 
 ```swift
-struct ProfileCard_Previews: PreviewProvider {
-    static var previews: some View {
-        Group {
-            ProfileCard(user: .preview)
-                .preferredColorScheme(.light)
-            ProfileCard(user: .preview)
-                .preferredColorScheme(.dark)
-        }
-    }
+#Preview("Light Mode") {
+    ProfileCard(user: .preview)
+        .preferredColorScheme(.light)
+}
+
+#Preview("Dark Mode") {
+    ProfileCard(user: .preview)
+        .preferredColorScheme(.dark)
 }
 ```
 

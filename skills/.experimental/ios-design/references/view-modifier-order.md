@@ -1,7 +1,7 @@
 ---
 title: Apply Modifiers in Correct Order
 impact: HIGH
-impactDescription: wrong order produces unexpected visual results
+impactDescription: prevents visual bugs from wrong padding/background/clip ordering
 tags: view, modifiers, order, padding, background
 ---
 
@@ -37,7 +37,7 @@ struct TagView: View {
             .padding(.vertical, 6)
             .foregroundStyle(.white)
             .background(Color.blue)  // Background includes padding
-            .cornerRadius(8)
+            .clipShape(.rect(cornerRadius: 8))
     }
 }
 // Result: Blue rounded rectangle containing padded text
@@ -58,7 +58,7 @@ Text("Button")
 
     // 3. Background/overlay
     .background(Color.accentColor)
-    .cornerRadius(12)
+    .clipShape(.rect(cornerRadius: 12))
 
     // 4. Effects (shadow, blur)
     .shadow(radius: 4)

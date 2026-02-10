@@ -1,7 +1,7 @@
 ---
 title: "Use frame() for Explicit Size Constraints"
 impact: CRITICAL
-impactDescription: "frame modifiers set ideal, minimum, and maximum sizes for precise layout control"
+impactDescription: "prevents undersized tap targets below 44pt; enables explicit min/max constraints for predictable sizing"
 tags: layout, frame, sizing, constraints, accessibility
 ---
 

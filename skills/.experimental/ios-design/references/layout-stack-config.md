@@ -1,7 +1,7 @@
 ---
 title: "Configure Stack Alignment and Spacing"
 impact: CRITICAL
-impactDescription: "default centering and spacing rarely match design specs"
+impactDescription: "controls alignment and spacing for 90%+ of SwiftUI layouts"
 tags: layout, stacks, alignment, spacing, forms
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use Environment Dismiss for Modal Closure
 impact: HIGH
-impactDescription: clean dismissal without passing closures through hierarchy
+impactDescription: eliminates dismiss callback prop-drilling through 2-5 view layers
 tags: nav, dismiss, environment, modal, sheet
 ---
 

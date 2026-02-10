@@ -42,31 +42,31 @@ label.textColor = UIColor.label
 view.backgroundColor = UIColor.systemBackground
 ```
 
-**Semantic color hierarchy:**
+**Semantic color hierarchy (SwiftUI):**
 
 ```swift
-// Text colors
+// Text colors (ShapeStyle)
 .primary      // Main text, high contrast
 .secondary    // Supporting text, medium contrast
 .tertiary     // Placeholder text, low contrast
 .quaternary   // Disabled text, minimal contrast
 
-// Background colors
+// Background colors (iOS 17+ ShapeStyle)
 .background           // Primary background
 .background.secondary // Grouped content background
 
-// System colors (adapt to Dark Mode)
-Color.systemBackground
-Color.secondarySystemBackground
-Color.tertiarySystemBackground
-Color.systemGroupedBackground
+// Bridging UIKit system colors into SwiftUI
+Color(.systemBackground)           // Primary background
+Color(.secondarySystemBackground)  // Secondary background
+Color(.tertiarySystemBackground)   // Tertiary background
+Color(.systemGroupedBackground)    // Grouped table background
 ```
 
-**Available semantic colors (UIKit):**
-- Labels: `label`, `secondaryLabel`, `tertiaryLabel`, `quaternaryLabel`
-- Backgrounds: `systemBackground`, `secondarySystemBackground`, `tertiarySystemBackground`
-- Fills: `systemFill`, `secondarySystemFill`, `tertiarySystemFill`
-- Groups: `systemGroupedBackground`, `secondarySystemGroupedBackground`
+**UIKit semantic colors (for bridging):**
+- Labels: `UIColor.label`, `.secondaryLabel`, `.tertiaryLabel`, `.quaternaryLabel`
+- Backgrounds: `UIColor.systemBackground`, `.secondarySystemBackground`, `.tertiarySystemBackground`
+- Fills: `UIColor.systemFill`, `.secondarySystemFill`, `.tertiarySystemFill`
+- Groups: `UIColor.systemGroupedBackground`, `.secondarySystemGroupedBackground`
 
 **System accent colors for interactive elements:**
 

@@ -1,7 +1,7 @@
 ---
 title: Integrate Search Using Searchable Modifier
 impact: MEDIUM-HIGH
-impactDescription: provides consistent search experience matching system apps
+impactDescription: enables native search filtering via .searchable modifier; reduces custom search UI code
 tags: nav, search, searchable, filtering
 ---
 

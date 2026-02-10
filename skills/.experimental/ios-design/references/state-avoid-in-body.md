@@ -62,4 +62,4 @@ struct EventDateView: View {
 
 **Note:** For truly expensive computations that depend on props, consider moving them to the model layer or using a task modifier.
 
-Reference: [The Secret to Buttery Smooth SwiftUI](https://www.swiftdifferently.com/blog/swiftui/swiftui-performance-article)
+Reference: [Demystify SwiftUI performance - WWDC24](https://developer.apple.com/videos/play/wwdc2024/10160/)

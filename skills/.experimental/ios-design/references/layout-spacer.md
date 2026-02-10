@@ -1,7 +1,7 @@
 ---
 title: "Use Spacer to Push Views Apart"
 impact: CRITICAL
-impactDescription: "Spacer expands to fill available space, enabling flexible layouts without hardcoded sizes"
+impactDescription: "distributes flexible space; prevents hardcoded spacing that breaks across devices"
 tags: layout, spacer, distribution, toolbar, flexible
 ---
 

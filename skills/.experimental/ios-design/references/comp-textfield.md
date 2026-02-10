@@ -30,7 +30,7 @@ TextEditor(text: $note.content)
     .frame(minHeight: 200)
     .scrollContentBackground(.hidden)
     .background(.background.secondary)
-    .cornerRadius(8)
+    .clipShape(.rect(cornerRadius: 8))
 
 // Properly configured email field
 TextField("Email", text: $email)

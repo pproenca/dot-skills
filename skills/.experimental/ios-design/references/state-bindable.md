@@ -1,7 +1,7 @@
 ---
 title: "Use @Bindable to Create Bindings from Observable Objects"
 impact: HIGH
-impactDescription: "creates $ bindings for @Observable properties in forms and controls"
+impactDescription: "eliminates manual state mirroring; creates direct bindings from @Observable"
 tags: state, swiftui, bindable, observable, forms
 ---
 

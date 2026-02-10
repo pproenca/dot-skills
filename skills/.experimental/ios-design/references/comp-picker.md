@@ -64,7 +64,7 @@ NavigationLink {
         Text("Country")
         Spacer()
         Text(country.name)
-            .foregroundColor(.secondary)
+            .foregroundStyle(.secondary)
     }
 }
 ```

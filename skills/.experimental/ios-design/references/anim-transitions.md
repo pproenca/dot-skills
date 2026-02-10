@@ -1,7 +1,7 @@
 ---
 title: Use Semantic Transitions for Appearing Views
 impact: MEDIUM-HIGH
-impactDescription: creates contextual enter/exit animations
+impactDescription: prevents abrupt 0ms insertions, adds 200-400ms contextual animations
 tags: anim, transition, appear, disappear, insert, remove
 ---
 
@@ -39,7 +39,7 @@ struct AlertBanner: View {
             Text(message)
                 .padding()
                 .background(.red)
-                .cornerRadius(8)
+                .clipShape(.rect(cornerRadius: 8))
                 .transition(.move(edge: .top).combined(with: .opacity))
         }
     }

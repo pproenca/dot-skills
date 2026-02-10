@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple",
+  "date": "2025-01-01",
+  "technology": "SwiftUI / iOS",
+  "abstract": "SwiftUI implementation patterns for building Apple-quality iOS UIs. Covers design systems, state management, layout, view composition, navigation, components, accessibility, and animation polish.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://developer.apple.com/documentation/swiftui/",
+    "https://developer.apple.com/tutorials/develop-in-swift/",
+    "https://developer.apple.com/videos/play/wwdc2024/10144/"
+  ]
+}

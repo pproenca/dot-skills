@@ -1,7 +1,7 @@
 ---
 title: "Use LazyVGrid for Scrollable Grid Layouts"
 impact: CRITICAL
-impactDescription: "lazy grids create views on demand, handling thousands of items without memory spikes"
+impactDescription: "enables lazy loading of 100+ grid items; prevents memory issues with large collections"
 tags: layout, grids, lazy-loading, performance, scrolling
 ---
 

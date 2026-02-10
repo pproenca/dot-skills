@@ -1,7 +1,7 @@
 ---
 title: Use foregroundStyle Over Deprecated foregroundColor
 impact: HIGH
-impactDescription: foregroundStyle supports hierarchical styles and ShapeStyle, foregroundColor is deprecated
+impactDescription: eliminates deprecated API warnings; enables gradients and hierarchical styles
 tags: design, modifiers, migration, foreground, deprecation
 ---
 

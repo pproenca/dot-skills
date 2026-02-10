@@ -1,7 +1,7 @@
 ---
 title: Use Material Backgrounds for Depth
 impact: CRITICAL
-impactDescription: creates the layered, translucent look of native iOS apps
+impactDescription: enables native translucent depth matching iOS system UI; avoids opaque backgrounds that break visual hierarchy
 tags: design, materials, blur, vibrancy, depth
 ---
 

@@ -10,20 +10,20 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** CRITICAL
 **Description:** Semantic colors, typography, spacing, dark mode, SF Symbols, and material backgrounds create visual harmony. These are what separate amateur apps from Apple-quality experiences.
 
-## 2. Layout & Sizing (layout)
-
-**Impact:** HIGH
-**Description:** 8pt grid, stacks, spacers, frames, grids, and adaptive layouts determine how content flows across screen sizes. Correct layout ensures your UI works on every device.
-
-## 3. View Composition (view)
-
-**Impact:** HIGH
-**Description:** View body structure, custom properties, modifier order, @ViewBuilder, and composition patterns affect performance, maintainability, and reusability.
-
-## 4. State & Data Flow (state)
+## 2. State & Data Flow (state)
 
 **Impact:** CRITICAL
 **Description:** @State, @Binding, @Environment, @Observable, and scope management are the foundation of reactive SwiftUI. Wrong patterns cause cascading re-renders and broken UIs.
+
+## 3. Layout & Sizing (layout)
+
+**Impact:** HIGH
+**Description:** Stacks, spacers, frames, grids, and adaptive layouts determine how content flows across screen sizes. Correct layout ensures your UI works on every device.
+
+## 4. View Composition (view)
+
+**Impact:** HIGH
+**Description:** View body structure, custom properties, modifier order, @ViewBuilder, and composition patterns affect performance, maintainability, and reusability.
 
 ## 5. Navigation (nav)
 
@@ -35,7 +35,12 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** HIGH
 **Description:** Choosing and configuring the right SwiftUI component—List, Picker, Button, TextField, Sheet—determines implementation success and native feel.
 
-## 7. Animation & Polish (anim)
+## 7. Accessibility (access)
+
+**Impact:** HIGH
+**Description:** VoiceOver labels, Dynamic Type support, touch targets, and reduce motion respect ensure your app works for all users and passes App Store accessibility requirements.
+
+## 8. Animation & Polish (anim)
 
 **Impact:** MEDIUM
-**Description:** Semantic transitions and loading state animations provide UX polish that makes your app feel alive and responsive.
+**Description:** Semantic transitions, loading state animations, spring configs, and matched geometry effects provide UX polish that makes your app feel alive and responsive.

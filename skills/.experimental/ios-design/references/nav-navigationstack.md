@@ -89,4 +89,4 @@ struct AppView: View {
 .navigationBarTitleDisplayMode(.automatic) // Context-dependent
 ```
 
-Reference: [Modern SwiftUI Navigation](https://medium.com/@dinaga119/mastering-navigation-in-swiftui-the-2025-guide-to-clean-scalable-routing-bbcb6dbce929)
+Reference: [NavigationStack - Apple Documentation](https://developer.apple.com/documentation/swiftui/navigationstack)

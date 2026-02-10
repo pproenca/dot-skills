@@ -62,4 +62,4 @@ struct ProfileEditor: View {
 }
 ```
 
-Reference: [SwiftUI Data Flow](https://matteomanferdini.com/swiftui-data-flow/)
+Reference: [Managing user interface state - Apple](https://developer.apple.com/documentation/swiftui/managing-user-interface-state)
