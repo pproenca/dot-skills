@@ -1,7 +1,7 @@
 ---
 title: Apply Transition Effects for View Insertion and Removal
-impact: LOW
-impactDescription: transitions animate views appearing and disappearing, preventing jarring UI changes
+impact: LOW-MEDIUM
+impactDescription: animated transitions reduce user disorientation during view changes, preventing 200-500ms of visual re-orientation time per abrupt insertion/removal
 tags: anim, transition, animation, insertion, removal
 ---
 

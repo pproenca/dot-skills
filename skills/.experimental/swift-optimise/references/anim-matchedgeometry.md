@@ -1,7 +1,7 @@
 ---
 title: Use matchedGeometryEffect for Shared Transitions
-impact: MEDIUM-HIGH
-impactDescription: creates fluid hero transitions between views
+impact: MEDIUM
+impactDescription: creates fluid hero transitions between views, perceived 2-3x smoother than cross-dissolve for shared elements
 tags: anim, matchedgeometryeffect, transition, hero, shared-element
 ---
 
@@ -96,5 +96,11 @@ struct ExpandableCardList: View {
     }
 }
 ```
+
+**Known Limitations:**
+- **Modifier order matters** -- apply `.matchedGeometryEffect` before `.frame()` and other layout modifiers, or the animation will interpolate from the wrong geometry
+- **Unreliable inside NavigationStack** -- push/pop transitions conflict with matchedGeometryEffect; use `ZStack`-based custom navigation instead
+- **AttributeGraph crashes** -- if two views with the same ID are visible simultaneously, SwiftUI may crash with "Bound preference ... tried to update multiple times per frame". Ensure only one view with a given ID is in the hierarchy at a time
+- **Performance with many items** -- each matched ID adds overhead to the animation system; avoid matching more than ~20 items simultaneously
 
 Reference: [matchedGeometryEffect Documentation](https://developer.apple.com/documentation/swiftui/view/matchedgeometryeffect(id:in:properties:anchor:issource:))

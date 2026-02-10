@@ -1,7 +1,7 @@
 ---
 title: Use Lazy Containers for Large Collections
-impact: MEDIUM
-impactDescription: loads only visible items, reduces memory by 90%+ with O(visible) instead of O(total)
+impact: HIGH
+impactDescription: reduces initial view allocations from O(total) to O(visible), cutting memory from ~1000 views to ~20 for large lists
 tags: perf, lazy, lazyvstack, lazyhstack, lazyvgrid, memory, virtualization
 ---
 

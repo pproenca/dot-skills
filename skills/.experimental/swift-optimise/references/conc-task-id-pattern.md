@@ -1,7 +1,7 @@
 ---
 title: Use .task(id:) for Reactive Data Loading
-impact: MEDIUM-HIGH
-impactDescription: automatic cancellation and re-trigger on value change
+impact: HIGH
+impactDescription: automatic cancellation eliminates stale-response bugs and resource leaks from concurrent inflight requests
 tags: conc, task, reactive, cancellation, data-loading
 ---
 

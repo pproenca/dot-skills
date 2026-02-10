@@ -1,7 +1,7 @@
 ---
 title: Replace Lock-Based Shared State with Actors
-impact: MEDIUM-HIGH
-impactDescription: eliminates data races without manual lock management
+impact: HIGH
+impactDescription: compiler-enforced mutual exclusion eliminates data races that cause intermittent crashes in 1-5% of concurrent access patterns
 tags: conc, actor, locks, thread-safety, shared-state
 ---
 

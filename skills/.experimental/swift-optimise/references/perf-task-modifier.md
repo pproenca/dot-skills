@@ -1,15 +1,15 @@
 ---
-title: Use task Modifier for Async Work
-impact: MEDIUM
-impactDescription: automatic cancellation when view disappears
-tags: perf, task, async, await, lifecycle
+title: Use .task Modifier Instead of .onAppear for Async Work
+impact: HIGH
+impactDescription: automatic cancellation prevents wasted network requests and memory leaks when views disappear mid-flight
+tags: perf, task, async, await, lifecycle, cancellation
 ---
 
-## Use task Modifier for Async Work
+## Use .task Modifier Instead of .onAppear for Async Work
 
-The `.task` modifier runs async work when a view appears and automatically cancels it when the view disappears. This prevents memory leaks and wasted work.
+The `.task` modifier runs async work when a view appears and automatically cancels it when the view disappears. Using `.onAppear` with a manually created `Task` leaks work -- the task continues executing even after the view is gone, wasting CPU, network, and memory.
 
-**Incorrect (onAppear doesn't cancel):**
+**Incorrect (onAppear doesn't cancel when view disappears):**
 
 ```swift
 struct ArticleView: View {
@@ -28,7 +28,7 @@ struct ArticleView: View {
 }
 ```
 
-**Correct (task auto-cancels):**
+**Correct (.task auto-cancels on disappearance):**
 
 ```swift
 struct ArticleView: View {
@@ -38,48 +38,27 @@ struct ArticleView: View {
     var body: some View {
         content
             .task {
-                // Automatically cancelled if view disappears
                 article = try? await fetchArticle(articleID)
             }
     }
 }
 ```
 
-**task with id for re-fetching:**
-
-```swift
-struct ArticleView: View {
-    let articleID: String
-    @State private var article: Article?
-
-    var body: some View {
-        content
-            .task(id: articleID) {
-                // Re-runs when articleID changes
-                // Previous task is cancelled
-                article = try? await fetchArticle(articleID)
-            }
-    }
-}
-```
-
-**Handling cancellation:**
+**Handling cancellation explicitly:**
 
 ```swift
 .task {
     do {
         article = try await fetchArticle(articleID)
     } catch is CancellationError {
-        // View disappeared, task was cancelled
-        // No action needed
+        // View disappeared -- no action needed
     } catch {
-        // Actual error
         self.error = error
     }
 }
 ```
 
-**Multiple async operations:**
+**Multiple async operations in parallel:**
 
 ```swift
 .task {
@@ -92,9 +71,11 @@ struct ArticleView: View {
 }
 ```
 
-**When to use onAppear instead:**
-- Synchronous work
+**When to use .onAppear instead:**
+- Synchronous work only
 - Fire-and-forget analytics
 - UI state setup (focus, scroll position)
+
+**See also:** [`conc-task-id-pattern`](conc-task-id-pattern.md) for re-triggering async work when a value changes using `.task(id:)`.
 
 Reference: [task(priority:_:) Documentation](https://developer.apple.com/documentation/swiftui/view/task(priority:_:))

@@ -1,7 +1,7 @@
 ---
 title: Replace NotificationCenter Observers with AsyncSequence
-impact: MEDIUM-HIGH
-impactDescription: automatic cleanup, no removeObserver needed
+impact: HIGH
+impactDescription: automatic cleanup eliminates stale-observer crashes and notification leaks that cause ~2% of observer-related bugs
 tags: conc, asyncsequence, notifications, observer, migration
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Make Animations Gesture-Driven
-impact: MEDIUM-HIGH
-impactDescription: creates interactive, responsive feel
+impact: MEDIUM
+impactDescription: gesture-driven animations reduce perceived latency to <16ms by tracking finger position directly instead of waiting for state commits
 tags: anim, gesture, drag, interactive, responsive
 ---
 

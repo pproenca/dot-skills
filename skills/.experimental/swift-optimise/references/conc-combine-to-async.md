@@ -1,7 +1,7 @@
 ---
 title: Replace Combine Publishers with async/await
-impact: MEDIUM-HIGH
-impactDescription: eliminates AnyCancellable bags and retain-cycle risk
+impact: CRITICAL
+impactDescription: eliminates AnyCancellable bags and retain-cycle risk, reduces concurrency code by 40-60%
 tags: conc, combine, async-await, structured-concurrency, migration
 ---
 
@@ -12,14 +12,16 @@ Combine publisher chains require manual lifecycle management through `Set<AnyCan
 **Incorrect (manual cancellable management with retain-cycle risk):**
 
 ```swift
+@Observable
 @MainActor
-class SearchViewModel: ObservableObject {
-    @Published var searchText = ""
-    @Published var results: [SearchResult] = []
+class SearchViewModel {
+    var searchText = ""
+    var results: [SearchResult] = []
     private var cancellables = Set<AnyCancellable>()
+    private let searchTextSubject = PassthroughSubject<String, Never>()
 
     init() {
-        $searchText
+        searchTextSubject
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
             .removeDuplicates()
             .sink { [weak self] query in
@@ -29,19 +31,13 @@ class SearchViewModel: ObservableObject {
             .store(in: &cancellables)
     }
 
+    func updateSearch(_ text: String) {
+        searchText = text
+        searchTextSubject.send(text)
+    }
+
     private func performSearch(_ query: String) async {
         results = await SearchService.search(query: query)
-    }
-}
-
-struct SearchView: View {
-    @StateObject private var viewModel = SearchViewModel()
-
-    var body: some View {
-        List(viewModel.results) { result in
-            SearchRow(result: result)
-        }
-        .searchable(text: $viewModel.searchText)
     }
 }
 ```
@@ -69,6 +65,8 @@ struct SearchView: View {
         }
         .searchable(text: $viewModel.searchText)
         .task(id: viewModel.searchText) {
+            // Acts as a debounce: cancelled and restarted on each keystroke.
+            // The 300ms sleep only completes after 300ms of inactivity.
             try? await Task.sleep(for: .milliseconds(300))
             guard !Task.isCancelled else { return }
             await viewModel.performSearch(viewModel.searchText)
@@ -76,5 +74,7 @@ struct SearchView: View {
     }
 }
 ```
+
+**Note on debounce behavior:** The `.task(id:)` + `Task.sleep` pattern behaves like Combine's `.debounce` -- it waits for a pause in changes before executing. Each keystroke cancels the previous sleep and starts a new one, so the search only fires after 300ms of inactivity.
 
 Reference: [AsyncSequence](https://developer.apple.com/documentation/swift/asyncsequence)

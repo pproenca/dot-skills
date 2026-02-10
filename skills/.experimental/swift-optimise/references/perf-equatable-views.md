@@ -1,13 +1,15 @@
 ---
 title: Add Equatable Conformance to Prevent Spurious Redraws
-impact: HIGH
-impactDescription: replaces reflection-based diffing with fast equality check, skipping redundant body re-evaluations
+impact: MEDIUM
+impactDescription: skips redundant body re-evaluations for views with closures or non-Equatable properties, 2-5x fewer body calls in closure-heavy lists
 tags: perf, equatable, diffing, re-renders, optimization
 ---
 
 ## Add Equatable Conformance to Prevent Spurious Redraws
 
-When a view conforms to Equatable, SwiftUI uses your equality implementation instead of reflection-based diffing. This is faster for complex views. When a view receives a closure or a non-Equatable property, SwiftUI cannot prove equality and conservatively re-evaluates `body` on every parent invalidation. Adding `Equatable` conformance with a custom `==` that compares only the meaningful inputs lets SwiftUI skip body re-evaluation when the view's semantic content has not changed.
+When a view conforms to Equatable, SwiftUI uses your equality implementation instead of reflection-based diffing. When a view receives a closure or a non-Equatable property, SwiftUI cannot prove equality and conservatively re-evaluates `body` on every parent invalidation. Adding `Equatable` conformance with a custom `==` that compares only the meaningful inputs lets SwiftUI skip body re-evaluation when the view's semantic content has not changed.
+
+**iOS 17+ note:** With `@Observable`, SwiftUI tracks property access at the individual property level -- only views that read a changed property are invalidated. This eliminates many scenarios where Equatable was previously necessary. Equatable still helps when views receive **closures**, **non-Observable data**, or **non-Equatable properties** that SwiftUI cannot diff automatically.
 
 **Incorrect (closure property forces re-evaluation every time):**
 

@@ -1,13 +1,13 @@
 ---
 title: Use drawingGroup for Complex Graphics
-impact: MEDIUM
-impactDescription: offloads rendering to Metal GPU, 2-10x faster for complex vector paths
+impact: HIGH
+impactDescription: offloads overlapping shape composition to Metal GPU, 2-5× frame rate improvement for gradient/particle-heavy views
 tags: perf, drawinggroup, metal, graphics, rendering
 ---
 
 ## Use drawingGroup for Complex Graphics
 
-By default, SwiftUI composites each layer of a view hierarchy on the CPU. For complex custom shapes with many overlapping paths, gradients, or blend modes, this CPU composition becomes a bottleneck, dropping frame rates during animation. Adding `.drawingGroup()` flattens the view into a single Metal-backed texture, offloading composition to the GPU for 2-10x faster rendering. Avoid using it for simple views -- the GPU roundtrip adds overhead that exceeds the savings for trivial content.
+By default, SwiftUI composites each layer of a view hierarchy on the CPU. For complex custom shapes with many overlapping paths, gradients, or blend modes, this CPU composition becomes a bottleneck, dropping frame rates during animation. Adding `.drawingGroup()` flattens the view into a single Metal-backed texture, offloading composition to the GPU. Avoid using it for simple views -- the GPU roundtrip adds overhead that exceeds the savings for trivial content.
 
 **Incorrect (each element rendered separately on CPU):**
 

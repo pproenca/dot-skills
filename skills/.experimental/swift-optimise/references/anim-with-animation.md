@@ -1,7 +1,7 @@
 ---
 title: Use withAnimation for State-Driven Transitions
-impact: LOW
-impactDescription: smooth animations provide spatial context and reduce cognitive load
+impact: LOW-MEDIUM
+impactDescription: interpolated layout changes help users track what changed, reducing cognitive load by providing spatial continuity
 tags: anim, animation, with-animation, state, transition
 ---
 
