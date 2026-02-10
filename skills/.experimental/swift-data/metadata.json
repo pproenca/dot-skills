@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple Developer",
+  "technology": "SwiftData",
+  "date": "February 2026",
+  "abstract": "Comprehensive data modeling and persistence guide for Swift and SwiftUI applications using SwiftData, designed for AI agents and LLMs. Contains 43 rules across 8 categories, prioritized by impact from critical (data modeling, persistence setup) to incremental (schema evolution, migration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://developer.apple.com/tutorials/develop-in-swift/welcome-to-data-modeling",
+    "https://developer.apple.com/tutorials/develop-in-swift/model-data-with-custom-types",
+    "https://developer.apple.com/tutorials/develop-in-swift/model-data-with-custom-types-conclusion",
+    "https://developer.apple.com/tutorials/develop-in-swift/save-data",
+    "https://developer.apple.com/tutorials/develop-in-swift/models-and-persistence-conclusion",
+    "https://developer.apple.com/tutorials/develop-in-swift/navigate-sample-data",
+    "https://developer.apple.com/tutorials/develop-in-swift/navigate-sample-data-conclusion",
+    "https://developer.apple.com/tutorials/develop-in-swift/create-update-and-delete-data",
+    "https://developer.apple.com/tutorials/develop-in-swift/create-update-and-delete-data-conclusion",
+    "https://developer.apple.com/tutorials/develop-in-swift/work-with-relationships",
+    "https://developer.apple.com/tutorials/develop-in-swift/navigation-editing-and-relationships-conclusion",
+    "https://developer.apple.com/documentation/swiftdata/preserving-your-apps-model-data-across-launches"
+  ]
+}
