@@ -2,7 +2,7 @@
 title: Use Functional State Updates for Derived Values
 impact: MEDIUM-HIGH
 impactDescription: prevents stale closures, stable callbacks
-tags: state, useState, functional, closures
+tags: rstate, useState, functional, closures
 ---
 
 ## Use Functional State Updates for Derived Values

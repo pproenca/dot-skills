@@ -1,7 +1,7 @@
 ---
 title: Maintain Sufficient Color Contrast
 impact: HIGH
-impactDescription: ensures text readability for all users including those with visual impairments (WCAG 4.5:1)
+impactDescription: text below 4.5:1 contrast ratio is unreadable for 8% of male users with color vision deficiency — fails WCAG AA compliance
 tags: acc, color, contrast, wcag, visibility, accessibility
 ---
 
@@ -84,23 +84,5 @@ Color("CustomGray")  // Must verify contrast in both modes
 - Xcode Accessibility Inspector
 - Color Contrast Analyzer
 - WebAIM Contrast Checker
-
-**Don't rely on color alone:**
-
-```swift
-// Wrong: only color indicates error
-TextField("Email", text: $email)
-    .foregroundColor(hasError ? .red : .primary)
-
-// Right: icon + color + text
-VStack(alignment: .leading) {
-    TextField("Email", text: $email)
-    if hasError {
-        Label("Invalid email format", systemImage: "exclamationmark.circle")
-            .foregroundStyle(.red)
-            .font(.caption)
-    }
-}
-```
 
 Reference: [Accessibility - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/accessibility)

@@ -1,7 +1,7 @@
 ---
 title: Use Error Boundaries with Suspense
 impact: MEDIUM
-impactDescription: graceful error recovery, isolated failures
+impactDescription: isolates failures to individual components, prevents full-page crashes
 tags: data, error-boundary, suspense, resilience
 ---
 

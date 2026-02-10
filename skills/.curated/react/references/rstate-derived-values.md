@@ -2,7 +2,7 @@
 title: Calculate Derived Values During Render
 impact: MEDIUM
 impactDescription: eliminates sync bugs, simpler code
-tags: state, derived, calculation, render
+tags: rstate, derived, calculation, render
 ---
 
 ## Calculate Derived Values During Render

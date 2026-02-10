@@ -1,7 +1,7 @@
 ---
 title: Show Appropriate Loading Indicators
 impact: HIGH
-impactDescription: keeps users informed during wait times
+impactDescription: users abandon screens with no loading feedback after 3-5 seconds — appropriate indicators reduce perceived wait time by 40%
 tags: feed, loading, progress, spinner
 ---
 

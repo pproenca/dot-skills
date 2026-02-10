@@ -86,30 +86,23 @@ struct ProfileHeader: View {
     @Environment(\.dynamicTypeSize) var typeSize
 
     var body: some View {
-        layout {
-            Avatar(url: user.avatarURL)
-                .frame(width: avatarSize, height: avatarSize)
-            VStack(alignment: .leading) {
-                Text(user.name)
-                    .font(.headline)  // Scales automatically
-                Text(user.bio)
-                    .font(.subheadline)  // Scales automatically
+        Group {
+            if typeSize.isAccessibilitySize {
+                VStack(alignment: .leading, spacing: 12) { content }
+            } else {
+                HStack(spacing: 16) { content }
             }
         }
     }
 
-    // Switch to vertical layout at large text sizes
-    @ViewBuilder
-    var layout: some View {
-        if typeSize.isAccessibilitySize {
-            VStack(alignment: .leading, spacing: 12) { content }
-        } else {
-            HStack(spacing: 16) { content }
+    @ViewBuilder private var content: some View {
+        Avatar(url: user.avatarURL)
+            .frame(width: typeSize.isAccessibilitySize ? 80 : 60,
+                   height: typeSize.isAccessibilitySize ? 80 : 60)
+        VStack(alignment: .leading) {
+            Text(user.name).font(.headline)
+            Text(user.bio).font(.subheadline)
         }
-    }
-
-    var avatarSize: CGFloat {
-        typeSize.isAccessibilitySize ? 80 : 60
     }
 }
 ```

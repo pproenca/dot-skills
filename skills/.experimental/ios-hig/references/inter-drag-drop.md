@@ -1,7 +1,7 @@
 ---
 title: Support Drag and Drop for Content Transfer
 impact: MEDIUM
-impactDescription: enables intuitive content movement and sharing
+impactDescription: drag and drop eliminates 3-5 tap copy-paste workflows — essential for iPad multitasking and cross-app content sharing
 tags: inter, drag-drop, transfer, content
 ---
 
@@ -60,9 +60,9 @@ Image("photo")
     }
 
 // Transferable for custom types
-struct Item: Transferable {
+struct Item: Codable, Transferable {
     static var transferRepresentation: some TransferRepresentation {
-        CodableRepresentation(contentType: .item)
+        CodableRepresentation(contentType: .data)
     }
 }
 

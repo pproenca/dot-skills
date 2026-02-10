@@ -1,7 +1,7 @@
 ---
 title: Never Rely on Color Alone
 impact: HIGH
-impactDescription: ensures information is accessible to colorblind users
+impactDescription: 8% of men and 0.5% of women have color vision deficiency — color-only indicators are invisible to 300M+ people worldwide
 tags: acc, color, colorblind, indicators
 ---
 

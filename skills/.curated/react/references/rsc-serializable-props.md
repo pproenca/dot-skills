@@ -67,4 +67,27 @@ export function ProductCard({ productId, productName, price }) {
 }
 ```
 
-**Serializable types:** strings, numbers, booleans, null, arrays, plain objects, Dates (as ISO strings).
+**Serializable types:** strings, numbers, booleans, null, arrays, plain objects, Dates (as ISO strings), and Server Actions (functions marked with `'use server'`).
+
+**Passing callbacks via Server Actions:**
+
+```typescript
+// actions.ts
+'use server'
+
+export async function addToCart(productId: string) {
+  await db.cart.add({ productId })
+}
+
+// Server Component — passes server action as prop
+import { addToCart } from './actions'
+
+export function ProductPage({ product }) {
+  return (
+    <ProductCard
+      productId={product.id}
+      onAdd={addToCart}  // ✅ Server Actions are serializable
+    />
+  )
+}
+```

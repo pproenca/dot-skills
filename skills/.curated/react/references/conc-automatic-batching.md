@@ -1,7 +1,7 @@
 ---
 title: Leverage Automatic Batching for Fewer Renders
 impact: HIGH
-impactDescription: 32% fewer renders in heavy updates
+impactDescription: batches multiple setState calls into a single render in all contexts
 tags: conc, batching, automatic, performance
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use Form Actions Instead of onSubmit
 impact: HIGH
-impactDescription: progressive enhancement, simpler code
+impactDescription: forms work without JS loaded, eliminates e.preventDefault() boilerplate
 tags: form, actions, progressive-enhancement, mutation
 ---
 

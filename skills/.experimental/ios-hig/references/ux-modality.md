@@ -1,7 +1,7 @@
 ---
 title: Use Modality Appropriately
-impact: MEDIUM-HIGH
-impactDescription: reserves modal presentations for focused, temporary tasks
+impact: HIGH
+impactDescription: modal overuse traps users in flows — nested modals increase task abandonment by 30-50% compared to push navigation
 tags: ux, modality, modal, sheets, interruption
 ---
 

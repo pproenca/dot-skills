@@ -5,32 +5,32 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ---
 
-## 1. Interaction Design (inter)
+## 1. Navigation (nav)
+
+**Impact:** CRITICAL
+**Description:** Tab bars, navigation stacks, split views, and toolbar placement define how users move through your app. Navigation is the most fundamental HIG topic — getting it wrong makes every screen harder to reach.
+
+## 2. Interaction Design (inter)
 
 **Impact:** CRITICAL
 **Description:** Touch targets, gestures, haptics, keyboard handling, and swipe actions define how users physically interact with your app. Getting these wrong breaks the native iOS feel.
 
-## 2. User Feedback (feed)
-
-**Impact:** HIGH
-**Description:** Loading states, error handling, notifications, success confirmation, and empty states communicate system status to users. Clear feedback builds trust and reduces confusion.
-
-## 3. UX Patterns (ux)
-
-**Impact:** HIGH
-**Description:** Onboarding, permissions, modality, data entry, undo, and settings organization follow Apple's established patterns that users already understand.
-
-## 4. Accessibility (acc)
+## 3. Accessibility (acc)
 
 **Impact:** CRITICAL
 **Description:** VoiceOver labels, Dynamic Type, color contrast, reduce motion, and focus management are not optional. Accessibility support is required for App Store quality and reaches 15%+ of users.
 
-## 5. Lists & Input (input)
+## 4. User Feedback (feed)
 
-**Impact:** MEDIUM-HIGH
-**Description:** ForEach patterns, toggles, pickers, text fields, and button actions are the building blocks of interactive forms and data-driven lists.
+**Impact:** HIGH
+**Description:** Loading states, error handling, notifications, success confirmation, and empty states communicate system status to users. Clear feedback builds trust and reduces confusion.
 
-## 6. List Data (list)
+## 5. UX Patterns (ux)
 
-**Impact:** MEDIUM
-**Description:** Identifiable data patterns ensure SwiftUI can efficiently diff and animate list changes.
+**Impact:** HIGH
+**Description:** Onboarding, permissions, modality, data entry, undo, confirmation dialogs, and settings organization follow Apple's established patterns that users already understand.
+
+## 6. Visual Design (vis)
+
+**Impact:** HIGH
+**Description:** Dark mode support, SF Symbols usage, layout margins, and safe area handling ensure your app looks native and adapts to all system configurations.

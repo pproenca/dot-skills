@@ -1,7 +1,7 @@
 ---
 title: Handle Keyboard Appearance Gracefully
 impact: HIGH
-impactDescription: prevents keyboard from obscuring input fields
+impactDescription: obscured input fields cause 30-50% of users to dismiss and retry — ScrollView/Form handle keyboard avoidance automatically in 0 extra lines
 tags: inter, keyboard, input, scroll
 ---
 
@@ -72,14 +72,19 @@ VStack {
     // Already handles keyboard
 }
 
-// Dismiss keyboard
-.onTapGesture {
-    UIApplication.shared.sendAction(
-        #selector(UIResponder.resignFirstResponder),
-        to: nil, from: nil, for: nil
-    )
-}
-// Or
+```
+
+**Dismiss keyboard with @FocusState:**
+
+```swift
+@FocusState private var isFocused: Bool
+
+TextField("Message", text: $message)
+    .focused($isFocused)
+
+Button("Done") { isFocused = false }
+
+// Or dismiss on scroll
 .scrollDismissesKeyboard(.interactively)
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: Use Notifications Judiciously
 impact: HIGH
-impactDescription: respects user attention and maintains trust
+impactDescription: over-notifying causes 40-60% of users to disable all notifications — each irrelevant notification reduces opt-in rate permanently
 tags: feed, notifications, push, alerts
 ---
 
@@ -60,11 +60,11 @@ let category = UNNotificationCategory(
 UNUserNotificationCenter.current()
     .setNotificationCategories([category])
 
-// Badge for unread count
-UIApplication.shared.applicationIconBadgeNumber = unreadCount
+// Badge for unread count (iOS 16+)
+try? await UNUserNotificationCenter.current().setBadgeCount(unreadCount)
 
 // Clear when seen
-UIApplication.shared.applicationIconBadgeNumber = 0
+try? await UNUserNotificationCenter.current().setBadgeCount(0)
 ```
 
 **Notification guidelines:**

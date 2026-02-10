@@ -68,3 +68,5 @@ const handleIncrement = useCallback(() => {
   setCount(c => c + 1)  // Functional form - no dependency on count
 }, [])  // Stable forever
 ```
+
+**Note:** If using [React Compiler v1.0+](https://react.dev/blog/2025/10/07/react-compiler-1), useCallback is handled automatically. Use manual useCallback only when the compiler can't optimize your case.

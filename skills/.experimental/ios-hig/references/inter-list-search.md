@@ -1,7 +1,7 @@
 ---
 title: Use searchable for Built-In Search
 impact: MEDIUM-HIGH
-impactDescription: system-standard search bar with automatic placement and keyboard handling
+impactDescription: .searchable provides system-standard placement, cancel button, and keyboard handling in 1 modifier vs 20+ lines for a custom TextField implementation
 tags: inter, list, searchable, filtering, search-bar, navigation
 ---
 

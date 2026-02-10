@@ -1,8 +1,8 @@
 ---
 title: Use useReducer for Complex State Logic
 impact: MEDIUM
-impactDescription: clearer state transitions, easier testing
-tags: state, useReducer, complex, actions
+impactDescription: eliminates impossible state combinations, enables unit-testable state logic
+tags: rstate, useReducer, complex, actions
 ---
 
 ## Use useReducer for Complex State Logic

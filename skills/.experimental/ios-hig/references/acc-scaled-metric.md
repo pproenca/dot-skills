@@ -1,7 +1,7 @@
 ---
 title: Use @ScaledMetric for Size-Adaptive Values
 impact: MEDIUM
-impactDescription: scales numeric values proportionally with Dynamic Type setting
+impactDescription: hardcoded sizes create visual imbalance at 200-310% text scale — icons and spacing that don't grow with text confuse 25%+ of users who adjust text size
 tags: acc, scaled-metric, dynamic-type, spacing, icon-size
 ---
 

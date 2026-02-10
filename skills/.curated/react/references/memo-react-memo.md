@@ -1,7 +1,7 @@
 ---
 title: Use React.memo for Expensive Pure Components
 impact: MEDIUM
-impactDescription: skips re-render when props unchanged
+impactDescription: skips expensive re-renders (5-50ms savings per unchanged component)
 tags: memo, react-memo, performance, pure
 ---
 
@@ -69,4 +69,4 @@ const ProductCard = memo(
 )
 ```
 
-**Note:** Ensure props passed to memo'd components are stable (primitives, memoized objects/functions).
+**Note:** If using [React Compiler v1.0+](https://react.dev/blog/2025/10/07/react-compiler-1) (works with React 17+), React.memo is handled automatically. Use manual memo only when the compiler can't optimize your case. Ensure props passed to memo'd components are stable (primitives, memoized objects/functions).

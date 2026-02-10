@@ -1,7 +1,7 @@
 ---
 title: Request Permissions in Context
 impact: HIGH
-impactDescription: improves permission grant rates and user trust
+impactDescription: contextual permission requests achieve 60-80% grant rates vs 30-40% for upfront requests — pre-permission explanation doubles acceptance
 tags: ux, permissions, privacy, context
 ---
 

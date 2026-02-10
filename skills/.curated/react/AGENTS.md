@@ -1,48 +1,21 @@
----
-name: react
-description: React 19 performance optimization guidelines for concurrent rendering, Server Components, actions, hooks, and memoization (formerly react-19). This skill should be used when writing React 19 components, using concurrent features, or optimizing re-renders. This skill does NOT cover Next.js-specific features like App Router, next.config.js, or Next.js caching (use nextjs-16-app-router skill). For client-side form validation with React Hook Form, use react-hook-form skill.
----
-
 # React 19 Best Practices
 
-Comprehensive performance optimization guide for React 19/19.2 applications. Contains 41 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns).
+**Version 0.1.0**
+curated
+February 2026
 
-## When to Apply
+> **Note:** This React guide is mainly for agents and LLMs to follow when
+> maintaining, generating, or refactoring React codebases. Humans may also
+> find it useful, but guidance here is optimized for automation and consistency
+> by AI-assisted workflows.
 
-- Writing new React components or refactoring existing ones
-- Optimizing re-render performance or bundle size
-- Using concurrent features (useTransition, useDeferredValue, Activity)
-- Setting up Server Components or server/client boundaries
-- Implementing form actions, optimistic updates, or data fetching
-- Configuring React Compiler for automatic memoization
-- Reviewing React code for common anti-patterns
+---
 
-## Rule Categories
+## Abstract
 
-| Category | Impact | Rules | Key Topics |
-|----------|--------|-------|------------|
-| Concurrent Rendering | CRITICAL | 6 | useTransition, useDeferredValue, Activity, batching |
-| Server Components | CRITICAL | 6 | RSC boundaries, data fetching, streaming |
-| Actions & Forms | HIGH | 5 | Form actions, useActionState, useOptimistic |
-| Data Fetching | HIGH | 5 | use() hook, cache(), Suspense, error boundaries |
-| State Management | MEDIUM-HIGH | 5 | Derived values, context optimization, useReducer |
-| Memoization & Performance | MEDIUM | 5 | React Compiler, useMemo, useCallback, React.memo |
-| Effects & Events | MEDIUM | 5 | useEffectEvent, cleanup, external stores |
-| Component Patterns | LOW-MEDIUM | 4 | Composition, controlled vs uncontrolled, key reset |
+Comprehensive performance optimization guide for React 19/19.2 applications, designed for AI agents and LLMs. Contains 41 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns). Covers React 19.2 features including Activity, useEffectEvent, cacheSignal, and React Compiler v1.0. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
 
-## Quick Reference
-
-**Critical patterns** — get these right first:
-- Fetch data in Server Components, not Client Components
-- Push `'use client'` boundaries as low as possible
-- Use `startTransition` for expensive non-blocking updates
-- Use `<Activity>` to preserve state across tab/page switches
-
-**Common mistakes** — avoid these anti-patterns:
-- Creating promises inside Client Components for `use()` (causes infinite loops)
-- Memoizing everything (use React Compiler v1.0+ instead)
-- Using effects for derived state or user event handling
-- Placing `'use client'` too high in the component tree
+---
 
 ## Table of Contents
 
@@ -96,17 +69,13 @@ Comprehensive performance optimization guide for React 19/19.2 applications. Con
    - 8.3 [Use Key to Reset Component State](references/rcomp-key-reset.md) — LOW-MEDIUM (forces full component remount, eliminates stale state after identity changes)
    - 8.4 [Use Render Props for Inversion of Control](references/rcomp-render-props.md) — LOW-MEDIUM (enables parent-controlled rendering without child prop explosion)
 
+---
+
 ## References
 
-1. [https://react.dev](https://react.dev)
-2. [https://react.dev/blog/2024/12/05/react-19](https://react.dev/blog/2024/12/05/react-19)
-3. [https://react.dev/blog/2025/10/01/react-19-2](https://react.dev/blog/2025/10/01/react-19-2)
-4. [https://react.dev/blog/2025/10/07/react-compiler-1](https://react.dev/blog/2025/10/07/react-compiler-1)
-5. [https://react.dev/learn/you-might-not-need-an-effect](https://react.dev/learn/you-might-not-need-an-effect)
-6. [https://github.com/facebook/react](https://github.com/facebook/react)
-
-## Related Skills
-
-- For Next.js 16 App Router, see `nextjs-16-app-router` skill
-- For client-side form handling, see `react-hook-form` skill
-- For data caching with TanStack Query, see `tanstack-query` skill
+1. [React Documentation](https://react.dev)
+2. [React v19 Blog Post](https://react.dev/blog/2024/12/05/react-19)
+3. [React 19.2 Blog Post](https://react.dev/blog/2025/10/01/react-19-2)
+4. [React Compiler v1.0](https://react.dev/blog/2025/10/07/react-compiler-1)
+5. [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
+6. [React GitHub Repository](https://github.com/facebook/react)

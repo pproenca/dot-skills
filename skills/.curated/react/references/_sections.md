@@ -13,7 +13,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 2. Server Components (rsc)
 
 **Impact:** CRITICAL
-**Description:** Proper server/client boundaries and data fetching patterns reduce client JavaScript by 38% and eliminate client-side waterfalls.
+**Description:** Proper server/client boundaries and data fetching patterns significantly reduce client JavaScript and eliminate client-side waterfalls.
 
 ## 3. Actions & Forms (form)
 

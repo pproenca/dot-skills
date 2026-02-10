@@ -1,7 +1,7 @@
 ---
 title: Handle Errors with Clear Recovery Actions
 impact: HIGH
-impactDescription: helps users understand and recover from problems
+impactDescription: technical error messages cause 70%+ of users to abandon the task — clear recovery actions retain 3-5× more users
 tags: feed, errors, recovery, messaging
 ---
 

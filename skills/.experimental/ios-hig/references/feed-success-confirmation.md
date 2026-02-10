@@ -1,7 +1,7 @@
 ---
 title: Confirm Successful Actions Appropriately
 impact: MEDIUM
-impactDescription: provides reassurance without being intrusive
+impactDescription: missing confirmation causes 20-30% of users to repeat the action — over-confirmation (alerts for minor actions) adds 2-3 unnecessary taps per task
 tags: feed, success, confirmation, status
 ---
 

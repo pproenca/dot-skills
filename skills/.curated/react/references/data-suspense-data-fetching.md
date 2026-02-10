@@ -1,7 +1,7 @@
 ---
 title: Use Suspense for Declarative Loading States
 impact: HIGH
-impactDescription: cleaner code, coordinated loading UI
+impactDescription: eliminates loading state boilerplate, enables parallel data fetch coordination
 tags: data, suspense, loading, declarative
 ---
 

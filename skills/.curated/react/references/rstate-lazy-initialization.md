@@ -2,7 +2,7 @@
 title: Use Lazy Initialization for Expensive Initial State
 impact: MEDIUM-HIGH
 impactDescription: prevents expensive computation on every render
-tags: state, useState, lazy, initialization
+tags: rstate, useState, lazy, initialization
 ---
 
 ## Use Lazy Initialization for Expensive Initial State

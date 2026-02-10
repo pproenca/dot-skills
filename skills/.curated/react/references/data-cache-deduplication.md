@@ -57,4 +57,18 @@ async function Sidebar() {
 }
 ```
 
-**Note:** `cache()` deduplicates within a single server request. For cross-request caching, use your framework's caching mechanism.
+**With cacheSignal for cleanup (React 19.2):**
+
+```typescript
+import { cache, cacheSignal } from 'react'
+
+const fetchWithCleanup = cache(async (url: string) => {
+  const res = await fetch(url, { signal: cacheSignal() })
+  return res.json()
+})
+// Fetch is automatically aborted if cache lifetime ends (render aborted/failed)
+```
+
+**Important:** `cache()` is for React Server Components only and requires framework support (e.g., Next.js) or React's canary channel. It is not available in standard client-side React setups. For client-side deduplication, use TanStack Query or SWR.
+
+**Note:** `cache()` deduplicates within a single server request. For cross-request caching, use your framework's caching mechanism. `cacheSignal()` (React 19.2) provides an AbortSignal that fires when the cache lifetime ends.

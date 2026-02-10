@@ -1,7 +1,7 @@
 ---
 title: Manage Focus for Assistive Technologies
 impact: MEDIUM-HIGH
-impactDescription: ensures logical navigation order with keyboard and VoiceOver
+impactDescription: broken focus order forces VoiceOver users to swipe through every element — proper focus reduces navigation steps by 50-80%
 tags: acc, focus, voiceover, keyboard-navigation
 ---
 

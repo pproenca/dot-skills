@@ -55,7 +55,7 @@ function UserCard({ user }) {
 const fullName = `${firstName} ${lastName}`
 
 // ✅ Memoized expensive calculations
-const sorted = useMemo(() => items.sort(compare), [items])
+const sorted = useMemo(() => [...items].sort(compare), [items])
 
 // ✅ Stable references with useId
 const inputId = useId()

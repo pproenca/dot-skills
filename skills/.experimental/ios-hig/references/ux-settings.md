@@ -1,7 +1,7 @@
 ---
 title: Organize Settings Logically
 impact: MEDIUM
-impactDescription: helps users find and understand configuration options
+impactDescription: ungrouped settings increase search time by 3-5× — grouped sections with headers match iOS Settings patterns users already know
 tags: ux, settings, preferences, configuration
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use the use() Hook for Promises in Render
 impact: HIGH
-impactDescription: cleaner async component code, Suspense integration
+impactDescription: eliminates useEffect+useState fetch pattern, integrates with Suspense boundaries
 tags: data, use, promises, async
 ---
 
@@ -32,20 +32,14 @@ function UserProfile({ userId }: { userId: string }) {
 }
 ```
 
-**Correct (use() with Suspense):**
+**Correct (use() with promise from Server Component):**
 
 ```typescript
-'use client'
+// Server Component — creates stable promise
+import { Suspense } from 'react'
 
-import { use, Suspense } from 'react'
-
-function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
-  const user = use(userPromise)  // Suspends until resolved
-  return <Profile user={user} />
-}
-
-function UserPage({ userId }: { userId: string }) {
-  const userPromise = fetchUser(userId)  // Start fetch
+export default function UserPage({ userId }: { userId: string }) {
+  const userPromise = fetchUser(userId)  // Stable across re-renders
 
   return (
     <Suspense fallback={<Skeleton />}>
@@ -53,6 +47,17 @@ function UserPage({ userId }: { userId: string }) {
     </Suspense>
   )
 }
+
+// Client Component — reads the promise
+'use client'
+
+import { use } from 'react'
+
+function UserProfile({ userPromise }: { userPromise: Promise<User> }) {
+  const user = use(userPromise)  // Suspends until resolved
+  return <Profile user={user} />
+}
+// Promise created in Server Component is stable across re-renders
 ```
 
 **use() with Context (conditional reading):**
@@ -69,5 +74,7 @@ function Button({ showTheme }: { showTheme: boolean }) {
   return <button>Click</button>
 }
 ```
+
+**Important:** Never create promises inside Client Components and pass them to `use()` — they are recreated on every render, causing infinite suspense loops. Always create promises in Server Components or cache them.
 
 **Note:** `use()` can be called conditionally, unlike other hooks. It works in loops and conditionals.

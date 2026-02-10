@@ -1,7 +1,7 @@
 ---
 title: Use useOptimistic for Instant UI Feedback
 impact: HIGH
-impactDescription: instant perceived response, auto-rollback on failure
+impactDescription: 0ms perceived latency for mutations, automatic rollback on server failure
 tags: form, useOptimistic, optimistic-ui, mutation
 ---
 

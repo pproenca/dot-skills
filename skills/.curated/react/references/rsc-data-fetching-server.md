@@ -1,7 +1,7 @@
 ---
 title: Fetch Data in Server Components
 impact: CRITICAL
-impactDescription: 38% less client JS, no client waterfalls
+impactDescription: significantly reduces client JS bundle, eliminates client-side data waterfalls
 tags: rsc, data-fetching, server, async
 ---
 

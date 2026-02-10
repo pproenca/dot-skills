@@ -1,7 +1,7 @@
 ---
 title: Use ViewThatFits for Adaptive Layouts
 impact: MEDIUM
-impactDescription: automatically selects the first child view that fits available space
+impactDescription: fixed layouts clip or overflow at accessibility text sizes (200-310%) — ViewThatFits eliminates manual breakpoint calculations
 tags: acc, view-that-fits, adaptive-layout, dynamic-type, responsive
 ---
 
@@ -21,7 +21,7 @@ struct EventActions: View {
                 .buttonStyle(.borderedProminent)
             Button("Decline") { declineEvent(event) }
                 .buttonStyle(.bordered)
-            Button("Maybe") { tentativeEvent(event) }
+            Button("Tentative") { tentativeEvent(event) }
                 .buttonStyle(.bordered)
         }
     }
@@ -41,7 +41,7 @@ struct EventActions: View {
                     .buttonStyle(.borderedProminent)
                 Button("Decline") { declineEvent(event) }
                     .buttonStyle(.bordered)
-                Button("Maybe") { tentativeEvent(event) }
+                Button("Tentative") { tentativeEvent(event) }
                     .buttonStyle(.bordered)
             }
             VStack(spacing: 8) {
@@ -49,7 +49,7 @@ struct EventActions: View {
                     .buttonStyle(.borderedProminent)
                 Button("Decline") { declineEvent(event) }
                     .buttonStyle(.bordered)
-                Button("Maybe") { tentativeEvent(event) }
+                Button("Tentative") { tentativeEvent(event) }
                     .buttonStyle(.bordered)
             }
         }

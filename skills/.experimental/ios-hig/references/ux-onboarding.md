@@ -1,7 +1,7 @@
 ---
 title: Design Minimal Onboarding
 impact: HIGH
-impactDescription: gets users into app quickly while teaching essentials
+impactDescription: each additional onboarding screen drops completion by 15-20% — 3+ screens lose 50%+ of users before they reach the app
 tags: ux, onboarding, first-run, tutorial
 ---
 

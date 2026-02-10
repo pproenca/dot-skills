@@ -1,7 +1,7 @@
 ---
 title: Use useEffectEvent for Non-Reactive Logic
 impact: MEDIUM
-impactDescription: separates reactive from non-reactive code
+impactDescription: prevents unnecessary effect re-runs from non-reactive value changes
 tags: effect, useEffectEvent, non-reactive, events
 ---
 
@@ -50,4 +50,4 @@ function ChatRoom({ roomId, theme }) {
 - Logging/analytics that shouldn't re-trigger effects
 - Side effects that depend on current values but aren't "about" those values
 
-**Note:** `useEffectEvent` is stable in React 19.2. It replaces the pattern of suppressing exhaustive-deps warnings.
+**Note:** `useEffectEvent` is stable starting in React 19.2 (October 2025). Requires `react@19.2.0` or later — if targeting earlier React 19 versions, use a ref-based workaround instead. It replaces the pattern of suppressing exhaustive-deps warnings.

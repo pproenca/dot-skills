@@ -1,8 +1,8 @@
 ---
 title: Prefer Composition Over Props Explosion
 impact: LOW-MEDIUM
-impactDescription: more flexible, reusable components
-tags: comp, composition, children, flexibility
+impactDescription: reduces prop drilling depth, enables independent component reuse
+tags: rcomp, composition, children, flexibility
 ---
 
 ## Prefer Composition Over Props Explosion

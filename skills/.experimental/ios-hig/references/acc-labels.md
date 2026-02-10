@@ -1,7 +1,7 @@
 ---
 title: Provide Meaningful Accessibility Labels
 impact: CRITICAL
-impactDescription: makes app usable for blind and low-vision users via VoiceOver
+impactDescription: unlabeled elements are invisible to 500K+ VoiceOver users — missing labels is the #1 iOS accessibility audit failure
 tags: acc, accessibility, voiceover, labels, screen-reader
 ---
 

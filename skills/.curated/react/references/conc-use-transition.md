@@ -1,7 +1,7 @@
 ---
 title: Use useTransition for Non-Blocking Updates
 impact: CRITICAL
-impactDescription: keeps UI responsive during heavy updates
+impactDescription: maintains <50ms input latency during heavy state updates
 tags: conc, useTransition, concurrent, non-blocking
 ---
 

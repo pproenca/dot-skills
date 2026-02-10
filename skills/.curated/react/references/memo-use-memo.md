@@ -1,7 +1,7 @@
 ---
 title: Use useMemo for Expensive Calculations
 impact: MEDIUM
-impactDescription: skips expensive recalculation on re-renders
+impactDescription: skips O(n) recalculations on re-renders with unchanged dependencies
 tags: memo, useMemo, performance, calculation
 ---
 
@@ -50,4 +50,4 @@ function AnalyticsChart({ data, filter }: { data: DataPoint[]; filter: Filter })
 - When the component rarely re-renders
 - When dependencies change on every render
 
-**Note:** With React Compiler (React 19+), manual memoization becomes less necessary as the compiler handles it automatically.
+**Note:** If using [React Compiler v1.0+](https://react.dev/blog/2025/10/07/react-compiler-1) (works with React 17+), useMemo is handled automatically. Use manual useMemo only when the compiler can't optimize your case.

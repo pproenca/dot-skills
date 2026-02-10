@@ -1,7 +1,7 @@
 ---
 title: Validate Forms on Server with Actions
 impact: MEDIUM
-impactDescription: secure validation, consistent error handling
+impactDescription: prevents client-only validation bypass, single source of truth for form errors
 tags: form, validation, server-actions, security
 ---
 

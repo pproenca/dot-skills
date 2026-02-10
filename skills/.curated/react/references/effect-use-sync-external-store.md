@@ -1,7 +1,7 @@
 ---
 title: Use useSyncExternalStore for External Subscriptions
 impact: MEDIUM
-impactDescription: correct subscription handling, SSR compatible
+impactDescription: prevents tearing in concurrent rendering, ensures SSR-safe external state
 tags: effect, useSyncExternalStore, subscription, external
 ---
 

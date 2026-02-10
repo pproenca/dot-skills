@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "organization": "Apple iOS HIG Best Practices",
+  "technology": "iOS (SwiftUI)",
+  "date": "February 2026",
+  "abstract": "Comprehensive Apple Human Interface Guidelines compliance guide for iOS apps built with SwiftUI, designed for AI agents and LLMs. Contains rules across categories covering navigation, interaction design, accessibility, user feedback, and UX patterns. Each rule includes detailed explanations with incorrect vs. correct SwiftUI implementations, quantified impact metrics, and references to official Apple HIG documentation. Covers iOS 17+ patterns including NavigationStack, ContentUnavailableView, sensoryFeedback, confirmationDialog, and ViewThatFits.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+    "https://developer.apple.com/design/human-interface-guidelines/navigation-and-search",
+    "https://developer.apple.com/tutorials/develop-in-swift/",
+    "https://developer.apple.com/documentation/swiftui"
+  ],
+  "category": "Design Guidelines"
+}

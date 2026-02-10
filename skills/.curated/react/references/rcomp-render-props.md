@@ -1,8 +1,8 @@
 ---
 title: Use Render Props for Inversion of Control
 impact: LOW-MEDIUM
-impactDescription: flexible rendering, shared logic
-tags: comp, render-props, inversion-of-control, pattern
+impactDescription: enables parent-controlled rendering without child prop explosion
+tags: rcomp, render-props, inversion-of-control, pattern
 ---
 
 ## Use Render Props for Inversion of Control
@@ -67,3 +67,5 @@ function DataFetcher<T>({
   {(users) => <UserList users={users} />}
 </DataFetcher>
 ```
+
+**Note:** For **logic sharing**, prefer custom hooks over render props — hooks are simpler and more composable. Render props remain useful when the **parent needs to control rendering** (inversion of rendering control), not just access data.

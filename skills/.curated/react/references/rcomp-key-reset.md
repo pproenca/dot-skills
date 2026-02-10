@@ -1,8 +1,8 @@
 ---
 title: Use Key to Reset Component State
 impact: LOW-MEDIUM
-impactDescription: correct state isolation, proper resets
-tags: comp, key, reset, state
+impactDescription: forces full component remount, eliminates stale state after identity changes
+tags: rcomp, key, reset, state
 ---
 
 ## Use Key to Reset Component State

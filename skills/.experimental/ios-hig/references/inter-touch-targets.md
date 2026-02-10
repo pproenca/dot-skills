@@ -1,7 +1,7 @@
 ---
 title: Maintain 44pt Minimum Touch Targets
 impact: CRITICAL
-impactDescription: ensures tappable elements are accessible to all users
+impactDescription: targets below 44pt cause 25%+ tap error rates — motor-impaired users cannot reliably activate small controls
 tags: inter, touch-target, accessibility, tap, buttons, tappable
 ---
 

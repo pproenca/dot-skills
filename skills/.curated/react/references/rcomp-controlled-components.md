@@ -1,8 +1,8 @@
 ---
 title: Choose Controlled vs Uncontrolled Appropriately
 impact: LOW-MEDIUM
-impactDescription: correct data flow, proper form handling
-tags: comp, controlled, uncontrolled, forms
+impactDescription: prevents form state sync bugs, enables real-time validation
+tags: rcomp, controlled, uncontrolled, forms
 ---
 
 ## Choose Controlled vs Uncontrolled Appropriately

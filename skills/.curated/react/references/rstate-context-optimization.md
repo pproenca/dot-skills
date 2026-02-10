@@ -2,7 +2,7 @@
 title: Split Context to Prevent Unnecessary Re-renders
 impact: MEDIUM
 impactDescription: reduces re-renders from context changes
-tags: state, context, optimization, splitting
+tags: rstate, context, optimization, splitting
 ---
 
 ## Split Context to Prevent Unnecessary Re-renders
@@ -55,14 +55,17 @@ function AppProvider({ children }: { children: ReactNode }) {
 }
 ```
 
-**Alternative (memoized selectors):**
+**Alternative (use() for conditional context reading):**
 
 ```typescript
-const AppContext = createContext({ user: null, theme: 'light' })
+import { use } from 'react'
 
-function useTheme() {
-  const { theme } = useContext(AppContext)
-  return useMemo(() => theme, [theme])
+function Button({ showTheme }: { showTheme: boolean }) {
+  if (showTheme) {
+    const theme = use(ThemeContext)  // Conditional context reading
+    return <button className={theme}>Themed</button>
+  }
+  return <button>Default</button>
 }
-// Still re-renders on context change, but minimizes work
+// use() can read context conditionally, unlike useContext
 ```
