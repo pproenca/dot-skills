@@ -1,22 +1,21 @@
 ---
 title: Use Arrays for One-to-Many Relationships
 impact: MEDIUM-HIGH
-impactDescription: ensures SwiftData correctly tracks relationship mutations
+impactDescription: aligns relationship modeling with Apple’s SwiftData examples and common SwiftUI iteration patterns
 tags: rel, one-to-many, array, relationship
 ---
 
 ## Use Arrays for One-to-Many Relationships
 
-For one-to-many relationships (e.g., a movie favorited by many friends), use an array property with a default empty array. SwiftData manages the array contents automatically when the inverse relationship changes. Using Set or custom collection types breaks SwiftData's change tracking because the framework only instruments Array-backed relationships.
+For one-to-many relationships (e.g., a movie favorited by many friends), use an array property with a default empty array. Apple’s SwiftData examples model to-many relationships as arrays, which integrates cleanly with SwiftUI’s `ForEach` and keeps relationship ordering explicit.
 
-**Incorrect (Set or custom collection — SwiftData cannot track changes):**
+**Incorrect (Set-based to-many relationship — non-canonical, harder to iterate and reason about):**
 
 ```swift
 import SwiftData
 
 @Model class Movie {
     var title: String
-    // SwiftData does not track Set mutations — changes silently lost
     var favoritedBy: Set<Friend> = []
 
     init(title: String) {
@@ -25,7 +24,7 @@ import SwiftData
 }
 ```
 
-**Correct (Array with empty default — auto-maintained by SwiftData):**
+**Correct (Array with empty default):**
 
 ```swift
 import SwiftData

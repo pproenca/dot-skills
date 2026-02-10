@@ -1,7 +1,7 @@
 ---
 title: Insert Models via ModelContext
 impact: HIGH
-impactDescription: prevents 100% data loss from untracked model instances
+impactDescription: ensures model instances are tracked by SwiftData for persistence
 tags: crud, insert, model-context, persistence
 ---
 

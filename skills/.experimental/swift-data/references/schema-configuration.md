@@ -1,7 +1,7 @@
 ---
 title: Customize Storage with ModelConfiguration
 impact: LOW-MEDIUM
-impactDescription: enables 100% of extension data sharing use cases
+impactDescription: enables extension data sharing and explicit control over store location
 tags: schema, configuration, storage, model-container
 ---
 
@@ -36,16 +36,29 @@ struct FriendsWidget: Widget {
 }
 ```
 
-**Correct (shared configuration with explicit URL and App Group):**
+**Correct (custom URL for your app only):**
 
 ```swift
+import SwiftData
+
+let schema = Schema([Friend.self, Movie.self])
+let fileURL = URL.applicationSupportDirectory.appending(path: "friends.store")
+
+// This is still app-sandbox storage (not shared with extensions).
+let configuration = ModelConfiguration(schema: schema, url: fileURL)
+let container = try ModelContainer(for: schema, configurations: configuration)
+```
+
+**Correct (shared App Group storage for app + extensions):**
+
+```swift
+import SwiftData
+
 let schema = Schema([Friend.self, Movie.self])
 let configuration = ModelConfiguration(
-    schema: schema,
-    url: URL.applicationSupportDirectory.appending(path: "friends.store"),
-    allowsSave: true
+    groupContainer: .identifier("group.com.example.myapp")
 )
-let container = try ModelContainer(for: schema, configurations: [configuration])
+let container = try ModelContainer(for: schema, configurations: configuration)
 ```
 
 **Alternative (in-memory configuration for tests and previews):**
@@ -65,4 +78,4 @@ let container = try ModelContainer(for: schema, configurations: [configuration])
 - Explicit URL control prevents data from scattering across default locations
 - In-memory mode eliminates disk I/O for tests and previews
 
-Reference: [Preserving Your App's Model Data Across Launches](https://developer.apple.com/documentation/swiftdata/preserving-your-apps-model-data-across-launches)
+Reference: [Dive deeper into SwiftData](https://developer.apple.com/videos/play/wwdc2023/10196/)

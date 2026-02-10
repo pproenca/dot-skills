@@ -1,7 +1,7 @@
 ---
 title: Use Environment Dismiss for Modal Save Flow
 impact: MEDIUM
-impactDescription: eliminates 100% of redundant save() calls
+impactDescription: avoids redundant save() calls when autosave is enabled
 tags: crud, dismiss, save, modal, environment
 ---
 

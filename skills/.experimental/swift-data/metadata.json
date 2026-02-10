@@ -1,9 +1,9 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "Apple Developer",
   "technology": "SwiftData",
   "date": "February 2026",
-  "abstract": "Comprehensive data modeling and persistence guide for Swift and SwiftUI applications using SwiftData, designed for AI agents and LLMs. Contains 43 rules across 8 categories, prioritized by impact from critical (data modeling, persistence setup) to incremental (schema evolution, migration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "abstract": "Comprehensive data modeling, persistence, and state management guide for Swift and SwiftUI applications using SwiftData, designed for AI agents and LLMs. Contains 48 rules across 8 categories, prioritized by impact from critical (data modeling, persistence setup) to incremental (schema evolution, migration). Each rule includes detailed explanations and real-world examples comparing incorrect vs. correct implementations to guide automated refactoring and code generation.",
   "references": [
     "https://developer.apple.com/tutorials/develop-in-swift/welcome-to-data-modeling",
     "https://developer.apple.com/tutorials/develop-in-swift/model-data-with-custom-types",
@@ -16,6 +16,10 @@
     "https://developer.apple.com/tutorials/develop-in-swift/create-update-and-delete-data-conclusion",
     "https://developer.apple.com/tutorials/develop-in-swift/work-with-relationships",
     "https://developer.apple.com/tutorials/develop-in-swift/navigation-editing-and-relationships-conclusion",
-    "https://developer.apple.com/documentation/swiftdata/preserving-your-apps-model-data-across-launches"
+    "https://developer.apple.com/documentation/swiftdata/preserving-your-apps-model-data-across-launches",
+    "https://developer.apple.com/videos/play/wwdc2023/10195/",
+    "https://developer.apple.com/videos/play/wwdc2023/10196/",
+    "https://developer.apple.com/videos/play/wwdc2024/10137/",
+    "https://developer.apple.com/documentation/swiftdata/fetchdescriptor/fetchoffset"
   ]
 }

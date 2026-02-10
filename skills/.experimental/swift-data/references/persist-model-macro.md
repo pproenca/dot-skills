@@ -1,15 +1,15 @@
 ---
 title: Apply @Model Macro to All Persistent Types
 impact: CRITICAL
-impactDescription: prevents 100% data loss — unmarked types are never persisted
+impactDescription: prevents non-persistent types from being mistakenly used with SwiftData APIs
 tags: persist, model-macro, swiftdata, persistence
 ---
 
 ## Apply @Model Macro to All Persistent Types
 
-The `@Model` macro converts a Swift class into a stored model with automatic change tracking, relationship management, and schema generation. Without it, SwiftData has no knowledge of the type and will not persist any instances — data silently disappears on app quit.
+The `@Model` macro converts a Swift class into a SwiftData persistent model with change tracking, relationship management, and schema generation. Non-`@Model` types aren't persistent models, so SwiftData APIs won't accept them for insert/fetch.
 
-**Incorrect (plain class — not persisted):**
+**Incorrect (plain class — not a SwiftData persistent model):**
 
 ```swift
 class Friend {
@@ -22,7 +22,7 @@ class Friend {
     }
 }
 
-// This instance lives only in memory — gone when the app closes
+// This instance lives only in memory and can't be inserted into SwiftData.
 let friend = Friend(name: "Alex", birthday: .now)
 context.insert(friend)  // ERROR: Cannot convert value of type 'Friend' to expected argument
 ```
@@ -42,7 +42,7 @@ import SwiftData
     }
 }
 
-// SwiftData tracks this instance and saves it automatically
+// SwiftData can track and persist this instance.
 let friend = Friend(name: "Alex", birthday: .now)
 context.insert(friend)
 ```

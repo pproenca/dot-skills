@@ -1,19 +1,19 @@
 ---
 title: Access ModelContext via @Environment for Mutations
 impact: MEDIUM
-impactDescription: prevents 100% of split-store bugs from mismatched contexts
+impactDescription: reduces context plumbing and helps avoid accidental wrong-context mutations
 tags: state, environment, model-context, mutations
 ---
 
 ## Access ModelContext via @Environment for Mutations
 
-Use `@Environment(\.modelContext)` to access the shared context for insert and delete operations. The model container set on the window group automatically provides this context to all child views. Passing context as a parameter or creating new `ModelContext` instances leads to multiple isolated stores where inserts in one context are invisible to queries in another.
+Prefer `@Environment(\.modelContext)` in any view that performs inserts, deletes, or edits. The model container you set on the scene/view hierarchy provides a consistent, main-actor `ModelContext` throughout the subtree. Passing `ModelContext` through view initializers isn't inherently wrong, but it increases coupling and makes it easier to accidentally mutate with the wrong context after refactors.
 
-**Incorrect (passing context as a parameter — breaks when view hierarchy changes):**
+**Incorrect (threading context through views — extra coupling and fragile plumbing):**
 
 ```swift
 struct FriendList: View {
-    let context: ModelContext // Passed from parent
+    let context: ModelContext // Must be threaded from parent
     @Query(sort: \Friend.name) private var friends: [Friend]
 
     var body: some View {
@@ -28,7 +28,7 @@ struct FriendList: View {
     }
 }
 
-// Parent must thread context through every navigation level
+// Parent must thread context through every navigation level.
 struct ContentView: View {
     @Environment(\.modelContext) private var context
 
@@ -59,6 +59,6 @@ struct FriendList: View {
 ```
 
 **When NOT to use:**
-- Background operations that need an isolated context (e.g., batch imports) should create a dedicated `ModelContext` from the same `ModelContainer` to avoid blocking the main actor
+- Non-View code (services, repositories, background tasks) can accept a `ModelContext` as a dependency to keep SwiftUI out of the data layer
 
 Reference: [Develop in Swift — Save Data](https://developer.apple.com/tutorials/develop-in-swift/save-data)

@@ -1,7 +1,7 @@
 ---
 title: Use localizedStandardContains for Search
 impact: MEDIUM
-impactDescription: fixes 100% of missed search results from case/diacritic mismatch
+impactDescription: improves search results by handling case and diacritics in a locale-aware way
 tags: query, search, localization, predicate
 ---
 
