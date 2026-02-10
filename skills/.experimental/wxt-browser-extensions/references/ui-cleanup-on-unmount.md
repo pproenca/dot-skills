@@ -7,7 +7,7 @@ tags: ui, cleanup, unmount, memory-leak, lifecycle
 
 ## Clean Up UI on Unmount
 
-Content script UIs must clean up event listeners, observers, and timers when removed. WXT's UI helpers provide cleanup hooks that must be used.
+Content script UIs must clean up event listeners, observers, and timers when removed. Use `onRemove` for cleanup and `ctx` helpers for auto-cleanup.
 
 **Incorrect (no cleanup):**
 
@@ -17,6 +17,8 @@ export default defineContentScript({
   main(ctx) {
     const ui = createShadowRootUi(ctx, {
       name: 'my-panel',
+      position: 'inline',
+      anchor: 'body',
       onMount: (container) => {
         // Event listener never removed
         window.addEventListener('resize', handleResize)
@@ -34,7 +36,7 @@ export default defineContentScript({
 })
 ```
 
-**Correct (proper cleanup):**
+**Correct (cleanup via onRemove and ctx helpers):**
 
 ```typescript
 export default defineContentScript({
@@ -42,30 +44,29 @@ export default defineContentScript({
   main(ctx) {
     const ui = createShadowRootUi(ctx, {
       name: 'my-panel',
+      position: 'inline',
+      anchor: 'body',
       onMount: (container) => {
-        window.addEventListener('resize', handleResize)
+        // ctx.addEventListener auto-removes on context invalidation
+        ctx.addEventListener(window, 'resize', handleResize)
 
-        const intervalId = setInterval(updateTime, 1000)
+        const intervalId = ctx.setInterval(updateTime, 1000)
 
         const observer = new MutationObserver(handleMutation)
         observer.observe(document.body, { childList: true })
 
-        // Return cleanup function
-        return () => {
-          window.removeEventListener('resize', handleResize)
-          clearInterval(intervalId)
-          observer.disconnect()
-        }
+        // Return resources that onRemove needs to clean up
+        return { observer }
       },
-      onRemove: () => {
-        // Additional cleanup after unmount
-        console.log('UI removed')
+      onRemove: (mounted) => {
+        // mounted is the return value from onMount
+        mounted?.observer.disconnect()
       }
     })
 
     ui.mount()
 
-    // Also clean up when extension context invalidated
+    // Clean up UI when extension context invalidated (e.g., on update)
     ctx.onInvalidated(() => {
       ui.remove()
     })
@@ -73,26 +74,31 @@ export default defineContentScript({
 })
 ```
 
-**With React (useEffect cleanup):**
+**With React (framework handles component cleanup):**
 
 ```typescript
-function Panel() {
-  useEffect(() => {
-    const handleResize = () => updateLayout()
-    window.addEventListener('resize', handleResize)
-
-    const observer = new MutationObserver(handleMutation)
-    observer.observe(document.body, { childList: true })
-
-    // Cleanup when component unmounts
-    return () => {
-      window.removeEventListener('resize', handleResize)
-      observer.disconnect()
-    }
-  }, [])
-
-  return <div>Panel content</div>
-}
+export default defineContentScript({
+  matches: ['*://*/*'],
+  cssInjectionMode: 'ui',
+  async main(ctx) {
+    const ui = await createShadowRootUi(ctx, {
+      name: 'my-panel',
+      position: 'inline',
+      anchor: 'body',
+      onMount: (container) => {
+        const root = createRoot(container)
+        root.render(<Panel />)
+        return root
+      },
+      onRemove: (root) => {
+        root?.unmount()
+      }
+    })
+    ui.mount()
+  }
+})
 ```
+
+**Key pattern:** `onMount` returns a value (app instance, resources object), `onRemove` receives that value for cleanup. Use `ctx.addEventListener` and `ctx.setInterval` for auto-cleanup on context invalidation.
 
 Reference: [WXT Content Script UI Lifecycle](https://wxt.dev/guide/essentials/content-script-ui)

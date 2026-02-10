@@ -1,6 +1,6 @@
 # WXT Browser Extensions Best Practices Skill
 
-A comprehensive performance optimization guide for WXT browser extension development, containing 45+ rules across 8 categories.
+A comprehensive performance optimization guide for WXT browser extension development, containing 49 rules across 8 categories. Updated for WXT v0.20+.
 
 ## Overview/Structure
 
@@ -12,13 +12,13 @@ wxt-browser-extensions/
 ├── references/
 │   ├── _sections.md      # Category definitions
 │   ├── svc-*.md          # Service Worker Lifecycle (6 rules)
-│   ├── inject-*.md       # Content Script Injection (6 rules)
+│   ├── inject-*.md       # Content Script Injection (7 rules)
 │   ├── msg-*.md          # Messaging Architecture (6 rules)
-│   ├── store-*.md        # Storage Patterns (5 rules)
+│   ├── store-*.md        # Storage Patterns (6 rules)
 │   ├── bundle-*.md       # Bundle Optimization (5 rules)
 │   ├── manifest-*.md     # Manifest Configuration (5 rules)
 │   ├── ui-*.md           # UI Performance (6 rules)
-│   └── ts-*.md           # TypeScript Patterns (7 rules)
+│   └── ts-*.md           # TypeScript Patterns (8 rules)
 └── assets/
     └── templates/
         └── _template.md  # Rule template for extensions

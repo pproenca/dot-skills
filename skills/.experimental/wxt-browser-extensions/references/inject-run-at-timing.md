@@ -9,18 +9,18 @@ tags: inject, run-at, timing, dom, document-start
 
 The `runAt` option controls when content scripts execute. Wrong timing causes race conditions where scripts run before elements exist or after events have fired.
 
-**Incorrect (default timing misses early events):**
+**Incorrect (default timing too late to intercept page scripts):**
 
 ```typescript
 export default defineContentScript({
   matches: ['*://*.example.com/*'],
-  // Default runAt: 'document_idle' - too late for early DOM
+  // Default runAt: 'document_idle' - runs after page scripts
   main() {
-    // Element may not exist yet, or page has already loaded
-    const earlyElement = document.querySelector('.loading-indicator')
-    if (!earlyElement) {
-      console.error('Missed the loading indicator')
-    }
+    // Too late - page's tracking script already initialized
+    Object.defineProperty(window, 'trackingEnabled', {
+      value: false,
+      writable: false
+    })
   }
 })
 ```

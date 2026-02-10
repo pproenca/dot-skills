@@ -31,23 +31,17 @@ export default defineContentScript({
 **Correct (Shadow DOM isolation with WXT helper):**
 
 ```typescript
-import { createShadowRootUi } from 'wxt/client'
+import './panel.css'
 
 export default defineContentScript({
   matches: ['*://*/*'],
+  cssInjectionMode: 'ui',
   main(ctx) {
     const ui = createShadowRootUi(ctx, {
       name: 'my-extension-panel',
       position: 'inline',
       anchor: 'body',
-      onMount: (container, shadow) => {
-        // Styles scoped to shadow root
-        const style = document.createElement('style')
-        style.textContent = `
-          .button { background: blue; padding: 8px 16px; }
-        `
-        shadow.appendChild(style)
-
+      onMount: (container) => {
         const button = document.createElement('button')
         button.className = 'button'
         button.textContent = 'Click me'
@@ -60,27 +54,40 @@ export default defineContentScript({
 })
 ```
 
-**With CSS file (recommended):**
+**With framework (React example):**
 
 ```typescript
-import { createShadowRootUi } from 'wxt/client'
-import styles from './panel.css?inline'
+import './styles.css'
 
 export default defineContentScript({
   matches: ['*://*/*'],
-  main(ctx) {
-    const ui = createShadowRootUi(ctx, {
+  cssInjectionMode: 'ui',
+  async main(ctx) {
+    const ui = await createShadowRootUi(ctx, {
       name: 'my-extension-panel',
       position: 'inline',
-      onMount: (container, shadow) => {
-        const styleEl = document.createElement('style')
-        styleEl.textContent = styles
-        shadow.appendChild(styleEl)
-        // Build UI
-      }
+      anchor: 'body',
+      onMount: (container) => {
+        const root = createRoot(container)
+        root.render(<Panel />)
+        return root
+      },
+      onRemove: (root) => root?.unmount()
     })
     ui.mount()
   }
+})
+```
+
+**WXT v0.20+ CSS reset:** Shadow roots now apply `all: initial` to reset inherited styles automatically. Use `inheritStyles: true` to preserve page style inheritance if needed (rare).
+
+**Event isolation:** Use `isolateEvents` to prevent click/keyboard events from bubbling to the host page:
+
+```typescript
+createShadowRootUi(ctx, {
+  name: 'my-panel',
+  position: 'overlay',
+  isolateEvents: ['click', 'keydown']
 })
 ```
 

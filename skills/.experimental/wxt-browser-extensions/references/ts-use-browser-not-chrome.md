@@ -7,7 +7,7 @@ tags: ts, browser, chrome, api, cross-browser
 
 ## Use browser Namespace Over chrome
 
-Use the `browser` namespace from WXT instead of `chrome`. WXT polyfills this for cross-browser compatibility and adds Promise support.
+Use the `browser` namespace from WXT instead of `chrome`. WXT normalizes `chrome` to `browser` for cross-browser compatibility across Chrome, Firefox, Safari, and Edge.
 
 **Incorrect (chrome namespace):**
 
@@ -53,6 +53,9 @@ export default defineBackground(() => {
 })
 ```
 
-**Note:** WXT automatically provides the `browser` global. No import needed. It works across Chrome, Firefox, Safari, and Edge with consistent Promise-based APIs.
+**Important (WXT v0.20+):** WXT no longer uses `webextension-polyfill`. The `browser` global is a direct re-export of the native `browser` or `chrome` global. This means:
+- Promise-based APIs work natively (Chrome 116+)
+- For APIs that may not exist on all browsers, use optional chaining: `browser.runtime.onSuspend?.addListener(() => {})`
+- `browser` is auto-imported by WXT -- no explicit import needed
 
 Reference: [WXT Extension APIs](https://wxt.dev/guide/essentials/extension-apis)

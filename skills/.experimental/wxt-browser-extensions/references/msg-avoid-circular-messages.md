@@ -71,4 +71,6 @@ browser.runtime.onMessage.addListener((message: TrackedMessage, sender, sendResp
 })
 ```
 
+**Note:** [`@webext-core/messaging`](msg-type-safe-messaging.md) with named message types reduces the risk of circular loops through explicit sender/receiver separation.
+
 Reference: [Chrome Messaging Debugging](https://developer.chrome.com/docs/extensions/develop/concepts/messaging#debugging)

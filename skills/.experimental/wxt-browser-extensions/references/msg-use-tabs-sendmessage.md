@@ -53,4 +53,6 @@ export default defineContentScript({
 
 **Note:** `tabs.sendMessage` throws if no content script is listening. Always wrap in try-catch or check if the tab URL matches your content script patterns first.
 
+**Note:** [`@webext-core/messaging`](msg-type-safe-messaging.md) provides `sendMessage` with built-in tab targeting via the `tabId` option, handling this pattern automatically.
+
 Reference: [Chrome Tabs sendMessage](https://developer.chrome.com/docs/extensions/reference/api/tabs#method-sendMessage)

@@ -62,6 +62,20 @@ settings.watch((newSettings) => {
 - One-time migration scripts that access legacy storage formats
 - Reading storage items created by other extensions
 
-**Note:** Use `fallback` for required defaults. Omit fallback when `null` is a valid state.
+**`fallback` vs `init`:**
+- `fallback` — in-memory default returned when storage is empty. Value is NOT persisted.
+- `init` — one-time initializer that saves the value to storage on first access. Use for unique IDs, install dates, etc.
+
+```typescript
+// fallback: returns 'dark' but doesn't save to storage
+const theme = storage.defineItem('local:theme', { fallback: 'dark' })
+
+// init: generates UUID and saves to storage on first access
+const installId = storage.defineItem('local:installId', {
+  init: () => crypto.randomUUID()
+})
+```
+
+Omit both when `null` is a valid state. See [`store-versioned-migrations`](store-versioned-migrations.md) for evolving storage schemas over time.
 
 Reference: [WXT Storage defineItem](https://wxt.dev/storage)

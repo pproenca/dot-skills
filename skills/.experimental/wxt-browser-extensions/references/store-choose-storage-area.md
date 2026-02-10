@@ -51,7 +51,7 @@ const userPreferences = storage.defineItem<UserPreferences>('sync:preferences', 
 | Area | Persistence | Synced | Quota |
 |------|-------------|--------|-------|
 | `session:` | Browser session | No | 10MB |
-| `local:` | Permanent | No | 10MB (5MB Chrome) |
+| `local:` | Permanent | No | 10MB |
 | `sync:` | Permanent | Yes | 100KB total, 8KB/item |
 
 Reference: [Chrome Storage Areas](https://developer.chrome.com/docs/extensions/reference/api/storage)

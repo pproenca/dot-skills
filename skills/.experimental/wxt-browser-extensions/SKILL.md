@@ -5,7 +5,7 @@ description: WXT browser extension performance optimization guidelines. This ski
 
 # Community WXT Browser Extensions Best Practices
 
-Comprehensive performance optimization guide for WXT browser extension development. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for WXT browser extension development. Contains 49 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation. Updated for WXT v0.20+.
 
 ## When to Apply
 
@@ -48,11 +48,12 @@ Reference these guidelines when:
 - [`inject-use-ctx-invalidated`](references/inject-use-ctx-invalidated.md) - Handle context invalidation on update
 - [`inject-dynamic-registration`](references/inject-dynamic-registration.md) - Use runtime registration for conditional injection
 - [`inject-all-frames`](references/inject-all-frames.md) - Configure allFrames for iframe handling
+- [`inject-spa-navigation`](references/inject-spa-navigation.md) - Handle SPA navigation with wxt:locationchange
 
 ### 3. Messaging Architecture (HIGH)
 
-- [`msg-return-true-for-async`](references/msg-return-true-for-async.md) - Return true for async message handlers
-- [`msg-type-safe-messaging`](references/msg-type-safe-messaging.md) - Define type-safe message protocols
+- [`msg-type-safe-messaging`](references/msg-type-safe-messaging.md) - Use @webext-core/messaging for type-safe protocols
+- [`msg-return-true-for-async`](references/msg-return-true-for-async.md) - Return true for async message handlers (raw API)
 - [`msg-use-tabs-sendmessage`](references/msg-use-tabs-sendmessage.md) - Use tabs.sendMessage for content scripts
 - [`msg-use-ports-for-streams`](references/msg-use-ports-for-streams.md) - Use ports for streaming communication
 - [`msg-handle-no-receiver`](references/msg-handle-no-receiver.md) - Handle missing message receivers
@@ -62,9 +63,10 @@ Reference these guidelines when:
 
 - [`store-use-define-item`](references/store-use-define-item.md) - Use storage.defineItem for type-safe access
 - [`store-choose-storage-area`](references/store-choose-storage-area.md) - Select appropriate storage area
-- [`store-batch-operations`](references/store-batch-operations.md) - Batch storage operations
+- [`store-batch-operations`](references/store-batch-operations.md) - Group related data into single defineItem
 - [`store-watch-for-changes`](references/store-watch-for-changes.md) - Use watch() for reactive updates
 - [`store-handle-quota-errors`](references/store-handle-quota-errors.md) - Handle storage quota errors
+- [`store-versioned-migrations`](references/store-versioned-migrations.md) - Use versioning for schema migrations
 
 ### 5. Bundle Optimization (MEDIUM-HIGH)
 
@@ -93,6 +95,7 @@ Reference these guidelines when:
 
 ### 8. TypeScript Patterns (LOW-MEDIUM)
 
+- [`ts-use-imports-module`](references/ts-use-imports-module.md) - Use #imports virtual module and auto-imports
 - [`ts-use-browser-not-chrome`](references/ts-use-browser-not-chrome.md) - Use browser namespace over chrome
 - [`ts-type-entrypoint-options`](references/ts-type-entrypoint-options.md) - Type entrypoint options explicitly
 - [`ts-augment-browser-types`](references/ts-augment-browser-types.md) - Augment types for missing APIs

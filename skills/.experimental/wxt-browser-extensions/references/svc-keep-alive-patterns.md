@@ -13,11 +13,11 @@ Service workers terminate after approximately 30 seconds of inactivity. For oper
 
 ```typescript
 export default defineBackground(() => {
-  browser.runtime.onMessage.addListener(async (message) => {
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'PROCESS_LARGE_FILE') {
       // Service worker may terminate during this 2-minute operation
-      const result = await processLargeFile(message.data)
-      return result
+      processLargeFile(message.data).then(sendResponse)
+      return true
     }
   })
 })
@@ -26,25 +26,42 @@ export default defineBackground(() => {
 **Correct (keep-alive with port connection):**
 
 ```typescript
+// background.ts - receives keep-alive port
 export default defineBackground(() => {
   browser.runtime.onConnect.addListener((port) => {
     if (port.name === 'keepAlive') {
-      // Port connection keeps service worker alive
+      // Port connection keeps service worker alive while connected
       port.onDisconnect.addListener(() => {
-        // Reconnect if needed
+        console.log('Keep-alive port disconnected')
       })
     }
   })
 
-  browser.runtime.onMessage.addListener(async (message, sender, sendResponse) => {
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'PROCESS_LARGE_FILE') {
-      // Create keep-alive port from content script before long operation
-      const result = await processLargeFile(message.data)
-      sendResponse(result)
+      processLargeFile(message.data).then(sendResponse)
+      return true
     }
-    return true
   })
 })
+```
+
+```typescript
+// popup.ts or content.ts - establishes keep-alive port
+async function processWithKeepAlive(data: FileData) {
+  // Open port to keep service worker alive during long operation
+  const port = browser.runtime.connect({ name: 'keepAlive' })
+
+  try {
+    const result = await browser.runtime.sendMessage({
+      type: 'PROCESS_LARGE_FILE',
+      data
+    })
+    return result
+  } finally {
+    port.disconnect() // Release keep-alive when done
+  }
+}
 ```
 
 **Alternative (alarm-based keep-alive):**
@@ -69,5 +86,9 @@ export default defineBackground(() => {
   }
 })
 ```
+
+**When NOT to use this pattern:**
+- Operations that complete within 30 seconds
+- Consider using offscreen documents for heavy DOM-dependent work instead
 
 Reference: [Chrome MV3 Service Worker Lifecycle](https://developer.chrome.com/docs/extensions/develop/concepts/service-workers/lifecycle)

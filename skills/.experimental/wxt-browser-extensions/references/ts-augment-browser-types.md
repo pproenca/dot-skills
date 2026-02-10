@@ -28,47 +28,48 @@ export default defineBackground(() => {
 
 ```typescript
 // types/browser.d.ts
-declare module 'wxt/browser' {
-  interface BrowserSidePanel {
-    open(options: { windowId?: number; tabId?: number }): Promise<void>
-    setOptions(options: {
-      path?: string
-      enabled?: boolean
-      tabId?: number
-    }): Promise<void>
-    getOptions(options: { tabId?: number }): Promise<{ path: string; enabled: boolean }>
-  }
+declare namespace chrome {
+  export namespace readingList {
+    interface ReadingListEntry {
+      url: string
+      title: string
+      hasBeenRead: boolean
+      creationTime: number
+    }
 
-  interface Browser {
-    sidePanel: BrowserSidePanel
+    export function addEntry(options: {
+      url: string
+      title: string
+      hasBeenRead?: boolean
+    }): Promise<void>
+
+    export function removeEntry(options: { url: string }): Promise<void>
+
+    export function query(options: {
+      url?: string
+      hasBeenRead?: boolean
+    }): Promise<ReadingListEntry[]>
   }
 }
 
 // background.ts - now fully typed
 export default defineBackground(() => {
-  browser.sidePanel.open({ windowId: 1 }) // Typed!
-  browser.sidePanel.setOptions({
-    path: 'sidepanel.html',
-    enabled: true
+  browser.readingList.addEntry({
+    url: 'https://example.com',
+    title: 'Example',
+    hasBeenRead: false
   })
 })
 ```
 
-**For experimental APIs with documentation:**
+**WXT v0.20+ type system:** WXT now uses `@types/chrome`-based types instead of `@types/webextension-polyfill`. This means:
+- Most Chrome APIs (including `sidePanel`) are already typed
+- Augment the `chrome` namespace directly, not `wxt/browser`
+- Use optional chaining for APIs not available on all browsers: `browser.sidePanel?.open()`
 
-```typescript
-// types/chrome-experimental.d.ts
-declare module 'wxt/browser' {
-  interface BrowserReadingList {
-    addEntry(options: { url: string; title: string; hasBeenRead?: boolean }): Promise<void>
-    removeEntry(options: { url: string }): Promise<void>
-    query(options: { url?: string; hasBeenRead?: boolean }): Promise<ReadingListEntry[]>
-  }
-
-  interface Browser {
-    readingList: BrowserReadingList
-  }
-}
-```
+**When to augment:**
+- Experimental Chrome APIs not yet in `@types/chrome`
+- Browser-specific APIs (Firefox-only, Safari-only)
+- APIs behind flags (Chrome Origin Trials, etc.)
 
 Reference: [TypeScript Module Augmentation](https://www.typescriptlang.org/docs/handbook/declaration-merging.html)

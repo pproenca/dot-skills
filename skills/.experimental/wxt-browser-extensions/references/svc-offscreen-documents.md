@@ -26,21 +26,26 @@ export default defineBackground(() => {
 })
 ```
 
-**Correct (offscreen document for clipboard):**
+**Correct (offscreen document with HTML entrypoint):**
 
 ```typescript
 // entrypoints/background.ts
 export default defineBackground(() => {
-  browser.runtime.onMessage.addListener(async (message) => {
+  browser.runtime.onMessage.addListener((message, sender, sendResponse) => {
     if (message.type === 'COPY_TO_CLIPBOARD') {
-      await setupOffscreenDocument()
-      await browser.runtime.sendMessage({
-        type: 'OFFSCREEN_COPY',
-        text: message.text
-      })
+      copyToClipboard(message.text).then(sendResponse)
+      return true
     }
   })
 })
+
+async function copyToClipboard(text: string) {
+  await setupOffscreenDocument()
+  await browser.runtime.sendMessage({
+    type: 'OFFSCREEN_COPY',
+    text
+  })
+}
 
 async function setupOffscreenDocument() {
   const existingContexts = await browser.runtime.getContexts({
@@ -56,14 +61,22 @@ async function setupOffscreenDocument() {
 }
 ```
 
+```html
+<!-- entrypoints/offscreen/index.html -->
+<!doctype html>
+<html>
+  <head>
+    <script type="module" src="./main.ts"></script>
+  </head>
+</html>
+```
+
 ```typescript
-// entrypoints/offscreen.ts
-export default defineUnlistedScript(() => {
-  browser.runtime.onMessage.addListener(async (message) => {
-    if (message.type === 'OFFSCREEN_COPY') {
-      await navigator.clipboard.writeText(message.text)
-    }
-  })
+// entrypoints/offscreen/main.ts
+browser.runtime.onMessage.addListener((message) => {
+  if (message.type === 'OFFSCREEN_COPY') {
+    navigator.clipboard.writeText(message.text)
+  }
 })
 ```
 

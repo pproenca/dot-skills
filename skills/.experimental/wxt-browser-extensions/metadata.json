@@ -1,15 +1,16 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "Community",
   "technology": "WXT Browser Extensions",
-  "date": "January 2026",
-  "abstract": "Comprehensive performance optimization guide for WXT browser extension development, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (service worker lifecycle, content script injection) to incremental (TypeScript patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "date": "February 2026",
+  "abstract": "Comprehensive performance optimization guide for WXT browser extension development, designed for AI agents and LLMs. Contains 49 rules across 8 categories, prioritized by impact from critical (service worker lifecycle, content script injection) to incremental (TypeScript patterns). Updated for WXT v0.20+ with #imports, removed polyfill, and current API patterns. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
   "references": [
     "https://wxt.dev",
     "https://wxt.dev/guide",
     "https://developer.chrome.com/docs/extensions/mv3/",
     "https://webext-core.aklinker1.io/",
     "https://developer.chrome.com/docs/extensions/reference/api/",
-    "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions"
+    "https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions",
+    "https://wxt.dev/guide/resources/upgrading"
   ]
 }

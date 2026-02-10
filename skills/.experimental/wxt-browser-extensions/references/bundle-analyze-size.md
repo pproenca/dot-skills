@@ -1,8 +1,8 @@
 ---
 title: Analyze and Monitor Bundle Size
 impact: MEDIUM-HIGH
-impactDescription: identifies 2-10× bundle bloat from hidden dependencies
-tags: bundle, analyze, size, vite, rollup
+impactDescription: identifies 2-10x bundle bloat from hidden dependencies
+tags: bundle, analyze, size, wxt-build
 ---
 
 ## Analyze and Monitor Bundle Size
@@ -12,43 +12,31 @@ Use bundle analysis to identify unexpectedly large dependencies. Many npm packag
 **Incorrect (blind dependency usage):**
 
 ```typescript
-// wxt.config.ts
-export default defineConfig({
-  // No bundle analysis configured
-})
-
-// Unknowingly importing 500KB+ from lodash
+// Unknowingly importing 500KB+ from lodash barrel export
 import { debounce } from 'lodash'
+
+// Using a heavy charting library in a popup that only shows a number
+import Chart from 'chart.js/auto'
 ```
 
-**Correct (bundle analysis enabled):**
-
-```typescript
-// wxt.config.ts
-import { defineConfig } from 'wxt'
-
-export default defineConfig({
-  vite: () => ({
-    build: {
-      rollupOptions: {
-        output: {
-          manualChunks: (id) => {
-            // Log large dependencies during build
-            if (id.includes('node_modules')) {
-              const match = id.match(/node_modules\/(.+?)\//);
-              return match ? `vendor/${match[1]}` : 'vendor'
-            }
-          }
-        }
-      }
-    }
-  })
-})
-```
+**Correct (analyze with wxt build --analyze):**
 
 ```bash
-# Add to package.json scripts
-"analyze": "wxt build --analyze"
+# Analyze bundle size for each entrypoint
+wxt build --analyze
+
+# Open interactive treemap in browser
+wxt build --analyze-open
+```
+
+```json
+// package.json
+{
+  "scripts": {
+    "build": "wxt build",
+    "analyze": "wxt build --analyze-open"
+  }
+}
 ```
 
 **Use lightweight alternatives:**
@@ -69,4 +57,6 @@ import { formatDistance } from 'date-fns' // 15KB tree-shaken
 - Content script: < 50KB per script
 - Popup/Options: < 200KB
 
-Reference: [Vite Bundle Analysis](https://vitejs.dev/guide/build.html#library-mode)
+**Note:** Each WXT entrypoint (background, content scripts, popup) is a self-contained bundle. Unlike web apps, extension entrypoints cannot share code chunks because they run in separate contexts.
+
+Reference: [WXT Build CLI](https://wxt.dev/api/cli/wxt-build)

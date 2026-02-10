@@ -72,4 +72,6 @@ async function sendIfContentScriptReady(tabId: number, message: Message) {
 }
 ```
 
+**Note:** [`@webext-core/messaging`](msg-type-safe-messaging.md) handles receiver errors automatically, reducing the need for manual error handling.
+
 Reference: [Chrome Messaging Best Practices](https://developer.chrome.com/docs/extensions/develop/concepts/messaging)
