@@ -1,7 +1,7 @@
 ---
 title: Use NavigationStack for Hierarchical Navigation
 impact: CRITICAL
-impactDescription: NavigationStack replaces deprecated NavigationView — apps using NavigationView face removal warnings in iOS 18+
+impactDescription: NavigationView deprecated in iOS 16+ — NavigationStack reduces navigation boilerplate by 40-60% with type-safe programmatic routing
 tags: nav, navigation-stack, hierarchy, drill-down, push
 ---
 

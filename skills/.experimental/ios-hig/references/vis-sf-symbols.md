@@ -1,7 +1,7 @@
 ---
 title: Use SF Symbols with Correct Rendering Mode and Weight
 impact: HIGH
-impactDescription: SF Symbols provide 5000+ icons that scale with Dynamic Type — custom icons don't scale and add 10-50KB per asset
+impactDescription: saves 10-50KB per icon — SF Symbols scale with Dynamic Type automatically while custom assets require manual sizing at each breakpoint
 tags: vis, sf-symbols, icons, rendering-mode, weight
 ---
 

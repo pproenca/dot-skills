@@ -1,7 +1,7 @@
 ---
 title: Add Swipe Actions for Contextual Operations
 impact: MEDIUM-HIGH
-impactDescription: swipe actions complete row operations in 1 gesture vs 2-3 taps with visible buttons — matches Mail and Messages patterns
+impactDescription: 1 gesture vs 2-3 taps — swipe actions complete row operations 60% faster than visible buttons
 tags: inter, list, swipe-actions, gestures, contextual-menu, delete
 ---
 

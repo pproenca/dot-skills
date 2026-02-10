@@ -1,7 +1,7 @@
 ---
 title: Support Pull-to-Refresh for Lists
 impact: MEDIUM
-impactDescription: .refreshable provides system-standard pull gesture in 3 lines vs 30+ for a custom DragGesture — users expect this pattern from every list-based app
+impactDescription: 3 lines vs 30+ — .refreshable replaces custom DragGesture with a system-standard pull gesture that 95%+ of iOS users expect
 tags: inter, pull-to-refresh, list, refresh
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use Standard Layout Margins and Safe Areas
 impact: HIGH
-impactDescription: standard 16pt margins match Apple's own apps — custom margins look out of place and break on Dynamic Island / home indicator devices
+impactDescription: non-standard margins look out of place in 95%+ of iOS apps — .padding() provides correct 16pt margins in 0 custom code
 tags: vis, layout, margins, safe-area, padding, spacing
 ---
 

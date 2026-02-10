@@ -100,16 +100,15 @@ UINotificationFeedbackGenerator().notificationOccurred(.error)
 ```swift
 struct HapticButton: View {
     let action: () -> Void
+    // Prepare before the expected event for lower latency
+    let generator = UIImpactFeedbackGenerator(style: .medium)
 
     var body: some View {
         Button("Submit") {
-            // Prepare generator for lower latency
-            let generator = UIImpactFeedbackGenerator(style: .medium)
-            generator.prepare()
-
             action()
             generator.impactOccurred()
         }
+        .onAppear { generator.prepare() } // warm up engine ahead of time
     }
 }
 ```

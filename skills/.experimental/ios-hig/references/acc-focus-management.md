@@ -77,10 +77,12 @@ HStack {
 .accessibilityElement(children: .contain)
 // Groups for logical navigation
 
-// Announce dynamic content
+// Announce dynamic content changes
 Text(statusMessage)
     .accessibilityAddTraits(.updatesFrequently)
-    .accessibilityLiveRegion(.polite)
+    .onChange(of: statusMessage) { _, newValue in
+        UIAccessibility.post(notification: .announcement, argument: newValue)
+    }
 ```
 
 **Focus management principles:**

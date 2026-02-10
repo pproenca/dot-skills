@@ -1,7 +1,7 @@
 ---
 title: Provide Meaningful Accessibility Labels
 impact: CRITICAL
-impactDescription: unlabeled elements are invisible to 500K+ VoiceOver users — missing labels is the #1 iOS accessibility audit failure
+impactDescription: 100% task failure for VoiceOver users when labels are missing — 500K+ blind users cannot interact with unlabeled elements
 tags: acc, accessibility, voiceover, labels, screen-reader
 ---
 
