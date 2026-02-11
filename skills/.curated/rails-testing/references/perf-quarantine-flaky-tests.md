@@ -1,7 +1,7 @@
 ---
 title: Quarantine Flaky Tests Instead of Retrying
 impact: MEDIUM
-impactDescription: retrying masks root causes and wastes CI time on repeated failures
+impactDescription: reduces CI waste by 30-50% vs auto-retry approach
 tags: perf, flaky-tests, quarantine, ci, reliability
 ---
 

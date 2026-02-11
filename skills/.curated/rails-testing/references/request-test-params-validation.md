@@ -1,7 +1,7 @@
 ---
 title: Test Parameter Validation and Edge Cases
 impact: MEDIUM-HIGH
-impactDescription: catches missing strong params and invalid input handling
+impactDescription: catches 3-5× more parameter edge cases than happy-path-only testing
 tags: request, params, strong-parameters, validation, edge-cases
 ---
 

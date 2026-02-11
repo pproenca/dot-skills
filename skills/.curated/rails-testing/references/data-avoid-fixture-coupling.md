@@ -7,7 +7,7 @@ tags: data, fixtures, coupling, factories, isolation
 
 ## Avoid Fixture Coupling Between Tests
 
-Fixtures are shared global state loaded once for the entire suite. When Test A depends on `users(:admin)` and someone modifies `fixtures/users.yml` for Test B, Test A breaks silently. Factories create isolated data per test — each test owns its setup and cannot be broken by changes to other tests. Fixtures also make it impossible to tell from reading a test what data it depends on.
+Fixtures are shared global state loaded once for the entire suite. When Test A depends on `users(:admin)` and someone modifies `fixtures/users.yml` for Test B, Test A breaks silently. Factories create isolated data per test — each test owns its setup and cannot be broken by changes to other tests. Fixtures also make it harder to tell from reading a test what data it depends on.
 
 **Incorrect (fixtures create invisible coupling between tests):**
 
@@ -74,7 +74,10 @@ end
 ```
 
 **When fixtures are acceptable:**
+Rails core team officially recommends fixtures, and they work well for certain patterns:
 - Reference/seed data that never changes (countries, currencies, permission definitions)
-- Performance-critical CI suites where factory overhead is measured and significant
+- Large suites where factory overhead is measured and significant — fixtures load once per suite, not per test
+- Teams that maintain disciplined fixture files with clear naming conventions
+- Minitest-based Rails applications following the default Rails testing approach
 
 Reference: [Thoughtbot — Why Factories?](https://thoughtbot.com/blog/factory-bot)

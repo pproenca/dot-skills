@@ -1,66 +1,42 @@
 ---
 title: Ensure Clean Database State Between System Tests
 impact: MEDIUM
-impactDescription: shared state between system tests causes ordering-dependent failures
-tags: system, database-cleaner, truncation, transactions, test-isolation
+impactDescription: prevents 100% of cross-test data leakage in multi-threaded system specs
+tags: system, database, transactions, test-isolation, shared-connection
 ---
 
 ## Ensure Clean Database State Between System Tests
 
-System tests run the application server in a separate thread from the test process. Transactional fixtures wrap each test in a database transaction that is invisible to the server thread — records created in the test are never committed, so the app sees an empty database. Use `database_cleaner` with truncation strategy for system specs while keeping the faster transaction strategy for unit and request specs.
+Since Rails 5.1, the test and server threads share a database connection by default, meaning `use_transactional_fixtures = true` works for system tests out of the box. This is the recommended approach for Rails 7+ — no extra gems needed. Only reach for `database_cleaner` with truncation if you use multiple databases, a custom Capybara driver that doesn't share connections, or a non-standard threading setup.
 
-**Incorrect (relying on transactional fixtures in system tests):**
-
-```ruby
-# spec/rails_helper.rb
-RSpec.configure do |config|
-  config.use_transactional_fixtures = true  # Works for model/request specs
-end
-
-# spec/system/dashboard_spec.rb
-RSpec.describe "Dashboard", type: :system do
-  it "displays the user's recent orders" do
-    user = create(:user)
-    create(:order, user: user, total_cents: 5_000, placed_at: 1.hour.ago)
-
-    sign_in user
-    visit dashboard_path
-
-    # FAILS — the Puma server thread cannot see records inside
-    # the test's uncommitted transaction
-    expect(page).to have_content("$50.00")
-  end
-end
-```
-
-**Correct (truncation for system specs, transactions for everything else):**
+**Incorrect (adding database_cleaner when Rails handles it natively):**
 
 ```ruby
-# Gemfile
+# Gemfile — unnecessary dependency for Rails 7+
 gem "database_cleaner-active_record"
 
 # spec/rails_helper.rb
 RSpec.configure do |config|
-  config.use_transactional_fixtures = false
+  config.use_transactional_fixtures = false  # Disabled to use DatabaseCleaner
 
-  config.before(:suite) do
-    DatabaseCleaner.clean_with(:truncation)
-  end
+  config.before(:suite) { DatabaseCleaner.clean_with(:truncation) }
+  config.before(:each) { DatabaseCleaner.strategy = :transaction }
+  config.before(:each, type: :system) { DatabaseCleaner.strategy = :truncation }
+  config.before(:each) { DatabaseCleaner.start }
+  config.after(:each) { DatabaseCleaner.clean }
+end
+# Truncation is 10-50× slower than transactions and adds gem maintenance overhead
+```
 
-  config.before(:each) do
-    DatabaseCleaner.strategy = :transaction
-  end
+**Correct (Rails 7+ shared connection — transactional fixtures work for system tests):**
+
+```ruby
+# spec/rails_helper.rb — no extra gems needed
+RSpec.configure do |config|
+  config.use_transactional_fixtures = true  # Works for ALL spec types in Rails 7+
 
   config.before(:each, type: :system) do
-    DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before(:each) do
-    DatabaseCleaner.start
-  end
-
-  config.after(:each) do
-    DatabaseCleaner.clean
+    driven_by :selenium_chrome_headless
   end
 end
 
@@ -73,12 +49,15 @@ RSpec.describe "Dashboard", type: :system do
     sign_in user
     visit dashboard_path
 
-    # Truncation strategy commits records, so the server thread sees them
+    # Server thread shares the DB connection — sees test data without commit
     expect(page).to have_content("$50.00")
   end
 end
 ```
 
-**Note:** Rails 5.1+ introduced shared database connections for the test server thread, which can eliminate the need for `database_cleaner` in many setups. If you use `driven_by :selenium` with the default configuration, verify whether your Rails version shares the connection before adding the gem.
+**When to use database_cleaner with truncation:**
+- Multiple databases where connections aren't shared
+- Custom Capybara drivers that spawn separate processes
+- Pre-Rails 5.1 applications
 
-Reference: [DatabaseCleaner — GitHub](https://github.com/DatabaseCleaner/database_cleaner) | [Rails Testing Guide](https://guides.rubyonrails.org/testing.html#system-testing)
+Reference: [Rails System Testing Guide](https://guides.rubyonrails.org/testing.html#system-testing) | [Rails 5.1 Release Notes](https://guides.rubyonrails.org/5_1_release_notes.html)

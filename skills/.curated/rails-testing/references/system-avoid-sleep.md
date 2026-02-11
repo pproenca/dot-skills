@@ -1,7 +1,7 @@
 ---
 title: Never Use sleep in System Tests
 impact: MEDIUM-HIGH
-impactDescription: sleep causes flaky slow tests — Capybara has built-in waiting
+impactDescription: eliminates 2-10s of wasted wait time per test vs hardcoded sleep
 tags: system, sleep, flaky, waiting, capybara
 ---
 

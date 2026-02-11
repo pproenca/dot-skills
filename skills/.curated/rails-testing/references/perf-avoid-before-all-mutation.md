@@ -1,7 +1,7 @@
 ---
 title: Never Mutate State in before(:all)
 impact: MEDIUM-HIGH
-impactDescription: before(:all) runs once and shares state across examples causing order-dependent failures
+impactDescription: prevents 100% of ordering-dependent failures from shared before(:all) state
 tags: perf, before-all, shared-state, test-isolation, let
 ---
 

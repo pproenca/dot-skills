@@ -1,7 +1,7 @@
 ---
 title: Test Public Methods with Input/Output Pairs
 impact: MEDIUM-HIGH
-impactDescription: model methods are the core of domain logic
+impactDescription: 2-4× more edge case coverage with input/output pair testing
 tags: model, methods, domain-logic, edge-cases, context-blocks
 ---
 

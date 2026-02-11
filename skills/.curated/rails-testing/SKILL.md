@@ -1,5 +1,5 @@
 ---
-name: rails-testing-best-practices
+name: rails-testing
 description: Ruby on Rails testing best practices for writing effective, maintainable test suites with RSpec. This skill should be used when writing, reviewing, or refactoring Rails tests to ensure proper test design, data management, and coverage patterns. Triggers on tasks involving RSpec specs, model tests, request specs, system tests, factory definitions, Capybara interactions, Sidekiq job tests, or test suite optimization. Complementary to rails-dev, ruby-optimise, and ruby-refactor skills.
 ---
 
@@ -86,7 +86,7 @@ Reference these guidelines when:
 - [`async-use-fake-mode-default`](references/async-use-fake-mode-default.md) - Default to Sidekiq fake mode globally
 - [`async-test-job-perform`](references/async-test-job-perform.md) - Test job perform method directly
 - [`async-test-mailer-delivery`](references/async-test-mailer-delivery.md) - Test mailer delivery with enqueued mail matcher
-- [`async-test-after-commit`](references/async-test-after-commit.md) - Account for after_commit in test transactions
+- [`async-test-after-commit`](references/async-test-after-commit.md) - Account for transaction-aware job enqueuing in Rails 7.2+
 
 ### 7. Test Performance & Reliability (MEDIUM)
 

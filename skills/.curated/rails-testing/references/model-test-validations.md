@@ -1,7 +1,7 @@
 ---
 title: Test Validations with Boundary Cases
 impact: HIGH
-impactDescription: catches data integrity bugs at the cheapest test level
+impactDescription: catches data integrity bugs at 10-100× less cost than integration tests
 tags: model, validations, shoulda-matchers, boundary-cases, data-integrity
 ---
 

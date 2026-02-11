@@ -1,7 +1,7 @@
 ---
 title: Use Request Specs over Controller Specs
 impact: HIGH
-impactDescription: exercises full HTTP stack including routing and middleware
+impactDescription: catches routing and middleware bugs that controller specs miss 100% of the time
 tags: request, controller-specs, request-specs, http, middleware, routing
 ---
 

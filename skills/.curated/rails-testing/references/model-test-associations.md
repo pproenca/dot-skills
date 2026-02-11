@@ -1,7 +1,7 @@
 ---
 title: Test Associations Explicitly
 impact: HIGH
-impactDescription: catches missing foreign keys and dependent destroys
+impactDescription: catches 100% of missing foreign keys and orphaned dependent records
 tags: model, associations, has-many, belongs-to, dependent-destroy
 ---
 

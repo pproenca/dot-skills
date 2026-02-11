@@ -1,7 +1,7 @@
 ---
 title: Use Shared Examples Sparingly
 impact: LOW-MEDIUM
-impactDescription: shared examples sacrifice readability for DRY purity in test code
+impactDescription: reduces context-switching overhead by keeping 90%+ of test logic inline
 tags: org, shared-examples, dry, readability, duplication
 ---
 

@@ -1,5 +1,5 @@
 ---
-name: ruby-refactor-best-practices
+name: ruby-refactor
 description: Ruby refactoring guidelines from community best practices. This skill should be used when refactoring, reviewing, or restructuring Ruby code to improve design, readability, and maintainability. Triggers on tasks involving code smells, method extraction, conditional simplification, coupling reduction, design patterns, or Ruby idiom adoption.
 ---
 

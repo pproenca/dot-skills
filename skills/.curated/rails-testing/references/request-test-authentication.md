@@ -1,7 +1,7 @@
 ---
 title: Test Authentication Boundaries
 impact: HIGH
-impactDescription: verifies that protected endpoints reject unauthenticated requests
+impactDescription: prevents 100% of unauthenticated access to protected endpoints
 tags: request, authentication, authorization, security, unauthenticated
 ---
 

@@ -1,8 +1,8 @@
 ---
 title: One Expectation per Test
 impact: CRITICAL
-impactDescription: pinpoints failures to exact behavior instead of hiding breakages behind earlier assertions
-tags: design, single-assertion, expectation, focused-test
+impactDescription: reduces failure diagnosis from N assertions to exactly 1 cause
+tags: design, single-assertion, expectation, focused-test, aggregate-failures
 ---
 
 ## One Expectation per Test
@@ -23,45 +23,58 @@ RSpec.describe RegistrationService do
       expect(User.find_by(email: "new@example.com")).to be_present
       expect(User.last.plan).to eq("starter")
       expect(ActionMailer::Base.deliveries.last.to).to include("new@example.com")
-      expect(Analytics).to have_received(:track).with("user.registered", anything)
     end
   end
 end
 ```
 
-**Correct (one logical assertion per test):**
+**Correct (one logical behavior per test, explicit inline setup):**
 
 ```ruby
 RSpec.describe RegistrationService do
   describe "#register" do
-    let(:params) { { email: "new@example.com", name: "Jane", plan: "starter" } }
-    let(:result) { described_class.new.register(params) }
-
     it "returns a success result" do
+      params = { email: "new@example.com", name: "Jane", plan: "starter" }
+
+      result = described_class.new.register(params)
+
       expect(result).to be_success
     end
 
     it "persists the user with the correct plan" do
-      result
+      params = { email: "new@example.com", name: "Jane", plan: "starter" }
+
+      described_class.new.register(params)
 
       expect(User.find_by(email: "new@example.com")).to have_attributes(plan: "starter")
     end
 
     it "sends a welcome email to the registered address" do
-      result
+      params = { email: "new@example.com", name: "Jane", plan: "starter" }
+
+      described_class.new.register(params)
 
       expect(ActionMailer::Base.deliveries.last.to).to include("new@example.com")
-    end
-
-    it "tracks the registration event in analytics" do
-      result
-
-      expect(Analytics).to have_received(:track).with("user.registered", anything)
     end
   end
 end
 ```
 
-**Note:** Multiple assertions about the same object are fine when they describe a single logical behavior — e.g., using `have_attributes` to check several fields on one domain object. The rule targets assertions about unrelated behaviors in the same test.
+**Alternative (aggregate_failures for related assertions on the same object):**
+
+```ruby
+it "persists the user with complete registration data", :aggregate_failures do
+  params = { email: "new@example.com", name: "Jane", plan: "starter" }
+
+  described_class.new.register(params)
+
+  user = User.find_by(email: "new@example.com")
+  expect(user.name).to eq("Jane")
+  expect(user.plan).to eq("starter")
+  expect(user.confirmed_at).to be_nil
+end
+```
+
+**Note:** Multiple assertions about the same object are fine when they describe a single logical behavior. Use `:aggregate_failures` to report all failures without masking. The rule targets assertions about unrelated behaviors in the same test.
 
 Reference: [Better Specs — Single Expectation](https://www.betterspecs.org/#single)

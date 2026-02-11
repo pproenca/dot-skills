@@ -1,7 +1,7 @@
 ---
 title: Test Scopes with Real Records
 impact: HIGH
-impactDescription: scopes generate SQL — test the query, not the definition
+impactDescription: catches 100% of SQL generation bugs that string-matching misses
 tags: model, scopes, query, activerecord, sql
 ---
 

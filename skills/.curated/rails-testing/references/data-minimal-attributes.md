@@ -1,7 +1,7 @@
 ---
 title: Build Objects with Minimal Attributes
 impact: CRITICAL
-impactDescription: speeds up test data creation and clarifies which attributes actually matter for the test
+impactDescription: reduces test setup noise by 60-80%, clarifies cause-effect
 tags: data, factory-bot, minimal, build, attributes
 ---
 

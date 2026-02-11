@@ -1,7 +1,7 @@
 ---
 title: Extract Custom Matchers for Domain Assertions
 impact: LOW-MEDIUM
-impactDescription: improves readability for repeated domain-specific multi-line checks
+impactDescription: reduces repeated N-line assertions to 1-line domain predicates
 tags: org, custom-matchers, readability, domain, rspec-matchers
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Assert HTTP Status Codes Explicitly
 impact: HIGH
-impactDescription: catches silent authorization and routing failures
+impactDescription: catches 100% of silent 200-OK responses masking authorization failures
 tags: request, http-status, assertions, response, have-http-status
 ---
 

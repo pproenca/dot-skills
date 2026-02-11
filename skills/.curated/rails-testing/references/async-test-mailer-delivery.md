@@ -1,7 +1,7 @@
 ---
 title: Test Mailer Delivery with deliver_later
 impact: MEDIUM
-impactDescription: mailers sent via deliver_later need Active Job testing setup
+impactDescription: prevents false-positive email delivery assertions
 tags: async, mailer, deliver-later, active-job, email
 ---
 

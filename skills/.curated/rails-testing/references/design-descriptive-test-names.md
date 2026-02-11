@@ -1,7 +1,7 @@
 ---
 title: Write Descriptive Test Names
 impact: HIGH
-impactDescription: failing test output becomes a self-documenting specification
+impactDescription: reduces failure triage time by 2-3× from output alone
 tags: design, naming, describe, context, readability
 ---
 

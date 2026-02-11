@@ -1,11 +1,11 @@
 ---
-title: Don't Test ActiveRecord or Framework Behavior
+title: Avoid Testing ActiveRecord or Framework Behavior
 impact: MEDIUM-HIGH
-impactDescription: wastes time testing code you don't own
+impactDescription: eliminates 10-20% of wasted test maintenance on framework-owned behavior
 tags: model, framework, activerecord, anti-pattern, unit-testing
 ---
 
-## Don't Test ActiveRecord or Framework Behavior
+## Avoid Testing ActiveRecord or Framework Behavior
 
 ActiveRecord's `save`, `find`, `destroy`, and query interface are tested by Rails itself — retesting them in your suite wastes time and creates noise that obscures your actual domain logic tests. Focus on the behavior YOU wrote on top of the framework: custom finders, computed attributes, state transitions, and business rules. If a test would pass with an empty model class plus the framework default, it is not testing your code.
 

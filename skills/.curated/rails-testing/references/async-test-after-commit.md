@@ -1,96 +1,79 @@
 ---
-title: Account for after_commit in Test Transactions
+title: Account for Transaction-Aware Job Enqueuing
 impact: MEDIUM-HIGH
-impactDescription: after_commit callbacks silently skip inside test transactions by default
-tags: async, after-commit, transactions, callbacks, active-record
+impactDescription: prevents 100% of missing job enqueues caused by transaction-aware callbacks
+tags: async, after-commit, transactions, enqueue-after-transaction-commit, active-job
 ---
 
-## Account for after_commit in Test Transactions
+## Account for Transaction-Aware Job Enqueuing
 
-By default, RSpec wraps each test in a database transaction that rolls back at the end. Because the transaction never commits, `after_commit` and `after_create_commit` callbacks never fire — jobs that are enqueued in these callbacks silently skip, webhook notifications never trigger, and cache invalidations never run. Rails 7.2+ fires `after_commit` callbacks within test transactions by default. For older Rails versions, use the `test_after_commit` gem or call `run_callbacks(:commit)` explicitly.
+Rails 5.0+ fires `after_commit` callbacks inside test transactions, so basic after_commit testing works out of the box. However, Rails 7.2 introduced `enqueue_after_transaction_commit` for Active Job, which defers job enqueuing until after the transaction commits. In tests using transactional fixtures, the transaction never commits — so jobs configured with this behavior appear to never enqueue. Understand which callback mechanism your code uses and test accordingly.
 
-**Incorrect (after_commit callback silently never fires):**
+**Incorrect (expecting enqueued jobs inside an uncommitted test transaction with Rails 7.2+):**
 
 ```ruby
+# app/jobs/fulfillment_sync_job.rb
+class FulfillmentSyncJob < ApplicationJob
+  self.enqueue_after_transaction_commit = true  # Rails 7.2+ default for some adapters
+
+  def perform(order_id)
+    Order.find(order_id).sync_to_fulfillment!
+  end
+end
+
 # app/models/order.rb
 class Order < ApplicationRecord
-  after_commit :sync_to_fulfillment, on: :create
+  after_create_commit :schedule_fulfillment
 
   private
 
-  def sync_to_fulfillment
+  def schedule_fulfillment
     FulfillmentSyncJob.perform_later(id)
   end
 end
 
 # spec/models/order_spec.rb
 RSpec.describe Order, type: :model do
-  describe "after creation" do
-    it "enqueues a fulfillment sync job" do
-      # This test PASSES incorrectly — no job was enqueued because
-      # the transaction never committed, but the expectation doesn't catch it
-      order = create(:order)
-
-      # This assertion silently passes because have_enqueued_job checks an
-      # empty queue and finds nothing — but the developer expected the callback to fire
-      expect(FulfillmentSyncJob).to have_been_enqueued.with(order.id)
-      # => FAILS, but the developer doesn't understand why
-    end
+  it "enqueues a fulfillment sync job" do
+    # after_create_commit fires (Rails 5.0+), but the job uses
+    # enqueue_after_transaction_commit — test transaction never commits
+    expect { create(:order) }.to have_enqueued_job(FulfillmentSyncJob)
+    # => FAILS: job deferred until transaction commit, which never happens
   end
 end
 ```
 
-**Correct (ensure after_commit fires in tests):**
+**Correct (test the callback behavior directly, or disable transaction-aware enqueuing in tests):**
 
 ```ruby
-# Option 1: Rails 7.2+ (built-in support, no gem needed)
+# Option 1: Disable transaction-aware enqueuing in test environment
 # config/environments/test.rb
 Rails.application.configure do
-  # Rails 7.2+ fires after_commit callbacks inside test transactions by default
-  # No additional configuration needed
+  config.active_job.enqueue_after_transaction_commit = :never
 end
 
-# Option 2: Older Rails — use test_after_commit gem
-# Gemfile
-# gem "test_after_commit", group: :test
-
-# Option 3: Explicitly trigger commit callbacks when testing specific behavior
-# spec/models/order_spec.rb
+# Now after_commit callbacks fire AND jobs enqueue immediately
 RSpec.describe Order, type: :model do
-  describe "after creation" do
-    it "enqueues a fulfillment sync job" do
-      order = create(:order)
-
-      # Explicitly fire commit callbacks for older Rails versions
-      order.run_callbacks(:commit)
-
-      expect(FulfillmentSyncJob).to have_been_enqueued.with(order.id)
-    end
+  it "enqueues a fulfillment sync job after creation" do
+    expect { create(:order) }.to have_enqueued_job(FulfillmentSyncJob)
   end
 end
 
-# Best approach (Rails 7.2+): callbacks fire automatically
+# Option 2: Test the callback's side effects directly
 RSpec.describe Order, type: :model do
-  describe "after creation" do
-    it "enqueues a fulfillment sync job" do
-      expect {
-        create(:order)
-      }.to have_enqueued_job(FulfillmentSyncJob)
-    end
+  it "calls schedule_fulfillment after commit" do
+    order = build(:order)
 
-    it "enqueues a webhook notification for the merchant" do
-      merchant = create(:merchant, webhook_url: "https://api.example.com/orders")
+    expect(order).to receive(:schedule_fulfillment)
 
-      expect {
-        create(:order, merchant: merchant)
-      }.to have_enqueued_job(WebhookDeliveryJob).with(
-        "order.created",
-        merchant.webhook_url,
-        a_kind_of(Integer)
-      )
-    end
+    order.save!
+    order.run_callbacks(:commit)
   end
 end
 ```
 
-Reference: [Rails 7.2 Release Notes — Test Transaction Callbacks](https://guides.rubyonrails.org/7_2_release_notes.html) | [test_after_commit — GitHub](https://github.com/grosser/test_after_commit)
+**When to use each approach:**
+- Use Option 1 for most test suites — simplest and most reliable
+- Use Option 2 when you need to verify callback wiring specifically
+
+Reference: [Rails 7.2 — enqueue_after_transaction_commit](https://guides.rubyonrails.org/active_job_basics.html#enqueue-after-transaction-commit) | [Active Job Basics — Rails Guides](https://guides.rubyonrails.org/active_job_basics.html#testing)

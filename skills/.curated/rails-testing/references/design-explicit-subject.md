@@ -1,7 +1,7 @@
 ---
 title: Prefer Explicit over Implicit Subject
 impact: HIGH
-impactDescription: makes the system under test immediately visible without mental indirection
+impactDescription: makes system-under-test immediately scannable without tracing subject resolution
 tags: design, subject, explicit, readability, rspec
 ---
 

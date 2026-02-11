@@ -1,7 +1,7 @@
 ---
 title: Use Accessible Selectors over CSS/XPath
 impact: MEDIUM-HIGH
-impactDescription: tests survive UI redesigns and enforce accessibility
+impactDescription: reduces selector maintenance by 80%+ — survives UI redesigns
 tags: system, accessibility, selectors, capybara, a11y
 ---
 

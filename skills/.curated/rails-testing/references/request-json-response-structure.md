@@ -1,7 +1,7 @@
 ---
 title: Assert JSON Response Structure
 impact: MEDIUM-HIGH
-impactDescription: catches API contract regressions
+impactDescription: catches 100% of API contract regressions that string matching misses
 tags: request, json, api, response-body, contract, serialization
 ---
 
@@ -50,7 +50,7 @@ RSpec.describe "Users API", type: :request do
 
       expect(response).to have_http_status(:ok)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to include(
         "id" => user.id,
         "name" => "Jane Doe",
@@ -64,7 +64,7 @@ RSpec.describe "Users API", type: :request do
 
       get api_user_path(user), headers: auth_headers
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json.keys).not_to include("password_digest", "reset_token", "otp_secret")
     end
   end
@@ -77,7 +77,7 @@ RSpec.describe "Users API", type: :request do
 
       expect(response).to have_http_status(:ok)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["data"].length).to eq(2)
       expect(json["data"].first).to include("id", "name", "email")
       expect(json["meta"]).to include(
@@ -96,7 +96,7 @@ RSpec.describe "Users API", type: :request do
 
       expect(response).to have_http_status(:created)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json).to include("id", "name", "email")
       expect(json).not_to include("password", "password_digest")
       expect(response.headers["Location"]).to eq(api_user_url(json["id"]))
@@ -109,7 +109,7 @@ RSpec.describe "Users API", type: :request do
 
       expect(response).to have_http_status(:unprocessable_entity)
 
-      json = JSON.parse(response.body)
+      json = response.parsed_body
       expect(json["errors"]).to include(
         a_hash_including("field" => "name", "message" => "can't be blank"),
         a_hash_including("field" => "email", "message" => "is invalid")

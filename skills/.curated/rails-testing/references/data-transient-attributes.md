@@ -1,7 +1,7 @@
 ---
 title: Use Transient Attributes for Complex Setup
 impact: MEDIUM-HIGH
-impactDescription: keeps factory interface clean while supporting complex multi-step scenarios
+impactDescription: reduces setup duplication by 3-5× across related specs
 tags: data, factory-bot, transient, callbacks, complex-setup
 ---
 

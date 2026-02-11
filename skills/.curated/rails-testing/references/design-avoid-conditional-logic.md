@@ -1,7 +1,7 @@
 ---
 title: Avoid Conditional Logic in Tests
 impact: HIGH
-impactDescription: tests with branches are testing themselves, not the production code
+impactDescription: prevents tests from testing themselves — 0 branches per test
 tags: design, conditional, branching, complexity, test-smell
 ---
 

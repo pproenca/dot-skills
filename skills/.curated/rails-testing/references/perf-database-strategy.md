@@ -1,19 +1,21 @@
 ---
 title: Use Transaction Strategy for Non-System Tests
 impact: MEDIUM
-impactDescription: transactions are 10-50x faster than truncation for database cleanup
-tags: perf, database-cleaner, transaction, truncation, speed
+impactDescription: transactions are 10-50× faster than truncation for database cleanup
+tags: perf, transaction, truncation, speed, database-cleanup
 ---
 
 ## Use Transaction Strategy for Non-System Tests
 
-Transactional cleanup wraps each test in a database transaction and rolls it back at the end — this is essentially free because no rows are ever committed. Truncation physically deletes all rows from every table after each test, which is orders of magnitude slower. Only system tests (Capybara with a real browser) need truncation because the test server runs in a separate thread that cannot see the test's uncommitted transaction. Using truncation everywhere is the single most common cause of unnecessarily slow test suites.
+Transactional cleanup wraps each test in a database transaction and rolls it back at the end — this is essentially free because no rows are ever committed. Truncation physically deletes all rows from every table after each test, which is orders of magnitude slower. Since Rails 5.1+, the shared database connection means transactional fixtures work for system tests too. Only use truncation if your setup requires it (multiple databases, custom drivers).
 
-**Incorrect (truncation strategy for all specs — 10-50x slower cleanup):**
+**Incorrect (truncation strategy for all specs — 10-50× slower cleanup):**
 
 ```ruby
 # spec/support/database_cleaner.rb
 RSpec.configure do |config|
+  config.use_transactional_fixtures = false  # Disabled globally
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :truncation
     DatabaseCleaner.clean_with(:truncation)
@@ -25,39 +27,36 @@ RSpec.configure do |config|
     end
   end
 end
-
-# spec/rails_helper.rb
-config.use_transactional_fixtures = false  # Disabled globally to use DatabaseCleaner
 ```
 
-**Correct (transactions by default, truncation only for system specs):**
+**Correct (transactional fixtures for all spec types in Rails 7+):**
 
 ```ruby
-# spec/rails_helper.rb — Rails' built-in transactional fixtures handle most specs
+# spec/rails_helper.rb — simplest and fastest approach
 RSpec.configure do |config|
-  config.use_transactional_fixtures = true
+  config.use_transactional_fixtures = true  # Instant rollback, zero cost
 end
 
-# spec/support/database_cleaner.rb — only override for system tests
-RSpec.configure do |config|
-  config.before(:each, type: :system) do
-    driven_by :selenium_chrome_headless
-  end
+# No database_cleaner gem needed for standard Rails 7+ setups.
+# The shared database connection handles system test visibility.
+```
 
-  # Only use DatabaseCleaner for system specs where threads don't share connections
-  config.before(:each, type: :system) do
+**When database_cleaner is still needed:**
+
+```ruby
+# Only for multi-database setups or non-standard threading
+RSpec.configure do |config|
+  config.use_transactional_fixtures = true  # Default for model/request specs
+
+  # Override only for specs that need truncation
+  config.before(:each, :truncation) do
     DatabaseCleaner.strategy = :truncation
   end
 
-  config.around(:each, type: :system) do |example|
-    DatabaseCleaner.cleaning do
-      example.run
-    end
+  config.around(:each, :truncation) do |example|
+    DatabaseCleaner.cleaning { example.run }
   end
 end
-
-# Model and request specs use transactional fixtures — instant rollback, zero cost.
-# System specs use truncation — slower but necessary for cross-thread visibility.
 ```
 
-Reference: [DatabaseCleaner — Recommended Strategy](https://github.com/DatabaseCleaner/database_cleaner#how-to-use) | [Better Specs — Database Cleaning](https://www.betterspecs.org/)
+Reference: [Rails Testing Guide](https://guides.rubyonrails.org/testing.html) | [Better Specs — Database Cleaning](https://www.betterspecs.org/)

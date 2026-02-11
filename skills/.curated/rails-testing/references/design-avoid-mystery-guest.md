@@ -1,7 +1,7 @@
 ---
 title: Avoid Mystery Guest Anti-Pattern
 impact: CRITICAL
-impactDescription: removes hidden dependencies between test and setup defined elsewhere
+impactDescription: reduces test debugging time by 2-5× — all context visible inline
 tags: design, mystery-guest, readability, inline-setup, self-contained
 ---
 

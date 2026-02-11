@@ -1,13 +1,15 @@
 ---
 title: Test Enum Transitions and Scopes
 impact: MEDIUM
-impactDescription: enums generate methods and scopes that need verification
+impactDescription: prevents silent enum mapping errors across 3-10 generated methods per enum
 tags: model, enums, state-transitions, scopes, activerecord
 ---
 
 ## Test Enum Transitions and Scopes
 
 Rails enums auto-generate scopes, bang methods, and predicate methods, but they do not enforce valid transitions between states. Skipping enum tests means you discover missing transition guards, incorrect integer mappings, and scope collisions in production. Test that enum values map correctly, generated scopes return the right records, and your domain enforces valid state transitions.
+
+> **Note:** While [`model-avoid-testing-framework`](model-avoid-testing-framework.md) says don't test ActiveRecord behavior, enum integer mappings are a deliberate exception — a reordered or removed value silently corrupts existing database rows. The mapping assertion protects your data layer.
 
 **Incorrect (skipping enum tests because "Rails generates them automatically"):**
 
