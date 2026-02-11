@@ -1,6 +1,6 @@
 ---
 title: Use Node.js 20+ for Optimal Performance
-impact: CRITICAL
+impact: MEDIUM
 impactDescription: required for upgrade tool, enables modern optimizations
 tags: build, node, runtime, compatibility, tooling
 ---

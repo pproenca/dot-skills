@@ -34,7 +34,7 @@ Tailwind CSS v4 moves the important modifier (`!`) from the beginning to the end
 
 ```html
 <!-- v3 -->
-<div class="!hover:bg-blue-500">
+<div class="hover:!bg-blue-500">
 
 <!-- v4 -->
 <div class="hover:bg-blue-500!">

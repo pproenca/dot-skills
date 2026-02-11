@@ -1,36 +1,52 @@
 ---
-title: Understand Hover Behavior on Touch Devices
+title: Pair Hover with Active for Touch-Friendly Interactions
 impact: MEDIUM
-impactDescription: prevents sticky hover states on mobile
-tags: resp, hover, touch, mobile, interaction
+impactDescription: prevents missing feedback on touch devices
+tags: resp, hover, touch, mobile, interaction, active
 ---
 
-## Understand Hover Behavior on Touch Devices
+## Pair Hover with Active for Touch-Friendly Interactions
 
-Tailwind CSS v4 only applies hover styles on devices that support hover, preventing "sticky" hover states on touch devices.
+Tailwind CSS v4 only applies `hover:` styles on devices that support hover (`@media (hover: hover)`), preventing "sticky" hover states on touch devices. Always pair `hover:` with `active:` to provide feedback on both device types.
 
-**Incorrect (expecting hover on all devices):**
+**Incorrect (hover-only feedback):**
 
 ```html
 <button class="bg-blue-500 hover:bg-blue-600">
-  <!-- In v3: hover state could "stick" on touch devices -->
-  <!-- In v4: hover only applies on hover-capable devices -->
+  <!-- Desktop: visual feedback on hover -->
+  <!-- Touch: no feedback at all — button appears unresponsive -->
 </button>
+
+<a href="/settings" class="text-gray-600 hover:text-blue-500">
+  <!-- Touch users get no indication the link is tappable -->
+  Settings
+</a>
 ```
 
-**Correct (understanding the behavior):**
+**Correct (hover + active for all devices):**
 
 ```html
-<!-- v4's default behavior is correct for most cases -->
-<button class="bg-blue-500 hover:bg-blue-600">
-  <!-- Desktop: hover works as expected -->
-  <!-- Touch: no sticky hover state -->
+<button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
+  <!-- Desktop: hover feedback + press feedback -->
+  <!-- Touch: press feedback via active: -->
 </button>
 
-<!-- For touch-specific feedback, use active: -->
-<button class="bg-blue-500 hover:bg-blue-600 active:bg-blue-700">
-  <!-- Desktop: hover + active -->
-  <!-- Touch: active provides feedback -->
+<a href="/settings" class="text-gray-600 hover:text-blue-500 active:text-blue-600">
+  Settings
+</a>
+```
+
+**Complete interactive pattern:**
+
+```html
+<button class="
+  bg-blue-500 text-white
+  hover:bg-blue-600
+  active:bg-blue-700
+  focus-visible:ring-2 focus-visible:ring-blue-400
+  disabled:opacity-50 disabled:pointer-events-none
+">
+  Touch-friendly button
 </button>
 ```
 
@@ -42,19 +58,7 @@ Tailwind CSS v4 only applies hover styles on devices that support hover, prevent
     background-color: var(--color-blue-600);
   }
 }
-```
-
-**Touch interaction patterns:**
-
-```html
-<button class="
-  bg-blue-500
-  hover:bg-blue-600
-  active:bg-blue-700
-  focus-visible:ring-2
-">
-  Touch-friendly button
-</button>
+/* active: applies on all devices — no media query wrapping */
 ```
 
 Reference: [Tailwind CSS Upgrade Guide](https://tailwindcss.com/docs/upgrade-guide)

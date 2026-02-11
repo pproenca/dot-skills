@@ -1,19 +1,19 @@
 # Tailwind CSS v4
 
-**Version 0.1.0**  
-Tailwind Labs  
+**Version 1.0.0**
+Community
 January 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
+> **Note:**
+> This Tailwind CSS v4 document is mainly for agents and LLMs to follow when maintaining,
+> generating, or refactoring codebases. Humans may also find it useful,
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
 
 ## Abstract
 
-Comprehensive performance optimization and best practices guide for Tailwind CSS v4, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (build configuration, CSS generation) to incremental (animation patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
+Comprehensive performance optimization and best practices guide for Tailwind CSS v4, designed for AI agents and LLMs. Contains 44 rules across 8 categories, prioritized by impact from critical (build configuration, CSS generation) to incremental (animation patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
 
 ---
 
@@ -24,10 +24,10 @@ Comprehensive performance optimization and best practices guide for Tailwind CSS
    - 1.2 [Remove Redundant PostCSS Plugins](references/build-postcss-simplify.md) — HIGH (reduces plugin overhead, simplifies configuration)
    - 1.3 [Use Correct CLI Package](references/build-cli-package.md) — HIGH (prevents build failures, ensures v4 compatibility)
    - 1.4 [Use CSS Import Over @tailwind Directives](references/build-css-import.md) — CRITICAL (eliminates deprecated patterns, enables v4 features)
-   - 1.5 [Use Node.js 20+ for Optimal Performance](references/build-node-version.md) — CRITICAL (required for upgrade tool, enables modern optimizations)
-   - 1.6 [Use Vite Plugin Over PostCSS](references/build-vite-plugin.md) — CRITICAL (3-10× faster incremental builds)
+   - 1.5 [Use Node.js 20+ for Optimal Performance](references/build-node-version.md) — MEDIUM (required for upgrade tool, enables modern optimizations)
+   - 1.6 [Use Vite Plugin Over PostCSS](references/build-vite-plugin.md) — CRITICAL (2-5x faster HMR and incremental performance vs PostCSS)
 2. [CSS Generation](references/_sections.md#2-css-generation) — **CRITICAL**
-   - 2.1 [Avoid Excessive Theme Variables](references/gen-avoid-theme-bloat.md) — CRITICAL (reduces CSS variable overhead by 50-80%)
+   - 2.1 [Avoid Excessive Theme Variables](references/gen-avoid-theme-bloat.md) — MEDIUM (reduces design token clutter and CSS variable declarations)
    - 2.2 [Use @utility for Custom Utilities](references/gen-utility-directive.md) — HIGH (enables variant support, proper sorting)
    - 2.3 [Use CSS-First Configuration Over JavaScript](references/gen-css-first-config.md) — CRITICAL (single source of truth, eliminates config file overhead)
    - 2.4 [Use Dynamic Utility Values](references/gen-dynamic-utilities.md) — HIGH (eliminates arbitrary value syntax, cleaner markup)
@@ -52,15 +52,17 @@ Comprehensive performance optimization and best practices guide for Tailwind CSS
    - 5.3 [Leverage Smart Utility Sorting](references/comp-smart-sorting.md) — MEDIUM (automatic cascade ordering, fewer specificity issues)
    - 5.4 [Understand Utility File Scope](references/comp-utility-file-scope.md) — MEDIUM-HIGH (prevents build errors and missing class bugs)
    - 5.5 [Use @reference for CSS Module Integration](references/comp-reference-directive.md) — MEDIUM-HIGH (eliminates duplicate CSS output in modules)
+   - 5.6 [Use @custom-variant for Custom Variant Definitions](references/comp-custom-variant.md) — MEDIUM-HIGH (enables reusable custom variants without JavaScript plugins)
 6. [Theming & Design Tokens](references/_sections.md#6-theming-&-design-tokens) — **MEDIUM**
    - 6.1 [Leverage Runtime CSS Variables](references/theme-runtime-variables.md) — MEDIUM (enables dynamic theming without JavaScript)
    - 6.2 [Set color-scheme for Native Dark Mode](references/theme-color-scheme.md) — MEDIUM (eliminates visual theme inconsistencies)
    - 6.3 [Use Class-Based Dark Mode for Control](references/theme-dark-mode-class.md) — MEDIUM (enables manual theme switching, better user control)
    - 6.4 [Use Prefix for Variable Namespacing](references/theme-prefix-variables.md) — MEDIUM (prevents CSS variable conflicts in large codebases)
    - 6.5 [Use Semantic Design Token Names](references/theme-semantic-tokens.md) — MEDIUM (improves maintainability, enables theme switching)
+   - 6.6 [Use @theme inline and @theme static for Variable Control](references/theme-inline-static.md) — MEDIUM (controls CSS variable generation, reduces runtime overhead)
 7. [Responsive & Adaptive](references/_sections.md#7-responsive-&-adaptive) — **MEDIUM**
    - 7.1 [Define Custom Breakpoints in @theme](references/resp-custom-breakpoints.md) — MEDIUM (enables project-specific responsive design)
-   - 7.2 [Understand Hover Behavior on Touch Devices](references/resp-hover-capability.md) — MEDIUM (prevents sticky hover states on mobile)
+   - 7.2 [Pair Hover with Active for Touch-Friendly Interactions](references/resp-hover-capability.md) — MEDIUM (prevents missing feedback on touch devices)
    - 7.3 [Use Container Queries for Component-Level Responsiveness](references/resp-container-queries.md) — MEDIUM (eliminates viewport-dependent component bugs)
    - 7.4 [Use Logical Properties for RTL Support](references/resp-logical-properties.md) — MEDIUM (automatic RTL support without duplicate styles)
    - 7.5 [Use Mobile-First Responsive Design](references/resp-mobile-first.md) — MEDIUM (10-30% smaller CSS output)

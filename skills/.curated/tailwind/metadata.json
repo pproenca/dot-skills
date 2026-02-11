@@ -1,9 +1,9 @@
 {
   "version": "1.0.0",
-  "organization": "Tailwind Labs",
+  "organization": "Community",
   "technology": "Tailwind CSS v4",
   "date": "January 2026",
-  "abstract": "Comprehensive performance optimization and best practices guide for Tailwind CSS v4, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (build configuration, CSS generation) to incremental (animation patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "abstract": "Comprehensive performance optimization and best practices guide for Tailwind CSS v4, designed for AI agents and LLMs. Contains 44 rules across 8 categories, prioritized by impact from critical (build configuration, CSS generation) to incremental (animation patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
   "references": [
     "https://tailwindcss.com/docs",
     "https://tailwindcss.com/blog/tailwindcss-v4",

@@ -3,9 +3,9 @@ name: tailwind
 description: Tailwind CSS v4 performance optimization and best practices guidelines (formerly tailwindcss-v4-style). This skill should be used when writing, reviewing, or refactoring Tailwind CSS v4 code to ensure optimal build performance, minimal CSS output, and correct usage of v4 features. Triggers on tasks involving Tailwind configuration, @theme directive, utility classes, responsive design, dark mode, container queries, or CSS generation optimization.
 ---
 
-# Tailwind Labs Tailwind CSS v4 Best Practices
+# Community Tailwind CSS v4 Best Practices
 
-Comprehensive performance optimization guide for Tailwind CSS v4 applications, maintained by Tailwind Labs. Contains 42 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for Tailwind CSS v4 applications. Contains 44 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -73,6 +73,7 @@ Reference these guidelines when:
 - [`comp-utility-file-scope`](references/comp-utility-file-scope.md) - Understand Utility File Scope
 - [`comp-smart-sorting`](references/comp-smart-sorting.md) - Leverage Smart Utility Sorting
 - [`comp-container-customize`](references/comp-container-customize.md) - Customize Container with @utility
+- [`comp-custom-variant`](references/comp-custom-variant.md) - Use @custom-variant for Custom Variant Definitions
 
 ### 6. Theming & Design Tokens (MEDIUM)
 
@@ -81,13 +82,14 @@ Reference these guidelines when:
 - [`theme-prefix-variables`](references/theme-prefix-variables.md) - Use Prefix for Variable Namespacing
 - [`theme-runtime-variables`](references/theme-runtime-variables.md) - Leverage Runtime CSS Variables
 - [`theme-color-scheme`](references/theme-color-scheme.md) - Set color-scheme for Native Dark Mode
+- [`theme-inline-static`](references/theme-inline-static.md) - Use @theme inline and @theme static for Variable Control
 
 ### 7. Responsive & Adaptive (MEDIUM)
 
 - [`resp-mobile-first`](references/resp-mobile-first.md) - Use Mobile-First Responsive Design
 - [`resp-container-queries`](references/resp-container-queries.md) - Use Container Queries for Component-Level Responsiveness
 - [`resp-custom-breakpoints`](references/resp-custom-breakpoints.md) - Define Custom Breakpoints in @theme
-- [`resp-hover-capability`](references/resp-hover-capability.md) - Understand Hover Behavior on Touch Devices
+- [`resp-hover-capability`](references/resp-hover-capability.md) - Pair Hover with Active for Touch-Friendly Interactions
 - [`resp-logical-properties`](references/resp-logical-properties.md) - Use Logical Properties for RTL Support
 
 ### 8. Animation & Transitions (LOW-MEDIUM)

@@ -15,15 +15,17 @@ Tailwind CSS v4 is incompatible with Sass, Less, and Stylus preprocessors. Moder
 // styles.scss
 @import "tailwindcss"; // May fail with preprocessor
 
-.card {
-  @apply bg-white rounded-lg;
+.navigation {
+  $spacing: 1rem;
+  padding: $spacing;
 
-  &:hover {
-    @apply shadow-lg;
+  &__item {
+    color: $brand-color;
+
+    &:hover {
+      color: darken($brand-color, 10%);
+    }
   }
-
-  $padding: 1rem;
-  padding: $padding;
 }
 ```
 
@@ -33,14 +35,16 @@ Tailwind CSS v4 is incompatible with Sass, Less, and Stylus preprocessors. Moder
 /* styles.css */
 @import "tailwindcss";
 
-@utility card {
-  @apply bg-white rounded-lg;
-
-  &:hover {
-    @apply shadow-lg;
-  }
-
+.navigation {
   padding: var(--spacing-4);
+
+  &__item {
+    color: var(--color-brand);
+
+    &:hover {
+      color: oklch(from var(--color-brand) calc(l - 0.1) c h);
+    }
+  }
 }
 ```
 
@@ -49,5 +53,6 @@ Tailwind CSS v4 is incompatible with Sass, Less, and Stylus preprocessors. Moder
 - CSS custom properties (replace Sass variables)
 - `@theme` directive (replace Sass maps)
 - `calc()` and modern CSS functions
+- `oklch(from ...)` relative color syntax (replace Sass `darken`/`lighten`)
 
 Reference: [Tailwind CSS Upgrade Guide](https://tailwindcss.com/docs/upgrade-guide)

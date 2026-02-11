@@ -1,25 +1,24 @@
 ---
 title: Use Vite Plugin Over PostCSS
 impact: CRITICAL
-impactDescription: 3-10× faster incremental builds
+impactDescription: 2-5x faster HMR and incremental performance vs PostCSS
 tags: build, vite, postcss, tooling, performance
 ---
 
 ## Use Vite Plugin Over PostCSS
 
-The first-party Vite plugin provides tighter integration and significantly faster builds than the PostCSS plugin, especially for incremental rebuilds during development.
+The first-party Vite plugin provides tighter integration and better performance than the PostCSS plugin, especially for Hot Module Replacement and incremental rebuilds during development.
 
-**Incorrect (slower PostCSS approach):**
+**Incorrect (PostCSS approach in Vite projects):**
 
 ```typescript
-// postcss.config.js
+// postcss.config.js — works, but misses Vite-specific optimizations
 export default {
   plugins: ["@tailwindcss/postcss"],
 };
-// Incremental rebuilds: ~5ms
 ```
 
-**Correct (optimized Vite plugin):**
+**Correct (dedicated Vite plugin):**
 
 ```typescript
 // vite.config.ts
@@ -29,11 +28,12 @@ import tailwindcss from "@tailwindcss/vite";
 export default defineConfig({
   plugins: [tailwindcss()],
 });
-// Incremental rebuilds: ~192µs (26× faster)
 ```
 
 **When NOT to use this pattern:**
 - Projects not using Vite as their build tool
-- Legacy projects requiring PostCSS pipeline compatibility
+- Projects using webpack, Parcel, or other bundlers (use `@tailwindcss/postcss` instead)
+
+**Note:** Both integration methods benefit from v4's engine improvements (full builds up to 5x faster, incremental builds over 100x faster than v3). The Vite plugin adds further gains through direct bundler integration.
 
 Reference: [Tailwind CSS v4.0 Release](https://tailwindcss.com/blog/tailwindcss-v4)

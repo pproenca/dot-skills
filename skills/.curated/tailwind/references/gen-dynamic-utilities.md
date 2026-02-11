@@ -12,8 +12,8 @@ Tailwind CSS v4 supports dynamic values for many utilities without arbitrary val
 **Incorrect (arbitrary value syntax):**
 
 ```html
-<div class="grid grid-cols-[15]">
-  <!-- Arbitrary syntax for non-standard column count -->
+<div class="grid grid-cols-[repeat(15,minmax(0,1fr))]">
+  <!-- Verbose arbitrary value syntax for non-standard column count -->
 </div>
 
 <div class="mt-[68px] w-[340px]">
