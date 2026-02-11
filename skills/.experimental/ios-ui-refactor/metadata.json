@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple HIG",
+  "technology": "SwiftUI iOS 17+",
+  "date": "February 2026",
+  "abstract": "Principal-level iOS UI review and refactoring guide for SwiftUI, designed for AI agents and LLMs. Contains 48 rules across 8 categories ordered by the visual review process: visual hierarchy (CRITICAL), typography discipline (CRITICAL), color system (CRITICAL), motion and animation (HIGH), screen transitions (HIGH), materials and depth (HIGH), spacing and rhythm (MEDIUM-HIGH), and iOS 17+ modernization (MEDIUM). Each rule identifies a specific anti-pattern, explains the design impact, and provides the correct iOS 17+ SwiftUI implementation while preserving brand identity.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://developer.apple.com/design/human-interface-guidelines/color",
+    "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "https://developer.apple.com/design/human-interface-guidelines/motion",
+    "https://developer.apple.com/design/human-interface-guidelines/materials",
+    "https://developer.apple.com/design/human-interface-guidelines/layout",
+    "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+    "https://developer.apple.com/documentation/swiftui/animation",
+    "https://developer.apple.com/documentation/swiftui/view-fundamentals",
+    "https://developer.apple.com/videos/play/wwdc2023/10156/",
+    "https://developer.apple.com/videos/play/wwdc2023/10257/",
+    "https://developer.apple.com/videos/play/wwdc2024/10151/",
+    "https://developer.apple.com/videos/play/wwdc2024/10145/",
+    "https://developer.apple.com/design/awards/"
+  ]
+}

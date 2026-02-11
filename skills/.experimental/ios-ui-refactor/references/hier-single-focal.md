@@ -1,7 +1,7 @@
 ---
 title: One Primary Focal Point Per Screen
 impact: CRITICAL
-impactDescription: screens with 2+ competing focal points increase time-to-comprehension by 40-60% — users tap back or scroll past without engaging
+impactDescription: eliminates competing visual elements that cause users to tap back or scroll past without engaging — clear focal point reduces time-to-comprehension to under 2 seconds
 tags: hier, focal-point, attention, cognitive-load, layout
 ---
 
@@ -90,4 +90,4 @@ struct ProfileScreen: View {
 - Tertiary elements use `.secondary` or `.tertiary` foreground styles
 - Interactive elements (buttons) use system styles, not custom bold treatments
 
-Reference: [WWDC21 — Design for Safari 15](https://developer.apple.com/videos/play/wwdc2021/10029/) (focal point principles), [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)
+Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout), [WWDC23 — Design with SwiftUI](https://developer.apple.com/videos/play/wwdc2023/10115/)

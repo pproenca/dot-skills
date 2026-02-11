@@ -74,43 +74,19 @@ struct DashboardView: View {
                     }
 
                     DashboardCard {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("Top Products", systemImage: "star.fill")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.orange)
-
-                            ForEach(topProducts) { product in
-                                HStack {
-                                    Text(product.name)
-                                    Spacer()
-                                    Text(product.revenue,
-                                         format: .currency(code: "USD"))
-                                        .foregroundStyle(.secondary)
-                                }
-                                .font(.subheadline)
-                            }
-                        }
+                        // Top Products card — same pattern
+                        Label("Top Products", systemImage: "star.fill")
+                            .font(.subheadline).fontWeight(.medium)
+                            .foregroundStyle(.orange)
+                        // ... product rows
                     }
 
                     DashboardCard {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("Recent Activity", systemImage: "clock.fill")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.green)
-
-                            ForEach(recentActivity) { activity in
-                                HStack {
-                                    Text(activity.title)
-                                    Spacer()
-                                    Text(activity.status)
-                                        .font(.caption)
-                                        .foregroundStyle(.secondary)
-                                }
-                                .font(.subheadline)
-                            }
-                        }
+                        // Recent Activity card — same pattern
+                        Label("Recent Activity", systemImage: "clock.fill")
+                            .font(.subheadline).fontWeight(.medium)
+                            .foregroundStyle(.green)
+                        // ... activity rows
                     }
                 }
                 .padding()

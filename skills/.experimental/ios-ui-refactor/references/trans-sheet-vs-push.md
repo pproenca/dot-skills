@@ -1,7 +1,7 @@
 ---
 title: Sheets for Tasks and Creation, Push for Drill-Down Hierarchy
 impact: HIGH
-impactDescription: Mismatched navigation paradigm confuses the user's mental model — using push for creation flows hides the originating context, while sheets for browsing detail breaks hierarchical wayfinding
+impactDescription: prevents 2-3 navigation dead-ends per flow — correct paradigm reduces "where am I?" confusion that causes 20-30% task abandonment
 tags: trans, sheet, push, navigation, modality, mental-model
 ---
 

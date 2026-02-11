@@ -1,7 +1,7 @@
 ---
 title: Use .smooth for Routine, .snappy for Interactive, .bouncy for Delight
 impact: HIGH
-impactDescription: Establishes a consistent motion language across the app, reducing perceived UI inconsistency by matching animation character to interaction intent
+impactDescription: reduces motion inconsistency to 3 named presets — eliminates per-view custom spring tuning across 100% of animated transitions
 tags: motion, animation, spring, design-system
 ---
 

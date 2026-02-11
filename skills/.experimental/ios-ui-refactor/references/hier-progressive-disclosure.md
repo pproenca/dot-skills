@@ -1,7 +1,7 @@
 ---
 title: Use Progressive Disclosure for Dense Information
 impact: CRITICAL
-impactDescription: screens showing 10+ data points simultaneously increase abandonment by 25-30% — progressive disclosure keeps first-screen cognitive load under 5-7 chunks
+impactDescription: reduces first-screen cognitive load from 10+ data points to 5-7 chunks (Miller's Law) — prevents information overload that causes users to scroll past without engaging
 tags: hier, progressive-disclosure, information-density, cognitive-load, navigation
 ---
 
@@ -95,40 +95,9 @@ struct HealthDashboard: View {
     }
 }
 
-struct SummaryCard: View {
-    let title: String
-    let headline: String
-    let subtitle: String
-    let systemImage: String
-    let tint: Color
-
-    var body: some View {
-        HStack {
-            VStack(alignment: .leading, spacing: 2) {
-                Label(title, systemImage: systemImage)
-                    .font(.subheadline)
-                    .fontWeight(.medium)
-                    .foregroundStyle(tint)
-
-                Text(headline)
-                    .font(.title2)
-                    .fontWeight(.semibold)
-                    .foregroundStyle(.primary)
-
-                Text(subtitle)
-                    .font(.caption)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-            Image(systemName: "chevron.right")
-                .font(.caption)
-                .foregroundStyle(.tertiary)
-        }
-        .padding()
-        .background(.quaternary.opacity(0.3),
-                    in: RoundedRectangle(cornerRadius: 12))
-    }
-}
+// SummaryCard: title + headline + subtitle + icon with chevron,
+// wrapped in .padding() + .background(.quaternary.opacity(0.3),
+// in: RoundedRectangle(cornerRadius: 12))
 ```
 
 **Progressive disclosure patterns on iOS:**

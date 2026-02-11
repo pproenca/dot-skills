@@ -66,7 +66,7 @@ struct ArticleCard: View {
 **Benefits:**
 - Dynamic Type scales all text automatically — no manual `@ScaledMetric` plumbing needed.
 - Apple's type scale maintains proportional relationships between levels at every accessibility size.
-- Eliminates "magic number" font sizes that drift across PRs.
+- Eliminates arbitrary font sizes that drift across PRs.
 
 **When NOT to apply:**
 - Display text in a branded hero banner may use a fixed size with `@ScaledMetric` for manual scaling. In that case, pair it with `.dynamicTypeSize(...:.accessibility3)` to cap maximum growth and prevent layout breakage.

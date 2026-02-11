@@ -34,7 +34,7 @@ struct PhotoGrid: View {
                     }
                 }
             }
-            .navigationDestination(for: Photo.self) { photo ->
+            .navigationDestination(for: Photo.self) { photo in
                 PhotoDetailView(photo: photo)
             }
         }

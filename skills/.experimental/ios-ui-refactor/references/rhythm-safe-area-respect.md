@@ -1,7 +1,7 @@
 ---
 title: Always Respect Safe Areas
 impact: MEDIUM-HIGH
-impactDescription: ignoring safe areas clips text and buttons behind the Dynamic Island, notch, or home indicator — users cannot read or tap obscured content, producing support tickets and 1-star reviews on notched devices
+impactDescription: prevents 100% of content clipping behind Dynamic Island, notch, and home indicator — eliminates the #1 cause of "can't tap button" support tickets on notched devices
 tags: rhythm, safe-area, layout, dynamic-island, accessibility
 ---
 

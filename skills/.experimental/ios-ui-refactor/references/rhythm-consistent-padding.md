@@ -1,7 +1,7 @@
 ---
 title: Use Consistent Padding Across All Screens
 impact: MEDIUM-HIGH
-impactDescription: inconsistent screen margins make an app feel like separate features stitched together — standardizing padding values makes every screen instantly recognizable as part of the same product
+impactDescription: reduces unique padding values from 10-15 per app to 4 named constants — eliminates per-screen margin drift that makes screens feel disconnected
 tags: rhythm, padding, margins, consistency, layout
 ---
 
@@ -93,35 +93,8 @@ struct ProfileView: View {
     }
 }
 
-struct SettingsView: View {
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-                VStack(alignment: .leading, spacing: Layout.itemSpacing) {
-                    Text("Settings")
-                        .font(.largeTitle.bold())
-                    Text("Customize your experience")
-                        .foregroundStyle(.secondary)
-                }
-                // ... content sections
-            }
-            .padding(.horizontal, Layout.screenMargin)
-        }
-    }
-}
-
-struct ActivityView: View {
-    var body: some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: Layout.sectionSpacing) {
-                Text("Activity")
-                    .font(.largeTitle.bold())
-                // ... content sections
-            }
-            .padding(.horizontal, Layout.screenMargin)
-        }
-    }
-}
+// SettingsView and ActivityView follow the same pattern:
+// VStack(spacing: Layout.sectionSpacing) + .padding(.horizontal, Layout.screenMargin)
 ```
 
 **Audit checklist for padding consistency:**

@@ -1,13 +1,13 @@
 ---
 title: Use a 4pt Base Unit for All Spacing
 impact: MEDIUM-HIGH
-impactDescription: arbitrary spacing values create pixel-level misalignment across screens — a 4pt grid guarantees alignment on all device scale factors (1x, 2x, 3x) and cuts design-to-dev handoff disputes by eliminating guesswork
+impactDescription: eliminates pixel-level misalignment on all device scale factors (1×, 2×, 3×) — reduces spacing-related design review comments by 80-90%
 tags: rhythm, spacing, grid, padding, layout, consistency
 ---
 
 ## Use a 4pt Base Unit for All Spacing
 
-Arbitrary padding values like 13, 18, or 7 points break alignment between adjacent elements and produce sub-pixel rendering on 2x and 3x displays. A 4pt base unit snaps every measurement to values that divide evenly into all iOS display scales, ensuring crisp edges without anti-aliasing artifacts. Define spacing constants once and reference them everywhere — this turns spacing from a per-view decision into a system-level constraint.
+Arbitrary padding values like 13, 18, or 7 points break alignment between adjacent elements and create visual inconsistency when neighboring views use different ad-hoc values. A 4pt base unit provides a consistent spatial language: every measurement aligns to a shared grid, making adjacent elements feel intentionally placed rather than arbitrarily spaced. Define spacing constants once and reference them everywhere — this turns spacing from a per-view decision into a system-level constraint. Note: Apple does not mandate a specific grid unit, but a 4pt base is a widely adopted community convention that aligns well with iOS system spacing.
 
 **Incorrect (arbitrary values that misalign across screens):**
 

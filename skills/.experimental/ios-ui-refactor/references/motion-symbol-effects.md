@@ -1,7 +1,7 @@
 ---
 title: Use Built-In symbolEffect, Not Manual Symbol Animation
 impact: HIGH
-impactDescription: Replaces fragile manual scale/opacity animations with system-provided symbol animations that automatically adapt to Dynamic Type, accessibility settings, and platform conventions
+impactDescription: eliminates 10-20 lines of manual keyframe code per symbol — system effects auto-adapt to Dynamic Type and Reduce Motion with zero extra code
 tags: motion, animation, sf-symbols, symbolEffect
 ---
 

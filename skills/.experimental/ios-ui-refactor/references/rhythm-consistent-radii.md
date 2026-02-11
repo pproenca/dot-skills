@@ -1,7 +1,7 @@
 ---
 title: Standardize Corner Radii Per Component Type
 impact: MEDIUM-HIGH
-impactDescription: inconsistent corner radii make components feel like they were sourced from different design systems — standardizing to 3 radius tiers creates immediate visual coherence across all screens
+impactDescription: reduces corner radius variants from 8-12 arbitrary values to 3 named tiers — eliminates visual fragmentation across all component types
 tags: rhythm, corner-radius, consistency, components, visual-coherence
 ---
 

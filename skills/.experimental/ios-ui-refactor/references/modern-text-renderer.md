@@ -81,7 +81,7 @@ Reserve `TextRenderer` for hero moments — splash screens, achievement celebrat
 ```swift
 Text(score, format: .number)
     .contentTransition(.numericText())
-    .animation(.spring, value: score)
+    .animation(.spring(), value: score)
 ```
 
 `TextRenderer` requires iOS 18+. On iOS 17, fall back to `.contentTransition` or static text.

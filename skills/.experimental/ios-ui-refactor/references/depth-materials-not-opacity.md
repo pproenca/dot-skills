@@ -44,7 +44,7 @@ struct WeatherCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
             Text(temperature)
-                .font(.system(size: 48, weight: .thin))
+                .font(.system(.largeTitle, design: .rounded, weight: .thin))
                 .foregroundStyle(.primary)
 
             Text(condition)

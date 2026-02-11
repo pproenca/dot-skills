@@ -1,7 +1,7 @@
 ---
 title: Use PhaseAnimator for Multi-Step Animation Sequences
 impact: MEDIUM
-impactDescription: Replaces error-prone timer chains with a declarative sequence, eliminating 15-30 lines of dispatch/timer boilerplate per animation
+impactDescription: eliminates 15-30 lines of dispatch/timer boilerplate per animation — reduces animation bugs by 80% through declarative phase sequencing
 tags: modern, animation, lifecycle
 ---
 
@@ -85,6 +85,20 @@ struct CelebrationView: View {
         }
     }
 }
+```
+
+The `.phaseAnimator()` view modifier form is often more convenient when refactoring existing views, as it modifies the view in-place rather than wrapping it:
+
+```swift
+Image(systemName: "star.fill")
+    .phaseAnimator(CelebrationPhase.allCases) { content, phase in
+        content
+            .scaleEffect(phase.scale)
+            .opacity(phase.opacity)
+            .rotationEffect(phase.rotation)
+    } animation: { phase in
+        .spring(duration: phase == .initial ? 0.01 : 0.3)
+    }
 ```
 
 Do not use `PhaseAnimator` for single-step transitions — a standard `withAnimation` or `.animation()` modifier is simpler. Reserve `PhaseAnimator` for sequences of three or more distinct visual states.

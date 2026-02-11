@@ -1,13 +1,13 @@
 ---
 title: Use MeshGradient for Premium Dynamic Backgrounds
 impact: MEDIUM
-impactDescription: Achieves Apple Weather-class visual depth on hero surfaces, replacing flat backgrounds that score 20-30% lower in user perception-of-quality studies
+impactDescription: produces organic, fluid backgrounds comparable to Apple Weather — replaces flat LinearGradient with GPU-accelerated multi-point color interpolation on hero surfaces
 tags: modern, visual, gradient, ios18
 ---
 
 ## Use MeshGradient for Premium Dynamic Backgrounds
 
-Flat solid colors and simple linear gradients read as utilitarian on hero surfaces — onboarding screens, subscription paywalls, and profile headers. `MeshGradient` interpolates colors across a grid of control points, producing organic, fluid backgrounds comparable to Apple Weather or Apple Music. This creates measurable uplift in perceived polish without requiring design assets.
+Flat solid colors and simple linear gradients read as utilitarian on hero surfaces — onboarding screens, subscription paywalls, and profile headers. `MeshGradient` interpolates colors across a grid of control points, producing organic, fluid backgrounds comparable to Apple Weather or Apple Music. This elevates perceived polish without requiring design assets.
 
 **Incorrect (flat LinearGradient for a hero surface):**
 

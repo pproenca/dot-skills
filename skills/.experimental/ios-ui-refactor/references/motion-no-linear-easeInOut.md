@@ -1,11 +1,11 @@
 ---
-title: Never Use Linear or EaseInOut for UI Elements
+title: Prefer Springs Over Linear and EaseInOut for UI Elements
 impact: HIGH
 impactDescription: Removes mechanical, robotic feel from all animated transitions and eliminates visible jank when animations are interrupted mid-flight
 tags: motion, animation, easing, anti-pattern
 ---
 
-## Never Use Linear or EaseInOut for UI Elements
+## Prefer Springs Over Linear and EaseInOut for UI Elements
 
 Linear animation moves at constant speed, which nothing in the physical world does — it reads as robotic. EaseInOut is better but has a fatal flaw: it decelerates to a hard stop, so when a user interrupts it (tap during animation, new gesture), the next animation starts from zero velocity, causing a visible stutter. Springs decelerate asymptotically and handle interruption by preserving the current velocity into the next animation.
 
@@ -89,6 +89,6 @@ struct SidebarView: View {
 }
 ```
 
-**When linear IS acceptable:** Progress bars, loading indicators, and continuous rotations (e.g., a spinning refresh icon) where constant speed is the correct visual metaphor. These are not interactive UI transitions.
+**When linear or easeInOut IS acceptable:** Progress bars, loading indicators, and continuous rotations (e.g., a spinning refresh icon) where constant speed is the correct visual metaphor. EaseInOut is also fine for timed opacity fades on non-interruptible sequences (toast notifications, auto-dismiss banners). These are not interactive UI transitions.
 
 **Reference:** WWDC 2023 "Animate with springs" — Apple explicitly recommends replacing all easing-curve animations with springs for UI transitions because springs are the only animation model that maintains velocity continuity across interruptions.

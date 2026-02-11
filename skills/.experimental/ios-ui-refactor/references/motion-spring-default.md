@@ -7,7 +7,7 @@ tags: motion, animation, spring, gesture
 
 ## Default to Spring Animations for All UI Transitions
 
-Spring animations are the SwiftUI default since iOS 17, and for good reason: they are the only animation type that preserves velocity continuity. When a user interrupts a gesture or triggers a new animation before the current one finishes, springs seamlessly blend the motion. Easing curves (easeInOut, linear) snap to new targets, creating visible jank.
+Spring animations are the SwiftUI default since iOS 17, and for good reason: they are the only animation type that preserves velocity continuity. When a user interrupts a gesture or triggers a new animation before the current one finishes, springs continuously blend the motion. Easing curves (easeInOut, linear) snap to new targets, creating visible jank.
 
 **Incorrect (hardcoded easing curves that break on interruption):**
 

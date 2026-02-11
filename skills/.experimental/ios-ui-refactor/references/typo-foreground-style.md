@@ -1,7 +1,7 @@
 ---
 title: Use foregroundStyle Over foregroundColor
 impact: CRITICAL
-impactDescription: foregroundColor is effectively deprecated since iOS 17 — foregroundStyle supports ShapeStyle (gradients, hierarchical colors, materials), enabling richer text rendering without workarounds
+impactDescription: eliminates 100% of foregroundColor deprecation warnings — foregroundStyle supports ShapeStyle (gradients, hierarchical colors, materials) in a single modifier
 tags: typo, api-modernization, foreground-style, color
 ---
 

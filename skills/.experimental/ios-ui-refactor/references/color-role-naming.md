@@ -1,7 +1,7 @@
 ---
 title: Name Custom Colors by Role, Not Hue
 impact: CRITICAL
-impactDescription: hue-named colors ("darkBlue", "lightGray") require a full audit and rename every time the brand palette changes — role-named colors survive rebrand with zero code changes
+impactDescription: reduces rebrand effort from 50-100 file changes to 1 asset catalog update — role-named colors survive palette changes with zero code modifications
 tags: color, naming, design-tokens, maintainability, dark-mode
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use Weight for Emphasis, Not ALL CAPS
 impact: CRITICAL
-impactDescription: preserves readability — all-caps body text reduces reading speed by 13-20% (Tinker, 1963), breaks iOS text conventions
+impactDescription: preserves readability — all-caps body text reduces word-shape recognition and reading speed, and conflicts with VoiceOver which may spell out acronym-like words
 tags: typo, emphasis, weight, readability
 ---
 
