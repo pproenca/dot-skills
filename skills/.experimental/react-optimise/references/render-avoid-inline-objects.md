@@ -84,4 +84,6 @@ function Dashboard({ revenues }: { revenues: number[] }) {
 }
 ```
 
+**With React Compiler:** The compiler auto-memoizes components and values, making `memo()` unnecessary. Hoisting constant objects to module scope remains good practice for code clarity regardless of compiler usage. See `compiler-remove-manual-memo` for migration steps.
+
 Reference: [React — Optimizing Performance](https://react.dev/reference/react/memo#minimizing-props-changes)

@@ -89,4 +89,4 @@ function FileUploader() {
 }
 ```
 
-Reference: [XState - Introduction to State Machines](https://xstate.js.org/docs/guides/introduction-to-state-machines-and-statecharts/)
+Reference: [Stately - Introduction to State Machines](https://stately.ai/docs/state-machines-and-statecharts)

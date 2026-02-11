@@ -1,18 +1,17 @@
 ---
 name: react-refactor
-description: Architectural refactoring guide for React applications covering component architecture, state architecture, hook patterns, component decomposition, modern React migration, coupling and cohesion, data flow, and refactoring safety. Use when refactoring React codebases, reviewing PRs for architectural issues, decomposing oversized components, or migrating to Server Components. Does NOT cover React 19 API usage (see react skill) or performance optimization (see react-optimise skill).
+description: Architectural refactoring guide for React applications covering component architecture, state architecture, hook patterns, component decomposition, coupling and cohesion, data flow, and refactoring safety. Use when refactoring React codebases, reviewing PRs for architectural issues, decomposing oversized components, or improving module boundaries. Does NOT cover React 19 API usage (see react skill) or performance optimization (see react-optimise skill).
 ---
 
 # React Refactor Best Practices
 
-Architectural refactoring guide for React applications. Contains 47 rules across 8 categories, prioritized by impact from critical (component and state architecture) to incremental (refactoring safety).
+Architectural refactoring guide for React applications. Contains 40 rules across 7 categories, prioritized by impact from critical (component and state architecture) to incremental (refactoring safety).
 
 ## When to Apply
 
 - Refactoring existing React codebases or planning large-scale restructuring
 - Reviewing PRs for architectural issues and code smells
 - Decomposing oversized components into focused units
-- Migrating client-first code to Server Components
 - Extracting reusable hooks from component logic
 - Improving testability of React code
 - Reducing coupling between feature modules
@@ -21,13 +20,12 @@ Architectural refactoring guide for React applications. Contains 47 rules across
 
 | Category | Impact | Rules | Key Topics |
 |----------|--------|-------|------------|
-| Component Architecture | CRITICAL | 7 | Compound components, headless pattern, composition over props |
+| Component Architecture | CRITICAL | 8 | Compound components, headless pattern, composition over props, client boundaries |
 | State Architecture | CRITICAL | 7 | Colocation, state machines, URL state, derived values |
 | Hook Patterns | HIGH | 6 | Single responsibility, naming, dependency stability, composition |
 | Component Decomposition | HIGH | 6 | Scroll test, extraction by change reason, view/logic separation |
-| Modern React Migration | MEDIUM-HIGH | 5 | Server Components, Server Actions, useActionState, useOptimistic |
-| Coupling & Cohesion | MEDIUM | 6 | Feature colocation, dependency injection, circular deps |
-| Data & Side Effects | MEDIUM | 5 | Server-first fetch, TanStack Query, error boundaries |
+| Coupling & Cohesion | MEDIUM | 4 | Dependency injection, circular deps, stable imports, barrel-free |
+| Data & Side Effects | MEDIUM | 4 | Server-first fetch, TanStack Query, error boundaries |
 | Refactoring Safety | LOW-MEDIUM | 5 | Characterization tests, behavior testing, integration tests |
 
 ## Quick Reference
@@ -54,6 +52,7 @@ Architectural refactoring guide for React applications. Contains 47 rules across
    - 1.5 [Prefer Composition Over Props Explosion](references/arch-composition-over-props.md) — CRITICAL (reduces prop count by 50-70%)
    - 1.6 [Separate Container Logic from Presentational Components](references/arch-container-presentational.md) — CRITICAL (enables independent testing)
    - 1.7 [Use Compound Components for Implicit State Sharing](references/arch-compound-components.md) — CRITICAL (reduces API surface by 60%)
+   - 1.8 [Push Client Boundaries to Leaf Components](references/arch-push-client-low.md) — HIGH (keeps 60-80% server-rendered)
 2. [State Architecture](references/_sections.md#2-state-architecture) — **CRITICAL**
    - 2.1 [Colocate State with Components That Use It](references/state-colocate-with-consumers.md) — CRITICAL (reduces prop passing by 60%)
    - 2.2 [Derive Values Instead of Syncing State](references/state-derive-dont-sync.md) — CRITICAL (eliminates double-render cycle)
@@ -76,31 +75,22 @@ Architectural refactoring guide for React applications. Contains 47 rules across
    - 4.4 [Extract Pure Functions from Component Bodies](references/decomp-extract-pure-functions.md) — HIGH (10x faster unit tests)
    - 4.5 [Inline Premature Abstractions Before Re-Extracting](references/decomp-inline-premature.md) — HIGH (40-60% simpler code)
    - 4.6 [Separate View Layer from Business Logic](references/decomp-separate-view-logic.md) — HIGH (5x faster test suite)
-5. [Modern React Migration](references/_sections.md#5-modern-react-migration) — **MEDIUM-HIGH**
-   - 5.1 [Add useOptimistic for Instant Mutation Feedback](references/migrate-use-optimistic.md) — MEDIUM-HIGH (0ms perceived latency)
-   - 5.2 [Default to Server Components for New Code](references/migrate-server-component-default.md) — MEDIUM-HIGH (30-60% less client JS)
-   - 5.3 [Migrate Form State to useActionState](references/migrate-use-action-state.md) — MEDIUM-HIGH (eliminates 60% of form state code)
-   - 5.4 [Push Client Boundaries to Leaf Components](references/migrate-push-client-low.md) — MEDIUM-HIGH (60-80% server-rendered)
-   - 5.5 [Use Server Actions for Data Mutations](references/migrate-actions-for-mutations.md) — MEDIUM-HIGH (eliminates API route boilerplate)
-6. [Coupling & Cohesion](references/_sections.md#6-coupling--cohesion) — **MEDIUM**
-   - 6.1 [Break Circular Dependencies with Intermediate Modules](references/couple-break-circular-deps.md) — MEDIUM (eliminates undefined-at-import-time bugs)
-   - 6.2 [Colocate Code by Feature Domain](references/couple-colocation-by-feature.md) — MEDIUM (reduces navigation by 70%)
-   - 6.3 [Apply Interface Segregation at Module Boundaries](references/couple-interface-segregation.md) — MEDIUM (prevents 30-50% of cascade rebuilds)
-   - 6.4 [Import from Stable Public API Surfaces Only](references/couple-stable-imports.md) — MEDIUM (enables internal refactoring)
-   - 6.5 [Use Barrel-Free Feature Modules for Clean Dependencies](references/couple-barrel-free-features.md) — MEDIUM (200-800ms build reduction)
-   - 6.6 [Use Dependency Injection for External Services](references/couple-dependency-injection.md) — MEDIUM (3x faster test setup)
-7. [Data & Side Effects](references/_sections.md#7-data--side-effects) — **MEDIUM**
-   - 7.1 [Avoid Effects for Derived or Computed Data](references/data-no-effect-derived.md) — MEDIUM (eliminates double-render cycle)
-   - 7.2 [Fetch Data on the Server by Default](references/data-server-first-fetch.md) — MEDIUM (reduces client JS by 30-60%)
-   - 7.3 [Place Error Boundaries at Data Fetch Granularity](references/data-granular-error-boundaries.md) — MEDIUM (errors isolated to affected section)
-   - 7.4 [Use Context Module Pattern for Action Colocation](references/data-context-module-pattern.md) — MEDIUM (centralizes data mutations)
-   - 7.5 [Use TanStack Query for Client-Side Server State](references/data-tanstack-query-client.md) — MEDIUM (eliminates 80% of fetch boilerplate)
-8. [Refactoring Safety](references/_sections.md#8-refactoring-safety) — **LOW-MEDIUM**
-   - 8.1 [Avoid Snapshot Tests for Refactored Components](references/safety-snapshot-free.md) — LOW-MEDIUM (eliminates false test failures)
-   - 8.2 [Extract Pure Functions to Increase Testability](references/safety-extract-pure-testability.md) — LOW-MEDIUM (10x faster test execution)
-   - 8.3 [Prefer Integration Tests for Component Verification](references/safety-integration-over-unit.md) — LOW-MEDIUM (catches 40% more bugs)
-   - 8.4 [Test Component Behavior Not Implementation Details](references/safety-test-behavior.md) — LOW-MEDIUM (5x fewer test updates)
-   - 8.5 [Write Characterization Tests Before Refactoring](references/safety-characterization-tests.md) — LOW-MEDIUM (catches 90% of unintended changes)
+5. [Coupling & Cohesion](references/_sections.md#5-coupling--cohesion) — **MEDIUM**
+   - 5.1 [Break Circular Dependencies with Intermediate Modules](references/couple-break-circular-deps.md) — MEDIUM (eliminates undefined-at-import-time bugs)
+   - 5.2 [Import from Stable Public API Surfaces Only](references/couple-stable-imports.md) — MEDIUM (enables internal refactoring)
+   - 5.3 [Use Barrel-Free Feature Modules for Clean Dependencies](references/couple-barrel-free-features.md) — MEDIUM (200-800ms build reduction)
+   - 5.4 [Use Dependency Injection for External Services](references/couple-dependency-injection.md) — MEDIUM (3x faster test setup)
+6. [Data & Side Effects](references/_sections.md#6-data--side-effects) — **MEDIUM**
+   - 6.1 [Fetch Data on the Server by Default](references/data-server-first-fetch.md) — MEDIUM (reduces client JS by 30-60%)
+   - 6.2 [Place Error Boundaries at Data Fetch Granularity](references/data-granular-error-boundaries.md) — MEDIUM (errors isolated to affected section)
+   - 6.3 [Use Context Module Pattern for Action Colocation](references/data-context-module-pattern.md) — MEDIUM (centralizes data mutations)
+   - 6.4 [Use TanStack Query for Client-Side Server State](references/data-tanstack-query-client.md) — MEDIUM (eliminates 80% of fetch boilerplate)
+7. [Refactoring Safety](references/_sections.md#7-refactoring-safety) — **LOW-MEDIUM**
+   - 7.1 [Avoid Snapshot Tests for Refactored Components](references/safety-snapshot-free.md) — LOW-MEDIUM (eliminates false test failures)
+   - 7.2 [Extract Pure Functions to Increase Testability](references/safety-extract-pure-testability.md) — LOW-MEDIUM (10x faster test execution)
+   - 7.3 [Prefer Integration Tests for Component Verification](references/safety-integration-over-unit.md) — LOW-MEDIUM (catches 40% more bugs)
+   - 7.4 [Test Component Behavior Not Implementation Details](references/safety-test-behavior.md) — LOW-MEDIUM (5x fewer test updates)
+   - 7.5 [Write Characterization Tests Before Refactoring](references/safety-characterization-tests.md) — LOW-MEDIUM (catches 90% of unintended changes)
 
 ## References
 

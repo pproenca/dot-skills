@@ -2,7 +2,7 @@
 title: Push Client Boundaries to Leaf Components
 impact: HIGH
 impactDescription: keeps 60-80% of component tree server-rendered
-tags: migrate, client-boundary, server-components, bundle-size
+tags: arch, client-boundary, server-components, bundle-size
 ---
 
 ## Push Client Boundaries to Leaf Components
@@ -62,7 +62,6 @@ export default function DashboardPage() {
         <h1>Dashboard</h1>
         <p>Welcome back. Here is your account summary.</p>
       </header>
-
       {/* Only the tab switcher needs client interactivity */}
       <DashboardTabs
         overviewPanel={<OverviewPanel />}
@@ -73,43 +72,25 @@ export default function DashboardPage() {
   );
 }
 
-// components/DashboardTabs.tsx
+// components/DashboardTabs.tsx — 'use client' only on the leaf
 "use client";
-
 import { type ReactNode, useState } from "react";
 
-interface DashboardTabsProps {
-  overviewPanel: ReactNode;
-  analyticsPanel: ReactNode;
-  settingsPanel: ReactNode;
-}
-
-export function DashboardTabs({
-  overviewPanel, analyticsPanel, settingsPanel,
-}: DashboardTabsProps) {
+export function DashboardTabs({ overviewPanel, analyticsPanel, settingsPanel }: {
+  overviewPanel: ReactNode; analyticsPanel: ReactNode; settingsPanel: ReactNode;
+}) {
   const [activeTab, setActiveTab] = useState("overview");
-
-  const panels: Record<string, ReactNode> = {
-    overview: overviewPanel,
-    analytics: analyticsPanel,
-    settings: settingsPanel,
-  };
+  const panels = { overview: overviewPanel, analytics: analyticsPanel, settings: settingsPanel };
 
   return (
     <div>
       <nav>
         {Object.keys(panels).map((tab) => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            className={activeTab === tab ? "active" : ""}
-          >
-            {tab}
-          </button>
+          <button key={tab} onClick={() => setActiveTab(tab)}
+            className={activeTab === tab ? "active" : ""}>{tab}</button>
         ))}
       </nav>
-      {/* Panels are Server Component ReactNodes passed as props */}
-      {panels[activeTab]}
+      {panels[activeTab as keyof typeof panels]}
     </div>
   );
 }

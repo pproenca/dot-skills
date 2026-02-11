@@ -4,10 +4,9 @@
 React Optimise Best Practices  
 February 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
-> but guidance here is optimized for automation and consistency by AI-assisted workflows.
+> **Note:** React performance optimization guide for agents and LLMs.
+> Use when maintaining, generating, or refactoring React codebases.
+> Humans may also find it useful, but guidance here is optimized for AI-assisted workflows.
 
 ---
 
@@ -32,7 +31,7 @@ Application-level performance optimization guide for React applications. Contain
    - 2.3 [Enforce Bundle Size Budgets with Analysis Tools](references/bundle-analyze-budgets.md) — CRITICAL (prevents gradual bundle size regression)
    - 2.4 [Prefetch Likely Next Routes on Interaction](references/bundle-prefetch-routes.md) — CRITICAL (200-1000ms faster perceived navigation)
    - 2.5 [Split Code at Route Boundaries with React.lazy](references/bundle-route-splitting.md) — CRITICAL (40-70% reduction in initial bundle size)
-   - 2.6 [Use Dynamic Imports for Heavy Libraries](references/bundle-dynamic-imports.md) — CRITICAL (100-500KB removed from critical path)
+   - 2.6 [Use Dynamic Imports for Heavy Libraries](references/bundle-dynamic-imports.md) — CRITICAL (reduces critical-path JS by 100-500KB)
 3. [Rendering Optimization](references/_sections.md#3-rendering-optimization) — **HIGH**
    - 3.1 [Avoid Inline Object Creation in JSX Props](references/render-avoid-inline-objects.md) — HIGH (prevents unnecessary child re-renders, improves memo effectiveness)
    - 3.2 [Debounce Expensive Derived Computations](references/render-debounce-expensive.md) — HIGH (50-200ms saved per keystroke in search/filter UIs)
@@ -51,7 +50,7 @@ Application-level performance optimization guide for React applications. Contain
    - 5.2 [Optimize Images with Responsive Sizing and Lazy Loading](references/cwv-image-optimization.md) — HIGH (40-70% image bandwidth reduction)
    - 5.3 [Optimize Interaction to Next Paint with Yielding](references/cwv-inp-optimization.md) — HIGH (reduces INP from 500ms+ to under 200ms)
    - 5.4 [Optimize Largest Contentful Paint with Priority Loading](references/cwv-lcp-optimization.md) — HIGH (200-1000ms LCP improvement)
-   - 5.5 [Prevent Cumulative Layout Shift with Size Reservations](references/cwv-cls-prevention.md) — HIGH (CLS reduced from 0.25+ to under 0.1)
+   - 5.5 [Prevent Cumulative Layout Shift with Size Reservations](references/cwv-cls-prevention.md) — HIGH (reduces CLS from 0.25+ to under 0.1)
 6. [State & Subscription Performance](references/_sections.md#6-state-&-subscription-performance) — **MEDIUM-HIGH**
    - 6.1 [Derive State Instead of Syncing for Zero Extra Renders](references/sub-derived-state-perf.md) — MEDIUM-HIGH (eliminates double-render cycle, 1 render instead of 2 per update)
    - 6.2 [Separate Server State from Client State Management](references/sub-server-client-separation.md) — MEDIUM-HIGH (eliminates manual cache invalidation, reduces state management code by 40%)
@@ -61,15 +60,15 @@ Application-level performance optimization guide for React applications. Contain
 7. [Profiling & Measurement](references/_sections.md#7-profiling-&-measurement) — **MEDIUM**
    - 7.1 [Benchmark with Production Builds Only](references/profile-production-builds.md) — MEDIUM (prevents false positives from dev-mode overhead)
    - 7.2 [Enforce Performance Budgets in CI](references/profile-performance-budgets.md) — MEDIUM (prevents regressions, catches 90% of perf issues before merge)
-   - 7.3 [Profile Before Optimizing to Target Real Bottlenecks](references/profile-before-optimize.md) — MEDIUM (10× more effective optimization effort)
+   - 7.3 [Profile Before Optimizing to Target Real Bottlenecks](references/profile-before-optimize.md) — MEDIUM (10× faster bottleneck identification)
    - 7.4 [Read Flame Charts to Identify Hot Render Paths](references/profile-flame-charts.md) — MEDIUM (identifies exact function causing 80% of render time)
-   - 7.5 [Use React Performance Tracks for Render Analysis](references/profile-react-devtools.md) — MEDIUM (pinpoints render bottlenecks in minutes instead of hours)
+   - 7.5 [Use React Performance Tracks for Render Analysis](references/profile-react-devtools.md) — MEDIUM (reduces render bottleneck diagnosis from hours to minutes)
 8. [Memory Management](references/_sections.md#8-memory-management) — **LOW-MEDIUM**
    - 8.1 [Avoid Closure-Based Memory Leaks in Event Handlers](references/mem-closure-leaks.md) — LOW-MEDIUM (prevents MB-scale memory retention in event-heavy UIs)
    - 8.2 [Cancel Async Operations on Unmount](references/mem-async-cancellation.md) — LOW-MEDIUM (prevents stale updates and memory retention)
    - 8.3 [Clean Up Effects to Prevent Subscription Memory Leaks](references/mem-effect-cleanup.md) — LOW-MEDIUM (prevents linear memory growth in long-lived SPAs)
    - 8.4 [Dispose Heavy Resources in Cleanup Functions](references/mem-heavy-resources.md) — LOW-MEDIUM (prevents 5-50MB per resource retention)
-   - 8.5 [Use Heap Snapshots to Detect Component Retention](references/mem-heap-snapshots.md) — LOW-MEDIUM (identifies retained objects causing 10-100MB memory growth)
+   - 8.5 [Use Heap Snapshots to Detect Component Retention](references/mem-heap-snapshots.md) — LOW-MEDIUM (eliminates 10-100MB retained memory from component leaks)
 
 ---
 

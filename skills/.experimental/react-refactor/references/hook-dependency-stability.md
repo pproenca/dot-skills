@@ -59,4 +59,21 @@ function PollDashboard({ refreshRate }: { refreshRate: number }) {
 }
 ```
 
-Reference: [Dan Abramov - Making setInterval Declarative with React Hooks](https://overreacted.io/making-setinterval-declarative-with-react-hooks/)
+**Modern alternative (useEffectEvent — React 19.2+):**
+
+`useEffectEvent` wraps a callback so it can be used inside effects without declaring it as a dependency, achieving the same stability with less boilerplate:
+
+```tsx
+function useInterval(callback: () => void, delayMs: number) {
+  const onTick = useEffectEvent(callback);
+
+  useEffect(() => {
+    const id = setInterval(onTick, delayMs);
+    return () => clearInterval(id);
+  }, [delayMs]);
+}
+```
+
+For codebases on React 19.2+, prefer `useEffectEvent` over the ref pattern. See the `react` skill for detailed API usage.
+
+Reference: [React Docs - useEffectEvent](https://react.dev/learn/separating-events-from-effects)

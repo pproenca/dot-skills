@@ -80,20 +80,11 @@ function useSubscription(userId: string) {
   }, [userId]);
 
   async function handleUpgrade(targetPlan: PlanTier) {
-    if (!plan) return;
-    if (plan.tier === targetPlan) {
-      setError("Already on this plan");
-      return;
-    }
-    if (plan.tier === "enterprise" && targetPlan !== "enterprise") {
-      setError("Enterprise downgrades require support");
-      return;
-    }
+    if (!plan || plan.tier === targetPlan) return;
     setIsUpgrading(true);
     setError(null);
     try {
-      const upgraded = await upgradePlan(userId, targetPlan);
-      setPlan(upgraded);
+      setPlan(await upgradePlan(userId, targetPlan));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upgrade failed");
     } finally {
@@ -101,16 +92,12 @@ function useSubscription(userId: string) {
     }
   }
 
-  const renewalDate = plan
-    ? new Intl.DateTimeFormat("en-US", { dateStyle: "long" }).format(plan.renewsAt)
-    : "";
-
-  return { plan, isUpgrading, error, renewalDate, handleUpgrade };
+  return { plan, isUpgrading, error, handleUpgrade };
 }
 
+// Thin view — maps hook return values to JSX
 function SubscriptionManager({ userId }: { userId: string }) {
-  const { plan, isUpgrading, error, renewalDate, handleUpgrade } =
-    useSubscription(userId);
+  const { plan, isUpgrading, error, handleUpgrade } = useSubscription(userId);
 
   return (
     <div>
@@ -118,7 +105,7 @@ function SubscriptionManager({ userId }: { userId: string }) {
       {plan && (
         <>
           <h2>{plan.tier} Plan</h2>
-          <p>{formatCurrency(plan.pricePerMonth)}/month — renews {renewalDate}</p>
+          <p>{formatCurrency(plan.pricePerMonth)}/month</p>
           <button onClick={() => handleUpgrade("pro")} disabled={isUpgrading}>
             {isUpgrading ? "Upgrading..." : "Upgrade to Pro"}
           </button>

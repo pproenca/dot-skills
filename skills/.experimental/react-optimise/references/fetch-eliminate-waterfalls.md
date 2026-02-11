@@ -75,12 +75,8 @@ function ProjectDashboard({ projectId }: { projectId: string }) {
   return (
     <div>
       <ProjectHeader project={projectQuery.data} />
-      <Suspense fallback={<Skeleton />}>
-        <MemberList members={membersQuery.data} />
-      </Suspense>
-      <Suspense fallback={<Skeleton />}>
-        <ActivityFeed activity={activityQuery.data} />
-      </Suspense>
+      {membersQuery.data ? <MemberList members={membersQuery.data} /> : <Skeleton />}
+      {activityQuery.data ? <ActivityFeed activity={activityQuery.data} /> : <Skeleton />}
     </div>
   )
 }

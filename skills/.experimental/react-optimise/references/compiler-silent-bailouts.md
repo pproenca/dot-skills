@@ -7,7 +7,7 @@ tags: compiler, bailout, diagnostics, idiomatic
 
 ## Detect and Fix Silent Compiler Bailouts
 
-React Compiler silently skips optimization when it encounters patterns it cannot prove safe: try/catch wrapping render expressions, optional chaining on refs, spreading unknown objects, and class component patterns. These bailouts produce no warnings -- the component just runs without memoization.
+React Compiler silently skips optimization when it encounters patterns it cannot prove safe: try/catch wrapping render expressions, optional chaining on refs during render, mutating values during render, and class component patterns. These bailouts produce no warnings — the component just runs without memoization.
 
 **Incorrect (three silent bailout patterns):**
 
@@ -26,8 +26,9 @@ function ProductDetail({ productId }: { productId: string }) {
   // Bailout: optional chaining on ref during render
   const containerWidth = containerRef.current?.offsetWidth ?? 0
 
-  // Bailout: spreading an object the compiler cannot statically analyze
-  const analyticsProps = getAnalyticsProps(productId)
+  // Bailout: mutating an object during render
+  const config = { theme: "light" }
+  config.theme = getUserTheme(productId) // mutation breaks compiler tracking
 
   return (
     <div ref={containerRef}>
@@ -35,7 +36,7 @@ function ProductDetail({ productId }: { productId: string }) {
         name={product.name}
         price={product.price}
         width={containerWidth}
-        {...analyticsProps}
+        theme={config.theme}
       />
     </div>
   )
@@ -57,7 +58,7 @@ function ProductDetail({ productId }: { productId: string }) {
 
   const product = parseProductData(productId) ?? FALLBACK_PRODUCT
 
-  const analyticsProps = getAnalyticsProps(productId)
+  const theme = getUserTheme(productId) // compute directly, no mutation
 
   return (
     <div ref={containerRef}>
@@ -65,8 +66,7 @@ function ProductDetail({ productId }: { productId: string }) {
         name={product.name}
         price={product.price}
         width={containerWidth}
-        data-track-id={analyticsProps.trackId}
-        data-track-source={analyticsProps.trackSource}
+        theme={theme}
       />
     </div>
   )

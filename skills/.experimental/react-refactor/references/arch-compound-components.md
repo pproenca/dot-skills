@@ -60,14 +60,14 @@ const TabsContext = createContext<{
 function Tabs({ children, defaultTab }: { children: React.ReactNode; defaultTab: string }) {
   const [activeTab, setActiveTab] = useState(defaultTab);
   return (
-    <TabsContext value={{ activeTab, onTabChange: setActiveTab }}>
+    <TabsContext.Provider value={{ activeTab, onTabChange: setActiveTab }}>
       <div>{children}</div>
-    </TabsContext>
+    </TabsContext.Provider>
   );
 }
 
 function Tab({ id, children }: { id: string; children: React.ReactNode }) {
-  const { activeTab, onTabChange } = use(TabsContext)!;
+  const { activeTab, onTabChange } = useContext(TabsContext)!;
   return (
     <button role="tab" aria-selected={activeTab === id} onClick={() => onTabChange(id)}>
       {children}
@@ -76,7 +76,7 @@ function Tab({ id, children }: { id: string; children: React.ReactNode }) {
 }
 
 function TabPanel({ id, children }: { id: string; children: React.ReactNode }) {
-  const { activeTab } = use(TabsContext)!;
+  const { activeTab } = useContext(TabsContext)!;
   return <div role="tabpanel" hidden={activeTab !== id}>{children}</div>;
 }
 
