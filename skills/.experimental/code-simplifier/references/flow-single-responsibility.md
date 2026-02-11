@@ -163,12 +163,9 @@ async function handleUserSignup(data: SignupData): Promise<User> {
 
   const user = await createUser(data);
 
-  // Post-creation tasks (could be event-driven)
-  await Promise.all([
-    sendWelcomeEmail(user),
-    recordSignupAudit(user),
-    initializeUserSettings(user),
-  ]);
+  await sendWelcomeEmail(user);
+  await recordSignupAudit(user);
+  await initializeUserSettings(user);
 
   return user;
 }

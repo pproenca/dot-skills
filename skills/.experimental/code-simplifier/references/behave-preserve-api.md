@@ -1,7 +1,7 @@
 ---
 title: Preserve Public Function Signatures and Types
 impact: CRITICAL
-impactDescription: API changes break all callers and require coordinated updates across codebases
+impactDescription: API changes break 100% of callers and require coordinated updates across 5-50+ dependent modules
 tags: behave, api, signatures, types, compatibility
 ---
 

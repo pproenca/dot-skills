@@ -2,7 +2,7 @@
 title: Focus on Recently Modified Code Only
 impact: HIGH
 impactDescription: Touching old stable code increases risk by 3-5x and adds 40%+ review time for code reviewers unfamiliar with legacy context
-tags: scope, focus, recent-changes, risk-reduction
+tags: scope, focus, recent-changes, risk-reduction, git-history
 ---
 
 ## Focus on Recently Modified Code Only
@@ -66,6 +66,23 @@ async function getUserProfile(id: string): Promise<Profile> {
 - When fixing a bug that requires touching old code
 - When old code blocks the current feature and must be modified anyway
 - When performing a planned, scoped refactoring sprint
+
+### How to Identify Recent Code
+
+Use git history to find active areas:
+
+```bash
+# Find files with most recent changes
+git log --since="30 days ago" --name-only --pretty=format: | sort | uniq -c | sort -rn | head -20
+
+# Check who owns which sections
+git blame path/to/file.ts
+
+# Find high-churn files (complexity signals)
+git log --since="90 days ago" --name-only --pretty=format: | sort | uniq -c | sort -rn
+```
+
+Prioritize files mentioned in open PRs, recent issues, or with many recent commits.
 
 ### Benefits
 

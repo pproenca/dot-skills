@@ -113,7 +113,7 @@ import (
 
 found := slices.Contains(slice, item)
 minimum := min(a, b)  // builtin since Go 1.21
-sorted := slices.SortedFunc(items, func(a, b Item) int {
+slices.SortFunc(items, func(a, b Item) int {
     return cmp.Compare(a.Priority, b.Priority)
 })
 ```

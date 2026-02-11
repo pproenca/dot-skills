@@ -1,7 +1,7 @@
 ---
 title: Keep Changes Small and Reviewable
 impact: HIGH
-impactDescription: PRs over 400 lines have 50% lower review quality and 2x more post-merge bugs according to Google research
+impactDescription: PRs over 400 lines have 50% lower defect detection and 2x more post-merge bugs (SmartBear study of 2,500 reviews at Cisco)
 tags: scope, diff-size, review-quality, pr-hygiene
 ---
 

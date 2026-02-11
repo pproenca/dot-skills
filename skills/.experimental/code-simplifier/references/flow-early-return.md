@@ -83,6 +83,10 @@ function processOrder(order: Order): Result {
 - Each condition can be understood in isolation
 - Easier to add new validations without restructuring
 
+### Related
+
+- See also [`flow-guard-clauses`](flow-guard-clauses.md) for validating preconditions at function entry
+
 ### When NOT to Apply
 
 - When the nested structure represents meaningful domain hierarchy

@@ -8,7 +8,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 1. Context Discovery (ctx)
 
 **Impact:** CRITICAL
-**Description:** Before making any changes, understand project conventions by reading CLAUDE.md, linting configs, and existing patterns. Project standards override generic guidance.
+**Description:** Before making any changes, understand project conventions by reading CLAUDE.md, linting configs, and existing patterns. Project standards override generic guidance. Scoping to recently modified code is covered in the Scope Management section.
 
 ## 2. Behavior Preservation (behave)
 

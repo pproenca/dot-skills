@@ -30,7 +30,7 @@ export async function fetchUserData(userId) {
   // }
   // const data = await response.json();
 
-  // TODO: maybe add this back later?
+  // TODO: add caching back when Redis is configured
   // cache.set(userId, response.data, TTL);
 
   return response.data;

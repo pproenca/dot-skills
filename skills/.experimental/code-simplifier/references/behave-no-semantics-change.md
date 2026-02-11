@@ -1,7 +1,7 @@
 ---
 title: Forbid Subtle Semantic Changes
 impact: CRITICAL
-impactDescription: Semantic changes like null vs undefined or == vs === cause bugs that pass tests but fail in edge cases
+impactDescription: Semantic changes like null vs undefined or == vs === cause bugs that pass 95% of tests but fail in edge cases only discovered in production
 tags: behave, semantics, null, undefined, equality, coercion
 ---
 
@@ -61,15 +61,6 @@ function isEmpty(value) {
 **Incorrect (changes short-circuit semantics):**
 
 ```python
-# Before: returns the actual truthy value
-def get_setting(override, default):
-    return override or default
-
-# After "simplification": returns boolean
-def get_setting(override, default):
-    return override if override else default
-# Actually this is the same - but beware:
-
 # Before: returns 0 if items is empty list
 def first_or_zero(items):
     return items[0] if items else 0
@@ -77,7 +68,7 @@ def first_or_zero(items):
 # After "simplification": uses or
 def first_or_zero(items):
     return (items and items[0]) or 0
-# Breaks: returns 0 when items[0] is 0, empty string, etc.
+# Breaks: returns 0 when items[0] is 0, empty string, False, etc.
 ```
 
 **Correct (preserve original semantics):**
@@ -87,24 +78,27 @@ def first_or_zero(items):
     return items[0] if items else 0
 ```
 
-**Incorrect (changes iteration semantics):**
+**Incorrect (changes nil vs empty slice semantics):**
 
 ```go
-// Before: iterates in insertion order (Go 1.12+ maps)
-for k, v := range orderedMap {
-    process(k, v)
+// Before: returns nil when no results found
+func findUsers(query string) []User {
+    rows := db.Query(query)
+    if len(rows) == 0 {
+        return nil
+    }
+    return rows
 }
 
-// After "simplification": sorts keys
-keys := make([]string, 0, len(orderedMap))
-for k := range orderedMap {
-    keys = append(keys, k)
+// After "simplification": always returns initialized slice
+func findUsers(query string) []User {
+    results := make([]User, 0)
+    rows := db.Query(query)
+    results = append(results, rows...)
+    return results
 }
-sort.Strings(keys)
-for _, k := range keys {
-    process(k, orderedMap[k])
-}
-// Breaks: code relying on original insertion order
+// Breaks: if findUsers("inactive") == nil { showEmptyState() }
+// json.Marshal(nil slice) = "null", json.Marshal(empty slice) = "[]"
 ```
 
 ### When NOT to Apply

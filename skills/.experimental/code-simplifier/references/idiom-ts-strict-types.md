@@ -12,12 +12,12 @@ Using `any` defeats TypeScript's purpose and hides bugs that would otherwise be 
 **Incorrect (using any bypasses type checking):**
 
 ```typescript
-function processData(data: any) {
+function parseUserPayload(payload: any) {
   // No type safety - runtime errors possible
-  return data.items.map((item: any) => item.name.toUpperCase());
+  return payload.items.map((item: any) => item.name.toUpperCase());
 }
 
-function parseResponse(response: any): any {
+function parseApiResponse(response: any): any {
   return JSON.parse(response.body);
 }
 ```
@@ -25,22 +25,22 @@ function parseResponse(response: any): any {
 **Correct (using unknown with narrowing):**
 
 ```typescript
-interface DataWithItems {
+interface UserPayload {
   items: Array<{ name: string }>;
 }
 
-function isDataWithItems(data: unknown): data is DataWithItems {
+function isUserPayload(data: unknown): data is UserPayload {
   return (
     typeof data === 'object' &&
     data !== null &&
     'items' in data &&
-    Array.isArray((data as DataWithItems).items)
+    Array.isArray((data as UserPayload).items)
   );
 }
 
-function processData(data: unknown): string[] {
-  if (!isDataWithItems(data)) {
-    throw new Error('Invalid data structure');
+function parseUserPayload(data: unknown): string[] {
+  if (!isUserPayload(data)) {
+    throw new Error('Invalid user payload structure');
   }
   return data.items.map(item => item.name.toUpperCase());
 }
@@ -49,7 +49,7 @@ interface ApiResponse {
   body: string;
 }
 
-function parseResponse(response: ApiResponse): unknown {
+function parseApiResponse(response: ApiResponse): unknown {
   return JSON.parse(response.body);
 }
 ```

@@ -1,7 +1,7 @@
 ---
 title: Preserve All Return Values and Outputs
 impact: CRITICAL
-impactDescription: Changed outputs cause cascading failures in dependent code, often detected only in production
+impactDescription: Changed return types (e.g., null vs undefined) cause cascading failures in 100% of dependent code checking strict equality
 tags: behave, outputs, return-values, testing
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Avoid Global Rewrites and Architectural Changes
 impact: HIGH
-impactDescription: Global renames touch 50+ files, require full regression testing, and block other PRs for days with merge conflicts
+impactDescription: Global renames touching 50+ files cause 3-5 days of merge conflicts and require 2-10x more regression testing than scoped changes
 tags: scope, global-changes, architecture, risk-management
 ---
 

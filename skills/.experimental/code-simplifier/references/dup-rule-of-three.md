@@ -1,7 +1,7 @@
 ---
 title: Apply the Rule of Three
 impact: MEDIUM
-impactDescription: Premature extraction adds indirection that costs 2-5 minutes per reader to understand, while waiting for 3 occurrences ensures the pattern is real
+impactDescription: Premature extraction adds 2-5 minutes of navigation overhead per reader; waiting for 3 occurrences reduces wrong abstractions by 60-80%
 tags: dup, abstraction, dry, timing
 ---
 

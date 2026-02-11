@@ -5,7 +5,7 @@ description: Code simplification skill for improving clarity, consistency, and m
 
 # Community Code Simplification Best Practices
 
-Comprehensive code simplification guide for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (context discovery, behavior preservation) to incremental (language idioms). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics.
+Comprehensive code simplification guide for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (context discovery, behavior preservation) to incremental (language idioms). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics.
 
 ## Core Principles
 
@@ -27,11 +27,11 @@ Reference these guidelines when:
 
 | Priority | Category | Impact | Prefix | Rules |
 |----------|----------|--------|--------|-------|
-| 1 | Context Discovery | CRITICAL | `ctx-` | 5 |
+| 1 | Context Discovery | CRITICAL | `ctx-` | 4 |
 | 2 | Behavior Preservation | CRITICAL | `behave-` | 6 |
 | 3 | Scope Management | HIGH | `scope-` | 5 |
-| 4 | Control Flow Simplification | HIGH | `flow-` | 7 |
-| 5 | Naming and Clarity | MEDIUM-HIGH | `name-` | 5 |
+| 4 | Control Flow Simplification | HIGH | `flow-` | 9 |
+| 5 | Naming and Clarity | MEDIUM-HIGH | `name-` | 6 |
 | 6 | Duplication Reduction | MEDIUM | `dup-` | 5 |
 | 7 | Dead Code Elimination | MEDIUM | `dead-` | 5 |
 | 8 | Language Idioms | LOW-MEDIUM | `idiom-` | 7 |
@@ -44,7 +44,6 @@ Reference these guidelines when:
 - [`ctx-detect-lint-config`](references/ctx-detect-lint-config.md) - Check for linting and formatting configs
 - [`ctx-follow-existing-patterns`](references/ctx-follow-existing-patterns.md) - Match existing code style in file and project
 - [`ctx-project-over-generic`](references/ctx-project-over-generic.md) - Project conventions override generic best practices
-- [`ctx-identify-scope`](references/ctx-identify-scope.md) - Identify recently modified code as default scope
 
 ### 2. Behavior Preservation (CRITICAL)
 
@@ -72,6 +71,8 @@ Reference these guidelines when:
 - [`flow-flatten-nesting`](references/flow-flatten-nesting.md) - Flatten deep nesting to maximum 2-3 levels
 - [`flow-single-responsibility`](references/flow-single-responsibility.md) - Each code block should do one thing
 - [`flow-positive-conditions`](references/flow-positive-conditions.md) - Prefer positive conditions over double negatives
+- [`flow-optional-chaining`](references/flow-optional-chaining.md) - Use optional chaining and nullish coalescing
+- [`flow-boolean-simplification`](references/flow-boolean-simplification.md) - Simplify boolean expressions
 
 ### 5. Naming and Clarity (MEDIUM-HIGH)
 
@@ -80,6 +81,7 @@ Reference these guidelines when:
 - [`name-avoid-abbreviations`](references/name-avoid-abbreviations.md) - Avoid cryptic abbreviations
 - [`name-consistent-vocabulary`](references/name-consistent-vocabulary.md) - Use consistent vocabulary throughout
 - [`name-avoid-generic`](references/name-avoid-generic.md) - Avoid generic names
+- [`name-string-interpolation`](references/name-string-interpolation.md) - Prefer string interpolation over concatenation
 
 ### 6. Duplication Reduction (MEDIUM)
 

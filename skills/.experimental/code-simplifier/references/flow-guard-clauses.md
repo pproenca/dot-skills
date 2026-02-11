@@ -146,6 +146,10 @@ function calculateShipping(order: Order): number {
 - Testing is simplified - guards can be tested independently
 - Debugging is easier - failures point to specific validation
 
+### Related
+
+- See also [`flow-early-return`](flow-early-return.md) for reducing nesting with early returns in general
+
 ### When NOT to Apply
 
 - When partial/graceful degradation is required (use defaults instead)

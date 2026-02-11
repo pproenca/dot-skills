@@ -57,22 +57,8 @@ class OrderService {
   ) {}
 
   async createOrder(userId: string, items: Item[]) {
-    // Before: verbose null checking
-    const user = await this.users.getById(userId);
-    if (!user) throw new NotFoundError('User not found');
-
-    const address = await this.shipping.formatAddress(user.addressId);
-    if (!address) throw new NotFoundError('Address not found');
-
-    return this.repo.create({ userId, items, shippingAddress: address });
-  }
-
-  // After: simplified but still uses public APIs
-  async createOrder(userId: string, items: Item[]) {
-    const [user, address] = await Promise.all([
-      this.users.getByIdOrThrow(userId),
-      this.shipping.getFormattedAddress(userId)
-    ]);
+    const user = await this.users.getByIdOrThrow(userId);
+    const address = await this.shipping.getFormattedAddress(userId);
 
     return this.repo.create({ userId, items, shippingAddress: address });
   }

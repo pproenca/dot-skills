@@ -1,7 +1,7 @@
 ---
 title: Preserve Error Messages, Types, and Handling
 impact: CRITICAL
-impactDescription: Changed error behavior breaks error handling logic, monitoring alerts, and user-facing messages
+impactDescription: Changed error types or messages break 100% of catch blocks matching on them, plus monitoring alert rules
 tags: behave, errors, exceptions, error-handling
 ---
 

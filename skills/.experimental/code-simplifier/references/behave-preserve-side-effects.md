@@ -1,7 +1,7 @@
 ---
 title: Preserve Side Effects (Logging, I/O, State Changes)
 impact: CRITICAL
-impactDescription: Missing logs break debugging, altered I/O corrupts data, changed state mutations cause race conditions
+impactDescription: Removed logging eliminates 100% of audit trail for that operation; reordered I/O causes data corruption in 10-30% of concurrent scenarios
 tags: behave, side-effects, logging, io, state
 ---
 

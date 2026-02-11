@@ -9,40 +9,39 @@ tags: ctx, conventions, best-practices, pragmatism
 
 Generic best practices are starting points, not absolute rules. Teams adopt specific conventions for good reasons: domain requirements, performance constraints, team preferences, or historical decisions. When project conventions conflict with generic guidance, always follow the project's established approach.
 
-**Incorrect (applying generic "early return" pattern against project convention):**
+**Incorrect (applying generic "arrow function" pattern against project convention):**
 
-```python
-# Project convention: use guard clauses with explicit else blocks for clarity
-# Developer applies generic "early return" simplification
+```javascript
+// Project convention: use function declarations for top-level functions
+// Developer applies generic "arrow functions are cleaner" simplification
 
-def process_order(order):
-    if not order.is_valid():
-        return None
-    if not order.has_items():
-        return None
-    if order.is_cancelled():
-        return None
+// Existing file uses function declarations throughout
+function validateEmail(email) {
+  return email.includes("@");
+}
 
-    return calculate_total(order)
+// Developer "simplifies" new additions to arrow functions
+const validatePhone = (phone) => /^\d{10}$/.test(phone);
+const validateAge = (age) => age >= 0 && age <= 150;
 ```
 
-**Correct (following project's explicit else block convention):**
+**Correct (following project's function declaration convention):**
 
-```python
-# Project convention documented: "Use explicit if-else for business logic clarity"
-# This team values explicitness over brevity for audit trails
+```javascript
+// Project convention documented: "Use function declarations for all named functions"
+// This team prefers hoisting behavior and consistent style
 
-def process_order(order):
-    if not order.is_valid():
-        return None
-    else:
-        if not order.has_items():
-            return None
-        else:
-            if order.is_cancelled():
-                return None
-            else:
-                return calculate_total(order)
+function validateEmail(email) {
+  return email.includes("@");
+}
+
+function validatePhone(phone) {
+  return /^\d{10}$/.test(phone);
+}
+
+function validateAge(age) {
+  return age >= 0 && age <= 150;
+}
 ```
 
 **Common conflicts:**
