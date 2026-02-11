@@ -1,11 +1,11 @@
-# Ruby Dev Best Practices
+# Ruby Optimise Best Practices
 
 Performance optimization guidelines for Ruby applications. Contains 42 rules across 8 categories for writing efficient Ruby code.
 
 ## Overview/Structure
 
 ```
-ruby-dev/
+ruby-optimise/
 ├── SKILL.md              # Entry point with quick reference
 ├── AGENTS.md             # Compiled comprehensive guide
 ├── metadata.json         # Version, organization, references
@@ -31,7 +31,7 @@ ruby-dev/
 
 ```bash
 # Clone or copy this skill to your project
-cp -r ruby-dev/ .claude/skills/ruby-dev/
+cp -r ruby-optimise/ .claude/skills/ruby-optimise/
 
 # Install dependencies (if using validation scripts)
 pnpm install
@@ -43,7 +43,7 @@ pnpm install
 # Build AGENTS.md from individual rules
 pnpm build
 # Or directly:
-node scripts/build-agents-md.js .claude/skills/ruby-dev
+node scripts/build-agents-md.js .claude/skills/ruby-optimise
 ```
 
 ### Validate
@@ -52,7 +52,7 @@ node scripts/build-agents-md.js .claude/skills/ruby-dev
 # Validate skill structure and content
 pnpm validate
 # Or directly:
-node scripts/validate-skill.js .claude/skills/ruby-dev
+node scripts/validate-skill.js .claude/skills/ruby-optimise
 ```
 
 ## Creating a New Rule

@@ -1,5 +1,5 @@
 ---
-name: ruby-dev-best-practices
+name: ruby-optimise-best-practices
 description: Ruby performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring Ruby code to ensure optimal performance patterns. Triggers on tasks involving object allocation, collection processing, ActiveRecord queries, string handling, concurrency, or Ruby runtime configuration.
 ---
 

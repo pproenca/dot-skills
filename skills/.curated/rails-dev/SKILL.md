@@ -1,5 +1,5 @@
 ---
-name: ruby-on-rails-dev-best-practices
+name: rails-dev-best-practices
 description: Ruby on Rails performance and maintainability optimization guidelines for building backend APIs and frontend web applications. This skill should be used when writing, reviewing, or refactoring Ruby on Rails code to ensure optimal patterns for controllers, models, ActiveRecord queries, caching, views, API design, security, and background jobs. Triggers on tasks involving Rails controllers, ActiveRecord queries, migrations, Turbo/Hotwire, API endpoints, background jobs, or Rails performance improvements.
 ---
 

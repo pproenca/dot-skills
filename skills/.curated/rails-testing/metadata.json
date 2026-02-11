@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Ruby on Rails Testing",
+  "date": "February 2026",
+  "abstract": "Comprehensive testing best practices guide for Ruby on Rails applications, designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (test design, data management) to incremental (test organization). Each rule includes detailed explanations, real-world RSpec examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated test generation and review. Complementary to rails-dev, ruby-optimise, and ruby-refactor skills.",
+  "references": [
+    "https://guides.rubyonrails.org/testing.html",
+    "https://rspec.info/",
+    "https://www.betterspecs.org/",
+    "https://github.com/thoughtbot/testing-rails",
+    "https://github.com/thoughtbot/factory_bot/blob/main/GETTING_STARTED.md",
+    "https://github.com/sidekiq/sidekiq/wiki/Testing",
+    "https://evilmartians.com/chronicles/system-of-a-test-setting-up-end-to-end-rails-testing",
+    "https://www.betterment.com/engineering/guidelines-for-testing-rails-applications",
+    "https://alchemists.io/articles/rspec_antipatterns",
+    "https://thoughtbot.com/blog/a-journey-towards-better-testing-practices"
+  ]
+}
