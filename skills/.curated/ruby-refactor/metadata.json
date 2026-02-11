@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Ruby",
+  "date": "February 2026",
+  "abstract": "Comprehensive refactoring guide for Ruby applications, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (structure decomposition, conditional simplification) to incremental (naming and readability). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://github.com/rubocop/ruby-style-guide",
+    "https://ruby-style-guide.shopify.dev/",
+    "https://www.poodr.com/",
+    "https://thoughtbot.com/blog/sandi-metz-rules-for-developers",
+    "https://thoughtbot.com/ruby-science/",
+    "https://martinfowler.com/books/refactoringRubyEd.html",
+    "https://refactoring.guru/refactoring/catalog",
+    "https://docs.ruby-lang.org/en/3.3/syntax/pattern_matching_rdoc.html",
+    "https://github.com/github/rubocop-github",
+    "https://github.com/airbnb/ruby"
+  ]
+}

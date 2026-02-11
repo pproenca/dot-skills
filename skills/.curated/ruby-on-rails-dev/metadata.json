@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Ruby on Rails",
+  "date": "February 2026",
+  "abstract": "Comprehensive performance and maintainability optimization guide for Ruby on Rails applications, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (N+1 query elimination, thin controllers, database indexing) to incremental (idempotent job design, retry configuration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://guides.rubyonrails.org",
+    "https://api.rubyonrails.org",
+    "https://edgeguides.rubyonrails.org",
+    "https://github.com/rubocop/rails-style-guide",
+    "https://turbo.hotwired.dev",
+    "https://github.com/flyerhzm/bullet",
+    "https://github.com/ankane/strong_migrations",
+    "https://github.com/kaminari/kaminari",
+    "https://guides.rubyonrails.org/caching_with_rails.html",
+    "https://guides.rubyonrails.org/security.html"
+  ]
+}

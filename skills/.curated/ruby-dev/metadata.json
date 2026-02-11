@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Ruby",
+  "date": "February 2026",
+  "abstract": "Comprehensive performance optimization guide for Ruby applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (object allocation, collection enumeration) to incremental (runtime configuration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://docs.ruby-lang.org",
+    "https://github.com/rubocop/ruby-style-guide",
+    "https://ruby-style-guide.shopify.dev",
+    "https://shopify.engineering/ruby-yjit-is-production-ready",
+    "https://railsatscale.com/2025-01-10-yjit-3-4-even-faster-and-more-memory-efficient/",
+    "https://www.datadoghq.com/blog/ruby-performance-optimization/",
+    "https://guides.rubyonrails.org/active_record_querying.html",
+    "https://blog.appsignal.com/2021/11/17/practical-garbage-collection-tuning-in-ruby.html",
+    "https://pragprog.com/titles/adrpo/ruby-performance-optimization/",
+    "https://github.com/fastruby/fast-ruby"
+  ]
+}
