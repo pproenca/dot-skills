@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "organization": "TypeScript Principal Specialist",
+  "technology": "TypeScript",
+  "date": "February 2026",
+  "abstract": "Comprehensive TypeScript refactoring and modernization guide designed for AI agents and LLMs. Contains 43 rules across 8 categories, prioritized by impact from critical (type architecture, narrowing) to incremental (quirks and pitfalls). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation. Covers TypeScript 4.x-5.x features, compiler performance optimization, type-safe error handling, and runtime patterns.",
+  "references": [
+    "https://www.typescriptlang.org/docs/handbook/",
+    "https://github.com/microsoft/TypeScript/wiki/Performance",
+    "https://google.github.io/styleguide/tsguide.html",
+    "https://www.totaltypescript.com",
+    "https://effectivetypescript.com"
+  ]
+}
