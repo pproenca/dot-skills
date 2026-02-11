@@ -71,4 +71,8 @@ public double calculatePay(Employee employee, Money bonus) { /* ... */ }
 public double calculatePayWithoutBonus(Employee employee) { /* ... */ }
 ```
 
+**When null/nullable is acceptable:**
+- Language-level nullable types with compiler enforcement (Kotlin `?`, TypeScript `strictNullChecks`, Rust `Option<T>`) make null safe because the compiler forces handling. The problem is untracked nullability, not the concept itself.
+- Interop with APIs or frameworks that require null (e.g., JDBC, some serialization libraries).
+
 Reference: [Clean Code, Chapter 7: Error Handling](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)

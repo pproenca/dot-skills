@@ -1,11 +1,11 @@
 ---
 name: clean-code
-description: Use when writing, reviewing, or refactoring code for maintainability and readability. Triggers on code reviews, naming discussions, function design, error handling, and test writing. Based on Robert C. Martin's Clean Code handbook.
+description: Use when writing, reviewing, or refactoring code for maintainability and readability. Triggers on code reviews, naming discussions, function design, error handling, and test writing. Based on Robert C. Martin's Clean Code handbook with modern corrections.
 ---
 
 # Robert C. Martin (Uncle Bob) Clean Code Best Practices
 
-Comprehensive software craftsmanship guide based on Robert C. Martin's "Clean Code: A Handbook of Agile Software Craftsmanship". Contains 45 rules across 8 categories, prioritized by impact to guide code reviews, refactoring decisions, and new development.
+Comprehensive software craftsmanship guide based on Robert C. Martin's "Clean Code: A Handbook of Agile Software Craftsmanship", updated with modern corrections where the original 2008 advice has been superseded. Contains 48 rules across 10 categories, prioritized by impact to guide code reviews, refactoring decisions, and new development. Examples are primarily in Java but principles are language-agnostic.
 
 ## When to Apply
 
@@ -15,6 +15,7 @@ Reference these guidelines when:
 - Reviewing code for maintainability issues
 - Refactoring existing code to improve clarity
 - Writing or improving unit tests
+- Wrapping third-party dependencies
 
 ## Rule Categories by Priority
 
@@ -24,10 +25,12 @@ Reference these guidelines when:
 | 2 | Functions | CRITICAL | `func-` |
 | 3 | Comments | HIGH | `cmt-` |
 | 4 | Formatting | HIGH | `fmt-` |
-| 5 | Objects and Data Structures | MEDIUM-HIGH | `obj-` |
-| 6 | Error Handling | MEDIUM-HIGH | `err-` |
-| 7 | Unit Tests | MEDIUM | `test-` |
-| 8 | Classes and Systems | MEDIUM | `class-` |
+| 5 | Error Handling | HIGH | `err-` |
+| 6 | Objects and Data Structures | MEDIUM-HIGH | `obj-` |
+| 7 | Boundaries | MEDIUM-HIGH | `bound-` |
+| 8 | Classes and Systems | MEDIUM-HIGH | `class-` |
+| 9 | Unit Tests | MEDIUM | `test-` |
+| 10 | Emergence and Simple Design | MEDIUM | `emerge-` |
 
 ## Quick Reference
 
@@ -50,7 +53,6 @@ Reference these guidelines when:
 - [`func-minimize-arguments`](references/func-minimize-arguments.md) - Minimize function arguments
 - [`func-no-side-effects`](references/func-no-side-effects.md) - Avoid side effects
 - [`func-command-query-separation`](references/func-command-query-separation.md) - Separate commands from queries
-- [`func-prefer-exceptions`](references/func-prefer-exceptions.md) - Prefer exceptions to error codes
 - [`func-dry`](references/func-dry.md) - Do not repeat yourself
 
 ### 3. Comments (HIGH)
@@ -68,7 +70,15 @@ Reference these guidelines when:
 - [`fmt-team-rules`](references/fmt-team-rules.md) - Follow team formatting rules
 - [`fmt-indentation`](references/fmt-indentation.md) - Respect indentation rules
 
-### 5. Objects and Data Structures (MEDIUM-HIGH)
+### 5. Error Handling (HIGH)
+
+- [`err-use-exceptions`](references/err-use-exceptions.md) - Separate error handling from happy path
+- [`err-write-try-catch-first`](references/err-write-try-catch-first.md) - Write try-catch-finally first
+- [`err-provide-context`](references/err-provide-context.md) - Provide context with exceptions
+- [`err-define-by-caller-needs`](references/err-define-by-caller-needs.md) - Define exceptions by caller needs
+- [`err-avoid-null`](references/err-avoid-null.md) - Avoid returning and passing null
+
+### 6. Objects and Data Structures (MEDIUM-HIGH)
 
 - [`obj-data-abstraction`](references/obj-data-abstraction.md) - Hide data behind abstractions
 - [`obj-data-object-asymmetry`](references/obj-data-object-asymmetry.md) - Understand data/object anti-symmetry
@@ -76,29 +86,31 @@ Reference these guidelines when:
 - [`obj-avoid-hybrids`](references/obj-avoid-hybrids.md) - Avoid hybrid data-object structures
 - [`obj-dto`](references/obj-dto.md) - Use DTOs for data transfer
 
-### 6. Error Handling (MEDIUM-HIGH)
+### 7. Boundaries (MEDIUM-HIGH)
 
-- [`err-use-exceptions`](references/err-use-exceptions.md) - Use exceptions instead of return codes
-- [`err-write-try-catch-first`](references/err-write-try-catch-first.md) - Write try-catch-finally first
-- [`err-provide-context`](references/err-provide-context.md) - Provide context with exceptions
-- [`err-define-by-caller-needs`](references/err-define-by-caller-needs.md) - Define exceptions by caller needs
-- [`err-avoid-null`](references/err-avoid-null.md) - Avoid returning and passing null
+- [`bound-wrap-third-party`](references/bound-wrap-third-party.md) - Wrap third-party APIs
+- [`bound-learning-tests`](references/bound-learning-tests.md) - Write learning tests for third-party code
 
-### 7. Unit Tests (MEDIUM)
-
-- [`test-first-law`](references/test-first-law.md) - Follow the three laws of TDD
-- [`test-keep-clean`](references/test-keep-clean.md) - Keep tests clean
-- [`test-one-assert`](references/test-one-assert.md) - One assert per test
-- [`test-first-principles`](references/test-first-principles.md) - Follow FIRST principles
-- [`test-build-operate-check`](references/test-build-operate-check.md) - Use Build-Operate-Check pattern
-
-### 8. Classes and Systems (MEDIUM)
+### 8. Classes and Systems (MEDIUM-HIGH)
 
 - [`class-small`](references/class-small.md) - Keep classes small
 - [`class-cohesion`](references/class-cohesion.md) - Maintain class cohesion
 - [`class-organize-for-change`](references/class-organize-for-change.md) - Organize classes for change
 - [`class-isolate-from-change`](references/class-isolate-from-change.md) - Isolate classes from change
 - [`class-separate-concerns`](references/class-separate-concerns.md) - Separate construction from use
+
+### 9. Unit Tests (MEDIUM)
+
+- [`test-first-law`](references/test-first-law.md) - Follow the three laws of TDD
+- [`test-keep-clean`](references/test-keep-clean.md) - Keep tests clean
+- [`test-one-assert`](references/test-one-assert.md) - One concept per test
+- [`test-first-principles`](references/test-first-principles.md) - Follow FIRST principles
+- [`test-build-operate-check`](references/test-build-operate-check.md) - Use Build-Operate-Check pattern
+
+### 10. Emergence and Simple Design (MEDIUM)
+
+- [`emerge-simple-design`](references/emerge-simple-design.md) - Follow the four rules of simple design
+- [`emerge-expressiveness`](references/emerge-expressiveness.md) - Maximize expressiveness
 
 ## How to Use
 

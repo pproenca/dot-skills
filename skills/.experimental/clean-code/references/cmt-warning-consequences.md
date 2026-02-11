@@ -31,11 +31,15 @@ public void testWithRealDatabase() {
 **Correct (warnings prevent mistakes):**
 
 ```java
-// SimpleDateFormat is not thread-safe. Create a new instance for each thread
-// or use DateTimeFormatter instead (Java 8+)
+// WARNING: DateTimeFormatter is thread-safe, but this legacy method returns
+// SimpleDateFormat which is NOT thread-safe. Do not cache or share the result.
+// Consider migrating callers to use DateTimeFormatter.ISO_LOCAL_DATE directly.
 public static SimpleDateFormat makeStandardDateFormat() {
     return new SimpleDateFormat("yyyy-MM-dd");
 }
+
+// Preferred (Java 8+): thread-safe, no warning needed
+private static final DateTimeFormatter DATE_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
 // WARNING: This operation takes ~30 minutes on production data
 // and consumes significant memory. Run only during maintenance windows.

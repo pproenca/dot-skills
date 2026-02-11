@@ -1,7 +1,7 @@
 ---
 title: Use Noun Phrases for Class Names
 impact: MEDIUM-HIGH
-impactDescription: eliminates "what does this class do" questions
+impactDescription: eliminates 80%+ of "what does this class do" questions
 tags: name, class, noun, identity
 ---
 

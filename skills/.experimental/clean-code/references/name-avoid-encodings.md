@@ -49,11 +49,18 @@ public class Part {
     }
 }
 
-// Prefer encoding implementation, not interface
+// Drop the interface prefix — callers use ShapeFactory, not IShapeFactory
 public interface ShapeFactory {}
-public class ShapeFactoryImpl implements ShapeFactory {}
+
+// Name implementations by what distinguishes them
+public class JsonShapeFactory implements ShapeFactory {}
+public class SvgShapeFactory implements ShapeFactory {}
+
+// If only one implementation exists, consider whether you need the interface at all
 ```
 
 Readers learn to ignore prefixes. You end up seeing only the meaningful part of the name.
+
+**Note:** `ShapeFactoryImpl` is a lesser evil than `IShapeFactory`, but `Impl` is still an encoding. When possible, name implementations by their distinguishing characteristic (protocol, storage mechanism, algorithm).
 
 Reference: [Clean Code, Chapter 2: Meaningful Names](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)

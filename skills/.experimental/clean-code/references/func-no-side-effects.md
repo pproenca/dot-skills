@@ -60,4 +60,8 @@ public class SessionManager {
 
 If you must have a temporal coupling, make it explicit in the function name: `checkPasswordAndInitializeSession`.
 
+**When side effects are expected:**
+- I/O operations (file writes, network calls, database mutations) inherently have side effects — the principle here is about *hidden* side effects, not avoiding all mutation. A function named `saveUser()` clearly signals side effects.
+- Event handlers, middleware, and lifecycle hooks are designed to produce side effects. Name them to make the effect obvious.
+
 Reference: [Clean Code, Chapter 3: Functions](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)

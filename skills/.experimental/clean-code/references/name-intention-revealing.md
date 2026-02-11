@@ -39,4 +39,9 @@ public List<Cell> getFlaggedCells() {
 
 The code now explicitly communicates its purpose: finding flagged cells in a minesweeper game. No comment needed.
 
+**When short names are acceptable:**
+- Loop counters (`i`, `j`, `k`) in small, tightly-scoped loops where the index has no domain meaning.
+- Mathematical algorithms where `x`, `y`, `dx`, `dt` are conventional and understood by the target audience.
+- Lambda parameters in trivial callbacks: `items.filter(x -> x > 0)` is clearer than `items.filter(numberThatMustBePositive -> numberThatMustBePositive > 0)`.
+
 Reference: [Clean Code, Chapter 2: Meaningful Names](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)

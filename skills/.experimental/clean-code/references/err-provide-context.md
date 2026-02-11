@@ -1,6 +1,6 @@
 ---
 title: Provide Context with Exceptions
-impact: MEDIUM-HIGH
+impact: HIGH
 impactDescription: enables rapid root cause identification
 tags: err, context, messages, debugging
 ---

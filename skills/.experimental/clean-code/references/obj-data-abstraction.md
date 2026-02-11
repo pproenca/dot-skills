@@ -22,23 +22,30 @@ public class Point {
 double distance = Math.sqrt(point.x * point.x + point.y * point.y);
 ```
 
-**Correct (hiding behind abstraction):**
+**Correct (hiding behind abstraction — immutable):**
 
 ```java
 // Hides representation - could be Cartesian, polar, or something else
 public interface Point {
     double getX();
     double getY();
-    void setCartesian(double x, double y);
     double getR();
     double getTheta();
-    void setPolar(double r, double theta);
+
+    static Point fromCartesian(double x, double y) {
+        return new CartesianPoint(x, y);
+    }
+
+    static Point fromPolar(double r, double theta) {
+        return new PolarPoint(r, theta);
+    }
 }
 
 // Clients work with the abstraction
 double distance = point.getR();  // Works regardless of internal representation
+Point moved = Point.fromCartesian(point.getX() + dx, point.getY() + dy);
 ```
 
-**Key insight:** The abstraction is not just about using getters/setters. It is about hiding the form of the data and exposing operations that work with the abstract concept.
+**Key insight:** The abstraction is not just about using getters/setters. It is about hiding the form of the data and exposing operations that work with the abstract concept. Prefer immutable objects with factory methods over mutable objects with setters — immutable designs are easier to reason about, thread-safe by default, and less prone to bugs.
 
 Reference: [Clean Code, Chapter 6: Objects and Data Structures](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)

@@ -1,6 +1,6 @@
 ---
 title: Define Exceptions by Caller Needs
-impact: MEDIUM
+impact: HIGH
 impactDescription: reduces catch blocks by 3-5× per call site
 tags: err, wrapper, classification, design
 ---

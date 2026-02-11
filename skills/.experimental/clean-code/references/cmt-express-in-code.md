@@ -49,4 +49,10 @@ boolean result = containsOnlyDigits(str);
 - Code documents itself
 - No risk of comment becoming stale
 
+**When comments are still valuable:**
+- **Why, not what:** Comments explaining *why* a decision was made (business rules, regulatory requirements, algorithm choices) cannot be replaced by code.
+- **Warnings:** Thread-safety, performance implications, or non-obvious side effects deserve explicit comments.
+- **Legal/license comments:** Required by policy and cannot be expressed as code.
+- **Public API documentation:** Javadoc/docstrings for public APIs are expected and useful.
+
 Reference: [Clean Code, Chapter 4: Comments](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)

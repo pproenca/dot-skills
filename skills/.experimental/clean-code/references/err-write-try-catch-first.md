@@ -1,6 +1,6 @@
 ---
 title: Write Try-Catch-Finally First
-impact: MEDIUM
+impact: HIGH
 impactDescription: prevents missing error handling cases
 tags: err, try-catch, tdd, boundaries
 ---
@@ -37,13 +37,8 @@ public void retrieveSectionShouldThrowOnInvalidFileName() {
 
 // Then write code starting with try-catch
 public List<RecordedGrip> retrieveSection(String sectionName) throws StorageException {
-    try {
-        FileInputStream stream = new FileInputStream(sectionName);
-        try {
-            return readGrips(stream);
-        } finally {
-            stream.close();
-        }
+    try (var stream = new FileInputStream(sectionName)) {
+        return readGrips(stream);
     } catch (IOException e) {
         throw new StorageException("Error reading section: " + sectionName, e);
     }

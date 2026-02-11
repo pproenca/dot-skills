@@ -1,6 +1,6 @@
 ---
 title: Separate Commands from Queries
-impact: HIGH
+impact: MEDIUM
 impactDescription: eliminates ambiguous function behavior
 tags: func, cqs, command, query, separation
 ---

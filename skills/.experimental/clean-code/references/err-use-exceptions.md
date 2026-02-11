@@ -1,63 +1,88 @@
 ---
-title: Use Exceptions Instead of Return Codes
-impact: MEDIUM-HIGH
-impactDescription: reduces nested conditionals by 50-80%
-tags: err, exceptions, return-codes, separation
+title: Separate Error Handling from Happy Path
+impact: HIGH
+impactDescription: reduces nested conditionals by 50-80% in exception-based languages
+tags: err, exceptions, error-handling, separation, result-types
 ---
 
-## Use Exceptions Instead of Return Codes
+## Separate Error Handling from Happy Path
 
-Exceptions separate error handling from the main logic. Return codes clutter the caller with error checking that obscures the algorithm. The caller can forget to check return codes.
+Error handling is important, but when it obscures logic, it's wrong. The core insight is separation: keep the happy path visible and error handling consolidated, regardless of which mechanism your language uses.
 
-**Incorrect (return codes obscure logic):**
+**Incorrect (error handling obscures business logic):**
 
 ```java
-public int sendShutdown() {
-    int status = device.getHandle(DEV1);
-    if (status != DEVICE_SUCCESS) {
-        return status;
+if (deletePage(page) == E_OK) {
+    if (registry.deleteReference(page.name) == E_OK) {
+        if (configKeys.deleteKey(page.name.makeKey()) == E_OK) {
+            logger.log("page deleted");
+        } else {
+            logger.log("configKey not deleted");
+        }
+    } else {
+        logger.log("deleteReference from registry failed");
     }
-
-    status = device.pause(handle);
-    if (status != DEVICE_SUCCESS) {
-        device.release(handle);
-        return status;
-    }
-
-    status = device.shutdown(handle);
-    if (status != DEVICE_SUCCESS) {
-        device.release(handle);
-        return status;
-    }
-
-    device.release(handle);
-    return DEVICE_SUCCESS;
+} else {
+    logger.log("delete failed");
+    return E_ERROR;
 }
 ```
 
-**Correct (exceptions clarify intent):**
+**Correct (Java/C#/Python — exceptions separate concerns):**
 
 ```java
-public void sendShutdown() throws DeviceException {
+public void delete(Page page) {
     try {
-        tryToShutDown();
-    } catch (DeviceException e) {
-        logger.log(e);
-        throw e;
+        deletePageAndAllReferences(page);
+    } catch (PageDeletionException e) {
+        logger.log(e.getMessage());
     }
 }
 
-private void tryToShutDown() throws DeviceException {
-    DeviceHandle handle = device.getHandle(DEV1);
-    try {
-        device.pause(handle);
-        device.shutdown(handle);
-    } finally {
-        device.release(handle);
-    }
+private void deletePageAndAllReferences(Page page) throws PageDeletionException {
+    deletePage(page);
+    registry.deleteReference(page.name);
+    configKeys.deleteKey(page.name.makeKey());
 }
 ```
 
-The business logic (get handle, pause, shutdown, release) is now clearly visible without being obscured by error handling.
+**Correct (Go — explicit error returns with early return):**
 
-Reference: [Clean Code, Chapter 7: Error Handling](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)
+```go
+func (s *Service) Delete(page Page) error {
+    if err := s.deletePage(page); err != nil {
+        return fmt.Errorf("deleting page: %w", err)
+    }
+    if err := s.registry.DeleteReference(page.Name); err != nil {
+        return fmt.Errorf("deleting reference: %w", err)
+    }
+    if err := s.configKeys.DeleteKey(page.Name); err != nil {
+        return fmt.Errorf("deleting config key: %w", err)
+    }
+    return nil
+}
+```
+
+**Correct (Rust — Result type with ? operator):**
+
+```rust
+fn delete(&self, page: &Page) -> Result<(), DeletionError> {
+    self.delete_page(page)?;
+    self.registry.delete_reference(&page.name)?;
+    self.config_keys.delete_key(&page.name)?;
+    Ok(())
+}
+```
+
+**The principle is language-agnostic:** separate error-handling logic from business logic. The mechanism differs:
+- **Java/C#/Python:** try-catch with specific exception types
+- **Go:** explicit error returns with early return pattern
+- **Rust:** `Result<T, E>` with `?` operator
+- **TypeScript/Kotlin:** `Result` types or exceptions depending on the domain
+
+**When NOT to use exceptions:**
+- In Go, Rust, or other languages designed around explicit error values — use their idiomatic patterns instead
+- For expected business outcomes (e.g., "user not found") — consider returning `Optional` or a domain-specific result type rather than throwing
+- In performance-critical hot paths where exception overhead matters
+
+Reference: [Clean Code, Chapter 3: Functions](https://www.oreilly.com/library/view/clean-code-a/9780136083238/) and [Chapter 7: Error Handling](https://www.oreilly.com/library/view/clean-code-a/9780136083238/)
