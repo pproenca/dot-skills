@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple + Community Best Practices",
+  "technology": "iOS Design System (SwiftUI)",
+  "date": "February 2026",
+  "abstract": "Comprehensive guide for building, organizing, and maintaining a SwiftUI design system. Contains 45 rules across 8 categories, prioritized by impact from critical (token architecture, color system engineering) to incremental (governance, migration). Each rule includes detailed explanations, production-realistic SwiftUI examples comparing incorrect vs. correct implementations, and specific impact metrics. Covers token hierarchy design, asset catalog organization, component style libraries (ButtonStyle, LabelStyle), spacing/sizing tokens, theming infrastructure, and automated governance.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://developer.apple.com/design/human-interface-guidelines/color",
+    "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "https://developer.apple.com/videos/play/wwdc2024/10150/",
+    "https://developer.apple.com/videos/play/wwdc2023/10115/",
+    "https://movingparts.io/styling-components-in-swiftui",
+    "https://www.swiftbysundell.com/articles/swiftui-views-versus-modifiers/",
+    "https://fatbobman.com/en/posts/custom-button-style-in-swiftui/",
+    "https://www.magnuskahr.dk/posts/2025/06/swiftui-design-system-considerations-semantic-colors/",
+    "https://github.com/microsoft/fluentui-apple"
+  ]
+}
