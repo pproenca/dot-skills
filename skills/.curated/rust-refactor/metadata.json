@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "organization": "Community",
+  "technology": "Rust",
+  "category": "code-quality",
+  "date": "February 2026",
+  "abstract": "Architectural refactoring guide for Rust applications. Contains 91 rules across 10 categories covering type safety, ownership, error handling, API design, project organization, module structure, naming conventions, conversions, idiomatic patterns, and iterators. Merged from rust-idioms and rust-systems skills.",
+  "references": [
+    "https://rust-lang.github.io/api-guidelines/",
+    "https://rust-unofficial.github.io/patterns/",
+    "https://doc.rust-lang.org/book/",
+    "https://www.lurklurk.org/effective-rust/",
+    "https://rust-lang.github.io/rust-clippy/",
+    "https://doc.rust-lang.org/reference/lifetime-elision.html",
+    "https://doc.rust-lang.org/nomicon/",
+    "https://refactoring.guru/design-patterns/rust"
+  ]
+}

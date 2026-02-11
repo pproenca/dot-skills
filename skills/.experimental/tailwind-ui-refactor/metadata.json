@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "Refactoring UI",
+  "technology": "Tailwind CSS",
+  "date": "February 2026",
+  "abstract": "Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 44 rules across 8 categories, prioritized by visual impact from critical (visual hierarchy, layout & spacing) to incremental (polish & details). Each rule includes incorrect vs. correct Tailwind HTML examples showing the exact transformation to apply.",
+  "references": [
+    "https://refactoringui.com/",
+    "https://tailwindcss.com/docs",
+    "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
+  ]
+}
