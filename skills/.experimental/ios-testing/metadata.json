@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "iOS Engineering",
+  "technology": "iOS Testing (Swift/SwiftUI)",
+  "date": "February 2026",
+  "abstract": "Comprehensive testing guide for iOS and Swift applications at principal engineer level. Contains 44 rules across 8 categories, prioritized by impact from critical (test architecture and testability, unit testing fundamentals) to incremental (test reliability and CI infrastructure). Each rule includes detailed explanations, production-realistic Swift code examples comparing incorrect vs. correct patterns, and specific impact metrics to guide test authoring, architecture decisions, and CI configuration.",
+  "references": [
+    "https://developer.apple.com/documentation/xctest",
+    "https://developer.apple.com/xcode/swift-testing",
+    "https://developer.apple.com/videos/play/wwdc2024/10195/",
+    "https://github.com/pointfreeco/swift-snapshot-testing",
+    "https://www.swiftbysundell.com/articles/unit-testing-code-that-uses-async-await/",
+    "https://www.avanderlee.com/concurrency/unit-testing-async-await/",
+    "https://fatbobman.com/en/posts/mastering-the-swift-testing-framework/",
+    "https://alexilyenko.github.io/xcuitest-page-object/"
+  ]
+}
