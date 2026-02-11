@@ -1,7 +1,7 @@
 ---
 title: Use Pattern Matching with Guard Clauses
 impact: MEDIUM
-impactDescription: combines structural matching with conditional logic
+impactDescription: reduces nested if/case from 3-4 levels to 1 flat match
 tags: modern, pattern-matching, guard, case-in
 ---
 

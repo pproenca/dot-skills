@@ -1,7 +1,7 @@
 ---
 title: Avoid Class Methods in Domain Logic
 impact: MEDIUM-HIGH
-impactDescription: class methods resist stubbing and polymorphism
+impactDescription: reduces test setup from global stubs to 1 constructor injection
 tags: couple, class-methods, testability, instance-methods
 ---
 

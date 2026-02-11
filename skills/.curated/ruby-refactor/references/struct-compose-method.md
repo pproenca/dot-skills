@@ -1,7 +1,7 @@
 ---
 title: Compose Methods at Single Abstraction Level
 impact: CRITICAL
-impactDescription: makes method readable in one pass
+impactDescription: reduces mixed abstraction levels from N to 1 per method
 tags: struct, compose-method, abstraction-level, readability
 ---
 
@@ -21,13 +21,12 @@ class RegistrationService
     raise ArgumentError, "Name is required" if params[:name].to_s.strip.empty?
 
     # Low-level: hash the password directly in flow
-    salt = SecureRandom.hex(16)
-    hashed_password = OpenSSL::Digest::SHA256.hexdigest("#{salt}:#{params[:password]}")
+    hashed_password = BCrypt::Password.create(params[:password])
 
     user = User.create!(
       name: params[:name].strip,
       email: params[:email].downcase,
-      password_digest: "#{salt}$#{hashed_password}",
+      password_digest: hashed_password,
       confirmed: false
     )
 
@@ -75,9 +74,8 @@ class RegistrationService
   end
 
   def hash_password(password)
-    salt = SecureRandom.hex(16)
-    digest = OpenSSL::Digest::SHA256.hexdigest("#{salt}:#{password}")
-    "#{salt}$#{digest}"
+    # Use BCrypt or Argon2 in production — simplified here for illustration
+    BCrypt::Password.create(password)
   end
 
   def send_confirmation(user)

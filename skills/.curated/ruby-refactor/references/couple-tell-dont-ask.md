@@ -1,7 +1,7 @@
 ---
 title: "Tell Objects What to Do, Don't Query Their State"
 impact: MEDIUM-HIGH
-impactDescription: moves logic closer to data it depends on
+impactDescription: reduces caller coupling from N state queries to 1 command
 tags: couple, tell-dont-ask, encapsulation, command
 ---
 

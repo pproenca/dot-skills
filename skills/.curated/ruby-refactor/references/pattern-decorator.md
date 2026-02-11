@@ -1,7 +1,7 @@
 ---
 title: Wrap Objects with Decorator for Added Behavior
 impact: MEDIUM
-impactDescription: adds behavior without modifying original class
+impactDescription: reduces subclass explosion from 2^N combinations to N decorators
 tags: pattern, decorator, wrapper, composition
 ---
 

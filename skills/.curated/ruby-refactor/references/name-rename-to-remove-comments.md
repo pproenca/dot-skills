@@ -1,7 +1,7 @@
 ---
 title: Rename to Eliminate Need for Comments
 impact: LOW-MEDIUM
-impactDescription: self-documenting code outlives stale comments
+impactDescription: eliminates 1 comment per renamed method or variable
 tags: name, comments, self-documenting, rename
 ---
 

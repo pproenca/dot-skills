@@ -31,22 +31,10 @@ end
 **Correct (delegate through the immediate collaborator):**
 
 ```ruby
-require "forwardable"
-
 class Order
-  extend Forwardable
-
   # Expose only what callers need — internal structure stays private
-  def_delegators :customer, :email, :customer_city, :customer_postal_code
-end
-
-class Customer
-  extend Forwardable
-
-  def_delegators :address, :city, :postal_code
-
-  def customer_city = city
-  def customer_postal_code = postal_code
+  delegate :email, to: :customer
+  delegate :city, :postal_code, to: :customer, prefix: true
 end
 
 class OrderMailer
@@ -64,14 +52,13 @@ class OrderMailer
 end
 ```
 
-In Rails, replace `extend Forwardable` / `def_delegators` with the built-in `delegate`:
+**Alternative (stdlib Forwardable for non-Rails projects):**
 
 ```ruby
-class Order < ApplicationRecord
-  belongs_to :customer
+require "forwardable"
 
-  # Rails delegate — same effect, less boilerplate
-  delegate :email, to: :customer
-  delegate :city, :postal_code, to: :customer, prefix: true
+class Customer
+  extend Forwardable
+  def_delegators :address, :city, :postal_code
 end
 ```

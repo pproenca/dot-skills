@@ -1,7 +1,7 @@
 ---
 title: Move Method to Resolve Feature Envy
 impact: HIGH
-impactDescription: aligns behavior with data it operates on
+impactDescription: reduces cross-class coupling from N accessors to 1 method call
 tags: couple, feature-envy, move-method, cohesion
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Extract Complex Booleans into Named Predicates
 impact: CRITICAL
-impactDescription: self-documents complex business logic
+impactDescription: reduces boolean complexity from N clauses to 1 named predicate
 tags: cond, decompose, predicate, readability
 ---
 

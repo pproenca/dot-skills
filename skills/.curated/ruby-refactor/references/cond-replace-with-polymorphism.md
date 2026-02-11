@@ -81,40 +81,20 @@ end
 class SmsNotifier < BaseNotifier
   private
 
-  def validate(recipient)
-    validate_phone(recipient)
-  end
+  def validate(recipient) = validate_phone(recipient)
 
   def send_message(notification)
-    SmsGateway.send(
-      phone: notification.recipient,
-      message: notification.body
-    )
+    SmsGateway.send(phone: notification.recipient, message: notification.body)
   end
 end
 
-class PushNotifier < BaseNotifier
-  private
-
-  def validate(recipient)
-    validate_device_token(recipient)
-  end
-
-  def send_message(notification)
-    PushService.send(
-      token: notification.recipient,
-      title: notification.subject,
-      payload: notification.body
-    )
-  end
-end
+# PushNotifier follows the same pattern...
 
 class NotificationService
   NOTIFIERS = {
     email: EmailNotifier.new,
-    sms: SmsNotifier.new,
-    push: PushNotifier.new
-  }.freeze  # adding a new type means adding a class and one registry entry
+    sms: SmsNotifier.new
+  }.freeze  # adding a type means adding a class and one registry entry
 
   def deliver(notification)
     notifier = NOTIFIERS.fetch(notification.type) do

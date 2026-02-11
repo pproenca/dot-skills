@@ -52,38 +52,28 @@ end
 ```ruby
 class PaymentProcessor
   def process(payment)
-    error = validate(payment)
-    return error if error
-
+    validate(payment)
     account = find_account(payment)
-    return account unless account.is_a?(Account) # returns error hash if not found
-
-    error = verify_account(account, payment)
-    return error if error
-
+    verify_account(account, payment)
     execute_payment(account, payment)
   end
 
   private
 
   def validate(payment)
-    return { success: false, error: "Amount must be positive" } unless payment.amount > 0
-    return { success: false, error: "Currency not supported" } unless payment.currency_supported?
-    return { success: false, error: "Payment flagged for manual review" } if payment.flagged_for_review?
-
-    nil # no error
+    raise PaymentError, "Amount must be positive" unless payment.amount > 0
+    raise PaymentError, "Currency not supported" unless payment.currency_supported?
+    raise PaymentError, "Payment flagged for manual review" if payment.flagged_for_review?
   end
 
   def find_account(payment)
-    account = Account.find_by(id: payment.account_id)
-    account || { success: false, error: "Account not found" }
+    Account.find_by(id: payment.account_id) ||
+      raise(PaymentError, "Account not found")
   end
 
   def verify_account(account, payment)
-    return { success: false, error: "Account is suspended" } unless account.active?
-    return { success: false, error: "Insufficient balance" } unless account.balance >= payment.amount
-
-    nil
+    raise PaymentError, "Account is suspended" unless account.active?
+    raise PaymentError, "Insufficient balance" unless account.balance >= payment.amount
   end
 
   def execute_payment(account, payment)

@@ -1,7 +1,7 @@
 ---
 title: Replace Primitive Obsession with Value Objects
 impact: MEDIUM-HIGH
-impactDescription: centralizes validation and behavior for domain concepts
+impactDescription: reduces scattered validation from N call sites to 1 constructor
 tags: data, value-object, primitive-obsession, domain
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use Data.define for Immutable Value Objects
 impact: MEDIUM-HIGH
-impactDescription: immutable by default, 85x faster than OpenStruct
+impactDescription: immutable by default, 10-50x faster construction than OpenStruct
 tags: data, data-define, immutable, ruby3
 ---
 

@@ -55,9 +55,9 @@ class OrderProcessor
     validate(order)
     subtotal = calculate_subtotal(order)
     discount = apply_discount(order.customer, subtotal)
-    total = calculate_total(subtotal - discount)
+    tax, shipping, total = calculate_total(subtotal - discount)
     charge_payment(order.payment_method, total)
-    finalize(order, subtotal:, discount:, total:)
+    finalize(order, subtotal:, discount:, tax:, shipping:, total:)
   end
 
   private
@@ -81,7 +81,7 @@ class OrderProcessor
   def calculate_total(subtotal_after_discount)
     tax = subtotal_after_discount * 0.08
     shipping = subtotal_after_discount > 100 ? 0 : 12.99
-    subtotal_after_discount + tax + shipping
+    [tax, shipping, subtotal_after_discount + tax + shipping]
   end
 
   def charge_payment(payment_method, total)
@@ -89,8 +89,8 @@ class OrderProcessor
     raise PaymentError, "Charge failed: #{payment_result.error}" unless payment_result.success?
   end
 
-  def finalize(order, subtotal:, discount:, total:)
-    order.update!(subtotal:, discount:, total:, status: :completed, completed_at: Time.current)
+  def finalize(order, subtotal:, discount:, tax:, shipping:, total:)
+    order.update!(subtotal:, discount:, tax:, shipping:, total:, status: :completed, completed_at: Time.current)
   end
 end
 ```

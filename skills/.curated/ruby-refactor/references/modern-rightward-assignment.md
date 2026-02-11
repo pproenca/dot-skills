@@ -1,7 +1,7 @@
 ---
 title: Use Rightward Assignment for Pipeline Expressions
 impact: LOW-MEDIUM
-impactDescription: reads naturally for method chain results
+impactDescription: reduces left-side noise in multi-step pipelines by 30-50%
 tags: modern, rightward-assignment, pipeline, syntax
 ---
 

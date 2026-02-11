@@ -65,9 +65,9 @@ class FlightTracker
     case coordinate
     in { latitude: (-90..90), longitude: (-180..180), altitude: (10_001..) }
       :high_altitude
-    in { latitude: (-90..90), longitude: (-180..180), altitude: Integer }
+    in { latitude: (-90..90), longitude: (-180..180), altitude: (1..10_000) }
       :low_altitude
-    in { latitude: (-90..90), longitude: (-180..180) }  # matches ground level naturally
+    in { latitude: (-90..90), longitude: (-180..180) }
       :ground_level
     else
       :invalid

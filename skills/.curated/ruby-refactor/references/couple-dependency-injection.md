@@ -40,9 +40,9 @@ end
 # Test usage — no monkey-patching, no network
 fake_client = instance_double(HTTPClient)
 allow(fake_client).to receive(:get).and_return(
-  OpenStruct.new(body: '{"temp": 22, "condition": "sunny"}')
+  OpenStruct.new(body: '{"celsius": 22, "condition": "sunny"}')
 )
 service = WeatherService.new(client: fake_client)
 result = service.forecast("London")
-expect(result["temp"]).to eq(22)
+expect(result["celsius"]).to eq(22)
 ```

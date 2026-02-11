@@ -1,7 +1,7 @@
 ---
 title: Use Pattern Matching for Structural Conditions
 impact: HIGH
-impactDescription: replaces 3-5 nested hash/array checks with one expression
+impactDescription: reduces 3-5 nested nil checks to 1 expression
 tags: cond, pattern-matching, ruby3, destructuring
 ---
 
@@ -59,3 +59,5 @@ class PaymentResponseParser
   end
 end
 ```
+
+**See also:** [`modern-pattern-matching`](modern-pattern-matching.md) for additional pattern matching syntax and features.

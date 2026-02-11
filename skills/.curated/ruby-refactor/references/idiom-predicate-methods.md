@@ -1,7 +1,7 @@
 ---
 title: Name Boolean Methods with ? Suffix
 impact: MEDIUM-HIGH
-impactDescription: signals return type at call site without docs
+impactDescription: eliminates N return-type lookups per code review
 tags: idiom, predicate, naming, convention
 ---
 

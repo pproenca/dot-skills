@@ -77,3 +77,5 @@ class ApplicationController < ActionController::Base
   end
 end
 ```
+
+**See also:** [`cond-null-object`](cond-null-object.md) for a simpler single-attribute null object introduction.

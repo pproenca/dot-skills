@@ -1,7 +1,7 @@
 ---
 title: Extract Algorithm Variations into Strategy Objects
 impact: MEDIUM
-impactDescription: adds new strategies without modifying existing code
+impactDescription: reduces case/when branches from N to 0 in caller
 tags: pattern, strategy, open-closed, algorithm
 ---
 

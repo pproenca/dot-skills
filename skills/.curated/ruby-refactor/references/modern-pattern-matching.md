@@ -1,7 +1,7 @@
 ---
 title: Use case/in for Structural Pattern Matching
 impact: MEDIUM
-impactDescription: replaces 3-5 nested hash/array checks with one expression
+impactDescription: reduces 3-5 nested hash checks to 1 destructuring expression
 tags: modern, pattern-matching, case-in, ruby3
 ---
 
@@ -48,3 +48,5 @@ class ApiResponseParser
   end
 end
 ```
+
+**See also:** [`cond-pattern-matching`](cond-pattern-matching.md) for replacing nested hash access conditionals.

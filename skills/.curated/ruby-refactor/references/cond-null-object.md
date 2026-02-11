@@ -72,3 +72,5 @@ class AccountDashboard
   end
 end
 ```
+
+**See also:** [`pattern-null-object-protocol`](pattern-null-object-protocol.md) for implementing the full protocol with multiple methods.

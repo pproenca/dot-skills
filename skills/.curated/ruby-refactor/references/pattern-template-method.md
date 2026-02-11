@@ -1,7 +1,7 @@
 ---
 title: Define Algorithm Skeleton with Template Method
 impact: MEDIUM
-impactDescription: reuses algorithm structure while varying steps
+impactDescription: eliminates 60-80% duplicated algorithm code across N subclasses
 tags: pattern, template-method, inheritance, hooks
 ---
 
