@@ -1,11 +1,17 @@
 {
   "name": "expo",
   "description": "Expo React Native performance optimization guidelines including data fetching patterns",
-  "version": "0.1.0",
+  "version": "1.1.1",
   "organization": "Community",
   "technology": "Expo React Native",
   "date": "January 2026",
-  "tags": ["expo", "react-native", "mobile", "performance", "data-fetching"],
+  "tags": [
+    "expo",
+    "react-native",
+    "mobile",
+    "performance",
+    "data-fetching"
+  ],
   "totalRules": 54,
   "abstract": "Comprehensive performance optimization guide for Expo React Native applications, designed for AI agents and LLMs. Contains 54 rules across 9 categories, prioritized by impact from critical (launch time, bundle size) to incremental (memory management). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
   "references": [

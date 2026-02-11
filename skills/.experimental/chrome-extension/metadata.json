@@ -1,11 +1,19 @@
 {
   "name": "chrome-extension",
   "description": "Chrome Extensions (Manifest V3) performance and code quality guidelines including TypeScript patterns and testing",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "organization": "Chrome Developer Relations",
   "technology": "Chrome Extensions",
   "date": "January 2026",
-  "tags": ["chrome", "extension", "manifest-v3", "service-worker", "typescript", "code-style", "testing"],
+  "tags": [
+    "chrome",
+    "extension",
+    "manifest-v3",
+    "service-worker",
+    "typescript",
+    "code-style",
+    "testing"
+  ],
   "totalRules": 67,
   "abstract": "Comprehensive performance and code quality guide for Chrome Extensions (Manifest V3). Contains 67 rules across 12 categories, prioritized by impact from critical (service worker lifecycle, content script optimization) to incremental (API usage patterns). Includes TypeScript patterns, error handling, and testing strategies.",
   "references": [
