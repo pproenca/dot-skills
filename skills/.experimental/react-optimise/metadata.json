@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "React Optimise Best Practices",
+  "technology": "React",
+  "date": "February 2026",
+  "abstract": "Application-level performance optimization guide for React applications. Contains 43 rules across 8 categories covering React Compiler mastery, bundle optimization, rendering performance, data fetching, Core Web Vitals, state subscriptions, profiling, and memory management. Complements the react skill (API-level patterns) with holistic performance strategies.",
+  "references": [
+    "https://react.dev",
+    "https://react.dev/blog/2025/10/07/react-compiler-1",
+    "https://web.dev/articles/vitals",
+    "https://tanstack.com/virtual",
+    "https://developer.chrome.com/docs/devtools/performance"
+  ],
+  "category": "Framework"
+}

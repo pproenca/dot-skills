@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "React Refactor Best Practices",
+  "technology": "React",
+  "date": "February 2026",
+  "abstract": "Architectural refactoring guide for React applications. Contains 47 rules across 8 categories covering component architecture, state architecture, hook patterns, component decomposition, modern React migration, coupling and cohesion, data and side effects, and refactoring safety. Each rule includes code smell indicators, before/after transforms, and safe refactoring steps.",
+  "references": [
+    "https://react.dev",
+    "https://react.dev/learn/thinking-in-react",
+    "https://kentcdodds.com/blog/application-state-management-with-react",
+    "https://testing-library.com/docs/guiding-principles",
+    "https://patterns.dev"
+  ],
+  "category": "Framework"
+}

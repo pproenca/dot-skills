@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "iOS SwiftUI Animations",
+  "date": "February 2026",
+  "abstract": "Comprehensive animation craft guide for SwiftUI apps, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (spring physics, timing) to incremental (orchestration, craft polish). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://developer.apple.com/documentation/swiftui/animation",
+    "https://developer.apple.com/documentation/swiftui/spring",
+    "https://developer.apple.com/documentation/swiftui/phaseanimator",
+    "https://developer.apple.com/documentation/swiftui/keyframeanimator",
+    "https://developer.apple.com/documentation/swiftui/matchedgeometryeffect",
+    "https://developer.apple.com/documentation/swiftui/scrolltransition",
+    "https://developer.apple.com/documentation/swiftui/visualeffect",
+    "https://developer.apple.com/documentation/swiftui/sensory-feedback",
+    "https://developer.apple.com/documentation/swiftui/symboleffect",
+    "https://developer.apple.com/wwdc23/10156",
+    "https://developer.apple.com/wwdc23/10157",
+    "https://developer.apple.com/wwdc23/10160",
+    "https://developer.apple.com/wwdc24/10145",
+    "https://developer.apple.com/wwdc24/10151"
+  ]
+}
