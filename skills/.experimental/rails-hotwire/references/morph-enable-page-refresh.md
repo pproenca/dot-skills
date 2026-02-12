@@ -1,7 +1,7 @@
 ---
 title: Enable Morphing for Page Refreshes
 impact: HIGH
-impactDescription: "7.8x faster DOM updates (23ms vs 180ms for 1000 nodes)"
+impactDescription: significantly faster DOM updates via minimal patching vs full body replacement
 tags: morph, page-refresh, performance, meta-tag
 ---
 

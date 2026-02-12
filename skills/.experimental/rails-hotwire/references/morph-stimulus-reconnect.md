@@ -7,7 +7,11 @@ tags: morph, stimulus, controllers, lifecycle
 
 ## Handle Stimulus Controller Reconnection After Morph
 
-When Turbo morphs the DOM, it patches elements in place rather than removing and re-inserting them. This means Stimulus controllers attached to morphed elements may not receive `disconnect`/`connect` lifecycle callbacks, leaving stale state (expired timers, orphaned event listeners, outdated data). Listening to `turbo:morph-element` or `turbo:morph` events allows controllers to detect when their element has been morphed and re-initialize any state that depends on current DOM content.
+When Turbo morphs the DOM, it patches elements in place rather than removing and re-inserting them. This means Stimulus controllers attached to morphed elements may not receive `disconnect`/`connect` lifecycle callbacks, leaving stale state (expired timers, orphaned event listeners, outdated data).
+
+**Decision tree for morph handling:**
+1. **If your state is in Stimulus values** (data attributes): use `valueChanged` callbacks — Stimulus detects attribute changes from morphing automatically.
+2. **If your state is NOT in values** (timers, third-party library instances, manual event listeners): listen to `turbo:morph-element` to detect when your element has been patched and re-initialize.
 
 **Incorrect (Stimulus controller state lost after morph):**
 
@@ -45,7 +49,9 @@ export default class extends Controller {
 }
 ```
 
-**Correct (listening to turbo:morph-element to re-establish state):**
+**Correct (valueChanged callback for value-based state, turbo:morph-element for non-value state):**
+
+Approach 1 — valueChanged callback (preferred when state is in values):
 
 ```javascript
 // app/javascript/controllers/countdown_controller.js
@@ -56,22 +62,14 @@ export default class extends Controller {
 
   connect() {
     this.startCountdown();
-    // Listen for morphs on this element
-    this.element.addEventListener("turbo:morph-element", this.handleMorph);
   }
 
   disconnect() {
     clearInterval(this.timer);
-    this.element.removeEventListener("turbo:morph-element", this.handleMorph);
   }
 
-  handleMorph = () => {
-    // Re-read values and restart after morph patches the element
-    clearInterval(this.timer);
-    this.startCountdown();
-  };
-
-  // Stimulus value changed callback — also works for morphed attribute updates
+  // Stimulus fires this when the data-countdown-deadline-value attribute
+  // changes — including when Turbo morphs new attribute values onto the element
   deadlineValueChanged() {
     clearInterval(this.timer);
     this.startCountdown();
@@ -89,5 +87,33 @@ export default class extends Controller {
     const minutes = Math.floor(ms / 60000);
     return `${minutes}:${seconds.toString().padStart(2, "0")}`;
   }
+}
+```
+
+Approach 2 — turbo:morph-element (for state not captured in values):
+
+```javascript
+// app/javascript/controllers/chart_controller.js
+import { Controller } from "@hotwired/stimulus";
+
+export default class extends Controller {
+  static values = { endpoint: String };
+
+  connect() {
+    // Third-party library instance — not stored in Stimulus values
+    this.chart = new ChartLibrary(this.element, { endpoint: this.endpointValue });
+    this.element.addEventListener("turbo:morph-element", this.handleMorph);
+  }
+
+  disconnect() {
+    this.chart.destroy();
+    this.element.removeEventListener("turbo:morph-element", this.handleMorph);
+  }
+
+  handleMorph = () => {
+    // Re-initialize the chart with new DOM state after morph
+    this.chart.destroy();
+    this.chart = new ChartLibrary(this.element, { endpoint: this.endpointValue });
+  };
 }
 ```

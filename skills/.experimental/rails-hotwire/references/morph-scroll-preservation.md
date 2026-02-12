@@ -7,7 +7,7 @@ tags: morph, scroll, user-experience, meta-tag
 
 ## Preserve Scroll Position During Morphing
 
-When a broadcast triggers a page refresh, Turbo re-renders the page from the server. Without scroll preservation, the browser resets to the top of the page after every morph, which is disorienting for users reading content further down. Setting `scroll: :preserve` in the layout tells Turbo to maintain the current scroll position after morphing. Use `scroll: :reset` only on specific pages where returning to the top is the expected behavior (e.g., after navigating to a new resource).
+When a broadcast triggers a page refresh (see [`morph-enable-page-refresh`](morph-enable-page-refresh.md) for enabling morphing), Turbo re-renders the page from the server. Without scroll preservation, the browser resets to the top of the page after every morph, which is disorienting for users reading content further down. Setting `scroll: :preserve` in the layout tells Turbo to maintain the current scroll position after morphing. Use `scroll: :reset` only on specific pages where returning to the top is the expected behavior (e.g., after navigating to a new resource).
 
 **Incorrect (page jumping to top after every broadcast morph):**
 

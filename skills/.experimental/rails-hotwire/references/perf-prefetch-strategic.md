@@ -7,7 +7,7 @@ tags: perf, turbo-drive, prefetch, server-load
 
 ## Disable Prefetch on Expensive Endpoints
 
-Turbo Drive 8 prefetches links on hover by default, which improves perceived navigation speed for lightweight pages. However, links to pages that trigger heavy database queries, report generation, or complex rendering will waste server resources when users merely hover without clicking. Selectively disabling prefetch on expensive endpoints prevents unnecessary load while keeping the optimization active where it helps.
+Turbo Drive 8 prefetches links on hover by default (see [`drive-prefetch-links`](drive-prefetch-links.md) for the general pattern), which improves perceived navigation speed for lightweight pages. However, links to pages that trigger heavy database queries, report generation, or complex rendering will waste server resources when users merely hover without clicking. Selectively disabling prefetch on expensive endpoints prevents unnecessary load while keeping the optimization active where it helps.
 
 **Incorrect (every link prefetched, including admin dashboards and report generators):**
 

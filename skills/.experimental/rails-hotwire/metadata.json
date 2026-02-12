@@ -3,7 +3,7 @@
   "organization": "Community",
   "technology": "Ruby on Rails Hotwire",
   "date": "February 2026",
-  "abstract": "Comprehensive guide for building interactive Rails applications with Hotwire (Turbo + Stimulus), designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (Turbo Drive navigation, Turbo Frames architecture) to incremental (testing patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "abstract": "Comprehensive guide for building interactive Rails applications with Hotwire (Turbo + Stimulus), designed for AI agents and LLMs. Contains 53 rules across 9 categories, prioritized by impact from critical (Turbo Drive navigation, Turbo Frames architecture) to incremental (testing patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
   "references": [
     "https://turbo.hotwired.dev/handbook/",
     "https://turbo.hotwired.dev/reference/attributes",

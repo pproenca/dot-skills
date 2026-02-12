@@ -81,3 +81,19 @@ end
   <p>Loading comments...</p>
 <% end %>
 ```
+
+**Caveat:** `turbo-visit-control="reload"` causes two GET requests — the first is the frame fetch that discovers the meta tag, and the second is the full-page reload Turbo triggers. Flash messages set during the redirect are consumed by the first request and lost before the second. If flash preservation matters, prefer handling the redirect in the controller with `turbo_frame_request?`:
+
+```ruby
+# app/controllers/application_controller.rb
+def authenticate_user!
+  unless current_user
+    if turbo_frame_request?
+      # Respond with a full-page redirect instead of rendering inside the frame
+      render turbo_stream: turbo_stream.action(:redirect, login_path)
+    else
+      redirect_to login_path
+    end
+  end
+end
+```

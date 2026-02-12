@@ -7,7 +7,7 @@ tags: bcast, refresh, morphing, simplicity
 
 ## Prefer Broadcast Refresh Over Granular Stream Updates
 
-Granular stream broadcasts (`broadcast_append_to`, `broadcast_replace_to`, `broadcast_remove_to`) require you to specify the correct target, partial, and action for every mutation type. When a single model change affects multiple page sections (a counter, a list, a status badge), you need multiple broadcast calls with synchronized partials. `broadcasts_refreshes` triggers a single page morph that re-renders the current page server-side and patches only the differences, dramatically reducing code and eliminating target-mismatch bugs.
+Granular stream broadcasts (`broadcast_append_to`, `broadcast_replace_to`, `broadcast_remove_to`) require you to specify the correct target, partial, and action for every mutation type. See also [`morph-vs-streams`](morph-vs-streams.md) for the controller-side perspective. When a single model change affects multiple page sections (a counter, a list, a status badge), you need multiple broadcast calls with synchronized partials. `broadcasts_refreshes` triggers a single page morph that re-renders the current page server-side and patches only the differences, dramatically reducing code and eliminating target-mismatch bugs.
 
 **Incorrect (complex broadcast callbacks targeting multiple elements):**
 

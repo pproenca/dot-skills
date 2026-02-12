@@ -7,7 +7,7 @@ tags: morph, streams, architecture, simplicity
 
 ## Choose Morphing Over Complex Stream Orchestration
 
-When a single user action affects multiple page sections (sidebar counts, main content, header badges, activity feeds), orchestrating individual Turbo Stream tags for each target becomes brittle and hard to maintain. Each stream tag requires a matching DOM ID, the correct action, and the right partial with the right locals. A broadcast refresh with morphing re-renders the entire page server-side and patches only the differences, achieving the same result with zero stream orchestration.
+When a single user action affects multiple page sections (sidebar counts, main content, header badges, activity feeds), orchestrating individual Turbo Stream tags for each target becomes brittle and hard to maintain. See also [`bcast-refresh-over-replace`](bcast-refresh-over-replace.md) for the model declaration side. Each stream tag requires a matching DOM ID, the correct action, and the right partial with the right locals. A broadcast refresh with morphing re-renders the entire page server-side and patches only the differences, achieving the same result with zero stream orchestration.
 
 **Incorrect (5+ turbo_stream tags targeting different page sections):**
 
@@ -60,14 +60,9 @@ class TasksController < ApplicationController
     @task = @project.tasks.find(params[:id])
 
     if @task.update(task_params)
-      respond_to do |format|
-        format.turbo_stream do
-          # Simple redirect for the actor; morph handles the page update
-          render turbo_stream: turbo_stream.action(:refresh, "")
-        end
-        format.html { redirect_to @project }
-      end
-      # Other viewers get the update via broadcasts_refreshes
+      # The acting user gets a standard redirect (Turbo Drive navigates).
+      # Other viewers get the update via broadcasts_refreshes on the model.
+      redirect_to @project
     else
       render :edit, status: :unprocessable_entity
     end

@@ -9,33 +9,29 @@ tags: bcast, security, signed-streams, authorization
 
 Turbo uses cryptographically signed stream names to prevent unauthorized clients from subscribing to arbitrary channels. The `turbo_stream_from` helper automatically signs the stream name using Rails' secret key base, and the `Turbo::StreamsChannel` verifies this signature on subscription. Manually constructing channel subscriptions with unsigned names bypasses this protection, allowing any client to listen to any stream by guessing the name.
 
-**Incorrect (manually subscribing to unsigned stream names):**
+**Incorrect (broadcasting to predictable, unscoped stream names):**
 
-```javascript
-// app/javascript/channels/project_channel.js
-import consumer from "./consumer";
+```ruby
+# app/models/message.rb
+class Message < ApplicationRecord
+  belongs_to :conversation
 
-// BAD: subscribing with a plain-text channel name
-// Any user can change project_id to eavesdrop on other projects
-consumer.subscriptions.create(
-  {
-    channel: "Turbo::StreamsChannel",
-    signed_stream_name: `project_${projectId}_messages`,
-  },
-  {
-    received(data) {
-      document.getElementById("messages").insertAdjacentHTML("beforeend", data);
-    },
-  }
-);
+  # BAD: broadcasting to a string literal without resource scoping.
+  # If two tenants share the same conversation ID (e.g., both have "1"),
+  # their messages leak across organizations.
+  broadcasts_refreshes_to "conversation_messages"
+end
 ```
 
 ```erb
-<%# BAD: constructing the subscription element manually %>
-<turbo-cable-stream-source
-  channel="Turbo::StreamsChannel"
-  signed-stream-name="project_42_messages">
-</turbo-cable-stream-source>
+<%# BAD: subscribing to a generic string name instead of a scoped resource.
+    Any user who guesses the stream name can subscribe. %>
+<%= turbo_stream_from "conversation_messages" %>
+
+<%# Also BAD: using just the record without tenant scoping in multi-tenant apps %>
+<%= turbo_stream_from @conversation %>
+<%# If tenant A's conversation #1 and tenant B's conversation #1 share the
+    same signed stream name, broadcasts leak between tenants. %>
 ```
 
 **Correct (turbo_stream_from helper that auto-signs):**

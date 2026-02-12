@@ -1,11 +1,11 @@
 ---
 name: rails-hotwire
-description: Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive, Turbo Frames, Turbo Streams, and Turbo 8 morphing. This skill should be used when writing, reviewing, or refactoring Hotwire-powered Rails code to ensure optimal patterns for navigation, partial page updates, real-time broadcasting, morphing, and progressive enhancement. Triggers on tasks involving Turbo Frames, Turbo Streams, Turbo Drive, broadcasts, morphing, ActionCable, turbo_stream_from, turbo_frame_tag, or Hotwire performance. Complementary to rails-dev, rails-testing, rails-design-system, ruby-optimise, and ruby-refactor skills.
+description: Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive, Turbo Frames, Turbo Streams, Turbo 8 morphing, and Stimulus controllers. This skill should be used when writing, reviewing, or refactoring Hotwire-powered Rails code to ensure optimal patterns for navigation, partial page updates, real-time broadcasting, morphing, Stimulus controller design, error handling, and progressive enhancement. Triggers on tasks involving Turbo Frames, Turbo Streams, Turbo Drive, broadcasts, morphing, Stimulus controllers, ActionCable, turbo_stream_from, turbo_frame_tag, data-controller, data-action, or Hotwire performance. Complementary to rails-dev, rails-testing, rails-design-system, ruby-optimise, and ruby-refactor skills.
 ---
 
 # Community Rails Hotwire Best Practices
 
-Comprehensive guide for building interactive Rails applications with Hotwire (Turbo + Stimulus), maintained by Community. Contains 46 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation. Follows the DHH "One Person Framework" philosophy: the server renders HTML, Turbo makes it feel like an SPA, Stimulus adds the sprinkle of JS where needed.
+Comprehensive guide for building interactive Rails applications with Hotwire (Turbo + Stimulus), maintained by Community. Contains 53 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation. Follows the DHH "One Person Framework" philosophy: the server renders HTML, Turbo makes it feel like an SPA, Stimulus adds the sprinkle of JS where needed.
 
 ## When to Apply
 
@@ -15,7 +15,9 @@ Reference these guidelines when:
 - Delivering Turbo Streams for surgical DOM mutations
 - Broadcasting real-time updates over ActionCable
 - Enabling Turbo 8 morphing for page refreshes
-- Choosing between Drive, Frames, Streams, and Morphing
+- Writing Stimulus controllers for client-side behavior
+- Handling errors in Turbo navigation, frames, and WebSocket connections
+- Choosing between Drive, Frames, Streams, Morphing, and Stimulus
 - Testing Hotwire interactions in system and integration tests
 
 ## Rule Categories by Priority
@@ -28,8 +30,9 @@ Reference these guidelines when:
 | 4 | Broadcasting & Real-Time | HIGH | `bcast-` |
 | 5 | Morphing & Page Refresh | HIGH | `morph-` |
 | 6 | Performance Optimization | MEDIUM-HIGH | `perf-` |
-| 7 | Architecture Decisions | MEDIUM | `arch-` |
-| 8 | Testing Hotwire | MEDIUM | `test-` |
+| 7 | Stimulus Patterns | MEDIUM-HIGH | `stim-` |
+| 8 | Architecture Decisions | MEDIUM | `arch-` |
+| 9 | Testing Hotwire | MEDIUM | `test-` |
 
 ## Quick Reference
 
@@ -41,6 +44,8 @@ Reference these guidelines when:
 - [`drive-cache-control`](references/drive-cache-control.md) - Configure Turbo cache for preview pages
 - [`drive-selective-disable`](references/drive-selective-disable.md) - Disable Turbo Drive on incompatible pages
 - [`drive-progress-bar`](references/drive-progress-bar.md) - Customize the Turbo progress bar
+- [`drive-confirm-dialog`](references/drive-confirm-dialog.md) - Use data-turbo-confirm for destructive actions
+- [`drive-error-recovery`](references/drive-error-recovery.md) - Handle Turbo navigation and fetch errors gracefully
 
 ### 2. Turbo Frames (CRITICAL)
 
@@ -69,6 +74,7 @@ Reference these guidelines when:
 - [`bcast-refresh-over-replace`](references/bcast-refresh-over-replace.md) - Prefer broadcast refresh over granular stream updates
 - [`bcast-avoid-view-logic-in-models`](references/bcast-avoid-view-logic-in-models.md) - Keep broadcasting logic out of models
 - [`bcast-signed-stream-names`](references/bcast-signed-stream-names.md) - Use signed stream names for security
+- [`bcast-reconnect-handling`](references/bcast-reconnect-handling.md) - Handle WebSocket disconnection and reconnection
 
 ### 5. Morphing & Page Refresh (HIGH)
 
@@ -87,7 +93,14 @@ Reference these guidelines when:
 - [`perf-prefetch-strategic`](references/perf-prefetch-strategic.md) - Disable prefetch on expensive endpoints
 - [`perf-memory-leak-prevention`](references/perf-memory-leak-prevention.md) - Clean up subscriptions and event listeners
 
-### 7. Architecture Decisions (MEDIUM)
+### 7. Stimulus Patterns (MEDIUM-HIGH)
+
+- [`stim-outlets-communication`](references/stim-outlets-communication.md) - Use outlets for cross-controller communication
+- [`stim-values-reactive-state`](references/stim-values-reactive-state.md) - Use Values API for reactive controller state
+- [`stim-action-descriptors`](references/stim-action-descriptors.md) - Use declarative action descriptors over addEventListener
+- [`stim-small-reusable-controllers`](references/stim-small-reusable-controllers.md) - Keep Stimulus controllers small and reusable
+
+### 8. Architecture Decisions (MEDIUM)
 
 - [`arch-progressive-enhancement`](references/arch-progressive-enhancement.md) - Follow the progressive enhancement hierarchy
 - [`arch-frame-vs-stream-decision`](references/arch-frame-vs-stream-decision.md) - Use frames for scoped navigation, streams for multi-target updates
@@ -95,7 +108,7 @@ Reference these guidelines when:
 - [`arch-avoid-client-state`](references/arch-avoid-client-state.md) - Keep state on the server, not the client
 - [`arch-stimulus-boundaries`](references/arch-stimulus-boundaries.md) - Use Stimulus only for client-side behavior
 
-### 8. Testing Hotwire (MEDIUM)
+### 9. Testing Hotwire (MEDIUM)
 
 - [`test-system-test-async`](references/test-system-test-async.md) - Wait for Turbo updates in system tests
 - [`test-stream-assertions`](references/test-stream-assertions.md) - Use Turbo Stream test helpers in integration tests

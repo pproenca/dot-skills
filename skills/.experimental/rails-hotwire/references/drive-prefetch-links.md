@@ -26,6 +26,8 @@ Turbo Drive prefetches links on hover (`mouseenter`) by default, making subseque
 </head>
 ```
 
+See also: [`perf-prefetch-strategic`](perf-prefetch-strategic.md) for granular strategies on which endpoints to exclude.
+
 **Correct (default prefetch with selective opt-out on heavy endpoints):**
 
 ```erb

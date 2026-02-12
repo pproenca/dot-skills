@@ -23,7 +23,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 4. Broadcasting & Real-Time (bcast)
 
 **Impact:** HIGH
-**Description:** N+1 broadcasts are the #1 Hotwire production performance killer — 1 create can trigger 100 broadcasts × 100 partial renders, degrading response times from 50ms to 3.2 seconds.
+**Description:** N+1 broadcasts are the #1 Hotwire production performance killer — 1 create can trigger 100 broadcasts × 100 partial renders, degrading response times by orders of magnitude.
 
 ## 5. Morphing & Page Refresh (morph)
 
@@ -35,12 +35,17 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** MEDIUM-HIGH
 **Description:** Lazy-loaded frames, optimistic UI, and batched stream updates reduce initial load from 2.4s to 0.7s and cut perceived latency to near-zero for common interactions.
 
-## 7. Architecture Decisions (arch)
+## 7. Stimulus Patterns (stim)
+
+**Impact:** MEDIUM-HIGH
+**Description:** Stimulus controllers are the "sprinkle of JavaScript" in Hotwire — small, reusable behaviors that enhance server-rendered HTML. Misusing Stimulus to manage state, fetch data, or build DOM recreates the SPA problems Hotwire was designed to eliminate.
+
+## 8. Architecture Decisions (arch)
 
 **Impact:** MEDIUM
 **Description:** The progressive enhancement hierarchy (HTML → CSS → Drive → Frames → Streams → Stimulus) determines which tool to reach for; wrong choice leads to over-engineered JavaScript replacing server-rendered simplicity.
 
-## 8. Testing Hotwire (test)
+## 9. Testing Hotwire (test)
 
 **Impact:** MEDIUM
 **Description:** Turbo's async DOM updates, WebSocket broadcasts, and frame navigations require specific Capybara patterns and test helpers to avoid flaky tests and false positives.

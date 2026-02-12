@@ -52,15 +52,29 @@ export default class extends Controller {
     const optimistic = document.createElement("div")
     optimistic.classList.add("message", "message--optimistic")
     optimistic.textContent = body
-    optimistic.dataset.optimistic = "true"
+
+    // Track this specific submission with a unique ID
+    const submissionId = `optimistic-${Date.now()}`
+    optimistic.id = submissionId
+    this.currentOptimisticId = submissionId
     messages.appendChild(optimistic)
 
     this.inputTarget.value = ""
   }
 
-  resolve() {
-    // Server morph replaces optimistic element with real one
-    document.querySelectorAll("[data-optimistic='true']").forEach(el => el.remove())
+  resolve(event) {
+    const optimistic = document.getElementById(this.currentOptimisticId)
+    if (!optimistic) return
+
+    if (event.detail.success) {
+      // Server morph will replace with the real message
+      optimistic.remove()
+    } else {
+      // Submission failed — show error and restore input
+      optimistic.classList.replace("message--optimistic", "message--failed")
+      optimistic.textContent += " (failed to send)"
+      this.inputTarget.value = optimistic.textContent.replace(" (failed to send)", "")
+    }
   }
 }
 ```
