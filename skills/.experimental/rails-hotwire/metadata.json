@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Ruby on Rails Hotwire",
+  "date": "February 2026",
+  "abstract": "Comprehensive guide for building interactive Rails applications with Hotwire (Turbo + Stimulus), designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (Turbo Drive navigation, Turbo Frames architecture) to incremental (testing patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://turbo.hotwired.dev/handbook/",
+    "https://turbo.hotwired.dev/reference/attributes",
+    "https://stimulus.hotwired.dev/handbook/introduction",
+    "https://github.com/hotwired/turbo-rails",
+    "https://jetthoughts.com/blog/hotwire-turbo-8-performance-patterns-real-time-rails/",
+    "https://blog.superails.com/hotwire-turbo-8-morphing",
+    "https://labzero.com/blog/hotwire-decisions-when-to-use-turbo-frames-turbo-streams-and-stimulus",
+    "https://www.hotrails.dev/turbo-rails/turbo-streams"
+  ]
+}
