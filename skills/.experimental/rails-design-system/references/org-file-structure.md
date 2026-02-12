@@ -90,4 +90,8 @@ Key principles:
 
 Do not create directories like `app/ui/`, `app/design_system/`, or `frontend/`. Every file in the list above is auto-loaded by Rails without additional configuration. Custom directories require explicit autoload path configuration and confuse developers who expect standard Rails structure.
 
+### Asset Pipeline: Propshaft (Rails 8+)
+
+Rails 8 uses Propshaft as the default asset pipeline (replacing Sprockets). Propshaft serves assets from `app/assets/` with digest-stamped filenames but does not compile or transform files. CSS is processed by Tailwind CLI or the `tailwindcss-rails` gem, not by Propshaft. Keep your CSS entry point at `app/assets/stylesheets/application.css` and let Tailwind handle the build.
+
 Reference: [Rails Directory Structure](https://guides.rubyonrails.org/getting_started.html#creating-the-blog-application)

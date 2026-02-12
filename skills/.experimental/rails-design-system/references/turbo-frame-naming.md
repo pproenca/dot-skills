@@ -1,8 +1,8 @@
 ---
 title: Name Turbo Frames with a Consistent Prefix Convention
-impact: LOW-MEDIUM
-impactDescription: prevents frame ID collisions and improves debuggability
-tags: org, turbo, naming, conventions
+impact: HIGH
+impactDescription: prevents frame ID collisions that silently break navigation
+tags: turbo, naming, frames, conventions
 ---
 
 ## Name Turbo Frames with a Consistent Prefix Convention

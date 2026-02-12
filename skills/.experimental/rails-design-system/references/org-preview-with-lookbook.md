@@ -2,7 +2,7 @@
 title: Add Lookbook Previews for Every Shared Component
 impact: MEDIUM
 impactDescription: prevents design drift through living documentation
-tags: comp, views, components, lookbook, previews, documentation
+tags: org, views, components, lookbook, previews, documentation
 ---
 
 ## Add Lookbook Previews for Every Shared Component

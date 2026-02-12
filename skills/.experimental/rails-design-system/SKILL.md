@@ -1,11 +1,11 @@
 ---
 name: rails-design-system
-description: Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal abstraction. This skill should be used when creating or refactoring Rails views, partials, components, form builders, helpers, Stimulus controllers, or design tokens. Triggers on tasks involving ERB partials, ViewComponent, Phlex, Tailwind design tokens, custom form builders, view helpers, Stimulus behaviors, Lookbook previews, or design system consistency audits.
+description: Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal abstraction. This skill should be used when creating or refactoring Rails views, partials, components, form builders, helpers, Stimulus controllers, Turbo Frames, Turbo Streams, or design tokens. Triggers on tasks involving ERB partials, Turbo navigation, Turbo Streams, ViewComponent, Phlex, Tailwind design tokens, custom form builders, view helpers, Stimulus behaviors, Import Maps, Lookbook previews, or design system consistency audits.
 ---
 
 # Community Ruby on Rails Design System Best Practices
 
-Comprehensive design system guide for Ruby on Rails applications, maintained by Community. Contains 47 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation. Complements `rails-dev` (controllers, models, queries) and `tailwind` (CSS patterns) by covering the systematic UI component architecture layer.
+Comprehensive design system guide for Ruby on Rails applications, maintained by Community. Contains 51 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation. Covers the full Rails frontend stack: Turbo (Drive, Frames, Streams), Stimulus, ERB partials, design tokens, form builders, and view helpers. Complements `rails-dev` (controllers, models, queries) and `tailwind` (CSS patterns) by covering the systematic UI component architecture layer.
 
 ## When to Apply
 
@@ -13,10 +13,14 @@ Reference these guidelines when:
 - Deciding whether to extract a partial, component, or helper
 - Defining design tokens with Tailwind CSS `@theme`
 - Creating or refactoring ERB partials with explicit locals
+- Decomposing pages into Turbo Frames for targeted updates
+- Using Turbo Streams for multi-element CRUD updates
+- Coordinating Turbo navigation with Stimulus controllers
 - Building ViewComponent or Phlex components for complex UI
 - Implementing a custom FormBuilder for consistent forms
 - Writing view helpers for badges, icons, and conditional classes
 - Adding Stimulus controllers for interactive behaviors
+- Managing JavaScript dependencies with Import Maps
 - Auditing the codebase for UI duplication and naming drift
 
 ## Rule Categories by Priority
@@ -25,12 +29,13 @@ Reference these guidelines when:
 |----------|----------|--------|--------|
 | 1 | Design Decisions | CRITICAL | `decide-` |
 | 2 | Design Tokens | CRITICAL | `token-` |
-| 3 | Partial Patterns | HIGH | `partial-` |
-| 4 | Component Architecture | HIGH | `comp-` |
-| 5 | Form System | MEDIUM-HIGH | `form-` |
-| 6 | Helper Patterns | MEDIUM | `helper-` |
-| 7 | Stimulus Behaviors | MEDIUM | `stim-` |
-| 8 | Consistency & Organization | LOW-MEDIUM | `org-` |
+| 3 | Turbo Integration | HIGH | `turbo-` |
+| 4 | Partial Patterns | HIGH | `partial-` |
+| 5 | Component Architecture | HIGH | `comp-` |
+| 6 | Form System | MEDIUM-HIGH | `form-` |
+| 7 | Helper Patterns | MEDIUM | `helper-` |
+| 8 | Stimulus Behaviors | MEDIUM | `stim-` |
+| 9 | Consistency & Organization | LOW-MEDIUM | `org-` |
 
 ## Quick Reference
 
@@ -52,7 +57,16 @@ Reference these guidelines when:
 - [`token-component-tokens`](references/token-component-tokens.md) - Create component-level tokens for repeated patterns
 - [`token-share-tokens-with-ruby`](references/token-share-tokens-with-ruby.md) - Share token values between CSS and Ruby when needed
 
-### 3. Partial Patterns (HIGH)
+### 3. Turbo Integration (HIGH)
+
+- [`turbo-drive-defaults`](references/turbo-drive-defaults.md) - Let Turbo Drive handle navigation by default
+- [`turbo-frame-decompose`](references/turbo-frame-decompose.md) - Decompose pages into Turbo Frames for targeted updates
+- [`turbo-frame-naming`](references/turbo-frame-naming.md) - Name Turbo Frames with dom_id conventions
+- [`turbo-frame-vs-stream`](references/turbo-frame-vs-stream.md) - Choose Turbo Frames vs Turbo Streams by scope of change
+- [`turbo-stream-crud`](references/turbo-stream-crud.md) - Use Turbo Streams for multi-element page updates
+- [`turbo-stimulus-coordination`](references/turbo-stimulus-coordination.md) - Coordinate Turbo and Stimulus without conflicts
+
+### 4. Partial Patterns (HIGH)
 
 - [`partial-explicit-locals`](references/partial-explicit-locals.md) - Always pass locals explicitly to partials
 - [`partial-presenter-objects`](references/partial-presenter-objects.md) - Use presenter objects to encapsulate view logic
@@ -61,17 +75,14 @@ Reference these guidelines when:
 - [`partial-collection-with-spacer`](references/partial-collection-with-spacer.md) - Use collection rendering with spacer templates
 - [`partial-shared-directory`](references/partial-shared-directory.md) - Place cross-controller partials in app/views/shared
 
-### 4. Component Architecture (HIGH)
+### 5. Component Architecture (HIGH)
 
 - [`comp-when-to-use`](references/comp-when-to-use.md) - Use components when partials outgrow simple rendering
 - [`comp-explicit-args`](references/comp-explicit-args.md) - Define explicit typed arguments for every component
 - [`comp-slots-for-markup`](references/comp-slots-for-markup.md) - Use slots for caller-provided markup blocks
-- [`comp-composition-over-inheritance`](references/comp-composition-over-inheritance.md) - Compose components instead of inheriting
-- [`comp-phlex-single-file`](references/comp-phlex-single-file.md) - Use Phlex for single-file Ruby-only components
-- [`comp-preview-with-lookbook`](references/comp-preview-with-lookbook.md) - Preview components with Lookbook in development
 - [`comp-test-rendered-output`](references/comp-test-rendered-output.md) - Test components by asserting on rendered HTML
 
-### 5. Form System (MEDIUM-HIGH)
+### 6. Form System (MEDIUM-HIGH)
 
 - [`form-custom-builder`](references/form-custom-builder.md) - Create a custom FormBuilder for consistent form rendering
 - [`form-set-default-builder`](references/form-set-default-builder.md) - Set the custom builder as the application default
@@ -80,7 +91,7 @@ Reference these guidelines when:
 - [`form-group-wrapper`](references/form-group-wrapper.md) - Wrap label + input + error in a consistent group element
 - [`form-button-consistency`](references/form-button-consistency.md) - Standardize submit buttons through the form builder
 
-### 6. Helper Patterns (MEDIUM)
+### 7. Helper Patterns (MEDIUM)
 
 - [`helper-tag-helpers`](references/helper-tag-helpers.md) - Use tag helpers for small generated HTML fragments
 - [`helper-conditional-classes`](references/helper-conditional-classes.md) - Use class_names for conditional CSS classes
@@ -88,7 +99,7 @@ Reference these guidelines when:
 - [`helper-badge-pattern`](references/helper-badge-pattern.md) - Build a badge helper for status indicators
 - [`helper-scope-to-domain`](references/helper-scope-to-domain.md) - Scope helpers to specific domains, not generic utilities
 
-### 7. Stimulus Behaviors (MEDIUM)
+### 8. Stimulus Behaviors (MEDIUM)
 
 - [`stim-general-purpose`](references/stim-general-purpose.md) - Write general-purpose controllers, not one-off scripts
 - [`stim-data-attribute-config`](references/stim-data-attribute-config.md) - Configure behavior through data attributes, not JavaScript
@@ -97,12 +108,13 @@ Reference these guidelines when:
 - [`stim-use-outlets`](references/stim-use-outlets.md) - Use outlets for cross-controller communication
 - [`stim-leverage-library`](references/stim-leverage-library.md) - Use stimulus-components before writing custom controllers
 
-### 8. Consistency & Organization (LOW-MEDIUM)
+### 9. Consistency & Organization (LOW-MEDIUM)
 
 - [`org-naming-conventions`](references/org-naming-conventions.md) - Follow consistent naming across partials, components, and helpers
 - [`org-file-structure`](references/org-file-structure.md) - Organize design system files in predictable locations
 - [`org-deduplication-audit`](references/org-deduplication-audit.md) - Periodically audit views for duplicated patterns
-- [`org-turbo-frame-naming`](references/org-turbo-frame-naming.md) - Name Turbo Frames with dom_id conventions
+- [`org-import-maps`](references/org-import-maps.md) - Use Import Maps for zero-build JavaScript delivery
+- [`org-preview-with-lookbook`](references/org-preview-with-lookbook.md) - Preview components with Lookbook in development
 - [`org-document-design-decisions`](references/org-document-design-decisions.md) - Document design system decisions in ADRs
 
 ## How to Use

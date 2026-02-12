@@ -7,9 +7,9 @@ tags: token, component, encapsulation, consistency
 
 ## Components Consume Tokens, Never Define Their Own
 
-Every design value in a component should trace back to a global token. When components define their own magic numbers (`8px`, `#3b82f6`, `0.75rem`), the token system fractures. Visual consistency degrades silently because there is no central place to audit or update these values. If a component truly needs a unique value, promote it to the global token set so it becomes visible and governable.
+Every design value in a component should trace back to a global token. When components define their own hardcoded values (`8px`, `#3b82f6`, `0.75rem`), the token system fractures. Visual consistency degrades silently because there is no central place to audit or update these values. If a component truly needs a unique value, promote it to the global token set so it becomes visible and governable.
 
-**Incorrect (component-scoped magic values):**
+**Incorrect (component-scoped hardcoded values):**
 
 ```css
 /* app/assets/stylesheets/components/card.css */
@@ -24,7 +24,7 @@ Every design value in a component should trace back to a global token. When comp
 .card-header {
   font-size: 18px;           /* Doesn't match the typography scale */
   font-weight: 600;
-  margin-bottom: 12px;       /* Another magic number */
+  margin-bottom: 12px;       /* Another unexplained number */
   color: #1f2937;
 }
 ```
@@ -66,22 +66,22 @@ Every design value in a component should trace back to a global token. When comp
 ```css
 /* Don't do this inside a component stylesheet */
 .avatar {
-  width: 40px;  /* Component-specific magic */
+  width: 40px;  /* Component-specific hardcoded value */
   height: 40px;
 }
 
 /* Instead, add it to the global token set */
 @theme {
-  --size-avatar: 2.5rem;
-  --size-avatar-sm: 2rem;
-  --size-avatar-lg: 3rem;
+  --spacing-avatar: 2.5rem;
+  --spacing-avatar-sm: 2rem;
+  --spacing-avatar-lg: 3rem;
 }
 ```
 
 ```erb
-<%# Then reference the token %>
+<%# Then reference the token via width/height utilities %>
 <img src="<%= user.avatar_url %>"
-     class="size-avatar rounded-full"
+     class="w-avatar h-avatar rounded-full"
      alt="<%= user.name %>">
 ```
 

@@ -68,6 +68,6 @@ Tailwind v4's `@theme` directive is the canonical place to declare design tokens
 |---|---|---|
 | `--color-primary: ...` | `bg-primary`, `text-primary`, `border-primary` | `var(--color-primary)` |
 | `--radius-default: ...` | `rounded-default` | `var(--radius-default)` |
-| `--font-size-heading: ...` | `text-heading` | `var(--font-size-heading)` |
+| `--text-heading: ...` | `text-heading` | `var(--text-heading)` |
 
 Reference: [Tailwind CSS v4 Theme Configuration](https://tailwindcss.com/docs/theme)

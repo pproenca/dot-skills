@@ -41,13 +41,15 @@ gem "primer_view_components"      # GitHub's component library
 **Correct (just enough for a production Rails app):**
 
 ```css
-/* app/assets/stylesheets/application.tailwind.css */
+/* app/assets/stylesheets/application.css */
+@import "tailwindcss";
+
 /* Design tokens via Tailwind @theme — single source of truth */
 @theme {
-  --color-primary-500: #4f46e5;
-  --color-primary-600: #4338ca;
-  --color-danger-500: #ef4444;
-  --color-success-500: #22c55e;
+  --color-primary: #4f46e5;
+  --color-primary-hover: #4338ca;
+  --color-danger: #ef4444;
+  --color-success: #22c55e;
   --radius-default: 0.5rem;
   --radius-full: 9999px;
 }

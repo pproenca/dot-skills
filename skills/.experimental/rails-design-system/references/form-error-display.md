@@ -56,7 +56,7 @@ class DesignSystemFormBuilder < ActionView::Helpers::FormBuilder
   def field_classes(method)
     has_errors = object&.errors&.[](method)&.any?
 
-    class_names(
+    @template.class_names(
       "mt-1 block w-full rounded-md shadow-sm",
       "border-gray-300 focus:border-blue-500 focus:ring-blue-500": !has_errors,
       "border-red-500 focus:border-red-500 focus:ring-red-500": has_errors

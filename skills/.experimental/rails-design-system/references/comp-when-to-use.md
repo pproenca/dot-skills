@@ -93,4 +93,19 @@ end
 
 If a partial meets none of these criteria, keep it as a partial.
 
-Reference: [ViewComponent Documentation](https://viewcomponent.org/)
+### ViewComponent vs Phlex
+
+If you do need a component, both ViewComponent and Phlex are production-grade options:
+
+| Criterion | ViewComponent | Phlex |
+|---|---|---|
+| Team prefers ERB templates | Better fit | Unfamiliar syntax |
+| Many small UI components | 2+ files per component | Single Ruby file |
+| Need Lookbook previews | First-class support | Supported via adapter |
+| Performance-sensitive rendering | Good | Faster (no template compilation) |
+| Existing large ViewComponent library | Keep it | Migration cost |
+| New project, Ruby-fluent team | Either works | Consider strongly |
+
+Choose based on team preference and existing investment. Do not mix both in the same project unless migrating.
+
+Reference: [ViewComponent Documentation](https://viewcomponent.org/), [Phlex Documentation](https://www.phlex.fun/)

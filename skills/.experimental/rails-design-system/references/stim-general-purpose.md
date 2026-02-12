@@ -1,7 +1,7 @@
 ---
 title: Write General-Purpose Controllers, Not Page-Specific Ones
 impact: MEDIUM
-impactDescription: 1 controller serves 5-20 views instead of 1 per view
+impactDescription: 10x fewer controllers — 5 reusable vs 50 one-off scripts
 tags: stim, stimulus, reusability, naming
 ---
 
