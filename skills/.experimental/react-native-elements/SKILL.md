@@ -1,5 +1,5 @@
 ---
-name: react-native-elements-best-practices
+name: react-native-elements
 description: React Native Elements UI component library best practices for performance, theming, and proper component usage. Use when building React Native apps with RNE, configuring themes, optimizing lists with ListItem, or reviewing RNE component code.
 ---
 

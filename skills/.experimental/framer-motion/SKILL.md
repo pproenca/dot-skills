@@ -1,5 +1,5 @@
 ---
-name: framer-motion-best-practices
+name: framer-motion
 description: Framer Motion performance optimization guidelines. This skill should be used when writing, reviewing, or refactoring React animations with Framer Motion to ensure optimal performance patterns. Triggers on tasks involving motion components, animations, gestures, layout transitions, scroll-linked effects, and SVG animations.
 ---
 

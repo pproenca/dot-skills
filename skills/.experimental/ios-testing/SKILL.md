@@ -1,5 +1,5 @@
 ---
-name: ios-testing-best-practices
+name: ios-testing
 description: iOS testing best practices for Swift and SwiftUI applications at principal engineer level. This skill should be used when writing, reviewing, or refactoring test code for iOS apps. Triggers on tasks involving unit tests, UI tests, XCTest, Swift Testing, mocking, snapshot testing, test architecture, dependency injection for testability, async testing, or CI test infrastructure.
 ---
 
