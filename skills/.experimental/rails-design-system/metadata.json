@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Ruby on Rails Design System",
+  "date": "February 2026",
+  "abstract": "Comprehensive design system guide for Ruby on Rails applications, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (design decisions, design tokens) to incremental (consistency and organization). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation. Complements rails-dev and tailwind skills by covering the UI component architecture layer.",
+  "references": [
+    "https://guides.rubyonrails.org/layouts_and_rendering.html",
+    "https://viewcomponent.org/",
+    "https://www.phlex.fun/",
+    "https://stimulus.hotwired.dev/",
+    "https://lookbook.build/",
+    "https://tailwindcss.com/docs/theme",
+    "https://api.rubyonrails.org/classes/ActionView/Helpers/FormBuilder.html",
+    "https://github.com/stimulus-components/stimulus-components",
+    "https://dev.37signals.com/"
+  ]
+}
