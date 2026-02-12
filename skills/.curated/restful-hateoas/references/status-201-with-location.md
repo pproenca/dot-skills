@@ -78,4 +78,4 @@ Content-Type: application/json
 
 **When NOT to use:** Batch creation endpoints that create multiple resources may return 200 with a collection body instead, since Location can only hold a single URI.
 
-**Reference:** RFC 7231 Section 6.3.2 (201 Created). See also `restful-hateoas:http-post-for-creation`, `restful-hateoas:link-self-link-every-resource`.
+**Reference:** RFC 9110 Section 15.3.2 (201 Created). See also `restful-hateoas:http-post-for-creation`, `restful-hateoas:link-self-link-every-resource`.

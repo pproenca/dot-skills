@@ -9,12 +9,12 @@ tags: http, delete, idempotent, error-handling, status-codes
 
 DELETE removes a resource and must be idempotent -- deleting the same resource twice must not produce an error or unexpected side effect. If the first DELETE succeeds but the client does not receive the response (network timeout), the client will retry. A server that raises 500 on the second attempt forces the client into an unrecoverable error state for an operation that already succeeded.
 
-**Incorrect (raises 500 if resource already deleted):**
+**Incorrect (raises exception on retry, returns HTML error page instead of JSON):**
 
 ```ruby
 class OrdersController < ApplicationController
   def destroy
-    order = Order.find(params[:id])  # raises ActiveRecord::RecordNotFound — 500 on retry
+    order = Order.find(params[:id])  # raises ActiveRecord::RecordNotFound — 404 HTML page on retry
     order.destroy!
     head :no_content
   end
@@ -62,4 +62,4 @@ HTTP/1.1 404 Not Found
 
 **When NOT to use:** If your domain requires audit trails, use soft-delete (`discarded_at` column) behind the same DELETE endpoint rather than changing HTTP semantics.
 
-**Reference:** RFC 7231 Section 4.3.5 (DELETE), Section 4.2.2 (Idempotent Methods)
+**Reference:** RFC 9110 Section 9.3.5 (DELETE), Section 9.2.2 (Idempotent Methods)

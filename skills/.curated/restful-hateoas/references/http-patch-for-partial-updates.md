@@ -34,14 +34,18 @@ end
 **Correct (PATCH with only changed fields):**
 
 ```ruby
+# config/initializers/mime_types.rb
+Mime::Type.register "application/merge-patch+json", :merge_patch
+
+# app/controllers/shipments_controller.rb
 class ShipmentsController < ApplicationController
   # PATCH /api/v1/shipments/:id
   # Content-Type: application/merge-patch+json
   def update
     shipment = Shipment.find(params[:id])
 
-    unless request.content_type == "application/merge-patch+json"
-      return render json: { error: "PATCH requires Content-Type: application/merge-patch+json" },
+    unless request.content_type.in?(["application/merge-patch+json", "application/json"])
+      return render json: { error: "PATCH requires Content-Type: application/merge-patch+json or application/json" },
                     status: :unsupported_media_type
     end
 

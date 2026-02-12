@@ -77,4 +77,4 @@ Content-Length: 1847
 - `Content-Length` header lets clients allocate buffers before downloading
 - Rails routes HEAD to the same action as GET by default -- no extra route needed
 
-**Reference:** RFC 7231 Section 4.3.2 (HEAD)
+**Reference:** RFC 9110 Section 9.3.2 (HEAD)

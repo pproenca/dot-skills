@@ -73,4 +73,4 @@ end
 
 **When NOT to use:** Do not set `public` on any response that varies by `Authorization` header without also setting a `Vary: Authorization` header. See `restful-hateoas:cache-vary-header`.
 
-**Reference:** RFC 7234 (HTTP Caching). See also `restful-hateoas:cache-etag-conditional-get` for combining Cache-Control with conditional requests.
+**Reference:** RFC 9111 (HTTP Caching). See also `restful-hateoas:cache-etag-conditional-get` for combining Cache-Control with conditional requests.

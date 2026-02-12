@@ -26,8 +26,8 @@ module Deprecatable
 
   private
 
-  def deprecate!(sunset:, migration_url:)
-    response.headers["Deprecation"] = "true"
+  def deprecate!(deprecated_at:, sunset:, migration_url:)
+    response.headers["Deprecation"] = "@#{deprecated_at.to_i}"  # RFC 9745: Date as Unix timestamp
     response.headers["Sunset"] = sunset.httpdate
     response.headers["Link"] = "<#{migration_url}>; rel=\"deprecation\""
   end
@@ -42,7 +42,8 @@ class Api::V1::OrdersController < ApplicationController
     order = current_user.orders.find(params[:id])
 
     deprecate!(
-      sunset: Time.utc(2026, 6, 1),
+      deprecated_at: Time.utc(2026, 1, 15),  # when deprecation took effect
+      sunset: Time.utc(2026, 6, 1),           # when endpoint will be removed
       migration_url: "https://api.example.com/docs/migration/receipt-endpoint"
     )
 
@@ -56,7 +57,7 @@ GET /api/v1/orders/42/receipt HTTP/1.1
 Authorization: Bearer <token>
 
 HTTP/1.1 200 OK
-Deprecation: true
+Deprecation: @1736899200
 Sunset: Mon, 01 Jun 2026 00:00:00 GMT
 Link: <https://api.example.com/docs/migration/receipt-endpoint>; rel="deprecation"
 Content-Type: application/json
@@ -65,7 +66,7 @@ Content-Type: application/json
 ```
 
 **Benefits:**
-- Client SDKs can log warnings or raise alerts when they receive `Deprecation: true`
+- Client SDKs can log warnings or raise alerts when they receive the `Deprecation` header
 - The `Sunset` date enables automated tracking of migration deadlines
 - The `Link` header with `rel="deprecation"` provides a direct path to migration instructions
 

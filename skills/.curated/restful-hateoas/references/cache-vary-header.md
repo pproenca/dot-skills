@@ -78,4 +78,4 @@ Cache-Control: private, max-age=60
 
 **When NOT to use:** If your API serves only one format and does not vary by any request header, omit `Vary` to maximize cache hit rates. Adding unnecessary `Vary` headers fragments the cache.
 
-**Reference:** RFC 7231 Section 7.1.4 (Vary). See also `restful-hateoas:media-accept-header-negotiation` for content negotiation and `restful-hateoas:cache-cache-control-headers` for Cache-Control directives.
+**Reference:** RFC 9110 Section 12.5.5 (Vary). See also `restful-hateoas:media-accept-header-negotiation` for content negotiation and `restful-hateoas:cache-cache-control-headers` for Cache-Control directives.

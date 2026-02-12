@@ -7,20 +7,18 @@ tags: link, entry-point, root, discovery, navigation
 
 ## Provide a Root API Entry Point
 
-Provide a root endpoint (e.g., `GET /api/v1`) that returns links to all top-level resources. This is the "homepage" of your API -- clients start here and discover the entire API through link traversal. Without a root, clients must know every resource URI upfront from out-of-band documentation.
+Provide a root endpoint (e.g., `GET /api`) that returns links to all top-level resources. This is the "homepage" of your API -- clients start here and discover the entire API through link traversal. Without a root, clients must know every resource URI upfront from out-of-band documentation.
 
 **Incorrect (no root endpoint -- clients must hardcode all resource URIs):**
 
 ```ruby
 # config/routes.rb
 namespace :api do
-  namespace :v1 do
-    resources :orders
-    resources :customers
-    resources :products
-    resources :shipments
-    # No root route -- clients need a README to discover these
-  end
+  resources :orders
+  resources :customers
+  resources :products
+  resources :shipments
+  # No root route -- clients need a README to discover these
 end
 ```
 
@@ -29,25 +27,23 @@ end
 ```ruby
 # config/routes.rb
 namespace :api do
-  namespace :v1 do
-    root "root#index"  # GET /api/v1
-    resources :orders
-    resources :customers
-    resources :products
-    resources :shipments
-  end
+  root "root#index"  # GET /api
+  resources :orders
+  resources :customers
+  resources :products
+  resources :shipments
 end
 
-# app/controllers/api/v1/root_controller.rb
-class Api::V1::RootController < Api::V1::BaseController
+# app/controllers/api/root_controller.rb
+class Api::RootController < Api::BaseController
   def index
     render json: {
       _links: {
-        self: { href: "/api/v1" },
-        orders: { href: "/api/v1/orders", title: "Customer orders" },
-        customers: { href: "/api/v1/customers", title: "Customer accounts" },
-        products: { href: "/api/v1/products", title: "Product catalogue" },
-        shipments: { href: "/api/v1/shipments", title: "Shipment tracking" }
+        self: { href: "/api" },
+        orders: { href: "/api/orders", title: "Customer orders" },
+        customers: { href: "/api/customers", title: "Customer accounts" },
+        products: { href: "/api/products", title: "Product catalogue" },
+        shipments: { href: "/api/shipments", title: "Shipment tracking" }
       }
     }
   end
@@ -60,13 +56,12 @@ end
 def index
   render json: {
     api: "Example Store API",
-    version: "v1",
     _links: {
-      self: { href: "/api/v1" },
-      orders: { href: "/api/v1/orders" },
-      customers: { href: "/api/v1/customers" },
+      self: { href: "/api" },
+      orders: { href: "/api/orders" },
+      customers: { href: "/api/customers" },
       "https://api.example.com/rels/search": {
-        href: "/api/v1/search{?q}",  # URI template (RFC 6570)
+        href: "/api/search{?q}",  # URI template (RFC 6570)
         templated: true
       }
     }

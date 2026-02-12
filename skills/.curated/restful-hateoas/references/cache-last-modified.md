@@ -68,4 +68,4 @@ HTTP/1.1 304 Not Modified
 - Works well with CDN and proxy caches that understand `Last-Modified`
 - `stale?` handles both setting the header and checking the conditional in one call
 
-**Reference:** RFC 7232 Section 2.2 (Last-Modified). See also `restful-hateoas:cache-etag-conditional-get` for content-based validation.
+**Reference:** RFC 9110 Section 8.8.2 (Last-Modified). See also `restful-hateoas:cache-etag-conditional-get` for content-based validation.

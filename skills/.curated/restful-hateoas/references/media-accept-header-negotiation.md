@@ -59,4 +59,4 @@ Content-Type: application/hal+json
 **When NOT to use:**
 - Internal microservices where every consumer is under your control and a single format suffices
 
-**Reference:** RFC 7231 Section 5.3.2 (Accept header). See also `restful-hateoas:media-content-type-in-responses` for setting the correct Content-Type on the way out.
+**Reference:** RFC 9110 Section 12.5.1 (Accept header). See also `restful-hateoas:media-content-type-in-responses` for setting the correct Content-Type on the way out.

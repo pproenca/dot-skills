@@ -7,7 +7,7 @@ tags: http, post, create, location-header, status-codes
 
 ## Return 201 Created with Location Header from POST
 
-POST creates a new subordinate resource and the server assigns its URI. Returning 200 with just the body forces clients to guess or parse the new resource's URL. The Location header (RFC 7231 Section 7.1.2) is the standard mechanism for the server to tell the client where the new resource lives, enabling hypermedia-driven navigation.
+POST creates a new subordinate resource and the server assigns its URI. Returning 200 with just the body forces clients to guess or parse the new resource's URL. The Location header (RFC 9110 Section 10.2.2) is the standard mechanism for the server to tell the client where the new resource lives, enabling hypermedia-driven navigation.
 
 **Incorrect (returns 200, no Location header):**
 
@@ -66,4 +66,4 @@ Content-Type: application/json
 
 **When NOT to use:** POST for non-creation actions (triggering exports, sending emails) should return 200 or 202 instead. See `restful-hateoas:status-202-for-async` for long-running operations.
 
-**Reference:** RFC 7231 Section 6.3.2 (201 Created). See also `restful-hateoas:status-201-with-location` for the status code and header mechanics.
+**Reference:** RFC 9110 Section 15.3.2 (201 Created). See also `restful-hateoas:status-201-with-location` for the status code and header mechanics.

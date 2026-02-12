@@ -90,4 +90,4 @@ Content-Type: application/json
 - No silent mismatches where a client parses the wrong format and fails downstream
 - API gateways and monitoring dashboards can track 406s to spot misconfigured clients
 
-**Reference:** RFC 7231 Section 6.5.6 (406 Not Acceptable). See also `restful-hateoas:media-accept-header-negotiation` for registering the MIME types that `respond_to` matches against.
+**Reference:** RFC 9110 Section 15.5.7 (406 Not Acceptable). See also `restful-hateoas:media-accept-header-negotiation` for registering the MIME types that `respond_to` matches against.

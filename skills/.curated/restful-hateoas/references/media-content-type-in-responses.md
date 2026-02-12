@@ -77,4 +77,4 @@ end
 - Content-Type-based routing in API gateways and proxies works correctly
 - Clients can reliably switch parsing strategy based on the Content-Type header
 
-**Reference:** RFC 7231 Section 3.1.1.5 (Content-Type). See also `restful-hateoas:media-accept-header-negotiation` for negotiating which format to serve.
+**Reference:** RFC 9110 Section 8.3 (Content-Type). See also `restful-hateoas:media-accept-header-negotiation` for negotiating which format to serve.

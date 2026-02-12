@@ -68,4 +68,4 @@ HTTP/1.1 304 Not Modified
 - Works with Rails' built-in `stale?` out of the box, no external caching layer needed
 - Clients receive the ETag automatically in the response headers
 
-**Reference:** RFC 7232 (Conditional Requests). See also `rails-dev:cache-conditional-get` for deeper Rails integration, and `restful-hateoas:cache-last-modified` for time-based conditional requests.
+**Reference:** RFC 9110 Section 13.1 (Conditional Requests). See also `rails-dev:cache-conditional-get` for deeper Rails integration, and `restful-hateoas:cache-last-modified` for time-based conditional requests.

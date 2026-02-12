@@ -80,4 +80,4 @@ Content-Type: application/json
 
 **When NOT to use:** If your API contract requires returning the deleted resource for undo functionality, use 200 with the resource body and a `restore` link instead of 204.
 
-**Reference:** RFC 7231 Section 6.3.5 (204 No Content). See also `restful-hateoas:http-delete-is-idempotent`.
+**Reference:** RFC 9110 Section 15.3.5 (204 No Content). See also `restful-hateoas:http-delete-is-idempotent`.

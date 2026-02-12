@@ -81,4 +81,4 @@ Content-Type: application/json
 
 **When NOT to use:** Use PATCH when clients only know a subset of fields, or when bandwidth is a concern for large resources.
 
-**Reference:** RFC 7231 Section 4.3.4 (PUT)
+**Reference:** RFC 9110 Section 9.3.4 (PUT)

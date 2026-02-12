@@ -110,4 +110,4 @@ Content-Type: application/json
 
 **When NOT to use:** For operations that reliably complete under 1-2 seconds, synchronous responses are simpler and more predictable. Use 202 when operations routinely exceed 5 seconds.
 
-**Reference:** RFC 7231 Section 6.3.3 (202 Accepted). See also `restful-hateoas:link-action-affordances` for conditional link exposure.
+**Reference:** RFC 9110 Section 15.3.3 (202 Accepted). See also `restful-hateoas:link-action-affordances` for conditional link exposure.

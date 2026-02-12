@@ -1,7 +1,7 @@
 ---
 title: Choose Between Embedding and Linking Related Resources
 impact: CRITICAL
-impactDescription: balances response size vs request count, 2-5x payload reduction for link-only responses
+impactDescription: balances response size vs request count, reduces payload by only including links for optional associations
 tags: link, embedded, hal, payload, performance, chatty
 ---
 

@@ -76,4 +76,4 @@ Content-Type: application/json
 
 **When NOT to use:** Use 422 for payload validation errors (missing required fields, invalid formats). Use 412 Precondition Failed when the conflict is detected via conditional headers (If-Match / If-Unmodified-Since).
 
-**Reference:** RFC 7231 Section 6.5.8 (409 Conflict). See also `restful-hateoas:link-action-affordances` for exposing allowed state transitions.
+**Reference:** RFC 9110 Section 15.5.10 (409 Conflict). See also `restful-hateoas:link-action-affordances` for exposing allowed state transitions.

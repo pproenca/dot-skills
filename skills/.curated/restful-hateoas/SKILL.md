@@ -5,7 +5,7 @@ description: RESTful API design guidelines following the Richardson Maturity Mod
 
 # Community RESTful HATEOAS Best Practices
 
-Comprehensive guide to building REST APIs that reach the Glory of REST (Richardson Maturity Level 3) in Ruby on Rails. Contains 44 rules across 9 categories, ordered by the request/response lifecycle — from resource URI design through hypermedia link relations to API evolution.
+Comprehensive guide to building REST APIs that reach the Glory of REST (Richardson Maturity Level 3) in Ruby on Rails. Contains 47 rules across 9 categories, ordered by the request/response lifecycle — from resource URI design through hypermedia link relations to API evolution.
 
 ## When to Apply
 
@@ -50,6 +50,7 @@ Reference these guidelines when:
 - [`http-patch-for-partial-updates`](references/http-patch-for-partial-updates.md) - PATCH for partial updates with merge semantics
 - [`http-delete-is-idempotent`](references/http-delete-is-idempotent.md) - Ensure DELETE is idempotent
 - [`http-head-for-metadata`](references/http-head-for-metadata.md) - Use HEAD for metadata without body transfer
+- [`http-idempotency-key`](references/http-idempotency-key.md) - Use idempotency keys for safe POST retries
 
 ### 3. Hypermedia & Link Relations (CRITICAL)
 
@@ -68,6 +69,7 @@ Reference these guidelines when:
 - [`status-409-for-conflicts`](references/status-409-for-conflicts.md) - Return 409 Conflict for state conflicts
 - [`status-202-for-async`](references/status-202-for-async.md) - Return 202 Accepted for async operations
 - [`status-allow-header-on-405`](references/status-allow-header-on-405.md) - Return 405 with Allow header for wrong methods
+- [`status-rate-limit-headers`](references/status-rate-limit-headers.md) - Include rate limit headers in API responses
 
 ### 5. Content Negotiation & Media Types (HIGH)
 
@@ -90,6 +92,7 @@ Reference these guidelines when:
 - [`err-validation-errors`](references/err-validation-errors.md) - Return structured validation errors
 - [`err-error-links`](references/err-error-links.md) - Include recovery links in error responses
 - [`err-machine-readable-codes`](references/err-machine-readable-codes.md) - Use machine-readable error codes
+- [`err-auth-error-codes`](references/err-auth-error-codes.md) - Distinguish 401 Unauthorized from 403 Forbidden
 
 ### 8. Caching & Conditional Requests (MEDIUM)
 
