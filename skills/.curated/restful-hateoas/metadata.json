@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "RESTful HATEOAS (Ruby on Rails)",
+  "date": "February 2026",
+  "abstract": "Comprehensive guide to building REST APIs that reach the Glory of REST (Richardson Maturity Level 3) in Ruby on Rails. Contains 44 rules across 9 categories, ordered by the request/response lifecycle — from resource URI design (nouns, plural, max 2 nesting levels) through HTTP method semantics (safe GET, idempotent PUT/DELETE) and hypermedia controls (_links, affordances, entry points) to API evolution (additive changes, deprecation headers). Each rule includes Rails-specific code examples with incorrect vs. correct patterns and quantified impact metrics.",
+  "references": [
+    "https://martinfowler.com/articles/richardsonMaturityModel.html",
+    "https://www.rfc-editor.org/rfc/rfc8288.html",
+    "https://www.rfc-editor.org/rfc/rfc9457",
+    "https://opensource.zalando.com/restful-api-guidelines/",
+    "https://learn.microsoft.com/en-us/azure/architecture/best-practices/api-design",
+    "https://guides.rubyonrails.org/routing.html",
+    "https://ieftimov.com/posts/sprinkle-some-hateoas-on-rails-apis/",
+    "https://jsonapi.org/",
+    "https://stateless.group/hal_specification.html"
+  ]
+}
