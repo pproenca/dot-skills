@@ -1,7 +1,7 @@
 ---
 title: Use Vertical Offset for Natural-Looking Shadows
 impact: MEDIUM
-impactDescription: mimics real-world light from above for believable depth
+impactDescription: eliminates shadow-[0_0_Npx] glow effect by using Tailwind's vertically-offset shadow-lg utility
 tags: depth, shadows, offset, light-source, realism
 ---
 
@@ -18,7 +18,7 @@ Shadows in real life come from a light source above. Use vertical offset (y > x)
 **Correct (vertical offset mimics overhead light):**
 ```html
 <div class="rounded-lg bg-white p-6 shadow-lg">
-  <h3 class="font-semibold text-gray-900">Card Title</h3>
+  <h3 class="font-semibold">Card Title</h3>
   <p class="text-sm text-gray-600">Card content goes here</p>
 </div>
 ```

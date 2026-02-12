@@ -1,7 +1,7 @@
 ---
-title: Don't Fill the Whole Screen — Constrain Content Width
+title: Constrain Content Width — Avoid Filling the Whole Screen
 impact: HIGH
-impactDescription: prevents 1400px-wide text blocks that destroy readability
+impactDescription: prevents 1400px+ unreadable text blocks by capping content at max-w-5xl (1024px)
 tags: space, max-width, container, layout, responsive
 ---
 
@@ -21,9 +21,9 @@ Just because the viewport is 1920px wide doesn't mean your content should be 192
 **Correct (constrained, readable width):**
 ```html
 <div class="mx-auto max-w-5xl px-6">
-  <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
+  <h1 class="text-3xl font-bold">Dashboard</h1>
   <p class="mt-4 max-w-2xl text-gray-600">Welcome back. Here's what's happening with your projects today.</p>
-  <div class="mt-8 grid grid-cols-3 gap-6">
+  <div class="mt-6 grid grid-cols-3 gap-6">
     <!-- cards at comfortable reading width -->
   </div>
 </div>

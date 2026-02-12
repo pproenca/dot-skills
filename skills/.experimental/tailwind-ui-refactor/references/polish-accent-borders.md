@@ -1,7 +1,7 @@
 ---
 title: Add Accent Borders to Highlight Important Elements
 impact: LOW
-impactDescription: adds visual distinction to cards, alerts, and active states
+impactDescription: adds visual emphasis with a single border-l-4 or border-t-4 utility on cards and alerts
 tags: polish, borders, accent, color, highlight
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use Background Color Differences to Separate Sections
 impact: MEDIUM
-impactDescription: creates clear visual boundaries without adding border lines
+impactDescription: eliminates border-b dividers with bg-white/bg-gray-50 alternation for cleaner section separation
 tags: sep, background, sections, containers, alternating
 ---
 

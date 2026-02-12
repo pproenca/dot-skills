@@ -1,7 +1,7 @@
 ---
 title: Match Border Radius to Brand Personality
 impact: LOW
-impactDescription: creates consistent personality across all UI elements
+impactDescription: eliminates mixed border-radius values (rounded vs rounded-lg vs rounded-full) across components
 tags: polish, border-radius, personality, branding, consistency
 ---
 

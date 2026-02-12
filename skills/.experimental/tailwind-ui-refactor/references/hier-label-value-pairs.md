@@ -1,7 +1,7 @@
 ---
 title: Combine Labels and Values Into Natural Language
 impact: HIGH
-impactDescription: makes data-dense displays more scannable by combining label-value pairs
+impactDescription: reduces label-value markup 40-60% by combining into natural phrases like "3 bedrooms"
 tags: hier, labels, data-display, readability
 ---
 
@@ -27,5 +27,7 @@ Instead of treating labels and values as separate visual elements with label-col
   <span><strong class="font-semibold text-gray-900">1,200</strong> sq ft</span>
 </div>
 ```
+
+**When NOT to use this pattern:** Keep traditional label-value pairs in admin dashboards, settings pages, data tables, and any UI where users scan labels to locate specific fields. The natural-language pattern works best for marketing content, property cards, and profile summaries — not data-dense interfaces.
 
 Reference: Refactoring UI — "Visual Hierarchy"

@@ -1,7 +1,7 @@
 ---
 title: Lighter Colors Feel Closer, Darker Colors Recede
 impact: MEDIUM
-impactDescription: creates depth without shadows using color alone
+impactDescription: eliminates shadow dependency by creating depth with bg-gray-900 vs bg-white color contrast
 tags: depth, color, elevation, flat-design, layers
 ---
 

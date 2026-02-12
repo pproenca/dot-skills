@@ -1,7 +1,7 @@
 ---
-title: Right-Align Numbers in Tables for Easy Comparison
+title: Align Numbers Right in Tables for Easy Comparison
 impact: MEDIUM
-impactDescription: enables instant visual comparison of numeric values
+impactDescription: enables instant number comparison by aligning decimal places with text-right tabular-nums
 tags: type, alignment, tables, numbers, data
 ---
 

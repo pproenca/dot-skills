@@ -1,7 +1,7 @@
 ---
 title: Tighten Letter Spacing for Headlines, Loosen for Uppercase
 impact: MEDIUM
-impactDescription: corrects optically unbalanced text at extreme sizes
+impactDescription: eliminates optical imbalance with tracking-tight for 2xl+ headings and tracking-wide for uppercase
 tags: type, letter-spacing, tracking, headlines, uppercase
 ---
 

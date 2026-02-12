@@ -19,9 +19,9 @@ A linear spacing scale (2, 4, 6, 8...) creates too many similar options and lead
 **Correct (Tailwind's systematic scale):**
 ```html
 <div class="space-y-3">
-  <h3 class="text-lg font-semibold text-gray-900">Title</h3>
+  <h3 class="text-lg font-bold">Title</h3>
   <p class="text-sm text-gray-600">Description text here</p>
-  <button class="mt-4 rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">Action</button>
+  <button class="mt-4 rounded bg-blue-600 px-4 py-2 text-white">Action</button>
 </div>
 ```
 

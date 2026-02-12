@@ -7,7 +7,7 @@ tags: color, contrast, accessibility, wcag, a11y
 
 Light gray text on white backgrounds looks elegant but fails accessibility. Body text needs 4.5:1 contrast ratio (WCAG AA). Large text (18px+ bold or 24px+ regular) needs 3:1. Never use gray lighter than gray-500 for body text on white.
 
-**Incorrect (gray-400 body text fails WCAG AA at ~3.5:1):**
+**Incorrect (gray-400 body text fails WCAG AA at ~2.9:1):**
 ```html
 <div class="rounded-lg bg-white p-6">
   <h3 class="text-lg font-semibold text-gray-900">Payment Details</h3>

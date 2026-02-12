@@ -1,7 +1,7 @@
 ---
 title: Use Spacing to Show Relationships Between Elements
 impact: CRITICAL
-impactDescription: makes group membership instantly clear without visual borders
+impactDescription: eliminates ambiguous form grouping with mt-1.5 within and space-y-6 between label+input pairs
 tags: space, proximity, grouping, gestalt, relationships
 ---
 

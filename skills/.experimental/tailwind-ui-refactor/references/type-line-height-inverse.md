@@ -1,7 +1,7 @@
 ---
 title: Line Height and Font Size Are Inversely Proportional
 impact: HIGH
-impactDescription: fixes cramped headings and spacey body text
+impactDescription: prevents cramped headings and spacey body text with leading-tight (2xl+) and leading-relaxed (sm)
 tags: type, line-height, leading, headings, body-text
 ---
 

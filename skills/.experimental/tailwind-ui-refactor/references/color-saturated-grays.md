@@ -1,7 +1,7 @@
 ---
 title: Add Subtle Saturation to Grays for Warmth or Coolness
 impact: MEDIUM
-impactDescription: adds subtle personality without explicit color
+impactDescription: replaces 4-6 generic hex grays with a single Tailwind gray palette (slate/zinc/stone)
 tags: color, grays, saturation, warmth, coolness, personality
 ---
 

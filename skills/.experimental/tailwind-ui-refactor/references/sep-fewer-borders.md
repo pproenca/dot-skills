@@ -24,11 +24,11 @@ Borders are the default way to separate elements, but too many make the design f
 **Correct (clean separation without borders):**
 ```html
 <div class="rounded-lg bg-white p-6 shadow-sm">
-  <h3 class="font-semibold text-gray-900">Section Title</h3>
+  <h3 class="font-semibold">Section Title</h3>
   <p class="mt-2 text-sm text-gray-600">Content here</p>
   <div class="mt-4 flex gap-2">
-    <button class="rounded-lg bg-gray-100 px-3 py-1.5 text-sm font-medium text-gray-700">Edit</button>
-    <button class="text-sm font-medium text-red-600">Delete</button>
+    <button class="rounded px-3 py-1 text-sm">Edit</button>
+    <button class="rounded px-3 py-1 text-sm">Delete</button>
   </div>
 </div>
 ```

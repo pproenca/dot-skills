@@ -1,7 +1,7 @@
 ---
-title: Don't Scale Up Icons Designed for Small Sizes
+title: Avoid Scaling Up Icons Designed for Small Sizes
 impact: LOW-MEDIUM
-impactDescription: prevents blurry, unbalanced icons in feature sections
+impactDescription: prevents blurry icons by keeping h-4 to h-6 at designed size and wrapping in bg shape for large displays
 tags: img, icons, scaling, svg, illustration
 ---
 

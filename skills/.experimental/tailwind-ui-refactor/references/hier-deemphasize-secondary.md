@@ -1,7 +1,7 @@
 ---
-title: De-emphasize Secondary Content Instead of Emphasizing Primary
+title: Reduce Secondary Content Emphasis Instead of Adding Primary
 impact: CRITICAL
-impactDescription: reduces visual noise across entire interface
+impactDescription: reduces visual noise by de-emphasizing 60-70% of UI text to gray-400/500
 tags: hier, hierarchy, de-emphasis, contrast, labels
 ---
 

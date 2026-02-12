@@ -1,7 +1,7 @@
 ---
 title: Use Size, Weight, and Color for Hierarchy — Not Just Size
 impact: CRITICAL
-impactDescription: transforms flat layouts into scannable interfaces
+impactDescription: enables 3-level visual hierarchy using size, weight, and color contrast per element
 tags: hier, hierarchy, size, weight, color, contrast
 ---
 

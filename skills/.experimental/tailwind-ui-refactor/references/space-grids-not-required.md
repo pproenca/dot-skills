@@ -1,7 +1,7 @@
 ---
-title: Don't Force Everything Into a Grid — Use Fixed Widths
+title: Use Fixed Widths Instead of Forcing Everything Into a Grid
 impact: HIGH
-impactDescription: prevents awkwardly stretched sidebars and form fields
+impactDescription: prevents sidebars stretching from 200px to 640px on wide viewports via w-56 shrink-0
 tags: space, grid, layout, fixed-width, flexible
 ---
 

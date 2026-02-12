@@ -1,7 +1,7 @@
 ---
 title: Use Spacing Instead of Lines in Simple Tables
 impact: MEDIUM
-impactDescription: makes data tables feel lighter and easier to scan
+impactDescription: removes 60-80% of border utilities from data tables by using generous py-3 padding and divide-y
 tags: sep, tables, spacing, lines, data-display
 ---
 

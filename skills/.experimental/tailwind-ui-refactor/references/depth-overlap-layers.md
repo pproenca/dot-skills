@@ -1,7 +1,7 @@
 ---
 title: Overlap Elements to Create Visual Layers
 impact: LOW-MEDIUM
-impactDescription: adds dimensional interest to flat card layouts
+impactDescription: eliminates flat section boundaries by overlapping elements with -mt-16 negative margins
 tags: depth, overlap, layers, z-index, offset
 ---
 

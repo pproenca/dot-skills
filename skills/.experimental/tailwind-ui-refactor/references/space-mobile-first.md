@@ -29,16 +29,16 @@ Start designing at a small viewport (~400px) where space is constrained and deci
 ```html
 <div class="grid gap-4 p-4 sm:grid-cols-2 sm:gap-6 sm:p-6 lg:grid-cols-3 lg:p-8">
   <div class="rounded-lg border p-4 sm:p-6">
-    <h3 class="text-lg font-semibold text-gray-900">Feature One</h3>
-    <p class="mt-2 text-sm text-gray-600">Description of the first feature with details.</p>
+    <h3 class="text-xl font-bold">Feature One</h3>
+    <p class="mt-3 text-gray-600">Description of the first feature with details.</p>
   </div>
   <div class="rounded-lg border p-4 sm:p-6">
-    <h3 class="text-lg font-semibold text-gray-900">Feature Two</h3>
-    <p class="mt-2 text-sm text-gray-600">Description of the second feature with details.</p>
+    <h3 class="text-xl font-bold">Feature Two</h3>
+    <p class="mt-3 text-gray-600">Description of the second feature with details.</p>
   </div>
   <div class="rounded-lg border p-4 sm:p-6">
-    <h3 class="text-lg font-semibold text-gray-900">Feature Three</h3>
-    <p class="mt-2 text-sm text-gray-600">Description of the third feature with details.</p>
+    <h3 class="text-xl font-bold">Feature Three</h3>
+    <p class="mt-3 text-gray-600">Description of the third feature with details.</p>
   </div>
 </div>
 ```

@@ -1,7 +1,7 @@
 ---
 title: Add Overlays or Reduce Contrast for Text Over Images
 impact: LOW-MEDIUM
-impactDescription: makes text readable over any background image
+impactDescription: prevents unreadable text over images via bg-gradient-to-t from-black/60 overlay
 tags: img, overlay, text-contrast, hero, background
 ---
 

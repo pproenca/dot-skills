@@ -5,7 +5,9 @@ description: Refactoring UI design patterns for Tailwind CSS applications. This 
 
 # Refactoring UI Tailwind CSS Best Practices
 
-Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 44 rules across 8 categories, prioritized by visual impact to guide automated refactoring and code generation.
+Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 50 rules across 9 categories, prioritized by design impact to guide automated refactoring and code generation.
+
+**Important: Think first, style second.** Before applying any visual rule, understand the UI's purpose, identify what matters to the user, and remove unnecessary elements. The Design Intent category (priority 1) must be considered before any styling changes. A simpler component with fewer elements always beats a decorated component with unnecessary markup.
 
 ## When to Apply
 
@@ -20,18 +22,28 @@ Reference these guidelines when:
 
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
-| 1 | Visual Hierarchy | CRITICAL | `hier-` |
-| 2 | Layout & Spacing | CRITICAL | `space-` |
-| 3 | Typography | HIGH | `type-` |
-| 4 | Color Systems | HIGH | `color-` |
-| 5 | Depth & Shadows | MEDIUM | `depth-` |
-| 6 | Borders & Separation | MEDIUM | `sep-` |
-| 7 | Images & Content | LOW-MEDIUM | `img-` |
-| 8 | Polish & Details | LOW | `polish-` |
+| 1 | Design Intent | CRITICAL | `intent-` |
+| 2 | Visual Hierarchy | CRITICAL | `hier-` |
+| 3 | Layout & Spacing | CRITICAL | `space-` |
+| 4 | Typography | HIGH | `type-` |
+| 5 | Color Systems | HIGH | `color-` |
+| 6 | Depth & Shadows | MEDIUM | `depth-` |
+| 7 | Borders & Separation | MEDIUM | `sep-` |
+| 8 | Images & Content | LOW-MEDIUM | `img-` |
+| 9 | Polish & Details | LOW | `polish-` |
 
 ## Quick Reference
 
-### 1. Visual Hierarchy (CRITICAL)
+### 1. Design Intent (CRITICAL)
+
+- [`intent-audit-before-styling`](references/intent-audit-before-styling.md) - Audit what each element communicates before changing any CSS
+- [`intent-remove-before-decorating`](references/intent-remove-before-decorating.md) - Remove unnecessary elements before styling what remains
+- [`intent-reduce-cognitive-load`](references/intent-reduce-cognitive-load.md) - Reduce choices per screen — fewer options beat prettier options
+- [`intent-progressive-disclosure`](references/intent-progressive-disclosure.md) - Hide secondary information behind interactions
+- [`intent-content-drives-layout`](references/intent-content-drives-layout.md) - Let real content determine layout — not the other way around
+- [`intent-simplify-over-decorate`](references/intent-simplify-over-decorate.md) - Prefer removing a wrapper over adding 5 utility classes to it
+
+### 2. Visual Hierarchy (CRITICAL)
 
 - [`hier-size-weight-color`](references/hier-size-weight-color.md) - Use size, weight, and color for hierarchy — not just size
 - [`hier-deemphasize-secondary`](references/hier-deemphasize-secondary.md) - De-emphasize secondary content instead of emphasizing primary
@@ -41,26 +53,26 @@ Reference these guidelines when:
 - [`hier-icon-sizing`](references/hier-icon-sizing.md) - Size icons relative to adjacent text, not to fill space
 - [`hier-color-hierarchy-on-dark`](references/hier-color-hierarchy-on-dark.md) - Use opacity or muted colors for hierarchy on colored backgrounds
 
-### 2. Layout & Spacing (CRITICAL)
+### 3. Layout & Spacing (CRITICAL)
 
 - [`space-start-generous`](references/space-start-generous.md) - Start with too much whitespace, then remove
 - [`space-systematic-scale`](references/space-systematic-scale.md) - Use a constrained spacing scale, not arbitrary values
 - [`space-relationship-proximity`](references/space-relationship-proximity.md) - Use spacing to show relationships between elements
-- [`space-dont-fill-screen`](references/space-dont-fill-screen.md) - Don't fill the whole screen — constrain content width
-- [`space-grids-not-required`](references/space-grids-not-required.md) - Don't force everything into a grid — use fixed widths
-- [`space-relative-sizing-fails`](references/space-relative-sizing-fails.md) - Avoid viewport-relative units for element sizing
+- [`space-dont-fill-screen`](references/space-dont-fill-screen.md) - Constrain content width — avoid filling the whole screen
+- [`space-grids-not-required`](references/space-grids-not-required.md) - Use fixed widths when grids are not needed
+- [`space-relative-sizing-fails`](references/space-relative-sizing-fails.md) - Avoid raw viewport units without clamping
 - [`space-mobile-first`](references/space-mobile-first.md) - Design mobile-first at ~400px, then expand
 
-### 3. Typography (HIGH)
+### 4. Typography (HIGH)
 
 - [`type-line-length`](references/type-line-length.md) - Keep line length between 45-75 characters
 - [`type-line-height-inverse`](references/type-line-height-inverse.md) - Line height and font size are inversely proportional
 - [`type-font-weight-variety`](references/type-font-weight-variety.md) - Choose fonts with at least 5 weight variations
-- [`type-no-center-long-text`](references/type-no-center-long-text.md) - Don't center long-form text — left-align body content
+- [`type-no-center-long-text`](references/type-no-center-long-text.md) - Left-align body content — avoid centering long-form text
 - [`type-letter-spacing`](references/type-letter-spacing.md) - Tighten letter spacing for headlines, loosen for uppercase
-- [`type-align-numbers-right`](references/type-align-numbers-right.md) - Right-align numbers in tables for easy comparison
+- [`type-align-numbers-right`](references/type-align-numbers-right.md) - Align numbers right in tables for easy comparison
 
-### 4. Color Systems (HIGH)
+### 5. Color Systems (HIGH)
 
 - [`color-define-palette-upfront`](references/color-define-palette-upfront.md) - Define a complete color palette upfront — don't pick colors ad-hoc
 - [`color-grayscale-first`](references/color-grayscale-first.md) - Design in grayscale first, add color last
@@ -69,7 +81,7 @@ Reference these guidelines when:
 - [`color-saturated-grays`](references/color-saturated-grays.md) - Add subtle saturation to grays for warmth or coolness
 - [`color-light-backgrounds-dark-text`](references/color-light-backgrounds-dark-text.md) - Use light-colored backgrounds with dark text for badges
 
-### 5. Depth & Shadows (MEDIUM)
+### 6. Depth & Shadows (MEDIUM)
 
 - [`depth-shadow-scale`](references/depth-shadow-scale.md) - Define a fixed shadow scale — small to extra large
 - [`depth-shadow-vertical-offset`](references/depth-shadow-vertical-offset.md) - Use vertical offset for natural-looking shadows
@@ -77,21 +89,21 @@ Reference these guidelines when:
 - [`depth-light-closer-dark-recedes`](references/depth-light-closer-dark-recedes.md) - Lighter colors feel closer, darker colors recede
 - [`depth-overlap-layers`](references/depth-overlap-layers.md) - Overlap elements to create visual layers
 
-### 6. Borders & Separation (MEDIUM)
+### 7. Borders & Separation (MEDIUM)
 
 - [`sep-fewer-borders`](references/sep-fewer-borders.md) - Use fewer borders — replace with spacing, shadows, or background color
 - [`sep-background-color-separation`](references/sep-background-color-separation.md) - Use background color differences to separate sections
 - [`sep-table-spacing-not-lines`](references/sep-table-spacing-not-lines.md) - Use spacing instead of lines in simple tables
-- [`sep-card-radio-buttons`](references/sep-card-radio-buttons.md) - Convert radio buttons and checkboxes to selectable cards
+- [`sep-card-radio-buttons`](references/sep-card-radio-buttons.md) - Upgrade radio buttons to selectable cards for key choices
 
-### 7. Images & Content (LOW-MEDIUM)
+### 8. Images & Content (LOW-MEDIUM)
 
 - [`img-control-user-content`](references/img-control-user-content.md) - Control user-uploaded image size and aspect ratio
 - [`img-text-overlay`](references/img-text-overlay.md) - Add overlays or reduce contrast for text over images
-- [`img-dont-scale-up-icons`](references/img-dont-scale-up-icons.md) - Don't scale up icons designed for small sizes
+- [`img-dont-scale-up-icons`](references/img-dont-scale-up-icons.md) - Avoid scaling up icons designed for small sizes
 - [`img-empty-states`](references/img-empty-states.md) - Design meaningful empty states with clear CTAs
 
-### 8. Polish & Details (LOW)
+### 9. Polish & Details (LOW)
 
 - [`polish-accent-borders`](references/polish-accent-borders.md) - Add accent borders to highlight important elements
 - [`polish-custom-bullets`](references/polish-custom-bullets.md) - Replace default bullets with icons or checkmarks

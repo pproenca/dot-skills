@@ -1,7 +1,7 @@
 ---
 title: Use Gradients With Hues Within 30 Degrees of Each Other
 impact: LOW
-impactDescription: prevents clashing gradient colors
+impactDescription: prevents clashing gradients by keeping hue distance within 30 degrees (e.g., blue-500 to indigo-600)
 tags: polish, gradients, color, hue, background
 ---
 

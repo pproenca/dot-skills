@@ -1,7 +1,7 @@
 ---
 title: Add Inner Shadow to Prevent Image Background Bleed
 impact: LOW
-impactDescription: prevents images from blending into page background
+impactDescription: prevents image edge bleed with a single ring-1 ring-gray-900/5 utility on light backgrounds
 tags: polish, images, shadows, inner-shadow, background-bleed
 ---
 

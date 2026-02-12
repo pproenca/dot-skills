@@ -1,7 +1,7 @@
 ---
 title: Define a Fixed Shadow Scale — Small to Extra Large
 impact: MEDIUM
-impactDescription: creates consistent elevation system across the UI
+impactDescription: eliminates arbitrary shadow-[...] values with Tailwind's 5-level scale (shadow-sm to shadow-xl)
 tags: depth, shadows, elevation, scale, consistency
 ---
 

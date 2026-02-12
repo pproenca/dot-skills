@@ -1,7 +1,7 @@
 ---
 title: Design Meaningful Empty States With Clear CTAs
 impact: LOW-MEDIUM
-impactDescription: converts dead-end screens into onboarding opportunities
+impactDescription: prevents dead-end "No data" screens by adding icon, descriptive copy, and primary CTA
 tags: img, empty-states, onboarding, cta, illustration
 ---
 

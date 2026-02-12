@@ -18,10 +18,10 @@ Not every button deserves to be a big, colorful, primary button. Style buttons b
 
 **Correct (clear action hierarchy):**
 ```html
-<div class="flex items-center gap-3">
-  <button class="rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white">Save</button>
-  <button class="rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700">Cancel</button>
-  <button class="text-sm font-medium text-red-600">Delete</button>
+<div class="flex gap-2">
+  <button class="rounded-lg bg-blue-600 px-4 py-2 font-bold text-white">Save</button>
+  <button class="rounded-lg border border-gray-300 px-4 py-2 font-bold text-gray-700">Cancel</button>
+  <button class="px-4 py-2 font-bold text-red-600">Delete</button>
 </div>
 ```
 
