@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Tailwind CSS",
+  "date": "February 2026",
+  "abstract": "Comprehensive responsive UI transformation guide for Tailwind CSS applications, designed for AI agents and LLMs. Contains 49 rules across 8 categories, prioritized by impact from critical (breakpoint strategy, layout transformation) to incremental (data adaptation). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations with Tailwind utility classes, and specific impact metrics to guide automated refactoring and code generation. Based on Refactoring UI by Adam Wathan & Steve Schoger and modern responsive design patterns.",
+  "references": [
+    "https://tailwindcss.com/docs/responsive-design",
+    "https://tailwindcss.com/docs/container-queries",
+    "https://web.dev/responsive-web-design-basics/",
+    "https://www.w3.org/WAI/WCAG22/Understanding/target-size-minimum.html",
+    "https://every-layout.dev"
+  ]
+}
