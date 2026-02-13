@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "nginx.org",
+  "technology": "nginx C Module Debugging",
+  "date": "February 2026",
+  "abstract": "Comprehensive debugging guide for nginx C modules, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (crash diagnosis, memory bug detection) to incremental (build and sanitizer configuration). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct debugging approaches, and specific techniques for systematic diagnosis of crashes, memory bugs, and behavioral issues.",
+  "references": [
+    "https://nginx.org/en/docs/dev/development_guide.html",
+    "https://docs.nginx.com/nginx/admin-guide/monitoring/debugging/",
+    "https://nginx.org/en/docs/debugging_log.html",
+    "https://nginx.org/en/docs/nginx_dtrace_pid_provider.html",
+    "https://github.com/openresty/openresty-systemtap-toolkit",
+    "https://api7.ai/blog/coredump-debug-story-about-nginx",
+    "https://developers.redhat.com/blog/2021/05/05/memory-error-checking-in-c-and-c-comparing-sanitizers-and-valgrind"
+  ]
+}
