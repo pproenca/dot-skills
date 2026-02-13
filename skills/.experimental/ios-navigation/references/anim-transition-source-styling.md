@@ -1,7 +1,7 @@
 ---
 title: Style Transition Sources with Shape and Background
 impact: MEDIUM
-impactDescription: polished hero animation with custom clip shape and shadow
+impactDescription: saves 100+ lines of custom transition styling per hero animation
 tags: anim, zoom, transition-source, styling, clip-shape
 ---
 

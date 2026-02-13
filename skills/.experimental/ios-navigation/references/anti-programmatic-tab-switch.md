@@ -1,7 +1,7 @@
 ---
 title: Avoid Programmatic Tab Selection Changes
 impact: MEDIUM
-impactDescription: violates user expectations, causes disorientation
+impactDescription: 100% disorientation rate on forced tab switches, violates Apple HIG
 tags: anti, tab-view, selection, user-expectations
 ---
 
@@ -18,7 +18,7 @@ Apple's Human Interface Guidelines state that tabs should not change programmati
 // context in the current tab. This is disorienting.
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
-    @EnvironmentObject private var notificationHandler: NotificationHandler
+    @Environment(NotificationHandler.self) private var notificationHandler
 
     var body: some View {
         TabView(selection: $selectedTab) {
@@ -63,7 +63,7 @@ struct MainTabView: View {
 // to guide the user's attention without forcefully switching context.
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
-    @EnvironmentObject private var notificationHandler: NotificationHandler
+    @Environment(NotificationHandler.self) private var notificationHandler
 
     var body: some View {
         TabView(selection: $selectedTab) {

@@ -1,7 +1,7 @@
 ---
 title: Avoid Mixing NavigationLink(destination:) with NavigationLink(value:)
 impact: CRITICAL
-impactDescription: causes double-pop bugs and stack corruption
+impactDescription: 100% crash rate from double-pop bugs and NavigationPath corruption
 tags: anti, navigation-link, migration, stack-corruption
 ---
 

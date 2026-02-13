@@ -7,7 +7,7 @@ tags: perf, lazy, navigation-link, value-based
 
 ## Use Value-Based NavigationLink for Lazy Destination Construction
 
-The legacy `NavigationLink(destination:)` initializer eagerly constructs every destination view at list render time. In a scrollable list of 500 products, that means 500 `ProductDetailView` instances — each potentially allocating view models, formatters, and image pipelines — are created immediately but never displayed. Value-based `NavigationLink(value:)` paired with `.navigationDestination(for:)` defers construction until the user actually taps.
+The legacy `NavigationLink(destination:)` initializer eagerly constructs every destination view at list render time. In a scrollable list of 500 products, that means 500 `ProductDetailView` initializers run — each allocating view models, formatters, and image pipelines — immediately but never displayed. Value-based `NavigationLink(value:)` paired with `.navigationDestination(for:)` defers construction until the user actually taps.
 
 **Incorrect (eager destination construction):**
 
@@ -57,13 +57,10 @@ struct ProductListView: View {
     var body: some View {
         NavigationStack {
             List(products) { product in
-                // Value-based: only the Hashable value is stored,
-                // not the destination view. Zero allocation per row.
                 NavigationLink(value: product) {
                     ProductRowView(product: product)
                 }
             }
-            // Destination factory — called once, only on navigation.
             .navigationDestination(for: Product.self) { product in
                 ProductDetailView(product: product)
             }
@@ -73,12 +70,10 @@ struct ProductListView: View {
 }
 
 struct ProductDetailView: View {
-    // Created only when the user navigates here.
-    @StateObject private var viewModel: ProductDetailViewModel
+    @State private var viewModel: ProductDetailViewModel
 
     init(product: Product) {
-        // Runs exactly once, on navigation — not at list render.
-        _viewModel = StateObject(wrappedValue: ProductDetailViewModel(product: product))
+        self.viewModel = ProductDetailViewModel(product: product)
     }
 
     var body: some View {

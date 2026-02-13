@@ -39,7 +39,7 @@ struct ProductCatalogView: View {
 // destinations, lazy view construction, and programmatic navigation.
 // State restoration is built-in via Codable NavigationPath.
 struct ProductCatalogView: View {
-    @StateObject private var viewModel = CatalogViewModel()
+    @State private var viewModel = CatalogViewModel()
     @State private var path = NavigationPath()
 
     var body: some View {

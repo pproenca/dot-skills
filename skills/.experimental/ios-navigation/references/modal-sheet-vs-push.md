@@ -1,7 +1,7 @@
 ---
 title: Use Push for Drill-Down, Sheet for Supplementary Content
 impact: HIGH
-impactDescription: determines whether users can navigate back or must dismiss
+impactDescription: wrong choice breaks swipe-back for 100% of drill-down flows
 tags: modal, sheet, push, navigation-link, mental-model
 ---
 

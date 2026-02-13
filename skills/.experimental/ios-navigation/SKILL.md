@@ -1,11 +1,11 @@
 ---
 name: ios-navigation
-description: iOS navigation architecture, transitions, and flow patterns for building fluid, golden-standard screen-to-screen experiences in SwiftUI. Covers NavigationStack, NavigationSplitView, zoom transitions, hero animations, sheet vs push decisions, multi-step flows, anti-patterns, performance, accessibility, and state restoration. This skill should be used when designing navigation hierarchies, implementing screen transitions, choosing between sheet and push, orchestrating multi-step flows, or reviewing navigation code for anti-patterns.
+description: SwiftUI NavigationStack, NavigationSplitView, and navigation transition patterns for iOS 16-18+. Covers @Observable coordinators, zoom transitions, hero animations, sheet vs push decisions, multi-step flows, anti-patterns, performance, accessibility, deep linking, and state restoration. This skill should be used when designing navigation hierarchies, implementing screen transitions, choosing between sheet and push, orchestrating multi-step flows, using @Observable with @Environment and @Bindable, or reviewing navigation code for anti-patterns.
 ---
 
 # Apple iOS Navigation Best Practices
 
-Comprehensive guide for building fluid, golden-standard navigation in iOS apps with SwiftUI. Contains 49 rules across 8 categories covering architecture, anti-patterns, transitions, modals, flow orchestration, performance, accessibility, and state restoration.
+Comprehensive guide for building fluid, golden-standard navigation in iOS apps with SwiftUI. Contains 51 rules across 8 categories covering architecture, anti-patterns, transitions, modals, flow orchestration, performance, accessibility, and state restoration.
 
 ## When to Apply
 
@@ -14,6 +14,7 @@ Reference these guidelines when:
 - Choosing between push, sheet, and fullScreenCover
 - Implementing hero animations, zoom transitions, or gesture-driven dismissals
 - Building multi-step flows (onboarding, checkout, registration)
+- Using @Observable with @Environment and @Bindable for shared navigation state
 - Reviewing code for navigation anti-patterns
 - Adding deep linking, state restoration, or tab persistence
 - Ensuring VoiceOver and reduce motion support for navigation
@@ -38,9 +39,11 @@ Reference these guidelines when:
 - [`arch-navigation-stack`](references/arch-navigation-stack.md) - Use NavigationStack over deprecated NavigationView
 - [`arch-value-based-links`](references/arch-value-based-links.md) - Use value-based NavigationLink over destination closures
 - [`arch-destination-registration`](references/arch-destination-registration.md) - Register navigationDestination at stack root
+- [`arch-destination-item`](references/arch-destination-item.md) - Use navigationDestination(item:) for optional-based navigation (iOS 17+)
 - [`arch-route-enum`](references/arch-route-enum.md) - Define routes as Hashable enums
 - [`arch-split-view`](references/arch-split-view.md) - Use NavigationSplitView for multi-column layouts
 - [`arch-coordinator`](references/arch-coordinator.md) - Extract navigation logic into Observable coordinator
+- [`arch-observable-environment`](references/arch-observable-environment.md) - Use @Environment with @Observable and @Bindable for shared state
 - [`arch-deep-linking`](references/arch-deep-linking.md) - Handle deep links by appending to NavigationPath
 - [`arch-navigation-path`](references/arch-navigation-path.md) - Use NavigationPath for heterogeneous type-erased navigation
 
@@ -86,7 +89,7 @@ Reference these guidelines when:
 
 - [`perf-lazy-destinations`](references/perf-lazy-destinations.md) - Use value-based NavigationLink for lazy destination construction
 - [`perf-task-modifier`](references/perf-task-modifier.md) - Use .task for async data loading on navigation
-- [`perf-state-object-ownership`](references/perf-state-object-ownership.md) - Use @StateObject at creation point, @ObservedObject for passed references
+- [`perf-state-object-ownership`](references/perf-state-object-ownership.md) - Own @Observable state with @State, pass as plain property
 - [`perf-avoid-body-side-effects`](references/perf-avoid-body-side-effects.md) - Avoid side effects in view body
 - [`perf-lazy-view-wrapper`](references/perf-lazy-view-wrapper.md) - Use LazyView wrapper for pre-iOS 16 destination loading
 

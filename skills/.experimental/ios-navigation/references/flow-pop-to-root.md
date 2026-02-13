@@ -1,7 +1,7 @@
 ---
 title: Implement Pop-to-Root by Clearing NavigationPath
 impact: MEDIUM-HIGH
-impactDescription: standard iOS pattern, no workarounds needed with NavigationStack
+impactDescription: O(1) pop-to-root via path.removeAll(), replaces N manual dismiss calls
 tags: flow, pop-to-root, navigation-path, programmatic
 ---
 

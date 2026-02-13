@@ -14,38 +14,28 @@ List rows with multiple text, image, and icon elements require one VoiceOver swi
 ```swift
 struct ConversationListView: View {
     let conversations: [Conversation]
-
     var body: some View {
         NavigationStack {
             List(conversations) { conversation in
                 NavigationLink(value: conversation) {
-                    // BAD: VoiceOver treats each child as a separate element.
-                    // Swipe sequence: "Avatar" -> "John Smith" -> "Hey, are you..."
-                    // -> "2m ago" -> "Unread badge" = 5 swipes per row.
-                    // 20 conversations * 5 swipes = 100 swipes to scan the list.
+                    // BAD: 5 swipes per row (avatar, name, message, time, badge)
+                    // 20 conversations = 100 swipes to scan the list
                     HStack(spacing: 12) {
                         AsyncImage(url: conversation.avatarURL)
                             .frame(width: 44, height: 44)
                             .clipShape(Circle())
-
                         VStack(alignment: .leading) {
-                            Text(conversation.senderName)
-                                .font(.headline)
+                            Text(conversation.senderName).font(.headline)
                             Text(conversation.lastMessage)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .lineLimit(1)
                         }
-
                         Spacer()
-
                         VStack(alignment: .trailing) {
-                            Text(conversation.timeAgo)
-                                .font(.caption)
+                            Text(conversation.timeAgo).font(.caption)
                             if conversation.isUnread {
-                                Circle()
-                                    .fill(.blue)
-                                    .frame(width: 10, height: 10)
+                                Circle().fill(.blue).frame(width: 10, height: 10)
                             }
                         }
                     }
@@ -61,7 +51,6 @@ struct ConversationListView: View {
 ```swift
 struct ConversationListView: View {
     let conversations: [Conversation]
-
     var body: some View {
         NavigationStack {
             List(conversations) { conversation in
@@ -70,33 +59,22 @@ struct ConversationListView: View {
                         AsyncImage(url: conversation.avatarURL)
                             .frame(width: 44, height: 44)
                             .clipShape(Circle())
-
                         VStack(alignment: .leading) {
-                            Text(conversation.senderName)
-                                .font(.headline)
+                            Text(conversation.senderName).font(.headline)
                             Text(conversation.lastMessage)
                                 .font(.subheadline)
                                 .foregroundColor(.secondary)
                                 .lineLimit(1)
                         }
-
                         Spacer()
-
                         VStack(alignment: .trailing) {
-                            Text(conversation.timeAgo)
-                                .font(.caption)
+                            Text(conversation.timeAgo).font(.caption)
                             if conversation.isUnread {
-                                Circle()
-                                    .fill(.blue)
-                                    .frame(width: 10, height: 10)
+                                Circle().fill(.blue).frame(width: 10, height: 10)
                             }
                         }
                     }
-                    // Combine all children into ONE VoiceOver element.
-                    // 1 swipe per row instead of 5. 20 swipes for 20 rows.
                     .accessibilityElement(children: .combine)
-                    // Override the auto-combined label for clarity.
-                    // VoiceOver reads: "John Smith, Hey are you free tomorrow, 2 minutes ago, unread"
                     .accessibilityLabel(conversationAccessibilityLabel(conversation))
                 }
             }
@@ -105,14 +83,9 @@ struct ConversationListView: View {
             }
         }
     }
-
-    // Build a human-readable label that conveys all row information
-    // in a natural sentence structure for VoiceOver.
     private func conversationAccessibilityLabel(_ conversation: Conversation) -> String {
         var label = "\(conversation.senderName), \(conversation.lastMessage), \(conversation.timeAgo)"
-        if conversation.isUnread {
-            label += ", unread"
-        }
+        if conversation.isUnread { label += ", unread" }
         return label
     }
 }

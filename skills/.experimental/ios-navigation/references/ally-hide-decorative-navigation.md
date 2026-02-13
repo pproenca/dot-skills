@@ -14,23 +14,16 @@ Decorative elements — chevron indicators, divider lines, background gradients,
 ```swift
 struct MenuItemView: View {
     let item: MenuItem
-
     var body: some View {
         NavigationLink(value: item.route) {
             HStack {
-                // BAD: VoiceOver reads "star.fill, Image" — meaningless
-                // without context. Adds an extra swipe stop.
+                // BAD: VoiceOver reads "star.fill, Image" — extra swipe stop
                 Image(systemName: item.icon)
                     .foregroundColor(.accentColor)
                     .frame(width: 28)
-
                 Text(item.title)
-
                 Spacer()
-
-                // BAD: VoiceOver reads "chevron.right, Image"
-                // NavigationLink already announces "Button" trait,
-                // so the chevron is redundant noise.
+                // BAD: VoiceOver reads "chevron.right, Image" — redundant
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.secondary)
@@ -41,18 +34,11 @@ struct MenuItemView: View {
 
 struct SectionDividerView: View {
     var body: some View {
-        // BAD: VoiceOver stops on this and reads nothing useful,
-        // or reads "dash, dash, dash" for the decorative line.
+        // BAD: VoiceOver stops and reads nothing useful
         HStack {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.secondary.opacity(0.3))
-            Image(systemName: "circle.fill")
-                .font(.system(size: 4))
-                .foregroundColor(.secondary)
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.secondary.opacity(0.3))
+            Rectangle().frame(height: 1).foregroundColor(.secondary.opacity(0.3))
+            Image(systemName: "circle.fill").font(.system(size: 4))
+            Rectangle().frame(height: 1).foregroundColor(.secondary.opacity(0.3))
         }
         .padding(.vertical, 8)
     }
@@ -64,65 +50,44 @@ struct SectionDividerView: View {
 ```swift
 struct MenuItemView: View {
     let item: MenuItem
-
     var body: some View {
         NavigationLink(value: item.route) {
             HStack {
-                // Decorative icon: hidden from VoiceOver.
-                // The item.title already conveys the meaning.
-                // If the icon IS meaningful, use .accessibilityLabel instead.
                 Image(systemName: item.icon)
                     .foregroundColor(.accentColor)
                     .frame(width: 28)
                     .accessibilityHidden(true)
-
                 Text(item.title)
-
                 Spacer()
-
-                // Chevron: purely decorative — NavigationLink already
-                // announces as a button. No information added.
                 Image(systemName: "chevron.right")
                     .font(.caption)
                     .foregroundColor(.secondary)
                     .accessibilityHidden(true)
             }
         }
-        // VoiceOver now reads: "Favorites, Button" — clean and clear.
-        // One swipe, one element, all necessary information.
+        // VoiceOver: "Favorites, Button" — one swipe, all info
     }
 }
 
 struct SectionDividerView: View {
     var body: some View {
-        // Entire decorative divider hidden from VoiceOver.
-        // It is visual-only — no semantic meaning to convey.
         HStack {
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.secondary.opacity(0.3))
-            Image(systemName: "circle.fill")
-                .font(.system(size: 4))
-                .foregroundColor(.secondary)
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(.secondary.opacity(0.3))
+            Rectangle().frame(height: 1).foregroundColor(.secondary.opacity(0.3))
+            Image(systemName: "circle.fill").font(.system(size: 4))
+            Rectangle().frame(height: 1).foregroundColor(.secondary.opacity(0.3))
         }
         .padding(.vertical, 8)
         .accessibilityHidden(true)
     }
 }
 
-// Exception: when an icon IS the primary information carrier,
-// give it a label instead of hiding it.
+// Exception: meaningful icons need labels, not hiding
 struct StatusBadge: View {
     let isOnline: Bool
-
     var body: some View {
         Circle()
             .fill(isOnline ? .green : .gray)
             .frame(width: 10, height: 10)
-            // This icon IS meaningful — label it, don't hide it.
             .accessibilityLabel(isOnline ? "Online" : "Offline")
     }
 }

@@ -1,7 +1,7 @@
 ---
 title: Avoid Sharing NavigationStack Across Tabs
 impact: CRITICAL
-impactDescription: navigation state bleeds between tabs, back stack corruption
+impactDescription: prevents back stack corruption across all tabs from shared NavigationStack
 tags: anti, tab-view, navigation-stack, state-bleed
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Use LazyView Wrapper for Pre-iOS 16 Destination Loading
 impact: LOW-MEDIUM
-impactDescription: defers destination construction until navigation occurs (legacy support)
+impactDescription: defers O(n) destination construction to O(1) on-tap for pre-iOS 16
 tags: perf, lazy-view, legacy, navigation-view
 ---
 

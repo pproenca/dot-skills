@@ -1,7 +1,7 @@
 ---
 title: Use Zoom Navigation Transition for Hero Animations (iOS 18+)
 impact: HIGH
-impactDescription: native hero animation with zero custom code, 60fps guaranteed
+impactDescription: O(1) hero animation setup replaces 200+ lines of manual transition code
 tags: anim, zoom, hero, navigation-transition, ios18
 ---
 

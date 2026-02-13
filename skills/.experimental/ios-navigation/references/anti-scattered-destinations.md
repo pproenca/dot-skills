@@ -1,7 +1,7 @@
 ---
 title: Avoid Scattering navigationDestination Across Views
 impact: CRITICAL
-impactDescription: undefined behavior, race conditions between registrations
+impactDescription: causes O(n) destination lookup ambiguity, undefined behavior with 2+ registrations
 tags: anti, destination, registration, undefined-behavior
 ---
 

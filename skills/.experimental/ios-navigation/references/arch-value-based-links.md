@@ -1,13 +1,13 @@
 ---
 title: Use Value-Based NavigationLink Over Destination Closures
 impact: CRITICAL
-impactDescription: prevents eager view construction, enables type-safe routing
+impactDescription: O(n) to O(1) destination construction at render time
 tags: arch, swiftui, navigation-link, performance, lazy-loading
 ---
 
 ## Use Value-Based NavigationLink Over Destination Closures
 
-NavigationLink(destination:) eagerly constructs the destination view and its entire dependency graph for every visible row, even if the user never taps it. In a list of 100 items this means 100 fully-initialized detail views in memory. Value-based NavigationLink defers construction until the push occurs, integrates with NavigationPath for programmatic control, and enforces type-safe routing through the destination registration pattern.
+NavigationLink(destination:) allocates the destination view struct and runs its initializer for every visible row, even if the user never taps it. When initializers trigger view model creation, network setup, or heavy allocations, this causes memory spikes and delays initial display. Value-based NavigationLink defers all construction until the push occurs, integrates with NavigationPath for programmatic control, and enforces type-safe routing through the destination registration pattern.
 
 **Incorrect (destination closure eagerly allocates views):**
 

@@ -48,7 +48,7 @@ struct PostComposerView: View {
 
 struct CameraCaptureView: View {
     @Environment(\.dismiss) private var dismiss
-    @StateObject private var camera = CameraManager()
+    @State private var camera = CameraManager()
 
     var body: some View {
         ZStack {

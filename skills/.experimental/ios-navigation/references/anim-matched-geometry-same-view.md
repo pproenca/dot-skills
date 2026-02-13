@@ -12,13 +12,11 @@ tags: anim, matched-geometry, view-hierarchy, common-mistake
 **Incorrect (matchedGeometryEffect across NavigationLink push):**
 
 ```swift
-// BAD: The namespace cannot bridge across a NavigationStack push.
-// The source cell is deallocated before the detail view appears,
-// resulting in no animation or a broken fade.
+// BAD: Namespace cannot bridge across NavigationStack push
+// Source cell deallocated before detail appears, animation fails
 struct PhotoGalleryView: View {
     @Namespace private var animation
     let photos: [Photo]
-
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -26,21 +24,15 @@ struct PhotoGalleryView: View {
                     ForEach(photos) { photo in
                         NavigationLink(value: photo) {
                             AsyncImage(url: photo.thumbnailURL)
-                                .matchedGeometryEffect(
-                                    id: photo.id,
-                                    in: animation
-                                )
+                                .matchedGeometryEffect(id: photo.id, in: animation)
                         }
                     }
                 }
             }
             .navigationDestination(for: Photo.self) { photo in
                 AsyncImage(url: photo.fullURL)
-                    .matchedGeometryEffect(
-                        id: photo.id,
-                        in: animation,
-                        isSource: false
-                    ) // WRONG: source is gone, animation fails silently
+                    .matchedGeometryEffect(id: photo.id, in: animation, isSource: false)
+                    // WRONG: source gone, animation fails
             }
         }
     }
@@ -50,11 +42,9 @@ struct PhotoGalleryView: View {
 **Correct (matchedGeometryEffect for in-place expansion, zoom for navigation):**
 
 ```swift
-// OPTION A: In-place expand/collapse (no navigation push)
-struct PhotoGalleryView: View {
+struct PhotoGalleryView: View { // In-place expand/collapse (no navigation push)
     @Namespace private var animation
     @State private var expandedPhoto: Photo?
-
     var body: some View {
         ZStack {
             ScrollView {
@@ -62,40 +52,27 @@ struct PhotoGalleryView: View {
                     ForEach(photos) { photo in
                         if expandedPhoto != photo {
                             AsyncImage(url: photo.thumbnailURL)
-                                .matchedGeometryEffect(
-                                    id: photo.id,
-                                    in: animation
-                                )
+                                .matchedGeometryEffect(id: photo.id, in: animation)
                                 .onTapGesture {
-                                    withAnimation(.spring(duration: 0.4, bounce: 0)) {
-                                        expandedPhoto = photo
-                                    }
+                                    withAnimation(.spring(duration: 0.4, bounce: 0)) { expandedPhoto = photo }
                                 }
                         }
                     }
                 }
             }
-
             if let photo = expandedPhoto {
                 PhotoDetailOverlay(photo: photo)
-                    .matchedGeometryEffect(
-                        id: photo.id,
-                        in: animation
-                    )
+                    .matchedGeometryEffect(id: photo.id, in: animation)
                     .onTapGesture {
-                        withAnimation(.spring(duration: 0.4, bounce: 0)) {
-                            expandedPhoto = nil
-                        }
+                        withAnimation(.spring(duration: 0.4, bounce: 0)) { expandedPhoto = nil }
                     }
             }
         }
     }
 }
-
 // OPTION B: Navigation push with zoom transition (iOS 18+)
 struct PhotoGalleryNavigationView: View {
     @Namespace private var zoomNamespace
-
     var body: some View {
         NavigationStack {
             ScrollView {
@@ -104,18 +81,13 @@ struct PhotoGalleryNavigationView: View {
                         NavigationLink(value: photo) {
                             AsyncImage(url: photo.thumbnailURL)
                         }
-                        .matchedTransitionSource(
-                            id: photo.id,
-                            in: zoomNamespace
-                        )
+                        .matchedTransitionSource(id: photo.id, in: zoomNamespace)
                     }
                 }
             }
             .navigationDestination(for: Photo.self) { photo in
                 PhotoDetailView(photo: photo)
-                    .navigationTransition(
-                        .zoom(sourceID: photo.id, in: zoomNamespace)
-                    )
+                    .navigationTransition(.zoom(sourceID: photo.id, in: zoomNamespace))
             }
         }
     }

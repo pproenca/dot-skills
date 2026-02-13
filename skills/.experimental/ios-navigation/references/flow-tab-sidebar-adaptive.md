@@ -47,9 +47,8 @@ struct AdaptiveRootView: View {
 // GOOD: Single TabView definition — tab bar on iPhone, sidebar on iPad,
 // with user-customizable tab ordering persisted automatically
 struct AdaptiveRootView: View {
-    // Persists user's tab customization across launches
-    @AppStorage("tabCustomization")
-    private var customization: TabViewCustomization
+    // Apple manages persistence automatically when tabs have .customizationID()
+    @State private var customization = TabViewCustomization()
 
     var body: some View {
         TabView {

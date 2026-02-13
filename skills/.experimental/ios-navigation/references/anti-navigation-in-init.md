@@ -1,7 +1,7 @@
 ---
 title: Avoid Heavy Work in View Initializers
 impact: HIGH
-impactDescription: causes hitches on navigation push, blocks main thread
+impactDescription: causes 200-800ms hitches on push, blocks main thread during animation
 tags: anti, performance, init, view-lifecycle
 ---
 
@@ -14,21 +14,18 @@ SwiftUI may construct destination views eagerly -- especially with `NavigationLi
 ```swift
 // BAD: The view model fetches data synchronously in init().
 // When NavigationLink constructs this view, the main thread
-// stalls for 200-800ms depending on network/database speed,
-// causing a visible hitch in the push animation.
+// stalls for 200-800ms, causing a visible hitch in the push animation.
 struct ProductDetailView: View {
-    @StateObject private var viewModel: ProductDetailViewModel
+    @State private var viewModel: ProductDetailViewModel
 
     init(productId: String) {
         // Heavy work: synchronous database query + JSON parsing
         let product = ProductDatabase.shared.fetchSync(id: productId)
         let recommendations = RecommendationEngine.shared
             .computeSync(for: product)
-        _viewModel = StateObject(
-            wrappedValue: ProductDetailViewModel(
-                product: product,
-                recommendations: recommendations
-            )
+        self.viewModel = ProductDetailViewModel(
+            product: product,
+            recommendations: recommendations
         )
     }
 
@@ -43,16 +40,12 @@ struct ProductDetailView: View {
 ```swift
 // GOOD: init() only stores the product ID — near-zero cost.
 // All expensive work runs asynchronously in .task {},
-// which fires after the view appears on screen so the
-// push animation stays at a smooth 60fps.
+// which fires after the view appears so the push stays at 60fps.
 struct ProductDetailView: View {
-    @StateObject private var viewModel: ProductDetailViewModel
+    @State private var viewModel: ProductDetailViewModel
 
     init(productId: String) {
-        // Lightweight: just capture the ID, no I/O
-        _viewModel = StateObject(
-            wrappedValue: ProductDetailViewModel(productId: productId)
-        )
+        self.viewModel = ProductDetailViewModel(productId: productId)
     }
 
     var body: some View {
@@ -64,20 +57,18 @@ struct ProductDetailView: View {
             }
         }
         .task {
-            // Async work runs off the main actor during load,
-            // then publishes results back to the @Published properties.
             await viewModel.loadProduct()
             await viewModel.loadRecommendations()
         }
     }
 }
 
-@MainActor
-final class ProductDetailViewModel: ObservableObject {
+@Observable @MainActor
+final class ProductDetailViewModel {
     let productId: String
-    @Published var product: Product?
-    @Published var recommendations: [Product] = []
-    @Published var isLoading = true
+    var product: Product?
+    var recommendations: [Product] = []
+    var isLoading = true
 
     init(productId: String) {
         self.productId = productId // No I/O in init

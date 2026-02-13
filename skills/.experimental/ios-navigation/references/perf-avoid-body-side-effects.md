@@ -13,7 +13,7 @@ SwiftUI may evaluate `body` multiple times per state change for diffing and layo
 
 ```swift
 struct CheckoutView: View {
-    @StateObject private var viewModel = CheckoutViewModel()
+    @State private var viewModel = CheckoutViewModel()
 
     var body: some View {
         // BAD: body may be called 3-5 times per state change
@@ -46,7 +46,7 @@ struct CheckoutView: View {
 
 ```swift
 struct CheckoutView: View {
-    @StateObject private var viewModel = CheckoutViewModel()
+    @State private var viewModel = CheckoutViewModel()
 
     var body: some View {
         // body is pure — no side effects, only view construction.

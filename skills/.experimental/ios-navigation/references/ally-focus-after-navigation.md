@@ -15,32 +15,22 @@ When a modal is dismissed, a flow completes, or an error appears, VoiceOver focu
 struct ProfileView: View {
     @State private var showEditSheet = false
     @State private var saveConfirmation = ""
-
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                Text("Profile")
-                    .font(.largeTitle)
-
-                // After the edit sheet is dismissed, VoiceOver focus
-                // lands on... somewhere. Usually the nav bar title
-                // or the first element. The confirmation message
-                // is never announced — user has no idea the save worked.
+                Text("Profile").font(.largeTitle)
+                // BAD: VoiceOver focus lands on nav bar or first element
+                // Confirmation message is never announced
                 if !saveConfirmation.isEmpty {
-                    Text(saveConfirmation)
-                        .foregroundColor(.green)
+                    Text(saveConfirmation).foregroundColor(.green)
                 }
-
-                Button("Edit Profile") {
-                    showEditSheet = true
-                }
+                Button("Edit Profile") { showEditSheet = true }
             }
             .sheet(isPresented: $showEditSheet) {
                 EditProfileSheet { result in
                     saveConfirmation = "Profile saved successfully"
                     showEditSheet = false
-                    // BAD: VoiceOver focus is now lost.
-                    // User must swipe around to discover what happened.
+                    // BAD: VoiceOver focus is lost
                 }
             }
         }
@@ -54,38 +44,22 @@ struct ProfileView: View {
 struct ProfileView: View {
     @State private var showEditSheet = false
     @State private var saveConfirmation = ""
-
-    // @AccessibilityFocusState binds to a VoiceOver focus target.
-    // Setting it to true moves VoiceOver focus to the bound element.
     @AccessibilityFocusState private var isConfirmationFocused: Bool
-
     var body: some View {
         NavigationStack {
             VStack(spacing: 16) {
-                Text("Profile")
-                    .font(.largeTitle)
-
+                Text("Profile").font(.largeTitle)
                 if !saveConfirmation.isEmpty {
                     Text(saveConfirmation)
                         .foregroundColor(.green)
-                        // Bind this element to the focus state.
-                        // When isConfirmationFocused = true,
-                        // VoiceOver immediately announces this text.
                         .accessibilityFocused($isConfirmationFocused)
                 }
-
-                Button("Edit Profile") {
-                    showEditSheet = true
-                }
+                Button("Edit Profile") { showEditSheet = true }
             }
             .sheet(isPresented: $showEditSheet) {
                 EditProfileSheet { result in
                     saveConfirmation = "Profile saved successfully"
                     showEditSheet = false
-
-                    // Move VoiceOver focus to the confirmation message
-                    // after a brief delay to let the sheet dismiss animation
-                    // complete and the confirmation view appear.
                     DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
                         isConfirmationFocused = true
                     }
@@ -95,14 +69,10 @@ struct ProfileView: View {
     }
 }
 
-// For enum-based focus (e.g., forms with multiple error targets):
+// Enum-based focus for forms with multiple error targets:
 struct SignUpView: View {
-    enum FocusTarget: Hashable {
-        case emailError, passwordError, successBanner
-    }
-
+    enum FocusTarget: Hashable { case emailError, passwordError }
     @AccessibilityFocusState private var focusTarget: FocusTarget?
-
     var body: some View {
         Form {
             TextField("Email", text: $email)
@@ -111,7 +81,6 @@ struct SignUpView: View {
                     .foregroundColor(.red)
                     .accessibilityFocused($focusTarget, equals: .emailError)
             }
-            // On validation failure, direct focus to the first error:
             // focusTarget = .emailError
         }
     }

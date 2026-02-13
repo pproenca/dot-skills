@@ -79,7 +79,7 @@ struct DismissableCardView: View {
                             .spring(duration: 0.5, bounce: 0)
                         ) {
                             if shouldDismiss {
-                                offset = UIScreen.main.bounds.height
+                                offset = 1000 // Large value to animate offscreen
                                 isDismissed = true
                             } else {
                                 offset = 0

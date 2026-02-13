@@ -12,19 +12,14 @@ Deep links from universal links, push notifications, Spotlight, and widgets must
 **Incorrect (boolean flags and imperative view presentation for deep links):**
 
 ```swift
-// COST: Each deep link target requires its own @State boolean and
-// .sheet/.fullScreenCover modifier. The back stack is not updated, so
-// the user cannot swipe back through the deep link path. Multiple
-// simultaneous deep links (e.g., notification + widget) race on the
-// boolean flags. State restoration is impossible.
+// COST: Each deep link needs its own boolean and .sheet modifier
+// Back stack not updated, user cannot swipe back through deep link path
+// State restoration impossible
 struct AppRootView: View {
     @State private var showProduct = false
     @State private var deepLinkedProductId: String?
     @State private var showOrder = false
     @State private var deepLinkedOrderId: String?
-    @State private var showPromotion = false
-    @State private var deepLinkedPromoCode: String?
-
     var body: some View {
         NavigationStack {
             HomeView()
@@ -32,8 +27,7 @@ struct AppRootView: View {
         .onOpenURL { url in
             let components = URLComponents(url: url, resolvingAgainstBaseURL: true)
             let path = components?.path ?? ""
-
-            // Fragile string parsing, no type safety, no exhaustive handling
+            // Fragile string parsing, no type safety
             if path.contains("product") {
                 deepLinkedProductId = path.components(separatedBy: "/").last
                 showProduct = true
@@ -43,7 +37,6 @@ struct AppRootView: View {
             }
         }
         .sheet(isPresented: $showProduct) {
-            // Presented outside NavigationStack — no back navigation
             if let id = deepLinkedProductId {
                 ProductDetailView(productId: id)
             }
@@ -60,25 +53,17 @@ struct AppRootView: View {
 **Correct (URL-to-route conversion appended to NavigationPath):**
 
 ```swift
-// BENEFIT: Deep links produce the same navigation state as manual
-// navigation. The full back stack is preserved. Multiple deep link
-// segments can build a complete drill-down path. State restoration
-// works because NavigationPath is Codable.
+// BENEFIT: Deep links produce same navigation state as manual navigation
+// Full back stack preserved, state restoration works
 struct AppRootView: View {
     @Environment(AppCoordinator.self) private var coordinator
-
     var body: some View {
         @Bindable var coordinator = coordinator
-
         NavigationStack(path: $coordinator.path) {
             HomeView()
-                .navigationDestination(for: AppRoute.self) { route in
-                    RouteDestinationView(route: route)
-                }
+                .navigationDestination(for: AppRoute.self) { RouteDestinationView(route: $0) }
         }
-        .onOpenURL { url in
-            coordinator.handleDeepLink(url)
-        }
+        .onOpenURL { coordinator.handleDeepLink($0) }
         .onContinueUserActivity(NSUserActivityTypeBrowsingWeb) { activity in
             guard let url = activity.webpageURL else { return }
             coordinator.handleDeepLink(url)
@@ -86,47 +71,25 @@ struct AppRootView: View {
     }
 }
 
-// Coordinator handles all deep link resolution centrally
 extension AppCoordinator {
     func handleDeepLink(_ url: URL) {
-        guard let routes = DeepLinkParser.parse(url) else {
-            logger.warning("Unrecognized deep link: \(url.absoluteString)")
-            return
-        }
-
-        // Reset to root, then build the full navigation stack
-        // so the user can swipe back through each level
-        popToRoot()
-
-        for route in routes {
-            navigate(to: route)
-        }
+        guard let routes = DeepLinkParser.parse(url) else { return }
+        popToRoot(); for route in routes { navigate(to: route) }
     }
 }
 
 enum DeepLinkParser {
-    /// Parses a URL into an ordered array of routes representing the
-    /// full navigation stack (e.g., category -> product -> reviews).
     static func parse(_ url: URL) -> [AppRoute]? {
         guard let components = URLComponents(url: url, resolvingAgainstBaseURL: true),
               let host = components.host else { return nil }
-
-        let segments = components.path
-            .split(separator: "/")
-            .map(String.init)
-
+        let segments = components.path.split(separator: "/").map(String.init)
         switch host {
         case "products":
             guard let productId = segments.first else { return nil }
-            return [
-                .productList(categoryId: "all"),
-                .productDetail(productId: productId)
-            ]
-
+            return [.productList(categoryId: "all"), .productDetail(productId: productId)]
         case "orders":
             guard let orderId = segments.first else { return nil }
             return [.orderDetail(orderId: orderId)]
-
         case "sellers":
             guard let sellerId = segments.first else { return nil }
             var routes: [AppRoute] = [.sellerProfile(sellerId: sellerId)]
@@ -134,9 +97,7 @@ enum DeepLinkParser {
                 routes.insert(.productList(categoryId: "seller-\(sellerId)"), at: 0)
             }
             return routes
-
-        default:
-            return nil
+        default: return nil
         }
     }
 }

@@ -1,51 +1,30 @@
 ---
-title: Use @StateObject at Creation Point, @ObservedObject for Passed References
+title: Own @Observable State with @State, Pass as Plain Property
 impact: MEDIUM-HIGH
-impactDescription: prevents view model recreation on parent re-render
-tags: perf, state-object, observed-object, view-model, lifecycle
+impactDescription: prevents model recreation on every parent re-render
+tags: perf, observable, state, view-model, lifecycle
 ---
 
-## Use @StateObject at Creation Point, @ObservedObject for Passed References
+## Own @Observable State with @State, Pass as Plain Property
 
-`@ObservedObject` does not own the object it wraps. If the parent view re-renders (due to any state change), SwiftUI recreates the child view struct, and `@ObservedObject var viewModel = SomeViewModel()` creates a brand-new instance — discarding all loaded data, in-flight requests, and local state. `@StateObject` tells SwiftUI to create the object once and preserve it across parent re-renders. Use `@StateObject` where you create the view model; use `@ObservedObject` only when receiving one from a parent.
+Use `@State` where you create an `@Observable` model — SwiftUI preserves the instance across parent re-renders. Pass it to children as a plain property (no wrapper needed). Use `@Bindable` when you need two-way bindings to the model's properties.
 
-**Incorrect (@ObservedObject at creation point — recreated on parent render):**
+**Important caveat:** Unlike the legacy `@StateObject` (which uses `@autoclosure`), `@State` with an `@Observable` class runs the initializer on every parent body evaluation — SwiftUI discards the extra instances, but side effects in `init()` (network calls, analytics, file I/O) still fire. Keep `@Observable` initializers lightweight and move expensive setup to `.task`.
+
+**Incorrect (model recreated on parent re-render):**
 
 ```swift
-struct ProductListView: View {
-    @State private var searchText = ""
-
-    var body: some View {
-        NavigationStack {
-            List(filteredProducts) { product in
-                NavigationLink(value: product) {
-                    ProductRowView(product: product)
-                }
-            }
-            .searchable(text: $searchText)
-            .navigationDestination(for: Product.self) { product in
-                // BAD: Every keystroke in searchable triggers a parent re-render.
-                // Each re-render recreates ProductDetailView, which recreates
-                // the view model — losing loaded data, resetting scroll position.
-                ProductDetailView(product: product)
-            }
-        }
-    }
-}
-
 struct ProductDetailView: View {
-    // BAD: @ObservedObject does NOT survive parent re-renders.
-    // A new DetailViewModel is allocated on every parent body call.
-    @ObservedObject var viewModel: ProductDetailViewModel
+    // BAD: plain property with no ownership — a new ViewModel
+    // is created on every parent body call, losing loaded data.
+    var viewModel: ProductDetailViewModel
 
     init(product: Product) {
-        // This initializer runs again on every parent state change.
         self.viewModel = ProductDetailViewModel(product: product)
     }
 
     var body: some View {
         ScrollView {
-            // Data loaded by .task is lost when viewModel is recreated.
             Text(viewModel.details?.description ?? "Loading...")
         }
         .task { await viewModel.loadDetails() }
@@ -53,81 +32,15 @@ struct ProductDetailView: View {
 }
 ```
 
-**Correct (@StateObject at creation point — survives parent re-renders):**
+**Correct (@State owns the model — survives parent re-renders):**
 
 ```swift
-struct ProductListView: View {
-    @State private var searchText = ""
-
-    var body: some View {
-        NavigationStack {
-            List(filteredProducts) { product in
-                NavigationLink(value: product) {
-                    ProductRowView(product: product)
-                }
-            }
-            .searchable(text: $searchText)
-            .navigationDestination(for: Product.self) { product in
-                ProductDetailView(product: product)
-            }
-        }
-    }
-}
-
 struct ProductDetailView: View {
-    // @StateObject: SwiftUI creates this ONCE and preserves it
-    // across parent re-renders. The view model survives searchable
-    // keystrokes, tab switches, and other unrelated state changes.
-    @StateObject private var viewModel: ProductDetailViewModel
-
-    init(product: Product) {
-        // _viewModel = StateObject(wrappedValue:) sets the initial value.
-        // SwiftUI only uses this closure on first creation — subsequent
-        // parent re-renders reuse the existing instance.
-        _viewModel = StateObject(wrappedValue: ProductDetailViewModel(product: product))
-    }
-
-    var body: some View {
-        ScrollView {
-            Text(viewModel.details?.description ?? "Loading...")
-        }
-        .task { await viewModel.loadDetails() }
-    }
-}
-
-// When passing a view model DOWN to a child, use @ObservedObject:
-struct ProductHeaderView: View {
-    // Correct: this view does not CREATE the view model,
-    // it receives it from a parent that owns it via @StateObject.
-    @ObservedObject var viewModel: ProductDetailViewModel
-
-    var body: some View {
-        Text(viewModel.product.name).font(.title)
-    }
-}
-```
-
-**iOS 17+ with @Observable (preferred for new code):**
-
-For projects targeting iOS 17+, `@Observable` replaces `ObservableObject` entirely. The ownership rules simplify: use `@State` where you create the model (replaces `@StateObject`), and pass it as a plain property where received (replaces `@ObservedObject`). Use `@Bindable` when you need two-way bindings.
-
-```swift
-// iOS 17+: @Observable replaces ObservableObject.
-// @State replaces @StateObject. Plain property replaces @ObservedObject.
-@Observable
-class ProductDetailViewModel {
-    var product: Product
-    var details: ProductDetails?
-
-    init(product: Product) { self.product = product }
-    func loadDetails() async { /* ... */ }
-}
-
-struct ProductDetailView: View {
-    // @State owns the object — survives parent re-renders (replaces @StateObject)
+    // @State owns the object — survives parent re-renders.
     @State private var viewModel: ProductDetailViewModel
 
     init(product: Product) {
+        // Keep init lightweight — no network calls or I/O here.
         self.viewModel = ProductDetailViewModel(product: product)
     }
 
@@ -141,11 +54,43 @@ struct ProductDetailView: View {
 }
 
 struct ProductHeaderView: View {
-    // Plain property — no wrapper needed (replaces @ObservedObject)
+    // Plain property — no wrapper needed for read access.
     var viewModel: ProductDetailViewModel
 
     var body: some View {
         Text(viewModel.product.name).font(.title)
+    }
+}
+
+@Observable
+class ProductDetailViewModel {
+    var product: Product
+    var details: ProductDetails?
+
+    init(product: Product) { self.product = product }
+    func loadDetails() async { /* ... */ }
+}
+```
+
+**Legacy (iOS 16 and below — @StateObject / @ObservedObject):**
+
+For codebases targeting iOS 16 or below where `@Observable` is unavailable, use `@StateObject` at the creation point and `@ObservedObject` when receiving from a parent. `@StateObject` uses `@autoclosure` for true lazy initialization — the wrapped value initializer runs only once, unlike `@State` with `@Observable`.
+
+```swift
+struct ProductDetailView: View {
+    @StateObject private var viewModel: ProductDetailViewModel
+
+    init(product: Product) {
+        _viewModel = StateObject(
+            wrappedValue: ProductDetailViewModel(product: product)
+        )
+    }
+
+    var body: some View {
+        ScrollView {
+            Text(viewModel.details?.description ?? "Loading...")
+        }
+        .task { await viewModel.loadDetails() }
     }
 }
 ```
