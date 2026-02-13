@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "nginx.org",
+  "technology": "nginx C Modules",
+  "date": "February 2026",
+  "abstract": "Comprehensive performance optimization and reliability guide for nginx C modules, designed for AI agents and LLMs. Contains 43 rules across 8 categories, prioritized by impact from critical (buffer zero-copy, connection efficiency) to incremental (logging and metrics). Each rule includes detailed explanations, real-world C code examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated optimization and resilience improvements. Companion to the nginx-c-module-best-practices skill which covers correctness.",
+  "references": [
+    "https://nginx.org/en/docs/dev/development_guide.html",
+    "https://www.evanmiller.org/nginx-modules-guide.html",
+    "https://www.evanmiller.org/nginx-modules-guide-advanced.html",
+    "https://github.com/nginx/nginx",
+    "https://github.com/baishancloud/nginx-development-guide",
+    "https://www.nginx.com/resources/wiki/extending/api/",
+    "https://blog.nginx.org/blog/inside-nginx-how-we-designed-for-performance-scale",
+    "https://blog.nginx.org/blog/performance-tuning-tips-tricks"
+  ]
+}
