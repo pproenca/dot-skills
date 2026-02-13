@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple Engineering",
+  "technology": "iOS Navigation (SwiftUI)",
+  "date": "February 2026",
+  "abstract": "Comprehensive navigation architecture and transition guide for iOS apps built with SwiftUI, designed for AI agents and LLMs. Contains 49 rules across 8 categories, prioritized by impact from critical (navigation architecture, anti-patterns) to incremental (state restoration, accessibility). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://developer.apple.com/videos/play/wwdc2022/10054/",
+    "https://developer.apple.com/videos/play/wwdc2024/10145/",
+    "https://developer.apple.com/design/human-interface-guidelines/navigation-and-search",
+    "https://developer.apple.com/documentation/swiftui/navigationstack",
+    "https://developer.apple.com/documentation/swiftui/navigationsplitview",
+    "https://developer.apple.com/documentation/swiftui/navigationpath",
+    "https://frankrausch.com/ios-navigation/",
+    "https://swiftwithmajid.com/2022/06/21/mastering-navigationstack-in-swiftui-deep-linking/",
+    "https://fatbobman.com/en/posts/new_navigator_of_swiftui_4/",
+    "https://peterfriese.dev/blog/2024/hero-animation/",
+    "https://swiftui-lab.com/digital-lounges-2022/"
+  ]
+}

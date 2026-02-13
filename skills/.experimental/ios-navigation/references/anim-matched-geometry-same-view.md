@@ -1,0 +1,123 @@
+---
+title: Use matchedGeometryEffect Only Within Same View Hierarchy
+impact: HIGH
+impactDescription: prevents broken animations across navigation pushes
+tags: anim, matched-geometry, view-hierarchy, common-mistake
+---
+
+## Use matchedGeometryEffect Only Within Same View Hierarchy
+
+`matchedGeometryEffect` animates geometry changes between two states within a single view hierarchy -- it does NOT work across `NavigationStack` pushes because the source view is removed from the tree before the destination appears. This is one of the most common SwiftUI animation mistakes. Use `.navigationTransition(.zoom)` for hero animations across navigation, and reserve `matchedGeometryEffect` for in-place expand/collapse transitions.
+
+**Incorrect (matchedGeometryEffect across NavigationLink push):**
+
+```swift
+// BAD: The namespace cannot bridge across a NavigationStack push.
+// The source cell is deallocated before the detail view appears,
+// resulting in no animation or a broken fade.
+struct PhotoGalleryView: View {
+    @Namespace private var animation
+    let photos: [Photo]
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                    ForEach(photos) { photo in
+                        NavigationLink(value: photo) {
+                            AsyncImage(url: photo.thumbnailURL)
+                                .matchedGeometryEffect(
+                                    id: photo.id,
+                                    in: animation
+                                )
+                        }
+                    }
+                }
+            }
+            .navigationDestination(for: Photo.self) { photo in
+                AsyncImage(url: photo.fullURL)
+                    .matchedGeometryEffect(
+                        id: photo.id,
+                        in: animation,
+                        isSource: false
+                    ) // WRONG: source is gone, animation fails silently
+            }
+        }
+    }
+}
+```
+
+**Correct (matchedGeometryEffect for in-place expansion, zoom for navigation):**
+
+```swift
+// OPTION A: In-place expand/collapse (no navigation push)
+struct PhotoGalleryView: View {
+    @Namespace private var animation
+    @State private var expandedPhoto: Photo?
+
+    var body: some View {
+        ZStack {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                    ForEach(photos) { photo in
+                        if expandedPhoto != photo {
+                            AsyncImage(url: photo.thumbnailURL)
+                                .matchedGeometryEffect(
+                                    id: photo.id,
+                                    in: animation
+                                )
+                                .onTapGesture {
+                                    withAnimation(.spring(duration: 0.4, bounce: 0)) {
+                                        expandedPhoto = photo
+                                    }
+                                }
+                        }
+                    }
+                }
+            }
+
+            if let photo = expandedPhoto {
+                PhotoDetailOverlay(photo: photo)
+                    .matchedGeometryEffect(
+                        id: photo.id,
+                        in: animation
+                    )
+                    .onTapGesture {
+                        withAnimation(.spring(duration: 0.4, bounce: 0)) {
+                            expandedPhoto = nil
+                        }
+                    }
+            }
+        }
+    }
+}
+
+// OPTION B: Navigation push with zoom transition (iOS 18+)
+struct PhotoGalleryNavigationView: View {
+    @Namespace private var zoomNamespace
+
+    var body: some View {
+        NavigationStack {
+            ScrollView {
+                LazyVGrid(columns: [GridItem(.adaptive(minimum: 100))]) {
+                    ForEach(photos) { photo in
+                        NavigationLink(value: photo) {
+                            AsyncImage(url: photo.thumbnailURL)
+                        }
+                        .matchedTransitionSource(
+                            id: photo.id,
+                            in: zoomNamespace
+                        )
+                    }
+                }
+            }
+            .navigationDestination(for: Photo.self) { photo in
+                PhotoDetailView(photo: photo)
+                    .navigationTransition(
+                        .zoom(sourceID: photo.id, in: zoomNamespace)
+                    )
+            }
+        }
+    }
+}
+```
