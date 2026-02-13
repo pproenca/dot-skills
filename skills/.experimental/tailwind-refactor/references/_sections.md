@@ -3,6 +3,8 @@
 This file defines all sections, their ordering, impact levels, and descriptions.
 The section ID (in parentheses) is the filename prefix used to group rules.
 
+**Note:** Section impact levels indicate the *maximum* severity for that category. Individual rules within a section may have lower impact levels when the specific change is less urgent than the category's primary concern.
+
 ---
 
 ## 1. Configuration Migration (config)
@@ -13,7 +15,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 2. Deprecated Utility Replacement (dep)
 
 **Impact:** CRITICAL
-**Description:** Utilities removed in v4 (`bg-opacity-*`, `flex-shrink-*`, `overflow-ellipsis`) cause build failures and must be replaced with their modern equivalents.
+**Description:** Utilities removed in v4 (`bg-opacity-*`, `flex-shrink-*`, `overflow-ellipsis`) are silently purged — they produce no CSS output and cause broken styles that are hard to detect because the build succeeds without errors.
 
 ## 3. Renamed Utility Updates (rename)
 

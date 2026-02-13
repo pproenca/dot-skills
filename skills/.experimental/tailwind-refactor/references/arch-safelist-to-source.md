@@ -1,7 +1,7 @@
 ---
 title: Replace safelist with @source inline()
 impact: MEDIUM
-impactDescription: replaces JS safelist array with 1-line CSS directive
+impactDescription: replaces N-line JS safelist with 1 CSS directive
 tags: arch, safelist, purge, source, v4-migration
 ---
 

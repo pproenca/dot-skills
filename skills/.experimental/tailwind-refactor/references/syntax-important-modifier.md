@@ -1,7 +1,7 @@
 ---
 title: Use Trailing ! for Important Modifier
 impact: MEDIUM
-impactDescription: aligns with v4 canonical syntax — prefix ! deprecated
+impactDescription: prevents removal when prefix ! syntax is dropped in future v4 release
 tags: syntax, important, v4-migration, specificity
 ---
 

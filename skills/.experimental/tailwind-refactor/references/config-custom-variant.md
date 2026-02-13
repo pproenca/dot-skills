@@ -1,7 +1,7 @@
 ---
 title: Migrate addVariant to @custom-variant
 impact: HIGH
-impactDescription: replaces ~10-line JS plugin with 1-line CSS directive per variant
+impactDescription: replaces ~10-line JS plugin with 1 CSS directive per variant
 tags: config, variants, custom-variant, plugins
 ---
 

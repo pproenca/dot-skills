@@ -5,11 +5,13 @@ description: Tailwind CSS code refactoring patterns for v4 migration and anti-pa
 
 # Community Tailwind CSS Refactoring Best Practices
 
-Comprehensive code quality refactoring guide for Tailwind CSS applications targeting v4. Contains 47 rules across 8 categories, prioritized by migration urgency. Every transformation preserves the existing look and feel — this skill is purely about cleaner code, modern syntax, and v4 compatibility.
+Comprehensive code quality refactoring guide for Tailwind CSS applications targeting v4. Contains 50 rules across 8 categories, prioritized by migration urgency. Every transformation preserves the existing look and feel — this skill is purely about cleaner code, modern syntax, and v4 compatibility.
 
 **Companion skills:** Use [tailwind-ui-refactor](../tailwind-ui-refactor/) for visual design improvements and [tailwind-responsive-ui](../tailwind-responsive-ui/) for responsive layout patterns.
 
 ## When to Apply
+
+**Before manual migration:** Run `npx @tailwindcss/upgrade` first — it handles most configuration and renamed utility changes automatically. Then use this skill for patterns the automated tool does not cover.
 
 Reference these guidelines when:
 - Migrating a project from Tailwind CSS v3 to v4
@@ -39,10 +41,12 @@ Reference these guidelines when:
 - [`config-import-directive`](references/config-import-directive.md) - Replace @tailwind directives with @import
 - [`config-css-theme`](references/config-css-theme.md) - Migrate tailwind.config.js to CSS @theme
 - [`config-theme-function`](references/config-theme-function.md) - Replace theme() function with CSS variables
+- [`config-theme-inline`](references/config-theme-inline.md) - Use @theme inline for non-utility design tokens
 - [`config-utility-directive`](references/config-utility-directive.md) - Replace @layer utilities with @utility
 - [`config-postcss-plugin`](references/config-postcss-plugin.md) - Update PostCSS plugin to @tailwindcss/postcss
 - [`config-content-autodetect`](references/config-content-autodetect.md) - Remove manual content configuration
 - [`config-custom-variant`](references/config-custom-variant.md) - Migrate addVariant to @custom-variant
+- [`config-preflight-defaults`](references/config-preflight-defaults.md) - Account for Preflight default changes in v4
 
 ### 2. Deprecated Utility Replacement (CRITICAL)
 
@@ -68,6 +72,7 @@ Reference these guidelines when:
 - [`class-gap-over-space`](references/class-gap-over-space.md) - Prefer gap-* over space-x/y-* in flex/grid
 - [`class-inset-shorthand`](references/class-inset-shorthand.md) - Replace top/right/bottom/left with inset-*
 - [`class-border-color-explicit`](references/class-border-color-explicit.md) - Add explicit border color for v4 default change
+- [`class-ring-color-explicit`](references/class-ring-color-explicit.md) - Add explicit ring color for v4 default change
 - [`class-redundant-display`](references/class-redundant-display.md) - Remove redundant display classes
 - [`class-hidden-priority`](references/class-hidden-priority.md) - Remove display overrides for hidden attribute
 - [`class-container-utility`](references/class-container-utility.md) - Replace container plugin config with @utility
@@ -78,7 +83,7 @@ Reference these guidelines when:
 - [`arb-spacing-to-scale`](references/arb-spacing-to-scale.md) - Replace arbitrary spacing with theme scale
 - [`arb-dynamic-classes`](references/arb-dynamic-classes.md) - Avoid dynamic class name construction
 - [`arb-breakpoint-to-theme`](references/arb-breakpoint-to-theme.md) - Replace arbitrary breakpoints with @theme
-- [`arb-zindex-to-scale`](references/arb-zindex-to-scale.md) - Replace arbitrary z-index with theme scale
+- [`arb-zindex-to-scale`](references/arb-zindex-to-scale.md) - Replace arbitrary z-index with defined scale
 
 ### 6. Syntax Modernization (MEDIUM)
 
@@ -101,7 +106,7 @@ Reference these guidelines when:
 
 - [`adopt-container-queries`](references/adopt-container-queries.md) - Use container queries instead of viewport breakpoints
 - [`adopt-not-variant`](references/adopt-not-variant.md) - Use not-* variant for negated conditions
-- [`adopt-in-variant`](references/adopt-in-variant.md) - Use in-* variant instead of group class
+- [`adopt-in-variant`](references/adopt-in-variant.md) - Use in-* variant to simplify parent-state styling
 - [`adopt-field-sizing`](references/adopt-field-sizing.md) - Use field-sizing-content for auto-resizing textareas
 - [`adopt-starting-variant`](references/adopt-starting-variant.md) - Use starting variant for entry animations without JS
 

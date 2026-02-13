@@ -33,3 +33,4 @@ Several commonly used utility combinations include classes that simply restate t
 - Only remove these classes when they appear **without** a variant prefix
 - Classes like `md:flex-row`, `lg:items-stretch`, `hover:justify-start`, `rtl:text-left` serve a real purpose as responsive or conditional overrides and must be kept
 - Example: `flex flex-col md:flex-row` — `md:flex-row` is NOT redundant here
+- Some teams prefer explicit defaults for code readability — if your convention is to document layout intent with explicit classes (e.g., `flex flex-row` to distinguish from a `flex flex-col` sibling), keep them

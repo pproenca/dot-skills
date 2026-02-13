@@ -3,7 +3,7 @@
   "organization": "Community",
   "technology": "Tailwind CSS",
   "date": "February 2026",
-  "abstract": "Comprehensive code quality refactoring guide for Tailwind CSS applications targeting v4 migration and anti-pattern cleanup. Contains 47 rules across 8 categories, prioritized by migration urgency from critical (configuration migration, deprecated utility replacement) to incremental (modern feature adoption). Every transformation preserves the existing visual output — this skill focuses purely on cleaner code, modern v4 syntax, and elimination of code smells. Each rule includes incorrect vs. correct examples showing exact class-level transformations.",
+  "abstract": "Comprehensive code quality refactoring guide for Tailwind CSS applications targeting v4 migration and anti-pattern cleanup. Contains 50 rules across 8 categories, prioritized by migration urgency from critical (configuration migration, deprecated utility replacement) to incremental (modern feature adoption). Every transformation preserves the existing visual output — this skill focuses purely on cleaner code, modern v4 syntax, and elimination of code smells. Each rule includes incorrect vs. correct examples showing exact class-level transformations.",
   "references": [
     "https://tailwindcss.com/blog/tailwindcss-v4",
     "https://tailwindcss.com/docs/upgrade-guide",

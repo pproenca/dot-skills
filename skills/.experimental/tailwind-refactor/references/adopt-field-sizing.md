@@ -27,3 +27,8 @@ Auto-resizing textareas traditionally require JavaScript to measure `scrollHeigh
 ```
 
 The `field-sizing-content` utility also works on `<input>` elements, sizing them based on content width rather than a fixed `size` attribute.
+
+**When NOT to use this pattern:**
+- `field-sizing: content` is a bleeding-edge CSS property with limited browser support — as of early 2026, Firefox added support recently and Safari support may still be partial
+- For production apps that must support older browsers, keep the JavaScript auto-resize as a fallback and use `field-sizing-content` as a progressive enhancement
+- Check [caniuse.com](https://caniuse.com/mdn-css_properties_field-sizing_content) for current support before adopting

@@ -1,13 +1,13 @@
 ---
 title: Replace flex-shrink and flex-grow with shrink and grow
 impact: HIGH
-impactDescription: replaces 2 deprecated utilities with shorter equivalents
+impactDescription: prevents 2 silently broken layout utilities
 tags: dep, flex, layout
 ---
 
 ## Replace flex-shrink and flex-grow with shrink and grow
 
-The `flex-shrink-*` and `flex-grow-*` utilities were deprecated in Tailwind v3.3 in favor of the shorter `shrink-*` and `grow-*` aliases. While both forms worked in v3, Tailwind CSS v4 removes the `flex-` prefixed versions entirely, causing build failures if they remain in your markup.
+The `flex-shrink-*` and `flex-grow-*` utilities were deprecated in Tailwind v3.3 in favor of the shorter `shrink-*` and `grow-*` aliases. While both forms worked in v3, Tailwind CSS v4 removes the `flex-` prefixed versions entirely. The classes are silently purged and produce no CSS output, resulting in broken layouts that are difficult to detect because the build itself succeeds without errors.
 
 **Incorrect (what's wrong):**
 
