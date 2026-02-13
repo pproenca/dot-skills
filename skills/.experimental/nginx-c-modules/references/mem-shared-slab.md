@@ -1,7 +1,7 @@
 ---
 title: Use Slab Allocator for Shared Memory Zones
-impact: MEDIUM
-impactDescription: prevents data corruption across worker processes
+impact: HIGH
+impactDescription: prevents server-wide data corruption across all worker processes
 tags: mem, shared-memory, slab, mutex
 ---
 

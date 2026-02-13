@@ -5,7 +5,7 @@ description: nginx C module development guidelines based on the official nginx d
 
 # nginx.org C Module Development Best Practices
 
-Comprehensive development guide for nginx C modules, derived from the official nginx development documentation and community expertise. Contains 46 rules across 8 categories, prioritized by impact to guide correct module implementation and prevent common crashes, memory leaks, and undefined behavior.
+Comprehensive development guide for nginx C modules, derived from the official nginx development documentation and community expertise. Contains 49 rules across 8 categories, prioritized by impact to guide correct module implementation and prevent common crashes, memory leaks, and undefined behavior.
 
 ## When to Apply
 
@@ -59,6 +59,7 @@ Reference these guidelines when:
 - [`conf-null-command`](references/conf-null-command.md) - Terminate Commands Array with ngx_null_command
 - [`conf-custom-handler`](references/conf-custom-handler.md) - Use Custom Handlers for Complex Directive Parsing
 - [`conf-module-ctx-null`](references/conf-module-ctx-null.md) - Set Unused Module Context Callbacks to NULL
+- [`conf-build-config`](references/conf-build-config.md) - Write Correct config Build Script for Module Compilation
 
 ### 4. Handler Development (HIGH)
 
@@ -68,6 +69,8 @@ Reference these guidelines when:
 - [`handler-content-handler`](references/handler-content-handler.md) - Use content_handler for Location-Specific Response Generation
 - [`handler-error-page`](references/handler-error-page.md) - Return HTTP Status Codes for Error Responses
 - [`handler-empty-response`](references/handler-empty-response.md) - Use header_only for Empty Body Responses
+- [`handler-module-ctx`](references/handler-module-ctx.md) - Use Module Context for Per-Request State
+- [`handler-add-variable`](references/handler-add-variable.md) - Register Custom Variables in preconfiguration
 
 ### 5. Filter Chain (MEDIUM-HIGH)
 

@@ -53,6 +53,12 @@ ngx_http_myproxy_create_request(ngx_http_request_t *r)
     ngx_buf_t            *b;
     size_t                len;
 
+    if (r->headers_in.host == NULL) {
+        ngx_log_error(NGX_LOG_ERR, r->connection->log, 0,
+                      "no Host header in request");
+        return NGX_ERROR;
+    }
+
     len = sizeof("GET ") - 1 + r->uri.len + sizeof(" HTTP/1.0\r\n") - 1
         + sizeof("Host: ") - 1 + r->headers_in.host->value.len
         + sizeof("\r\n") - 1

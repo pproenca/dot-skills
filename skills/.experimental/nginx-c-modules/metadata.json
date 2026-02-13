@@ -3,7 +3,7 @@
   "organization": "nginx.org",
   "technology": "nginx C Modules",
   "date": "February 2026",
-  "abstract": "Comprehensive development guide for nginx C modules, designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (memory management, request lifecycle) to incremental (data structures and strings). Each rule includes detailed explanations, real-world C code examples comparing incorrect vs. correct implementations, and specific impact metrics to guide correct module development.",
+  "abstract": "Comprehensive development guide for nginx C modules, designed for AI agents and LLMs. Contains 49 rules across 8 categories, prioritized by impact from critical (memory management, request lifecycle) to incremental (data structures and strings). Each rule includes detailed explanations, real-world C code examples comparing incorrect vs. correct implementations, and specific impact metrics to guide correct module development.",
   "references": [
     "https://nginx.org/en/docs/dev/development_guide.html",
     "https://www.evanmiller.org/nginx-modules-guide.html",

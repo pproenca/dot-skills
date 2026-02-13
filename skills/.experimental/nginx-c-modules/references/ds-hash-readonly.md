@@ -70,6 +70,10 @@ ngx_http_mymodule_handler(ngx_http_request_t *r)
 
     lcf = ngx_http_get_module_loc_conf(r, ngx_http_mymodule_module);
 
+    if (r->headers_in.host == NULL) {
+        return NGX_DECLINED;
+    }
+
     key = ngx_hash_key_lc(r->headers_in.host->value.data,
                           r->headers_in.host->value.len);
 

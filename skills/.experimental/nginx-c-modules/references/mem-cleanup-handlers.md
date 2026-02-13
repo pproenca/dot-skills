@@ -53,6 +53,13 @@ ngx_http_mymodule_open_db(ngx_http_request_t *r, my_ctx_t *ctx)
         return NGX_ERROR;
     }
 
+    /* initialize sentinel BEFORE registering cleanup — ngx_pcalloc zeros
+     * to 0 which is a valid fd on Unix, not our sentinel -1 */
+    ctx->db_fd = -1;
+
+    cln->handler = ngx_http_mymodule_cleanup_db;
+    cln->data = ctx;
+
     ctx->db_fd = open("/var/lib/mymodule/data.db", O_RDONLY);
     if (ctx->db_fd == -1) {
         ngx_log_error(NGX_LOG_ERR, r->connection->log, ngx_errno,
@@ -60,11 +67,8 @@ ngx_http_mymodule_open_db(ngx_http_request_t *r, my_ctx_t *ctx)
         return NGX_ERROR;
     }
 
-    cln->handler = ngx_http_mymodule_cleanup_db;
-    cln->data = ctx;
-
     return NGX_OK;
 }
 ```
 
-**Note:** Register the cleanup handler before acquiring the resource or immediately after. If you register after and the acquisition fails, the cleanup handler safely handles the sentinel value (`-1`). This pattern is used throughout nginx core for temporary files (`ngx_pool_cleanup_file`).
+**Note:** Initialize the sentinel value (`ctx->db_fd = -1`) explicitly before registering the cleanup handler. `ngx_pcalloc` zeros memory to `0`, which is a valid file descriptor on Unix — not a safe sentinel. Register the cleanup handler before `open()` so that if the pool is destroyed between the open and the return, the fd is still closed. This pattern is used throughout nginx core for temporary files (`ngx_pool_cleanup_file`).
