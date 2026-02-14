@@ -7,7 +7,7 @@ description: nginx C module performance optimization and reliability guidelines 
 
 Comprehensive performance optimization and reliability guide for nginx C modules, derived from the official nginx development documentation and production engineering experience. Contains 43 rules across 8 categories, prioritized by impact to guide automated optimization and resilience improvements.
 
-**Companion skill**: This skill complements [nginx-c-module-best-practices](../nginx-c-modules/SKILL.md) which covers correctness (memory safety, request lifecycle, configuration). This skill covers **performance optimization and operational reliability**.
+**Companion skill**: This skill complements [nginx-c-modules](../nginx-c-modules/SKILL.md) which covers correctness (memory safety, request lifecycle, configuration). This skill covers **performance optimization and operational reliability**.
 
 ## When to Apply
 

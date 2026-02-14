@@ -7,7 +7,7 @@ description: nginx C module debugging guidelines based on the official nginx dev
 
 Comprehensive debugging guide for nginx C modules, derived from the official nginx development documentation and production debugging experience. Contains 45 rules across 8 categories, prioritized by impact to guide systematic diagnosis of crashes, memory bugs, and behavioral issues in nginx modules.
 
-**Companion skills**: This skill complements [nginx-c-module-best-practices](../nginx-c-modules/SKILL.md) (correctness) and [nginx-c-module-perf-reliability](../nginx-c-perf/SKILL.md) (performance). This skill covers **debugging and diagnosis**.
+**Companion skills**: This skill complements [nginx-c-modules](../nginx-c-modules/SKILL.md) (correctness) and [nginx-c-module-perf-reliability](../nginx-c-perf/SKILL.md) (performance). This skill covers **debugging and diagnosis**.
 
 ## When to Apply
 

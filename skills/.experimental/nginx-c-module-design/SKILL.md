@@ -1,5 +1,5 @@
 ---
-name: nginx-c-design-best-practices
+name: nginx-c-module-design
 description: nginx C module directive design guidelines for creating admin-friendly configuration interfaces. This skill should be used when designing nginx module directives — deciding what to expose vs hardcode, naming conventions, scope placement, default values, variable design, and validation patterns. Triggers on tasks involving ngx_command_t design, directive naming, configuration API design, nginx module public interface, or directive deprecation.
 ---
 
