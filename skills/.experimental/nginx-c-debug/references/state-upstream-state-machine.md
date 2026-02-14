@@ -1,7 +1,7 @@
 ---
 title: Debug Upstream Module State by Logging Transition Points
 impact: MEDIUM
-impactDescription: maps complex proxy state machine for intermittent failures
+impactDescription: maps 8+ upstream state transitions — intermittent proxy failures require logging each transition
 tags: state, upstream, state-machine, proxy
 ---
 

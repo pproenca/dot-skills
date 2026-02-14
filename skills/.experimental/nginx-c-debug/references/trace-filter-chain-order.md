@@ -1,7 +1,7 @@
 ---
 title: Trace Filter Chain Execution Order and Data Flow
 impact: HIGH
-impactDescription: identifies which filter corrupts or drops response data
+impactDescription: identifies which of 10+ chained filters corrupts or drops response data
 tags: trace, filter, chain, header-filter, body-filter
 ---
 

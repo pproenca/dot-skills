@@ -1,7 +1,7 @@
 ---
 title: Enable NGX_DEBUG_PALLOC for Fine-Grained Pool Allocation Tracking
 impact: LOW-MEDIUM
-impactDescription: makes each pool allocation individually trackable by memory tools
+impactDescription: turns 1 opaque pool into 100s of individual malloc calls visible to ASan/Valgrind
 tags: build, debug-palloc, pool, allocation, tracking
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Avoid Storing Long-Lived Pointers in Temporary Pools
 impact: CRITICAL
-impactDescription: crashes when temp pool destroyed mid-processing
+impactDescription: crashes when temp pool freed — r->pool vs r->connection->pool lifetime mismatch
 tags: memdbg, temp-pool, request-body, configuration
 ---
 

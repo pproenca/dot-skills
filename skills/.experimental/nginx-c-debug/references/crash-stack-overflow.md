@@ -1,7 +1,7 @@
 ---
 title: Detect Stack Overflow from Recursive Subrequest or Filter Chains
 impact: CRITICAL
-impactDescription: kills worker with SIGSEGV at stack boundary
+impactDescription: kills worker with SIGSEGV — default 8MB stack overflows with ~2000+ recursive calls
 tags: crash, stack-overflow, recursion, subrequest, filter
 ---
 

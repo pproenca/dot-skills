@@ -1,7 +1,7 @@
 ---
 title: Use Valgrind Pool-Level Tracing to Find Leaked Allocations
 impact: CRITICAL
-impactDescription: pinpoints exact allocation source of leaks
+impactDescription: turns 1 opaque pool block into 100s of individually tracked allocations for Valgrind
 tags: memdbg, valgrind, pool, allocation-tracing
 ---
 
@@ -62,5 +62,7 @@ Standard Valgrind cannot track nginx pool allocations because `ngx_palloc` inter
  * in production.
  */
 ```
+
+**See also:** [`build-debug-palloc`](build-debug-palloc.md) for the canonical NGX_DEBUG_PALLOC build configuration and ASan integration.
 
 Reference: [nginx Development Guide — Memory Pools](https://nginx.org/en/docs/dev/development_guide.html#pool)

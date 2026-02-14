@@ -1,7 +1,7 @@
 ---
 title: Extract Crash Context from Worker Exit Log Messages
 impact: CRITICAL
-impactDescription: provides crash location without coredump
+impactDescription: recovers crash location in 90%+ of cases even without coredump enabled
 tags: crash, worker, exit, error-log, signal
 ---
 

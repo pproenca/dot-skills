@@ -1,7 +1,7 @@
 ---
 title: Trace Request Processing with DTrace pid Provider
 impact: MEDIUM
-impactDescription: inspects function arguments in production without debug binary
+impactDescription: inspects function arguments in production — no rebuild needed vs 30min+ rebuild cycle
 tags: probe, dtrace, pid-provider, request-tracing
 ---
 
@@ -52,6 +52,12 @@ www       4521  ...  nginx: worker process
 $ cat > trace_request.d << 'DTRACE_SCRIPT'
 #!/usr/sbin/dtrace -s
 
+/* WARNING: struct offsets (0xb8, 0xc0 below) are examples only.
+ * They change with every nginx version, compile flags, and platform.
+ * Find YOUR offsets first:
+ *   pahole -C ngx_http_request_s ./objs/nginx | grep -A1 uri
+ *   gdb -batch ./objs/nginx -ex 'ptype /o ngx_http_request_s' */
+
 /* Trace ngx_http_process_request — entry point for
  * every HTTP request after headers are parsed.
  * arg0 = ngx_http_request_t *r */
@@ -60,8 +66,7 @@ pid$target::ngx_http_process_request:entry
     self->req = arg0;
     self->start = timestamp;
 
-    /* Read r->uri.len (offset depends on nginx version,
-     * use pahole or GDB to find the exact offset) */
+    /* Replace 0xb8/0xc0 with YOUR offsets from pahole/gdb */
     this->uri_len = *(uint32_t *)copyin(arg0 + 0xb8, 4);
     this->uri_data = *(uintptr_t *)copyin(arg0 + 0xc0, 8);
 

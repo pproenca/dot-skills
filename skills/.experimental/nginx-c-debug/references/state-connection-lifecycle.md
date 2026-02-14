@@ -1,7 +1,7 @@
 ---
 title: Track Connection State Transitions for Lifecycle Debugging
 impact: MEDIUM
-impactDescription: identifies where connection handling deviates from expected sequence
+impactDescription: identifies connection handling deviations — 5+ state transitions per request must occur in correct order
 tags: state, connection, lifecycle, transitions
 ---
 

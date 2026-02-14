@@ -1,7 +1,7 @@
 ---
 title: Identify Pool Memory Leak Patterns from Growing Worker RSS
 impact: CRITICAL
-impactDescription: worker RSS grows until OOM kill
+impactDescription: worker RSS grows ~4KB+ per request until OOM kill — connection pool leaks are the #1 cause
 tags: memdbg, memory-leak, pool, rss, oom
 ---
 

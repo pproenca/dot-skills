@@ -1,7 +1,7 @@
 ---
 title: Inspect ngx_http_request_t Fields in GDB for Request State
 impact: HIGH
-impactDescription: reveals full request state at crash time
+impactDescription: reveals full request state (uri, headers, phase, count) at crash time — 20+ fields to inspect
 tags: gdb, request, inspection, state
 ---
 

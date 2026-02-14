@@ -1,7 +1,7 @@
 ---
 title: Set Log Action String for Context in Error Messages
 impact: MEDIUM-HIGH
-impactDescription: adds operation context to every log line automatically
+impactDescription: adds operation context to every log line — reduces log correlation time from minutes to seconds
 tags: dbglog, action, log-handler, context
 ---
 

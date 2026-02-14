@@ -1,7 +1,7 @@
 ---
 title: Format ngx_str_t Correctly in Debug Log Messages
 impact: MEDIUM-HIGH
-impactDescription: prevents truncated or garbage output in debug logs
+impactDescription: prevents truncated or garbage output — %V handles non-NUL-terminated ngx_str_t correctly
 tags: dbglog, ngx-str, format, logging
 ---
 

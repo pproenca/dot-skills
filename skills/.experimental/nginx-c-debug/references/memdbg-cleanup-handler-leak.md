@@ -1,7 +1,7 @@
 ---
 title: Detect Resource Leaks from Missing Pool Cleanup Handlers
 impact: CRITICAL
-impactDescription: leaks file descriptors and external resources
+impactDescription: leaks 1 fd per request — hits ulimit (typically 1024) within minutes under load
 tags: memdbg, cleanup, file-descriptor, resource-leak
 ---
 

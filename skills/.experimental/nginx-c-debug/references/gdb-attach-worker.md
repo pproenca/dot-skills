@@ -1,7 +1,7 @@
 ---
 title: Attach GDB to a Running nginx Worker Process
 impact: HIGH
-impactDescription: enables live debugging of stuck or misbehaving workers
+impactDescription: enables live debugging — attaching to wrong process (master) wastes 100% of debugging time
 tags: gdb, attach, worker, live-debugging
 ---
 
@@ -52,7 +52,7 @@ www-data  3203  ...  nginx: worker process
 # Step 3: For multi-worker, find which worker handles
 # your test connection (check connection count or use
 # a single worker during debugging)
-$ gdb /usr/local/nginx/sbin/nginx -p 3202
+$ gdb -p 3202
 
 # Step 4: Set breakpoints on your module's functions
 (gdb) break ngx_http_mymodule_handler

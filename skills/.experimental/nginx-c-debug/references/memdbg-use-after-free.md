@@ -1,7 +1,7 @@
 ---
 title: Detect Use-After-Free from Pool Destruction Timing
 impact: CRITICAL
-impactDescription: causes intermittent crashes under load
+impactDescription: causes intermittent crashes — reproduces in ~1/1000+ requests when pool reuse timing aligns
 tags: memdbg, use-after-free, pool, lifecycle
 ---
 

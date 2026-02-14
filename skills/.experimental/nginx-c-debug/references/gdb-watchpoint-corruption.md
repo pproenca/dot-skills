@@ -1,7 +1,7 @@
 ---
 title: Use GDB Watchpoints to Catch Memory Corruption at Write Time
 impact: HIGH
-impactDescription: catches corruption at the exact instruction that writes bad data
+impactDescription: catches corruption at the exact instruction — hardware watchpoints have 0 overhead on x86 (4 slots)
 tags: gdb, watchpoint, memory-corruption, hardware-breakpoint
 ---
 

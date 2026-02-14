@@ -1,7 +1,7 @@
 ---
 title: Trace Upstream Callback Sequence for Proxy Debugging
 impact: HIGH
-impactDescription: maps the upstream state machine transitions
+impactDescription: maps 8+ upstream callback transitions — proxy bugs require tracing create/init/send/read/finalize sequence
 tags: trace, upstream, callback, state-machine, proxy
 ---
 

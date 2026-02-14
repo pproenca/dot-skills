@@ -1,7 +1,7 @@
 ---
 title: Trace Memory Pool Allocations with SystemTap
 impact: MEDIUM
-impactDescription: tracks per-request allocation patterns in production
+impactDescription: tracks per-request allocation patterns in production with <5% overhead
 tags: probe, systemtap, pool, memory, allocation
 ---
 

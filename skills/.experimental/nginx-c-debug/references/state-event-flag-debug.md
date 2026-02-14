@@ -1,7 +1,7 @@
 ---
 title: Inspect Event Flags to Debug Unexpected Handler Invocation
 impact: MEDIUM
-impactDescription: reveals why a handler runs at the wrong time
+impactDescription: reveals why a handler runs unexpectedly — 6+ event flags (ready, active, eof, error, timer_set, timedout) control dispatch
 tags: state, event, flags, ready, active
 ---
 

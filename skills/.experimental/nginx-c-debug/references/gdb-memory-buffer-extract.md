@@ -1,7 +1,7 @@
 ---
 title: Extract Debug Log from Memory Buffer Using GDB Script
 impact: HIGH
-impactDescription: recovers full debug trace from crashed worker
+impactDescription: recovers last 32MB+ of debug trace from crashed worker coredump
 tags: gdb, memory-buffer, debug-log, extraction
 ---
 

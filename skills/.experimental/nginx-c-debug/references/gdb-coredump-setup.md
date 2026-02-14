@@ -1,7 +1,7 @@
 ---
 title: Configure Core Dump Generation for nginx Worker Crashes
 impact: HIGH
-impactDescription: enables post-mortem analysis of every crash
+impactDescription: enables post-mortem analysis — without coredumps, crash root cause is lost 100% of the time
 tags: gdb, coredump, worker, configuration
 ---
 

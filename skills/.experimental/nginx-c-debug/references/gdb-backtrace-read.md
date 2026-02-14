@@ -1,7 +1,7 @@
 ---
 title: Read nginx Backtrace to Identify Crash Module and Phase
 impact: HIGH
-impactDescription: maps crash to specific module and request phase
+impactDescription: maps crash to specific module and 1 of 11 HTTP phases in seconds
 tags: gdb, backtrace, stack-trace, phase
 ---
 

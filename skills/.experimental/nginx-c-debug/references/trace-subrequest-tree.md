@@ -1,7 +1,7 @@
 ---
 title: Map Subrequest Parent-Child Relationships for Debugging
 impact: HIGH
-impactDescription: untangles nested subrequest execution order
+impactDescription: untangles nested subrequest tree — SSI pages can create 10+ subrequests with non-obvious execution order
 tags: trace, subrequest, parent, main-request
 ---
 

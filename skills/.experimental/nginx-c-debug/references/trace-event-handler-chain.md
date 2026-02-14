@@ -1,7 +1,7 @@
 ---
 title: Trace Event Handler Execution for Connection Debugging
 impact: HIGH
-impactDescription: identifies which handler misses or double-processes an event
+impactDescription: identifies which of 3-5 chained handlers misses or double-processes an event
 tags: trace, event, handler, connection, read-write
 ---
 

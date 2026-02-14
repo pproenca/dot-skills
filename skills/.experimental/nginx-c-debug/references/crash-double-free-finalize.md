@@ -1,7 +1,7 @@
 ---
 title: Diagnose Double Finalize Crashes from Request Reference Count
 impact: CRITICAL
-impactDescription: causes cascading worker crashes under load
+impactDescription: causes cascading worker crashes — missing return after finalize triggers 2nd free on same pool
 tags: crash, double-free, finalize, reference-count
 ---
 

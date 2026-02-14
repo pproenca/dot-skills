@@ -1,7 +1,7 @@
 ---
 title: Use Single-Process Mode for Simplified Debugging
 impact: LOW-MEDIUM
-impactDescription: eliminates multi-process complexity during debugging
+impactDescription: eliminates master/worker split — 1 process to attach GDB to instead of N workers
 tags: build, single-process, master-off, debugging
 ---
 

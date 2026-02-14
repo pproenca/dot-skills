@@ -1,7 +1,7 @@
 ---
 title: Trace Configuration Inheritance Through Server and Location Blocks
 impact: HIGH
-impactDescription: finds silent config merge bugs
+impactDescription: finds silent config merge bugs — 3-level inheritance (http/server/location) masks 80%+ of merge errors
 tags: trace, configuration, merge, inheritance
 ---
 

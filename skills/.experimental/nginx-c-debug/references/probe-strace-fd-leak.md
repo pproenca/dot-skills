@@ -1,7 +1,7 @@
 ---
 title: Detect File Descriptor Leaks with strace and /proc
 impact: MEDIUM
-impactDescription: identifies fd leak source from syscall trace
+impactDescription: identifies fd leak source — traces open/close syscalls to find unmatched pairs
 tags: probe, strace, file-descriptor, leak, proc
 ---
 

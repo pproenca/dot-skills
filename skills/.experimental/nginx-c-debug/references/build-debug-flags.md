@@ -1,7 +1,7 @@
 ---
 title: Compile nginx with Full Debug Symbols and No Optimization
 impact: LOW-MEDIUM
-impactDescription: makes GDB output readable instead of optimized-out
+impactDescription: makes GDB output readable — -O2 optimizes out 50%+ of variables, -O0 preserves all
 tags: build, debug-symbols, compiler-flags, optimization
 ---
 

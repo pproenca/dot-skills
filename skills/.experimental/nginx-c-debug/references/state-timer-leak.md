@@ -1,7 +1,7 @@
 ---
 title: Detect Timer Leaks from Events Not Removed Before Pool Destruction
 impact: MEDIUM
-impactDescription: causes use-after-free when timer fires on freed data
+impactDescription: causes use-after-free — timer fires 1-60s after pool freed, crash is delayed and non-deterministic
 tags: state, timer, leak, event, use-after-free
 ---
 

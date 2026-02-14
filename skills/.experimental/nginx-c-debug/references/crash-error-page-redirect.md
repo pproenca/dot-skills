@@ -1,7 +1,7 @@
 ---
 title: Avoid Crashes from error_page Internal Redirect Context Invalidation
 impact: CRITICAL
-impactDescription: crashes on stale context after redirect
+impactDescription: crashes on stale context — ngx_http_internal_redirect zeros all r->ctx[] entries
 tags: crash, error-page, redirect, context, use-after-free
 ---
 

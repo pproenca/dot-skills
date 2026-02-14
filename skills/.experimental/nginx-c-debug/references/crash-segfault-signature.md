@@ -1,7 +1,7 @@
 ---
 title: Identify Segfault Crash Signature from Signal and Address
 impact: CRITICAL
-impactDescription: determines debugging strategy in seconds
+impactDescription: reduces crash triage from hours to seconds by classifying crash type from signal + address
 tags: crash, segfault, signals, sigsegv, coredump
 ---
 

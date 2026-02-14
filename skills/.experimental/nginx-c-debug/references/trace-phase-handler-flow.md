@@ -1,7 +1,7 @@
 ---
 title: Trace Request Through HTTP Phase Handlers
 impact: HIGH
-impactDescription: maps request flow through the phase engine
+impactDescription: maps request flow through 11 HTTP phases — identifies which phase skips or misroutes the request
 tags: trace, phase, handler, request-flow
 ---
 

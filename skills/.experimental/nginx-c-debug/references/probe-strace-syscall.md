@@ -1,7 +1,7 @@
 ---
 title: Use strace to Trace System Call Patterns in nginx Workers
 impact: MEDIUM
-impactDescription: reveals I/O patterns and blocking calls without recompilation
+impactDescription: reveals I/O patterns and blocking calls — no recompilation, attaches to running worker in seconds
 tags: probe, strace, syscall, io-pattern
 ---
 

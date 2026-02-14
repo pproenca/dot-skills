@@ -62,24 +62,26 @@ error_log memory:32m debug;
 
 ```bash
 # Extract the memory buffer from a running or crashed process
-# using GDB. The buffer is a global ngx_log_memory_buf struct.
+# using GDB. The buffer is stored in log->wdata (set by
+# ngx_log_memory_writer during initialization).
 
 # Method 1: Attach to running worker and dump buffer
 $ gdb -batch -p $(pgrep -f 'nginx: worker') \
-    -ex 'set $buf = ngx_cycle->log->file->data' \
-    -ex 'set $end = (char *)$buf + ((ngx_log_memory_buf_t *)$buf)->end - ((ngx_log_memory_buf_t *)$buf)->start' \
-    -ex 'set $pos = ((ngx_log_memory_buf_t *)$buf)->pos' \
-    -ex 'printf "=== LOG START (from pos) ===\n"' \
-    -ex 'dump binary memory /tmp/nginx-debug.log ((ngx_log_memory_buf_t *)$buf)->start ((ngx_log_memory_buf_t *)$buf)->end'
+    -ex 'set $log = ngx_cycle->log' \
+    -ex 'while $log && $log->writer != ngx_log_memory_writer' \
+    -ex 'set $log = $log->next' \
+    -ex 'end' \
+    -ex 'set $buf = (ngx_log_memory_buf_t *) $log->wdata' \
+    -ex 'dump binary memory /tmp/nginx-debug.log $buf->start $buf->end'
 
 # Method 2: From a core dump after a crash
 $ gdb /usr/local/nginx/sbin/nginx /tmp/core.12345
 (gdb) set $log = ngx_cycle->log
-(gdb) while $log->next
+(gdb) while $log && $log->writer != ngx_log_memory_writer
  > set $log = $log->next
  > end
-(gdb) set $membuf = (ngx_log_memory_buf_t *) $log->file->data
-(gdb) dump binary memory /tmp/crash-debug.log $membuf->start $membuf->end
+(gdb) set $buf = (ngx_log_memory_buf_t *) $log->wdata
+(gdb) dump binary memory /tmp/crash-debug.log $buf->start $buf->end
 (gdb) quit
 
 # View the extracted log (may contain binary zeros at the

@@ -1,7 +1,7 @@
 ---
 title: Find Buffer Overrun from ngx_pnalloc Size Miscalculation
 impact: CRITICAL
-impactDescription: corrupts adjacent pool allocations silently
+impactDescription: corrupts adjacent pool allocations — crash appears in unrelated code, not at the overrun site
 tags: memdbg, buffer-overrun, pnalloc, size-calculation
 ---
 

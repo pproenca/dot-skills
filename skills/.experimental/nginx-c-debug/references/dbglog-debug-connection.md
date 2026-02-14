@@ -1,7 +1,7 @@
 ---
 title: Use debug_connection to Isolate Single-Client Debug Output
 impact: MEDIUM-HIGH
-impactDescription: isolates 1 client's trace from thousands of concurrent requests
+impactDescription: isolates 1 client's trace from 1000s of concurrent requests — reduces log volume by 99%+
 tags: dbglog, debug-connection, ip-filter, production
 ---
 

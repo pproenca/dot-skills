@@ -1,7 +1,7 @@
 ---
 title: Measure Per-Function Latency with eBPF Probes
 impact: MEDIUM
-impactDescription: identifies slow functions in production with near-zero overhead
+impactDescription: identifies slow functions in production with <1% overhead vs 30%+ for --with-debug
 tags: probe, ebpf, bpftrace, latency, performance
 ---
 

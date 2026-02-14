@@ -1,7 +1,7 @@
 ---
 title: Diagnose Shared Memory Slab Corruption from Multi-Worker Crashes
 impact: CRITICAL
-impactDescription: corrupts shared state, crashes all workers
+impactDescription: corrupts shared memory zone — affects all N worker processes simultaneously
 tags: memdbg, shared-memory, slab, corruption, mutex
 ---
 
