@@ -1,6 +1,6 @@
 ---
 title: Audit Security Implications of Every Exposed Directive
-impact: HIGH
+impact: CRITICAL
 impactDescription: prevents configuration-induced vulnerabilities
 tags: expose, security, validation, attack-surface
 ---

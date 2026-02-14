@@ -7,7 +7,7 @@ tags: compat, alias, rename, backwards-compatibility
 
 ## Keep Old Directive Name as an Alias
 
-When renaming a directive, register both the old and new names pointing to the same handler and config field offset. The old name triggers a deprecation warning but produces identical behavior. This allows gradual migration of automation, Ansible playbooks, and config management systems without emergency config rewrites. Pattern from nginx: `sticky_cookie_insert` was kept as an alias for `sticky cookie`.
+When renaming a directive, register both the old and new names pointing to the same handler and config field offset. The old name triggers a deprecation warning but produces identical behavior. This allows gradual migration of automation, Ansible playbooks, and config management systems without emergency config rewrites. Pattern from nginx: `ssl on|off` was deprecated in 1.15.0 in favor of `listen ... ssl`, and kept working for 5 years until removal in 1.25.1.
 
 **Incorrect (renaming a directive with no alias breaks all existing configs):**
 

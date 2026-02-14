@@ -9,6 +9,8 @@ tags: type, custom-handler, parsing, key-value
 
 Built-in slot functions handle simple single-value directives. When a directive needs multiple arguments with different types, key=value syntax, cross-field validation, or conditional logic, use a custom `set` handler. The handler receives `cf->args` and can parse, validate, and set multiple config fields from a single directive -- keeping the admin-facing syntax clean while handling internal complexity.
 
+**Note:** For simple two-argument key-value directives (like `proxy_set_header Host $host`), use the built-in `ngx_conf_set_keyval_slot` which stores pairs into an `ngx_array_t` of `ngx_keyval_t`. The custom handler below is for complex cases with `key=value` syntax, multiple parameter types, or cross-field validation.
+
 **Incorrect (forcing a built-in slot for a directive with key=value pairs):**
 
 ```c
@@ -62,7 +64,8 @@ ngx_http_mymodule_limit_req(ngx_conf_t *cf, ngx_command_t *cmd, void *conf)
     for (i = 1; i < cf->args->nelts; i++) {
 
         if (ngx_strncmp(value[i].data, "rate=", 5) == 0) {
-            rate = ngx_atoi(value[i].data + 5, value[i].len - 7);
+            /* parse the numeric part after "rate=" */
+            rate = ngx_atoi(value[i].data + 5, value[i].len - 5);
             if (rate <= 0) {
                 ngx_conf_log_error(NGX_LOG_EMERG, cf, 0,
                                    "invalid rate \"%V\" in "

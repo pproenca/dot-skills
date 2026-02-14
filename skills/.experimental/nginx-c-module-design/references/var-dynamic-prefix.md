@@ -75,8 +75,9 @@ ngx_http_mymodule_add_variables(ngx_conf_t *cf)
 
     static ngx_str_t  prefix = ngx_string("mymod_meta_");
 
-    /* register "mymod_meta_" as a prefix — nginx calls our handler
-     * for any $mymod_meta_<key> reference, no pre-registration needed */
+    /* register prefix — nginx calls our handler for any $mymod_meta_<key>,
+     * setting data = &v[i].name during init so the handler receives
+     * the full variable name via the data parameter */
     var = ngx_http_add_variable(cf, &prefix, NGX_HTTP_VAR_PREFIX);
     if (var == NULL) {
         return NGX_ERROR;

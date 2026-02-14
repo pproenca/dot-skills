@@ -1,7 +1,7 @@
 ---
 title: Use Platform-Aware Buffer Size Defaults
 impact: MEDIUM
-impactDescription: "ensures optimal I/O alignment on all platforms without admin tuning"
+impactDescription: "prevents 2-4x I/O penalty from partial-page reads on ARM64 and SPARC platforms"
 tags: default, buffer, platform, pagesize
 ---
 

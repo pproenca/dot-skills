@@ -96,7 +96,7 @@ ngx_http_mymodule_merge_loc_conf(ngx_conf_t *cf, void *parent, void *child)
 }
 
 static ngx_int_t
-ngx_http_mymodule_handler(ngx_http_request_t *r)
+ngx_http_mymodule_upstream_next(ngx_http_request_t *r, ngx_uint_t attempt)
 {
     ngx_http_mymodule_loc_conf_t  *mlcf;
 

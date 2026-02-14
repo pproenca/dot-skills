@@ -9,6 +9,8 @@ tags: type, 1more, list, bitmask
 
 When a directive accepts a variable-length list of values (like `ssl_protocols TLSv1.2 TLSv1.3` or `proxy_next_upstream error timeout http_502 http_503`), use `NGX_CONF_1MORE`. This accepts one or more arguments and delegates to a custom handler that iterates `cf->args`. Use this pattern for bitmask flags, protocol lists, and error condition lists where the admin selects a subset from a known set.
 
+**Note:** For simple bitmask cases where each argument maps directly to a flag without extra logic (like the `off` keyword or custom validation), use the built-in `ngx_conf_set_bitmask_slot` with an `ngx_conf_bitmask_t` array instead of a custom handler. The custom handler shown below is needed when the directive has special keywords, conditional logic, or validation beyond simple flag OR-ing.
+
 **Incorrect (separate directives for each value in the set):**
 
 ```c
