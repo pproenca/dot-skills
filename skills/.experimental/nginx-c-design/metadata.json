@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "nginx.org",
+  "technology": "nginx C Module Directive Design",
+  "date": "February 2026",
+  "abstract": "Comprehensive directive design guide for nginx C module authors, focused on creating admin-friendly configuration interfaces. Contains 46 rules across 8 categories, prioritized by impact from critical (exposure decisions, naming conventions) to incremental (evolution and compatibility). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "references": [
+    "https://nginx.org/en/docs/dev/development_guide.html",
+    "https://www.evanmiller.org/nginx-modules-guide.html",
+    "https://github.com/nginx/nginx/blob/master/src/http/modules/ngx_http_proxy_module.c",
+    "https://github.com/nginx/nginx/blob/master/src/http/modules/ngx_http_ssl_module.c",
+    "https://github.com/nginx/nginx/blob/master/src/http/modules/ngx_http_fastcgi_module.c",
+    "https://github.com/openresty/lua-nginx-module",
+    "https://nginx.org/en/docs/http/ngx_http_proxy_module.html",
+    "https://nginx.org/en/docs/http/ngx_http_core_module.html"
+  ]
+}
