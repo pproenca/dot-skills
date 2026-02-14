@@ -1,5 +1,5 @@
 ---
-name: signals-rails-best-practices
+name: 37signals-rails
 description: 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and Jason Zimdars. This skill should be used when writing, reviewing, or refactoring Ruby on Rails code following the 37signals philosophy. Triggers on tasks involving Rails controllers, models, concerns, Hotwire, Turbo, Stimulus, Solid Queue, multi-tenancy, or code following DHH conventions.
 ---
 
