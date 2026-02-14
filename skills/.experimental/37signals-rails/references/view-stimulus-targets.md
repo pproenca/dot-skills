@@ -1,7 +1,7 @@
 ---
 title: Stimulus Targets Over CSS Selectors
 impact: MEDIUM
-impactDescription: 0 broken bindings during CSS refactoring
+impactDescription: 0 broken bindings during CSS refactors — targets survive 100% of markup restructuring
 tags: view, stimulus, targets, javascript
 ---
 

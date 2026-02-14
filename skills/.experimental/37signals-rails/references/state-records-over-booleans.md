@@ -72,7 +72,7 @@ class Card < ApplicationRecord
   end
 
   def unarchive
-    archivings.last&.destroy!
+    archivings.destroy_all
   end
 
   def archived?

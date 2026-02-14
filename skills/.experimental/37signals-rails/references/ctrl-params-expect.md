@@ -1,7 +1,7 @@
 ---
 title: Use params.expect() for Parameter Validation
 impact: HIGH
-impactDescription: reduces parameter handling code by 40-60%
+impactDescription: prevents user-triggered 500 errors — returns 400 on parameter tampering instead
 tags: ctrl, params, validation, rails-8
 ---
 

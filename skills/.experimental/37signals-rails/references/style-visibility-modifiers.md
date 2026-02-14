@@ -1,13 +1,16 @@
 ---
 title: Visibility Modifier Formatting
 impact: LOW
-impactDescription: 0 formatting inconsistencies across all class definitions
+impactDescription: 0 formatting deviations — 100% consistency across all class and module definitions
 tags: style, visibility, private, formatting
 ---
 
 ## Visibility Modifier Formatting
 
-Follow strict formatting rules for visibility modifiers (`private`, `protected`). No blank line immediately after the modifier keyword. Indent method definitions beneath them. For modules that contain only private methods, place `private` at the top of the module with a blank line after it and no indentation on the methods. Never define bang (`!`) methods unless a non-bang counterpart exists — the bang signals "this is the dangerous version," which only makes sense relative to a safe alternative.
+Follow strict formatting rules for visibility modifiers (`private`, `protected`). Two conventions apply depending on context:
+
+1. **In classes with mixed public/private methods:** No blank line after `private`. The first private method starts on the very next line.
+2. **In modules where ALL methods are private:** Place `private` at the top as a section divider, followed by a blank line, with no indentation on the methods below.
 
 **Incorrect (inconsistent visibility formatting):**
 
@@ -27,11 +30,6 @@ class Account < ApplicationRecord
 
   def generate_token
     self.token = SecureRandom.hex(20)
-  end
-
-  # Bang method without a non-bang counterpart
-  def reset_token!
-    update!(token: SecureRandom.hex(20))
   end
 end
 
@@ -68,16 +66,6 @@ class Account < ApplicationRecord
 
   def generate_token
     self.token = SecureRandom.hex(20)
-  end
-
-  # Non-bang version exists, so bang is justified
-  def reset_token
-    self.token = SecureRandom.hex(20)
-  end
-
-  def reset_token!
-    reset_token
-    save!
   end
 end
 

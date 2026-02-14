@@ -63,11 +63,11 @@ production:
       threads: 5
       processes: 2
       polling_interval: 0.1
-  schedulers:
-    - recurring_tasks:
-        daily_digest:
-          command: "DigestMailer.daily.deliver_later"
-          schedule: "every day at 9am"
+
+# config/recurring.yml — separate file for recurring tasks
+daily_digest:
+  class: DigestMailerJob
+  schedule: "every day at 9am"
 
 # app/jobs/recording_transcription_job.rb — Current attributes propagate automatically
 class RecordingTranscriptionJob < ApplicationJob

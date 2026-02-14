@@ -1,9 +1,9 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "37signals",
   "technology": "Ruby on Rails",
   "date": "February 2026",
-  "abstract": "Comprehensive coding principles and conventions for Ruby on Rails applications following the 37signals philosophy. Contains 46 rules across 8 categories, prioritized by architectural impact from critical (rich domain models, CRUD controllers) to foundational (testing, code style). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and references to official 37signals sources. Designed for AI agents and LLMs to guide code generation and refactoring toward the 37signals way.",
+  "abstract": "Comprehensive coding principles and conventions for Ruby on Rails applications following the 37signals philosophy. Contains 56 rules across 8 categories, prioritized by architectural impact from critical (rich domain models, CRUD controllers, avoided patterns) to foundational (testing, code style). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and references to official 37signals sources. Designed for AI agents and LLMs to guide code generation and refactoring toward the 37signals way.",
   "references": [
     "https://github.com/basecamp/fizzy",
     "https://github.com/basecamp/fizzy/blob/main/STYLE.md",
@@ -11,6 +11,8 @@
     "https://rubyonrails.org/doctrine",
     "https://dev.37signals.com/",
     "https://dev.37signals.com/vanilla-rails-is-plenty/",
-    "https://signalvnoise.com/svn3/on-writing-software-well/"
+    "https://signalvnoise.com/svn3/on-writing-software-well/",
+    "https://gist.github.com/marckohlbrugge/d363fb90c89f71bd0c816d24d7642aca",
+    "https://world.hey.com/dhh/system-tests-have-failed-d90af718"
   ]
 }

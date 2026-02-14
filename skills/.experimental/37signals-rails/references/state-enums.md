@@ -1,6 +1,6 @@
 ---
 title: Enums for Categorical States
-impact: MEDIUM-HIGH
+impact: HIGH
 impactDescription: reduces 20+ lines of manual scope/predicate code to 1-line declaration
 tags: state, enums, active-record, predicates
 ---

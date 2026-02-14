@@ -1,11 +1,11 @@
 ---
-name: 37signals-rails
-description: 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and Jason Zimdars. This skill should be used when writing, reviewing, or refactoring Ruby on Rails code following the 37signals philosophy. Triggers on tasks involving Rails controllers, models, concerns, Hotwire, Turbo, Stimulus, Solid Queue, multi-tenancy, or code following DHH conventions.
+name: signals-rails
+description: 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the Fizzy/Basecamp/HEY codebase. This skill should be used when writing, reviewing, or refactoring Ruby on Rails code following the 37signals philosophy — vanilla Rails, CRUD controllers, rich domain models, concerns, no service objects, Hotwire, Turbo, Stimulus, Solid Queue, Solid Cache, Solid Cable, multi-tenancy, Minitest, custom auth, or DHH conventions.
 ---
 
 # 37signals Rails Best Practices
 
-Comprehensive coding principles and conventions for Ruby on Rails applications, as practiced at 37signals (Basecamp, HEY, Fizzy). Contains 46 rules across 8 categories, prioritized by architectural impact. Derived from official 37signals sources: the Fizzy codebase, STYLE.md, AGENTS.md, the Rails Doctrine, and DHH's "On Writing Software Well" series.
+Comprehensive coding principles and conventions for Ruby on Rails applications, as practiced at 37signals (Basecamp, HEY, Fizzy). Contains 56 rules across 8 categories, prioritized by architectural impact. Derived from official 37signals sources: the Fizzy codebase, STYLE.md, AGENTS.md, the Rails Doctrine, DHH's "On Writing Software Well" series, and the unofficial 37signals style guide (265 Fizzy PRs).
 
 ## When to Apply
 
@@ -16,6 +16,8 @@ Reference these guidelines when:
 - Setting up background jobs, caching, or real-time features
 - Reviewing code for 37signals-style conventions
 - Refactoring toward rich domain models
+- Choosing authentication or authorization approach
+- Adding Stimulus controllers or Turbo patterns
 
 ## Rule Categories by Priority
 
@@ -36,11 +38,13 @@ Reference these guidelines when:
 
 - [`arch-rich-models`](references/arch-rich-models.md) - Rich Domain Models Over Service Objects
 - [`arch-vanilla-rails`](references/arch-vanilla-rails.md) - Vanilla Rails is Plenty
+- [`arch-avoid-patterns`](references/arch-avoid-patterns.md) - Deliberately Avoided Patterns and Gems
 - [`arch-earn-abstractions`](references/arch-earn-abstractions.md) - Earn Abstractions Through Rule of Three
 - [`arch-build-before-gems`](references/arch-build-before-gems.md) - Build It Yourself Before Reaching for Gems
-- [`arch-ship-to-learn`](references/arch-ship-to-learn.md) - Ship to Learn — Prototype Quality is Valid
+- [`arch-ship-to-learn`](references/arch-ship-to-learn.md) - Start Simple — Add Complexity Only After Validation
 - [`arch-domain-facades`](references/arch-domain-facades.md) - Domain Models as Facades Over Internal Complexity
 - [`arch-single-business-layer`](references/arch-single-business-layer.md) - Single Layer for Business Logic
+- [`arch-custom-auth`](references/arch-custom-auth.md) - Custom Passwordless Auth Over Devise
 
 ### 2. Controllers & REST (CRITICAL)
 
@@ -49,6 +53,7 @@ Reference these guidelines when:
 - [`ctrl-thin-controllers`](references/ctrl-thin-controllers.md) - Thin Controllers with Rich Domain Models
 - [`ctrl-params-expect`](references/ctrl-params-expect.md) - Use params.expect() for Parameter Validation
 - [`ctrl-controller-concerns`](references/ctrl-controller-concerns.md) - Controller Concerns for Cross-Cutting Behavior
+- [`ctrl-nested-resources`](references/ctrl-nested-resources.md) - Nested Resources with scope module
 
 ### 3. Domain Modeling (HIGH)
 
@@ -59,6 +64,8 @@ Reference these guidelines when:
 - [`model-counter-caches`](references/model-counter-caches.md) - Counter Caches to Prevent N+1 Count Queries
 - [`model-touch-chains`](references/model-touch-chains.md) - Touch Chains for Cache Invalidation
 - [`model-callbacks-auxiliary`](references/model-callbacks-auxiliary.md) - Callbacks for Auxiliary Complexity
+- [`model-event-tracking`](references/model-event-tracking.md) - Polymorphic Event Model for Activity Tracking
+- [`model-poro-namespacing`](references/model-poro-namespacing.md) - Namespace POROs Under Parent Models
 
 ### 4. State Management (HIGH)
 
@@ -76,15 +83,18 @@ Reference these guidelines when:
 - [`db-solid-cache`](references/db-solid-cache.md) - Solid Cache for Application Caching
 - [`db-multi-tenancy`](references/db-multi-tenancy.md) - Path-Based Multi-Tenancy with Current.account
 - [`db-uuid-primary-keys`](references/db-uuid-primary-keys.md) - UUIDs as Primary Keys
+- [`db-no-foreign-keys`](references/db-no-foreign-keys.md) - No Foreign Key Constraints
 
 ### 6. Views & Frontend (MEDIUM)
 
 - [`view-turbo-frames`](references/view-turbo-frames.md) - Turbo Frames for Scoped Page Fragments
 - [`view-turbo-streams`](references/view-turbo-streams.md) - Turbo Streams for Real-Time Updates
 - [`view-stimulus-targets`](references/view-stimulus-targets.md) - Stimulus Targets Over CSS Selectors
+- [`view-stimulus-design`](references/view-stimulus-design.md) - Stimulus Controller Design Principles
 - [`view-helpers-not-partials`](references/view-helpers-not-partials.md) - Extract Logic to Helpers Not Partials
 - [`view-progressive-enhancement`](references/view-progressive-enhancement.md) - Progressive Enhancement as Primary Pattern
 - [`view-fragment-caching`](references/view-fragment-caching.md) - Fragment Caching for View Performance
+- [`view-http-caching`](references/view-http-caching.md) - HTTP Caching with fresh_when and ETags
 
 ### 7. Code Style (MEDIUM)
 
@@ -93,6 +103,7 @@ Reference these guidelines when:
 - [`style-positive-names`](references/style-positive-names.md) - Use Positive Names for Methods and Scopes
 - [`style-naming-return-values`](references/style-naming-return-values.md) - Method Names Reflect Return Values
 - [`style-visibility-modifiers`](references/style-visibility-modifiers.md) - Visibility Modifier Formatting
+- [`style-bang-methods`](references/style-bang-methods.md) - Bang Methods Only When Non-Bang Exists
 - [`style-async-naming`](references/style-async-naming.md) - Use _later and _now Suffixes for Async Operations
 
 ### 8. Testing (MEDIUM)
@@ -100,6 +111,7 @@ Reference these guidelines when:
 - [`test-minitest`](references/test-minitest.md) - Minitest Over RSpec
 - [`test-fixtures`](references/test-fixtures.md) - Database Fixtures Over FactoryBot
 - [`test-no-damage`](references/test-no-damage.md) - No Test-Induced Design Damage
+- [`test-no-system-tests`](references/test-no-system-tests.md) - Integration Tests Over System Tests
 - [`test-behavior`](references/test-behavior.md) - Test Behavior Not Implementation
 
 ## How to Use

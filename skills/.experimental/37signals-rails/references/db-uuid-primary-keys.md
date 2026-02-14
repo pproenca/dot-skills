@@ -16,7 +16,7 @@ Use UUIDs instead of sequential integers as primary keys. Sequential IDs leak in
 class CreateRecordings < ActiveRecord::Migration[8.0]
   def change
     create_table :recordings do |t|
-      t.belongs_to :account, null: false, foreign_key: true
+      t.belongs_to :account, null: false
       t.string :title, null: false
       t.timestamps
     end
@@ -34,7 +34,7 @@ end
 class CreateRecordings < ActiveRecord::Migration[8.0]
   def change
     create_table :recordings, id: :uuid do |t|
-      t.belongs_to :account, null: false, foreign_key: true, type: :uuid
+      t.references :account, null: false, type: :uuid
       t.string :title, null: false
       t.timestamps
     end
