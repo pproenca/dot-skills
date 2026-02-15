@@ -1,7 +1,7 @@
 {
   "name": "chrome-extension-ui",
   "description": "Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content scripts, and options pages",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "organization": "Chrome Extensions Community",
   "technology": "Chrome Extensions",
   "date": "January 2026",
