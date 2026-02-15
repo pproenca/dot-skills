@@ -55,4 +55,4 @@ trap 'rm -rf "$tmpfile" "$tmpdir"' EXIT
 - Check existence then create (TOCTOU race)
 - Forget cleanup on script exit
 
-Reference: [ShellCheck SC2094](https://www.shellcheck.net/wiki/SC2094)
+Reference: [CWE-377: Insecure Temporary File](https://cwe.mitre.org/data/definitions/377.html)

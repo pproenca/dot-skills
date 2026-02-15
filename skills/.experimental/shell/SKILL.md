@@ -1,11 +1,11 @@
 ---
 name: shell
-description: Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts (formerly shell-scripts). Use when writing, reviewing, or refactoring shell scripts. Triggers on shell scripts, bash, sh, POSIX, ShellCheck, error handling, quoting, variables.
+description: Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts. Use when writing, reviewing, or refactoring shell scripts, Dockerfile RUN commands, Makefile recipes, CI pipeline scripts, cron jobs, or systemd ExecStart directives. Triggers on bash, sh, POSIX, ShellCheck, error handling, quoting, variables, set -euo pipefail.
 ---
 
-# Shell Scripts Best Practices
+# Shell Scripts Best Practices (Community)
 
-Comprehensive best practices guide for shell scripting, designed for AI agents and LLMs. Contains 48 rules across 9 categories, prioritized by impact from critical (safety, portability) to incremental (style). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics.
+Comprehensive best practices guide for shell scripting, designed for AI agents and LLMs. Contains 49 rules across 9 categories, prioritized by impact from critical (safety, portability) to incremental (style). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics.
 
 ## When to Apply
 
@@ -23,13 +23,13 @@ Reference these guidelines when:
 |----------|----------|--------|--------|-------|
 | 1 | Safety & Security | CRITICAL | `safety-` | 6 |
 | 2 | Portability | CRITICAL | `port-` | 5 |
-| 3 | Error Handling | HIGH | `err-` | 6 |
+| 3 | Error Handling | HIGH | `err-` | 8 |
 | 4 | Variables & Data | HIGH | `var-` | 5 |
 | 5 | Quoting & Expansion | MEDIUM-HIGH | `quote-` | 6 |
 | 6 | Functions & Structure | MEDIUM | `func-` | 5 |
 | 7 | Testing & Conditionals | MEDIUM | `test-` | 5 |
 | 8 | Performance | LOW-MEDIUM | `perf-` | 6 |
-| 9 | Style & Formatting | LOW | `style-` | 4 |
+| 9 | Style & Formatting | LOW | `style-` | 3 |
 
 ## Quick Reference
 
@@ -58,6 +58,8 @@ Reference these guidelines when:
 - [`err-stderr-messages`](references/err-stderr-messages.md) - Send error messages to stderr
 - [`err-pipefail`](references/err-pipefail.md) - Use pipefail to catch pipeline errors
 - [`err-check-commands`](references/err-check-commands.md) - Check command success explicitly
+- [`err-shellcheck`](references/err-shellcheck.md) - Use ShellCheck for static analysis
+- [`err-debug-tracing`](references/err-debug-tracing.md) - Use debug tracing with set -x and PS4
 
 ### 4. Variables & Data (HIGH)
 
@@ -106,7 +108,7 @@ Reference these guidelines when:
 - [`style-indentation`](references/style-indentation.md) - Use consistent indentation
 - [`style-file-structure`](references/style-file-structure.md) - Follow consistent file structure
 - [`style-comments`](references/style-comments.md) - Write useful comments
-- [`style-shellcheck`](references/style-shellcheck.md) - Use ShellCheck for static analysis
+
 
 ## How to Use
 

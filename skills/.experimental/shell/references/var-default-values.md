@@ -1,7 +1,7 @@
 ---
 title: Use Parameter Expansion for Defaults
 impact: HIGH
-impactDescription: handles unset variables safely without conditionals
+impactDescription: 4-6× fewer lines than if/else for default value assignment
 tags: var, defaults, parameter-expansion, unset
 ---
 

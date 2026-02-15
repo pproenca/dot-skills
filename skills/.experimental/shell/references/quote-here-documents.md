@@ -91,19 +91,32 @@ main() {
 # Most editors need configuration to insert tabs
 ```
 
-**Here strings for single lines:**
+**Here strings for single lines (bash only):**
 
 ```bash
 #!/bin/bash
-# <<< for single-line input
+# <<< for single-line input — NOT available in POSIX sh, dash, or ash
 grep "pattern" <<< "$variable"
 
 # Instead of echo | pipe
 echo "$variable" | grep "pattern"  # Works but spawns subshell
-grep "pattern" <<< "$variable"      # More efficient
+grep "pattern" <<< "$variable"      # More efficient (bash/zsh/ksh only)
 
 # Read into variable
 read -r first rest <<< "$line"
+```
+
+**POSIX alternative to here strings:**
+
+```sh
+#!/bin/sh
+# Use printf | pipe in POSIX sh (dash, ash, busybox)
+printf '%s\n' "$variable" | grep "pattern"
+
+# Or use a here document for single-line input
+grep "pattern" << EOF
+$variable
+EOF
 ```
 
 **Common patterns:**

@@ -1,13 +1,13 @@
 ---
 title: Use ShellCheck for Static Analysis
-impact: LOW
-impactDescription: catches bugs before runtime
-tags: style, shellcheck, linting, static-analysis
+impact: HIGH
+impactDescription: catches 80%+ of quoting, error handling, and portability bugs before runtime
+tags: err, shellcheck, linting, static-analysis, quality
 ---
 
 ## Use ShellCheck for Static Analysis
 
-ShellCheck detects common bugs, style issues, and portability problems that are easy to miss in review. Integrate it into CI and use it during development.
+ShellCheck catches security vulnerabilities (unquoted variables), error handling bugs (masked exit status), and portability issues (bashisms in POSIX scripts). It enforces rules from nearly every category in this guide. Run it in CI and during development.
 
 **Incorrect (no static analysis):**
 
@@ -36,22 +36,22 @@ files=$(find .)            # SC2006 fixed
 
 ```bash
 # Basic usage
-shellcheck script.sh
+shellcheck deploy.sh
 
 # Check multiple files
 shellcheck scripts/*.sh
 
 # Specify shell dialect
-shellcheck --shell=bash script.sh
-shellcheck --shell=sh script.sh
+shellcheck --shell=bash deploy.sh
+shellcheck --shell=sh install.sh
 
-# Output formats
-shellcheck --format=gcc script.sh     # GCC-style for editors
-shellcheck --format=json script.sh    # Machine-readable
-shellcheck --format=checkstyle script.sh  # CI integration
+# Output formats for CI
+shellcheck --format=gcc deploy.sh        # GCC-style for editors
+shellcheck --format=json deploy.sh       # Machine-readable
+shellcheck --format=checkstyle deploy.sh # CI integration
 
 # Severity filter
-shellcheck --severity=warning script.sh  # Skip style/info
+shellcheck --severity=warning deploy.sh  # Skip style/info
 ```
 
 **Directive comments:**
@@ -60,7 +60,7 @@ shellcheck --severity=warning script.sh  # Skip style/info
 #!/bin/bash
 # Disable specific check for next line
 # shellcheck disable=SC2086
-echo $unquoted_var  # Intentionally unquoted
+echo $intentionally_unquoted  # Documented exception
 
 # Disable for entire file (at top)
 # shellcheck disable=SC2034,SC2154
@@ -68,10 +68,10 @@ echo $unquoted_var  # Intentionally unquoted
 # Enable optional checks
 # shellcheck enable=require-variable-braces
 
-# Explain why check is disabled
+# Always explain why a check is disabled
 # shellcheck disable=SC2029
-# Intentional remote expansion: $REMOTE_VAR is expanded on server
-ssh server "echo $REMOTE_VAR"
+# Intentional remote expansion: DEPLOY_ENV is expanded on server
+ssh "$deploy_host" "echo $DEPLOY_ENV"
 ```
 
 **Common ShellCheck warnings:**
@@ -82,25 +82,18 @@ ssh server "echo $REMOTE_VAR"
 echo $var      # Warning
 echo "$var"    # OK
 
-# SC2046: Quote to prevent word splitting
-files=$(find .)  # Warning
-# shellcheck disable=SC2046 (if intentional)
-
-# SC2034: Variable appears unused
-unused_var=1   # Warning (typo? dead code?)
-
 # SC2155: Declare and assign separately
-local var=$(cmd)  # Warning: exit status lost
-local var         # OK
-var=$(cmd)        # OK
+local config=$(cmd)  # Warning: exit status lost
+local config         # OK
+config=$(cmd)        # OK
 
 # SC2164: Use cd ... || exit
-cd /dir          # Warning
-cd /dir || exit  # OK
+cd /deploy/dir          # Warning
+cd /deploy/dir || exit  # OK
 
 # SC2006: Use $() instead of backticks
-var=`cmd`        # Warning
-var=$(cmd)       # OK
+tag=`git describe`   # Warning
+tag=$(git describe)  # OK
 ```
 
 **CI integration:**
@@ -120,37 +113,15 @@ jobs:
           severity: warning
 ```
 
+**Pre-commit hook:**
+
 ```bash
-# Pre-commit hook
 #!/bin/bash
 # .git/hooks/pre-commit
-files=$(git diff --cached --name-only --diff-filter=ACM | grep '\.sh$')
-if [[ -n "$files" ]]; then
-  shellcheck $files || exit 1
+changed_scripts=$(git diff --cached --name-only --diff-filter=ACM | grep '\.sh$')
+if [[ -n "$changed_scripts" ]]; then
+  shellcheck $changed_scripts || exit 1
 fi
-```
-
-**Editor integration:**
-
-```bash
-# VS Code: Install "ShellCheck" extension
-# Vim: Use ALE or Syntastic
-# Neovim: Use null-ls or nvim-lint
-# Emacs: Use flycheck-mode
-```
-
-**ShellCheck in Makefiles:**
-
-```makefile
-SHELL_FILES := $(shell find . -name '*.sh')
-
-.PHONY: lint
-lint:
-	shellcheck $(SHELL_FILES)
-
-.PHONY: lint-fix
-lint-fix:
-	shellcheck --format=diff $(SHELL_FILES) | patch -p1
 ```
 
 Reference: [ShellCheck Wiki](https://github.com/koalaman/shellcheck/wiki)

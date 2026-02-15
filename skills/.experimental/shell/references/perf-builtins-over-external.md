@@ -116,4 +116,4 @@ sed 's/old/new/g' large_file.txt
 # sort, uniq, grep for large data sets
 ```
 
-Reference: [Advanced Bash Scripting Guide - Builtins](https://tldp.org/LDP/abs/html/internal.html)
+Reference: [Greg's Wiki - Builtins](https://mywiki.wooledge.org/BashGuide/CommandsAndArguments#Types_of_Commands)

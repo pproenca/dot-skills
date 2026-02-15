@@ -18,7 +18,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 3. Error Handling (err)
 
 **Impact:** HIGH
-**Description:** Unhandled errors cascade into data corruption and silent failures. Proper exit codes, strict mode, and traps prevent downstream damage.
+**Description:** Unhandled errors cascade into data corruption and silent failures. Proper exit codes, strict mode, traps, and static analysis prevent downstream damage.
 
 ## 4. Variables & Data (var)
 

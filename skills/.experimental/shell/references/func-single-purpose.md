@@ -1,19 +1,19 @@
 ---
 title: Write Single-Purpose Functions
 impact: MEDIUM
-impactDescription: improves testability and reusability
+impactDescription: reduces function complexity from O(n) concerns to O(1), enabling isolated testing
 tags: func, design, single-responsibility, modularity
 ---
 
 ## Write Single-Purpose Functions
 
-Functions that do multiple things are hard to test, reuse, and debug. Each function should do one thing well and compose with others for complex operations.
+Functions that do multiple tasks are hard to test, reuse, and debug. Each function should do one task well and compose with others for complex operations.
 
 **Incorrect (multi-purpose function):**
 
 ```bash
 #!/bin/bash
-# Does too many things: parse args, validate, process, output
+# Does too many concerns: parse args, validate, process, output
 process_file() {
   local file="$1"
   local verbose="$2"
@@ -46,7 +46,7 @@ process_file() {
 
 ```bash
 #!/bin/bash
-# Each function does one thing
+# Each function has a single responsibility
 
 validate_file() {
   local file="$1"
@@ -104,11 +104,11 @@ process_file() {
 ```bash
 #!/bin/bash
 # Use verb_noun format
-get_config()      # Retrieves something
-set_option()      # Sets something
-validate_input()  # Validates something
-process_file()    # Processes something
-check_status()    # Checks something
+get_config()      # Retrieves configuration
+set_option()      # Assigns an option value
+validate_input()  # Checks input constraints
+process_file()    # Transforms file content
+check_status()    # Verifies system state
 
 # Boolean functions: use is_, has_, can_, should_
 is_valid()

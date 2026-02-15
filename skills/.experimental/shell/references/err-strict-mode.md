@@ -1,7 +1,7 @@
 ---
 title: Use Strict Mode for Error Detection
 impact: HIGH
-impactDescription: catches 90% of common script failures
+impactDescription: catches 60-80% of common failures when combined with explicit checks
 tags: err, strict-mode, errexit, nounset, pipefail
 ---
 
@@ -77,4 +77,31 @@ shopt -s inherit_errexit  # Subshells inherit errexit
 shopt -s nullglob         # Globs expand to nothing if no match
 ```
 
-Reference: [Unofficial Bash Strict Mode](https://gist.github.com/robin-a-meade/58d60124b88b60816e8349d1e3938615)
+**Caveats — `set -e` does NOT catch everything:**
+
+```bash
+#!/bin/bash
+set -euo pipefail
+
+# 1. Disabled inside if/while/until conditions
+if some_failing_command; then  # No exit — set -e disabled in condition
+  echo "success"
+fi
+
+# 2. Disabled in left side of && / ||
+failing_command && echo "ok"  # No exit — set -e disabled before &&
+
+# 3. Does NOT propagate into command substitutions (bash < 4.4)
+result=$(failing_command)  # May not exit without inherit_errexit
+# Fix: shopt -s inherit_errexit (bash 4.4+)
+
+# 4. local masks exit status (even with set -e)
+my_func() {
+  local config=$(cat /missing/file)  # No exit! local succeeds
+}
+# Fix: separate declaration and assignment (see port-export-syntax)
+```
+
+Always combine `set -e` with explicit error checks for critical operations. Do not rely on it as the sole safety mechanism.
+
+Reference: [Greg's Wiki - BashFAQ/105](https://mywiki.wooledge.org/BashFAQ/105)

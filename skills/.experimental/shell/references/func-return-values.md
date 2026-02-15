@@ -78,7 +78,7 @@ result=$(calculate_sum 5 3)
 get_file_info() {
   local file="$1"
   local size name
-  size=$(stat -f%z "$file" 2>/dev/null) || return 1
+  size=$(wc -c < "$file" 2>/dev/null) || return 1
   name=$(basename "$file")
   echo "$size:$name"  # Colon-separated
 }

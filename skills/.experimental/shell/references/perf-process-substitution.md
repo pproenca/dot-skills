@@ -2,18 +2,18 @@
 title: Use Process Substitution for Temp Files
 impact: LOW-MEDIUM
 impactDescription: eliminates file I/O and cleanup overhead
-tags: perf, process-substitution, temp-files, pipes
+tags: perf, process-substitution, intermediate-files, pipes
 ---
 
 ## Use Process Substitution for Temp Files
 
-Creating temp files for intermediate data requires file I/O and cleanup. Process substitution `<()` and `>()` provides files that are actually pipes, avoiding disk overhead.
+Creating intermediate files for intermediate data requires file I/O and cleanup. Process substitution `<()` and `>()` provides files that are actually pipes, avoiding disk overhead.
 
-**Incorrect (temp files for intermediate data):**
+**Incorrect (intermediate files for intermediate data):**
 
 ```bash
 #!/bin/bash
-# Creating temp files is slow and needs cleanup
+# Creating intermediate files is slow and needs cleanup
 sorted1=$(mktemp)
 sorted2=$(mktemp)
 trap 'rm -f "$sorted1" "$sorted2"' EXIT
@@ -22,18 +22,20 @@ sort file1.txt > "$sorted1"
 sort file2.txt > "$sorted2"
 diff "$sorted1" "$sorted2"
 
-# Multiple intermediates
-grep "pattern1" input > /tmp/step1.$$
-grep "pattern2" /tmp/step1.$$ > /tmp/step2.$$
-wc -l /tmp/step2.$$
-rm /tmp/step1.$$ /tmp/step2.$$
+# Multiple intermediates with risky predictable names
+filtered_first=$(mktemp)
+filtered_second=$(mktemp)
+trap 'rm -f "$filtered_first" "$filtered_second"' EXIT
+grep "pattern1" input > "$filtered_first"
+grep "pattern2" "$filtered_first" > "$filtered_second"
+wc -l "$filtered_second"
 ```
 
 **Correct (process substitution):**
 
 ```bash
 #!/bin/bash
-# No temp files, no cleanup needed
+# No intermediate files, no cleanup needed
 diff <(sort file1.txt) <(sort file2.txt)
 
 # Chain processing without files
@@ -76,9 +78,9 @@ diff <(curl -s http://example.com/file) local_file.txt
 join <(sort file1.txt) <(sort file2.txt)
 
 # Feed compressed data to commands expecting files
-zcat large_file.gz > temp.txt
-wc -l temp.txt
-rm temp.txt
+zcat large_file.gz > decompressed_log.txt
+wc -l decompressed_log.txt
+rm decompressed_log.txt
 # Better:
 wc -l <(zcat large_file.gz)
 
@@ -102,7 +104,7 @@ while read -r line; do
 done < <(find . -name "*.txt")
 echo "Processed $count files"
 
-# Without process substitution, need temp file or lost variables
+# Without process substitution, need intermediate file or lost variables
 ```
 
 **Limitations:**
@@ -110,7 +112,7 @@ echo "Processed $count files"
 ```bash
 #!/bin/bash
 # Process substitution is bash/ksh/zsh only - not POSIX
-# In POSIX sh, use temp files or pipes
+# In POSIX sh, use intermediate files or pipes
 
 # Can't seek in process substitution (it's a pipe)
 # This won't work:

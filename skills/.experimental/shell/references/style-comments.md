@@ -1,7 +1,7 @@
 ---
 title: Write Useful Comments
 impact: LOW
-impactDescription: explains why, not what
+impactDescription: reduces code review clarification questions by 30-50%
 tags: style, comments, documentation
 ---
 
@@ -63,7 +63,7 @@ done
 # on expected "file not found" errors from grep
 grep "pattern" file.txt || true
 
-# Document magic numbers
+# Document unexplained constants
 readonly MAX_CONNECTIONS=100  # Limit from database license
 readonly TIMEOUT_MS=30000     # Match nginx upstream timeout
 

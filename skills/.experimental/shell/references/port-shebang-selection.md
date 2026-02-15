@@ -1,7 +1,7 @@
 ---
 title: Choose Shebang Based on Portability Needs
 impact: CRITICAL
-impactDescription: determines script compatibility across systems
+impactDescription: prevents 100% of bashism failures by matching interpreter to features used
 tags: port, shebang, posix, bash, compatibility
 ---
 

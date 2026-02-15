@@ -13,15 +13,15 @@ Without cleanup traps, scripts leave behind temporary files, running background 
 
 ```bash
 #!/bin/bash
-tmpfile=$(mktemp)
-tmpdir=$(mktemp -d)
+build_log=$(mktemp)
+staging_dir=$(mktemp -d)
 
 # If script is interrupted (Ctrl+C) or fails,
-# temp files are never cleaned up
-process_data > "$tmpfile"
+# these files are never cleaned up
+process_data > "$build_log"
 # ... more operations
-rm "$tmpfile"
-rm -rf "$tmpdir"  # May never be reached
+rm "$build_log"
+rm -rf "$staging_dir"  # May never be reached
 ```
 
 **Correct (trap-based cleanup):**
@@ -31,44 +31,57 @@ rm -rf "$tmpdir"  # May never be reached
 set -euo pipefail
 
 # Global cleanup variables
-TMPFILE=""
-TMPDIR=""
-BACKGROUND_PID=""
+BUILD_LOG=""
+STAGING_DIR=""
+WORKER_PID=""
 
 cleanup() {
   local exit_code=$?
 
-  # Remove temporary files
-  [[ -n "$TMPFILE" && -f "$TMPFILE" ]] && rm -f "$TMPFILE"
-  [[ -n "$TMPDIR" && -d "$TMPDIR" ]] && rm -rf "$TMPDIR"
+  # Remove working files
+  [[ -n "$BUILD_LOG" && -f "$BUILD_LOG" ]] && rm -f "$BUILD_LOG"
+  [[ -n "$STAGING_DIR" && -d "$STAGING_DIR" ]] && rm -rf "$STAGING_DIR"
 
   # Kill background processes
-  [[ -n "$BACKGROUND_PID" ]] && kill "$BACKGROUND_PID" 2>/dev/null || true
+  [[ -n "$WORKER_PID" ]] && kill "$WORKER_PID" 2>/dev/null || true
 
   exit "$exit_code"
 }
 
-# Register cleanup for multiple signals
-trap cleanup EXIT ERR INT TERM
+# Register cleanup on EXIT only — EXIT fires on all shell exits
+# including signal-induced exits (INT, TERM), avoiding double execution
+trap cleanup EXIT
 
 # Now create resources
-TMPFILE=$(mktemp)
-TMPDIR=$(mktemp -d)
+BUILD_LOG=$(mktemp)
+STAGING_DIR=$(mktemp -d)
 
 # Script work here - cleanup runs automatically on exit
-process_data > "$TMPFILE"
+process_data > "$BUILD_LOG"
 ```
 
-**Trap for specific signals:**
+**Common mistake — trapping EXIT + signals causes double execution:**
 
 ```bash
 #!/bin/bash
-# Different handlers for different situations
-trap 'echo "Interrupted"; exit 130' INT
-trap 'echo "Terminated"; exit 143' TERM
+# WRONG: cleanup runs TWICE on SIGINT/SIGTERM
+# (once for signal handler, once for EXIT when shell exits)
+trap cleanup EXIT ERR INT TERM
+
+# CORRECT: EXIT alone catches all exit paths including signals
+trap cleanup EXIT
+```
+
+**Separate handlers for signal-specific behavior:**
+
+```bash
+#!/bin/bash
+# Use separate handlers only when different behavior is needed per signal
+trap 'echo "Interrupted" >&2; exit 130' INT
+trap 'echo "Terminated" >&2; exit 143' TERM
 trap 'cleanup' EXIT
 
-# ERR trap for debugging
+# ERR trap for debugging (separate concern from cleanup)
 trap 'echo "Error on line $LINENO: $BASH_COMMAND" >&2' ERR
 ```
 

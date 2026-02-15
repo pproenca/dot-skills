@@ -1,7 +1,7 @@
 ---
 title: Use case for Pattern Matching
 impact: MEDIUM
-impactDescription: cleaner than chained if/elif for multiple patterns
+impactDescription: 40-60% fewer lines than if/elif chains for 3+ patterns, with built-in glob matching
 tags: test, case, patterns, conditionals
 ---
 

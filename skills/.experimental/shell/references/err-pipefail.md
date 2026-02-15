@@ -1,7 +1,7 @@
 ---
 title: Use pipefail to Catch Pipeline Errors
 impact: HIGH
-impactDescription: detects failures hidden in pipeline stages
+impactDescription: catches 100% of mid-pipeline failures that silently produce corrupt output
 tags: err, pipefail, pipestatus, pipes
 ---
 

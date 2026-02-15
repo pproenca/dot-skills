@@ -26,7 +26,7 @@ cat file | grep pattern
 echo $(pwd)
 
 # Unnecessary ( ) grouping
-(cd /tmp && rm -f *.log)  # cd affects only subshell
+(cd /var/cache/app && rm -f *.log)  # cd affects only subshell
 ```
 
 **Correct (avoid subshells):**
@@ -52,12 +52,12 @@ echo "$PWD"
 
 # Use { } for grouping without subshell
 {
-  cd /tmp && rm -f *.log
+  cd /var/cache/app && rm -f *.log
 }  # cd affects current shell!
 
 # Or be explicit about wanting subshell isolation
 (
-  cd /tmp  # Only affects subshell
+  cd /var/cache/app  # Only affects subshell
   rm -f *.log
 )
 # Still in original directory here
@@ -101,9 +101,10 @@ read -r var < <(echo "hello")
 echo "$var"  # "hello"
 
 # Solution 3: File or named pipe
-command > /tmp/output.$$
-read -r var < /tmp/output.$$
-rm /tmp/output.$$
+staging_file=$(mktemp)
+command > "$staging_file"
+read -r var < "$staging_file"
+rm "$staging_file"
 
 # Solution 4: Command output to array
 mapfile -t lines < <(command)

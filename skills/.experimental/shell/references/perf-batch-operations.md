@@ -24,7 +24,7 @@ for file in $(find . -name "*.sh"); do
 done
 
 # Spawns rm N times
-for file in /tmp/cache/*; do
+for file in /var/cache/myapp/*; do
   rm "$file"
 done
 ```
@@ -40,7 +40,7 @@ grep "error" *.log
 find . -name "*.sh" -exec chmod +x {} +
 
 # rm with glob (one invocation)
-rm /tmp/cache/*
+rm /var/cache/myapp/*
 
 # xargs for complex batching
 find . -name "*.log" -print0 | xargs -0 grep "error"

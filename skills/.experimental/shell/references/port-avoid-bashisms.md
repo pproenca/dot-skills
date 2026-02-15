@@ -53,10 +53,12 @@ for file in "$@"; do echo "$file"; done
 # Use explicit redirections
 command > /dev/null 2>&1
 
-# Use temp files or pipes instead of process substitution
-cmd1 > /tmp/out1.$$
-cmd2 > /tmp/out2.$$
-diff /tmp/out1.$$ /tmp/out2.$$
+# Use mktemp instead of process substitution
+diff_left=$(mktemp) diff_right=$(mktemp)
+trap 'rm -f "$diff_left" "$diff_right"' EXIT
+cmd1 > "$diff_left"
+cmd2 > "$diff_right"
+diff "$diff_left" "$diff_right"
 
 # Use printf instead of echo -e
 printf 'line1\nline2\n'

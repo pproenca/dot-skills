@@ -28,89 +28,38 @@ main "$@"
 
 ```bash
 #!/bin/bash
-#
-# Script description: Brief explanation of what this script does.
-#
-# Usage: script.sh [options] <required_arg>
-#
-# Options:
-#   -h, --help     Show help message
-#   -v, --verbose  Enable verbose output
-#
+# deploy.sh — Deploy application to staging environment
+# Usage: deploy.sh [-v] [-e environment] <version>
 
 set -euo pipefail
 
-#######################################
-# Constants
-#######################################
+# 1. Constants
 readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-readonly SCRIPT_NAME="$(basename "${BASH_SOURCE[0]}")"
-readonly CONFIG_FILE="/etc/myapp/config"
-readonly LOG_FILE="/var/log/myapp.log"
+readonly DEPLOY_CONFIG="/etc/myapp/deploy.conf"
 
-#######################################
-# Configurable defaults (can override via environment)
-#######################################
+# 2. Configurable defaults (override via environment)
 : "${LOG_LEVEL:=info}"
 : "${DRY_RUN:=false}"
 
-#######################################
-# Source dependencies
-#######################################
-source "${SCRIPT_DIR}/lib/common.sh"
+# 3. Source dependencies
 source "${SCRIPT_DIR}/lib/logging.sh"
 
-#######################################
-# Global variables (mutable state)
-#######################################
+# 4. Global variables (mutable state)
 VERBOSE=false
-OUTPUT_FILE=""
+TARGET_ENV="staging"
 
-#######################################
-# Functions (alphabetical or logical order)
-#######################################
+# 5. Functions
+cleanup() { :; }
+parse_args() { :; }
+deploy_release() { :; }
 
-cleanup() {
-  # Cleanup logic here
-  :
-}
-
-parse_args() {
-  # Argument parsing here
-  :
-}
-
-process() {
-  # Main processing logic
-  :
-}
-
-usage() {
-  cat << EOF
-Usage: ${SCRIPT_NAME} [options] <input>
-
-Options:
-  -h, --help     Show this help message
-  -v, --verbose  Enable verbose output
-  -o FILE        Output file (default: stdout)
-
-Examples:
-  ${SCRIPT_NAME} input.txt
-  ${SCRIPT_NAME} -v -o output.txt input.txt
-EOF
-}
-
-#######################################
-# Main entry point
-#######################################
+# 6. Main entry point
 main() {
   trap cleanup EXIT
-
   parse_args "$@"
-  process
+  deploy_release
 }
 
-# Only run main if executed directly
 [[ "${BASH_SOURCE[0]}" == "${0}" ]] && main "$@"
 ```
 

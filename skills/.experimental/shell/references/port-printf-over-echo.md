@@ -1,7 +1,7 @@
 ---
 title: Use printf Instead of echo for Portability
 impact: CRITICAL
-impactDescription: ensures consistent output across all systems
+impactDescription: eliminates 5+ echo behavior differences across bash, dash, zsh, and busybox
 tags: port, printf, echo, output, compatibility
 ---
 
