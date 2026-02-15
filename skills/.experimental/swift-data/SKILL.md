@@ -1,11 +1,11 @@
 ---
 name: swift-data
-description: SwiftData data modeling, persistence, and state management guidelines from Apple Developer tutorials. This skill should be used when writing, reviewing, or refactoring SwiftData models, persistence logic, @Query usage, CRUD operations, relationships, or SwiftUI state integration in iOS apps. Triggers on tasks involving @Model, ModelContainer, ModelContext, @Query, SwiftData relationships, or data persistence.
+description: SwiftData data modeling, persistence, state management, API sync, and error handling guidelines for production iOS apps. This skill should be used when writing, reviewing, or refactoring SwiftData models, persistence logic, @Query usage, CRUD operations, relationships, API-to-SwiftData sync, offline-first architecture, error recovery, or SwiftUI state integration. Triggers on tasks involving @Model, ModelContainer, ModelContext, @Query, @ModelActor, SwiftData relationships, data persistence, network sync, or schema migration.
 ---
 
 # Apple Developer SwiftData Best Practices
 
-Comprehensive data modeling, persistence, and state management guide for Swift and SwiftUI applications using SwiftData, sourced from official Apple Developer tutorials and WWDC sessions. Contains 48 rules across 8 categories (after merging duplicates and adding concurrency coverage), prioritized by impact to guide automated refactoring and code generation.
+Comprehensive data modeling, persistence, state management, sync architecture, and error handling guide for Swift and SwiftUI applications using SwiftData, sourced from official Apple Developer tutorials, WWDC sessions, and production architecture patterns. Contains 58 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -15,6 +15,9 @@ Reference these guidelines when:
 - Writing @Query declarations and predicates
 - Implementing create, update, and delete operations
 - Configuring model relationships (one-to-many, inverse)
+- Fetching from APIs and persisting to SwiftData (offline-first, sync)
+- Handling save failures, corrupt stores, and migration errors
+- Choosing between @Query in views vs @Observable ViewModels
 - Coordinating SwiftUI state with SwiftData (@Bindable, @State, @Environment)
 - Building preview infrastructure with sample data
 - Planning schema migrations for app updates
@@ -24,19 +27,26 @@ Reference these guidelines when:
 Use this workflow when designing or refactoring a SwiftData-backed feature:
 
 1. Model design: define `@Model` classes, defaults, and transient/computed state (see `model-*`)
-2. Container wiring: configure `ModelContainer` once at the app boundary; choose default vs custom configuration; decide App Group sharing (see `persist-container-setup`, `schema-configuration`, `persist-app-group`)
-3. Queries: prefer `@Query` in views; use `FetchDescriptor` in services/background work (see `query-property-wrapper`, `query-fetch-descriptor`, `query-fetch-tuning`)
-4. CRUD flows: insert/delete via the environment context; choose creation UI patterns; handle cancel/undo appropriately (see `crud-*`)
-5. Relationships: model to-many relationships as arrays; define delete rules for ownership (see `rel-*`)
-6. Previews: create in-memory containers and sample data for fast iteration (see `preview-*`)
-7. Schema evolution: plan migrations and validate uniqueness/indexing choices before shipping (see `schema-*`)
+2. Container wiring: configure `ModelContainer` once at the app boundary with error recovery; choose default vs custom configuration; decide App Group sharing (see `persist-container-setup`, `persist-container-error-recovery`, `schema-configuration`, `persist-app-group`)
+3. Queries: prefer `@Query` in views; use `FetchDescriptor` in services/background work; handle background refresh staleness (see `query-property-wrapper`, `query-background-refresh`, `query-fetch-descriptor`, `query-fetch-tuning`)
+4. CRUD flows: insert/delete via the environment context; handle save errors; choose creation UI patterns; handle cancel/undo appropriately (see `crud-*`)
+5. Sync architecture: design offline-first with local reads and background sync; map DTOs to models; handle conflicts (see `sync-*`)
+6. Relationships: model to-many relationships as arrays; define delete rules for ownership (see `rel-*`)
+7. State architecture: choose @Query for reads, ViewModels for complex writes; place business logic in model extensions (see `state-*`)
+8. Previews: create in-memory containers and sample data for fast iteration (see `preview-*`)
+9. Schema evolution: plan migrations with versioned schemas; test migration paths; add recovery for corrupt stores (see `schema-*`)
 
 ## Troubleshooting
 
 - Data not persisting -> `persist-model-macro`, `persist-container-setup`, `persist-autosave`, `schema-configuration`
-- List not updating -> `query-property-wrapper`, `state-wrapper-views`
-- Duplicates -> `schema-unique-attributes`, `schema-unique-macro`
-- Widget/extension can’t see data -> `persist-app-group`, `schema-configuration`
+- List not updating after background import -> `query-background-refresh`, `persist-model-actor`
+- List not updating (same-context) -> `query-property-wrapper`, `state-wrapper-views`
+- Duplicates from API sync -> `schema-unique-attributes`, `sync-conflict-resolution`
+- App crashes on launch after model change -> `schema-migration-recovery`, `persist-container-error-recovery`
+- Save failures silently losing data -> `crud-save-error-handling`
+- Stale data from network -> `sync-offline-first`, `sync-fetch-persist`
+- Widget/extension can't see data -> `persist-app-group`, `schema-configuration`
+- Over-engineered ViewModel layer -> `state-query-vs-viewmodel`, `state-business-logic-placement`
 
 ## Rule Categories by Priority
 
@@ -46,10 +56,11 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 | 2 | Persistence Setup | CRITICAL | `persist-` |
 | 3 | Querying & Filtering | HIGH | `query-` |
 | 4 | CRUD Operations | HIGH | `crud-` |
-| 5 | Relationships | MEDIUM-HIGH | `rel-` |
-| 6 | SwiftUI State Flow | MEDIUM | `state-` |
-| 7 | Sample Data & Previews | MEDIUM | `preview-` |
-| 8 | Schema & Migration | LOW-MEDIUM | `schema-` |
+| 5 | Sync & Networking | HIGH | `sync-` |
+| 6 | Relationships | MEDIUM-HIGH | `rel-` |
+| 7 | SwiftUI State Flow | MEDIUM-HIGH | `state-` |
+| 8 | Schema & Migration | MEDIUM-HIGH | `schema-` |
+| 9 | Sample Data & Previews | MEDIUM | `preview-` |
 
 ## Quick Reference
 
@@ -68,6 +79,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 
 - [`persist-model-macro`](references/persist-model-macro.md) - Apply @Model macro to all persistent types
 - [`persist-container-setup`](references/persist-container-setup.md) - Configure ModelContainer at the App level
+- [`persist-container-error-recovery`](references/persist-container-error-recovery.md) - Handle ModelContainer creation failure with store recovery
 - [`persist-context-environment`](references/persist-context-environment.md) - Access ModelContext via @Environment
 - [`persist-autosave`](references/persist-autosave.md) - Enable autosave for manually created contexts
 - [`persist-enumerate-batch`](references/persist-enumerate-batch.md) - Use ModelContext.enumerate for large traversals
@@ -79,6 +91,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 ### 3. Querying & Filtering (HIGH)
 
 - [`query-property-wrapper`](references/query-property-wrapper.md) - Use @Query for declarative data fetching
+- [`query-background-refresh`](references/query-background-refresh.md) - Force view refresh after background context inserts
 - [`query-sort-descriptors`](references/query-sort-descriptors.md) - Apply sort descriptors to @Query
 - [`query-predicates`](references/query-predicates.md) - Use #Predicate for type-safe filtering
 - [`query-dynamic-init`](references/query-dynamic-init.md) - Use custom view initializers for dynamic queries
@@ -96,8 +109,15 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 - [`crud-undo-cancel`](references/crud-undo-cancel.md) - Enable undo and use it to cancel edits
 - [`crud-edit-button`](references/crud-edit-button.md) - Provide EditButton for list management
 - [`crud-dismiss-save`](references/crud-dismiss-save.md) - Use Environment dismiss for modal save flow
+- [`crud-save-error-handling`](references/crud-save-error-handling.md) - Handle context.save() failures instead of ignoring errors
 
-### 5. Relationships (MEDIUM-HIGH)
+### 5. Sync & Networking (HIGH)
+
+- [`sync-fetch-persist`](references/sync-fetch-persist.md) - Use @ModelActor services to fetch and persist API data
+- [`sync-offline-first`](references/sync-offline-first.md) - Design offline-first architecture with local reads and background sync
+- [`sync-conflict-resolution`](references/sync-conflict-resolution.md) - Implement conflict resolution for bidirectional sync
+
+### 6. Relationships (MEDIUM-HIGH)
 
 - [`rel-optional-single`](references/rel-optional-single.md) - Use optionals for optional relationships
 - [`rel-array-many`](references/rel-array-many.md) - Use arrays for one-to-many relationships
@@ -105,27 +125,31 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 - [`rel-delete-rules`](references/rel-delete-rules.md) - Configure cascade delete rules for owned relationships
 - [`rel-explicit-sort`](references/rel-explicit-sort.md) - Sort relationship arrays explicitly
 
-### 6. SwiftUI State Flow (MEDIUM)
+### 7. SwiftUI State Flow (MEDIUM-HIGH)
 
+- [`state-query-vs-viewmodel`](references/state-query-vs-viewmodel.md) - Choose @Query in views for reads, ViewModels for complex write logic
+- [`state-business-logic-placement`](references/state-business-logic-placement.md) - Place business logic in model extensions and service types
+- [`state-dependency-injection`](references/state-dependency-injection.md) - Inject ModelContainer for testable service architecture
 - [`state-bindable`](references/state-bindable.md) - Use @Bindable for two-way model binding
 - [`state-local-state`](references/state-local-state.md) - Use @State for view-local transient data
 - [`state-wrapper-views`](references/state-wrapper-views.md) - Extract wrapper views for dynamic query state
 
-### 7. Sample Data & Previews (MEDIUM)
-
-- [`preview-sample-singleton`](references/preview-sample-singleton.md) - Create a SampleData singleton for previews
-- [`preview-in-memory`](references/preview-in-memory.md) - Use in-memory containers for preview isolation
-- [`preview-static-data`](references/preview-static-data.md) - Define static sample data on model types
-- [`preview-main-actor`](references/preview-main-actor.md) - Annotate SampleData with @MainActor
-
-### 8. Schema & Migration (LOW-MEDIUM)
+### 8. Schema & Migration (MEDIUM-HIGH)
 
 - [`schema-define-all-types`](references/schema-define-all-types.md) - Define schema with all model types
 - [`schema-unique-attributes`](references/schema-unique-attributes.md) - Use @Attribute(.unique) for natural keys
 - [`schema-unique-macro`](references/schema-unique-macro.md) - Use #Unique for compound uniqueness (iOS 18+)
 - [`schema-index`](references/schema-index.md) - Use #Index for hot predicates and sorts (iOS 18+)
 - [`schema-migration-plan`](references/schema-migration-plan.md) - Plan migrations before changing models
+- [`schema-migration-recovery`](references/schema-migration-recovery.md) - Plan migration recovery for schema changes
 - [`schema-configuration`](references/schema-configuration.md) - Customize storage with ModelConfiguration
+
+### 9. Sample Data & Previews (MEDIUM)
+
+- [`preview-sample-singleton`](references/preview-sample-singleton.md) - Create a SampleData singleton for previews
+- [`preview-in-memory`](references/preview-in-memory.md) - Use in-memory containers for preview isolation
+- [`preview-static-data`](references/preview-static-data.md) - Define static sample data on model types
+- [`preview-main-actor`](references/preview-main-actor.md) - Annotate SampleData with @MainActor
 
 ## How to Use
 

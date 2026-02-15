@@ -1,7 +1,7 @@
 ---
 title: Plan Migrations Before Changing Models
-impact: LOW-MEDIUM
-impactDescription: prevents data loss and crashes when existing users update the app
+impact: HIGH
+impactDescription: prevents data loss and 100% crash rate for existing users when the app ships a schema change
 tags: schema, migration, versioning, data-safety
 ---
 

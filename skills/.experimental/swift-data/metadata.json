@@ -1,9 +1,9 @@
 {
-  "version": "1.0.3",
+  "version": "1.1.0",
   "organization": "Apple Developer",
   "technology": "SwiftData",
   "date": "February 2026",
-  "abstract": "Comprehensive data modeling, persistence, and state management guide for Swift and SwiftUI applications using SwiftData, designed for AI agents and LLMs. Contains 48 rules across 8 categories, prioritized by impact from critical (data modeling, persistence setup) to incremental (schema evolution, migration). Each rule includes detailed explanations and real-world examples comparing incorrect vs. correct implementations to guide automated refactoring and code generation.",
+  "abstract": "Comprehensive data modeling, persistence, state management, sync architecture, and error handling guide for Swift and SwiftUI applications using SwiftData, designed for AI agents and LLMs. Contains 58 rules across 9 categories, prioritized by impact from critical (data modeling, persistence setup) to production architecture (sync, error recovery, state management). Each rule includes detailed explanations and real-world examples comparing incorrect vs. correct implementations to guide automated refactoring and code generation.",
   "references": [
     "https://developer.apple.com/tutorials/develop-in-swift/welcome-to-data-modeling",
     "https://developer.apple.com/tutorials/develop-in-swift/model-data-with-custom-types",
@@ -20,6 +20,12 @@
     "https://developer.apple.com/videos/play/wwdc2023/10195/",
     "https://developer.apple.com/videos/play/wwdc2023/10196/",
     "https://developer.apple.com/videos/play/wwdc2024/10137/",
-    "https://developer.apple.com/documentation/swiftdata/fetchdescriptor/fetchoffset"
+    "https://developer.apple.com/documentation/swiftdata/fetchdescriptor/fetchoffset",
+    "https://developer.apple.com/forums/thread/761118",
+    "https://azamsharp.com/2025/03/28/swiftdata-architecture-patterns-and-practices.html",
+    "https://www.hackingwithswift.com/quick-start/swiftdata/common-swiftdata-errors-and-their-solutions",
+    "https://fatbobman.com/en/posts/key-considerations-before-using-swiftdata/",
+    "https://matteomanferdini.com/swiftdata-mvvm/",
+    "https://www.hackingwithswift.com/quick-start/swiftdata/how-to-use-mvvm-to-separate-swiftdata-from-your-views"
   ]
 }

@@ -57,6 +57,9 @@ struct FriendsApp: App {
 }
 ```
 
+**Production caveat:**
+`.modelContainer(for:)` crashes the app if the store cannot be created (corrupt file, incompatible schema without migration). For production apps, create the `ModelContainer` manually in the `App.init()` with a do-catch and fallback. See [`persist-container-error-recovery`](persist-container-error-recovery.md) for the full recovery pattern.
+
 **When NOT to use:**
 - Unit tests and previews should use in-memory containers instead of the shared app container
 

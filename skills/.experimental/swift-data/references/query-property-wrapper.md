@@ -43,6 +43,9 @@ struct FriendList: View {
 }
 ```
 
+**Known limitation — cross-context inserts:**
+`@Query` does not reliably update when data is inserted from a `@ModelActor` background context. Deletes propagate correctly, but inserts and updates from background actors may leave the UI stale until the next autosave merge. If your app uses background imports or sync services, see [`query-background-refresh`](query-background-refresh.md) for the workaround pattern using `ModelContext.didSave` notifications.
+
 **When NOT to use:**
 - In non-SwiftUI contexts (background tasks, services, unit tests) — use `FetchDescriptor` with `context.fetch()` instead
 - When you need a one-shot fetch that should not trigger view re-renders

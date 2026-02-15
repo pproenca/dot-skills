@@ -57,6 +57,9 @@ try await importer.importFriends(from: dtos)
 - Simple CRUD from SwiftUI views — use `@Environment(\.modelContext)` instead
 - One-off fetches that are fast enough on the main actor
 
+**UI refresh caveat:**
+Inserts from a `@ModelActor` do not reliably trigger `@Query` updates in SwiftUI views. If your UI depends on seeing background-inserted data immediately, you must observe `ModelContext.didSave` notifications and force a view refresh. See [`query-background-refresh`](query-background-refresh.md) for the full workaround pattern.
+
 **Benefits:**
 - Actor isolation guarantees serial access to the context — no data races
 - `DefaultSerialModelExecutor` ensures operations run one-by-one
