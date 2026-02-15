@@ -1,7 +1,7 @@
 ---
 title: Prefer Removing a Wrapper Over Adding 5 Utility Classes to It
 impact: HIGH
-impactDescription: cuts class count 20-30% per component by eliminating unnecessary DOM nesting
+impactDescription: reduces DOM depth and class count by eliminating unnecessary wrapper elements
 tags: intent, simplify, remove-wrappers, flat-markup, less-is-more
 ---
 
@@ -37,5 +37,7 @@ When a component looks wrong, the reflex is to add classes: rounded corners, sha
 ```
 
 Count the DOM depth. If a component is 4+ levels deep, look for wrappers that exist only for styling. Remove them and let the remaining elements handle their own spacing.
+
+**Important:** The key insight is removing wrapper divs and decorative borders — not content elements. If an icon, image, or label serves as a visual anchor for scanning (e.g., notification icons in a list, user avatars in a feed), keep it. Only remove elements that exist purely for visual decoration or structural nesting without semantic purpose.
 
 Reference: Refactoring UI — "Start with a Feature, Not a Layout"

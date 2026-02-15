@@ -24,7 +24,7 @@ Designing in grayscale forces you to establish hierarchy through spacing, size, 
   <h3 class="text-base font-semibold text-gray-900">Project Alpha</h3>
   <span class="rounded-full bg-gray-100 px-2 py-0.5 text-xs font-medium text-gray-600">Active</span>
   <p class="text-sm text-gray-600">Design Phase — 3 tasks remaining</p>
-  <p class="text-xs text-gray-400">Due: March 15</p>
+  <p class="text-xs text-gray-500">Due: March 15</p>
 </div>
 
 <!-- Step 2: add color to enhance (only badge changes) -->
@@ -32,7 +32,7 @@ Designing in grayscale forces you to establish hierarchy through spacing, size, 
   <h3 class="text-base font-semibold text-gray-900">Project Alpha</h3>
   <span class="rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">Active</span>
   <p class="text-sm text-gray-600">Design Phase — 3 tasks remaining</p>
-  <p class="text-xs text-gray-400">Due: March 15</p>
+  <p class="text-xs text-gray-500">Due: March 15</p>
 </div>
 ```
 

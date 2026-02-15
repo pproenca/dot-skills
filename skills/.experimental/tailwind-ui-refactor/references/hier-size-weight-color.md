@@ -21,7 +21,7 @@ When everything is the same size and weight, nothing stands out. Use three lever
 <div class="p-6">
   <h3 class="text-lg font-semibold text-gray-900">John Smith</h3>
   <p class="text-sm font-medium text-gray-500">Software Engineer</p>
-  <p class="text-sm text-gray-400">john@example.com</p>
+  <p class="text-sm text-gray-500">john@example.com</p>
 </div>
 ```
 

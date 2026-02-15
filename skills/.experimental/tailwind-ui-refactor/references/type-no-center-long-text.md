@@ -1,7 +1,7 @@
 ---
 title: Avoid Centering Long-Form Text — Left-Align Body Content
 impact: MEDIUM-HIGH
-impactDescription: eliminates ragged-left edges on 3+ line paragraphs that slow reading 10-15%
+impactDescription: eliminates ragged-left edges on multi-line paragraphs that impair reading flow
 tags: type, alignment, center, left-align, readability
 ---
 

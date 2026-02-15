@@ -1,7 +1,7 @@
 ---
 title: Ensure 4.5:1 Contrast Ratio for Body Text
 impact: HIGH
-impactDescription: prevents inaccessible text that 15% of users struggle to read
+impactDescription: prevents inaccessible text by enforcing WCAG AA 4.5:1 minimum contrast ratio
 tags: color, contrast, accessibility, wcag, a11y
 ---
 

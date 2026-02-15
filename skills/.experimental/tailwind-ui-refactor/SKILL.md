@@ -5,7 +5,7 @@ description: Refactoring UI design patterns for Tailwind CSS applications. This 
 
 # Refactoring UI Tailwind CSS Best Practices
 
-Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 50 rules across 9 categories, prioritized by design impact to guide automated refactoring and code generation.
+Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 52 rules across 9 categories, prioritized by design impact to guide automated refactoring and code generation. Uses Tailwind CSS v4 syntax (v3 notes provided where syntax differs).
 
 **Important: Think first, style second.** Before applying any visual rule, understand the UI's purpose, identify what matters to the user, and remove unnecessary elements. The Design Intent category (priority 1) must be considered before any styling changes. A simpler component with fewer elements always beats a decorated component with unnecessary markup.
 
@@ -42,6 +42,8 @@ Reference these guidelines when:
 - [`intent-progressive-disclosure`](references/intent-progressive-disclosure.md) - Hide secondary information behind interactions
 - [`intent-content-drives-layout`](references/intent-content-drives-layout.md) - Let real content determine layout — not the other way around
 - [`intent-simplify-over-decorate`](references/intent-simplify-over-decorate.md) - Prefer removing a wrapper over adding 5 utility classes to it
+- [`intent-match-context-fidelity`](references/intent-match-context-fidelity.md) - Match design polish to context — admin vs consumer vs product
+- [`intent-match-existing-patterns`](references/intent-match-existing-patterns.md) - Audit sibling component patterns before restyling
 
 ### 2. Visual Hierarchy (CRITICAL)
 
@@ -110,6 +112,17 @@ Reference these guidelines when:
 - [`polish-border-radius-personality`](references/polish-border-radius-personality.md) - Match border radius to brand personality
 - [`polish-gradient-close-hues`](references/polish-gradient-close-hues.md) - Use gradients with hues within 30 degrees of each other
 - [`polish-inner-shadow-images`](references/polish-inner-shadow-images.md) - Add inner shadow to prevent image background bleed
+
+## Scope & Limitations
+
+This skill covers **layout, hierarchy, spacing, color, and polish** based on Refactoring UI principles. It does NOT cover:
+
+- **Font selection & pairing** — choosing distinctive typefaces, avoiding generic AI defaults (Inter, Arial, system-ui), or pairing display + body fonts
+- **Animation & motion** — meaningful transitions, micro-interactions, page load sequences, or scroll-triggered reveals
+- **Creative direction** — establishing an aesthetic vision, choosing a tone (minimal, maximalist, brutalist, etc.), or differentiating from generic "AI slop" aesthetics
+- **Spatial composition** — asymmetric layouts, grid-breaking elements, or unconventional visual flow
+
+For these concerns, pair this skill with a design-thinking or frontend-design skill that covers creative direction and aesthetic execution.
 
 ## How to Use
 

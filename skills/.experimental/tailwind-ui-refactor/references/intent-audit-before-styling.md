@@ -1,7 +1,7 @@
 ---
 title: Audit What Each Element Communicates Before Changing Any CSS
 impact: CRITICAL
-impactDescription: prevents 30-50% of unnecessary markup by identifying purposeless elements first
+impactDescription: prevents unnecessary markup by identifying elements that don't serve the user's task
 tags: intent, audit, purpose, user-goal, information-hierarchy
 ---
 

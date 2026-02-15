@@ -1,7 +1,7 @@
 ---
 title: Reduce Choices Per Screen — Fewer Options Beat Prettier Options
 impact: CRITICAL
-impactDescription: cuts decision time 40-60% per Hick's Law when reducing from 6+ to 2-3 actions
+impactDescription: reduces decision fatigue by limiting visible actions per screen (Hick's Law — fewer choices means faster decisions)
 tags: intent, cognitive-load, hicks-law, simplify, actions, cta
 ---
 

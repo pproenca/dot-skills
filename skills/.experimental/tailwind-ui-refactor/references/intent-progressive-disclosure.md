@@ -1,7 +1,7 @@
 ---
 title: Hide Secondary Information Behind Interactions
 impact: CRITICAL
-impactDescription: reduces visible content 30-50% per screen while keeping all data accessible
+impactDescription: reduces visible content per screen by hiding secondary information behind interactions
 tags: intent, progressive-disclosure, collapse, expand, detail, simplify
 ---
 

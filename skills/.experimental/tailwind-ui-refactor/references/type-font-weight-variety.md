@@ -23,7 +23,7 @@ Fonts with limited weight options (just regular and bold) force you to rely on s
 <div class="space-y-1 font-sans">
   <h3 class="text-lg font-semibold text-gray-900">Project Name</h3>
   <p class="text-sm font-medium text-gray-600">Team Lead</p>
-  <p class="text-sm text-gray-400">Last updated 2 hours ago</p>
+  <p class="text-sm text-gray-500">Last updated 2 hours ago</p>
 </div>
 ```
 

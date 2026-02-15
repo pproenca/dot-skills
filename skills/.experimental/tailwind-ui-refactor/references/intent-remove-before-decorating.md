@@ -1,7 +1,7 @@
 ---
 title: Remove Unnecessary Elements Before Styling What Remains
 impact: CRITICAL
-impactDescription: reduces DOM nodes 20-40% and eliminates visual noise from purposeless UI
+impactDescription: eliminates visual noise by removing purposeless elements before styling what remains
 tags: intent, simplify, remove, reduce, declutter
 ---
 
