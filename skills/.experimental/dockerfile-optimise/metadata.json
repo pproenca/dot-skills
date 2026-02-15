@@ -1,9 +1,9 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "Docker",
   "technology": "Dockerfile",
   "date": "February 2026",
-  "abstract": "Comprehensive Dockerfile optimization guide for build time, robustness, and image quality, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (layer caching, multi-stage builds) to incremental (quality validation). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics. Sources exclusively from official Docker documentation.",
+  "abstract": "Comprehensive Dockerfile optimization guide for build time, robustness, and image quality, designed for AI agents and LLMs. Contains 48 rules across 8 categories, prioritized by impact from critical (layer caching, multi-stage builds) to incremental (quality validation). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics. Sources exclusively from official Docker documentation.",
   "references": [
     "https://docs.docker.com/build/building/best-practices/",
     "https://docs.docker.com/build/cache/optimize/",

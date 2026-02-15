@@ -57,6 +57,8 @@ RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
 
 (The `docker-clean` removal is required — without it, apt deletes cached `.deb` files before the cache mount can persist them. Cache mounts are not part of the image layer at all — they exist only in the build cache on the host. No cleanup command is needed, and the cached files are reused by subsequent builds. This is the best of both worlds: small images and fast rebuilds.)
 
+> **See also:** [`cache-mount-package`](cache-mount-package.md) (CRITICAL) for full coverage of cache mounts across all package managers.
+
 ### pip — same principle applies
 
 **Incorrect (cache persists in layer):**

@@ -5,7 +5,7 @@ description: Dockerfile optimization guidelines from official Docker documentati
 
 # Dockerfile Optimization Best Practices
 
-Comprehensive Dockerfile optimization guide sourced exclusively from official Docker documentation. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive Dockerfile optimization guide sourced exclusively from official Docker documentation. Contains 48 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
 
 ## When to Apply
 
@@ -36,6 +36,7 @@ Reference these guidelines when:
 
 - [`cache-layer-order`](references/cache-layer-order.md) - Order layers by change frequency
 - [`cache-copy-deps-first`](references/cache-copy-deps-first.md) - Copy dependency files before source code
+- [`cache-copy-link`](references/cache-copy-link.md) - Use COPY --link for cache-efficient layer copying
 - [`cache-mount-package`](references/cache-mount-package.md) - Use cache mounts for package managers
 - [`cache-apt-combine`](references/cache-apt-combine.md) - Combine apt-get update with install
 - [`cache-external`](references/cache-external.md) - Use external cache for CI/CD builds
@@ -56,6 +57,7 @@ Reference these guidelines when:
 - [`base-minimal-image`](references/base-minimal-image.md) - Use minimal base images
 - [`base-official-images`](references/base-official-images.md) - Use Docker Official Images
 - [`base-pin-versions`](references/base-pin-versions.md) - Pin base image versions with digests
+- [`base-arg-version`](references/base-arg-version.md) - Use ARG before FROM to parameterize base images
 - [`base-rebuild-regularly`](references/base-rebuild-regularly.md) - Rebuild images regularly with --pull
 - [`base-distroless`](references/base-distroless.md) - Use distroless or scratch images for production
 
@@ -64,7 +66,7 @@ Reference these guidelines when:
 - [`ctx-dockerignore`](references/ctx-dockerignore.md) - Use .dockerignore to exclude unnecessary files
 - [`ctx-bind-mounts`](references/ctx-bind-mounts.md) - Use bind mounts instead of COPY for build-only files
 - [`ctx-minimize-context`](references/ctx-minimize-context.md) - Keep build context small
-- [`ctx-syntax-directive`](references/ctx-syntax-directive.md) - Use syntax directive for latest BuildKit features
+- [`ctx-syntax-directive`](references/ctx-syntax-directive.md) - Use syntax directive for latest BuildKit features (prerequisite for cache mounts, secret mounts, heredocs, COPY --link)
 
 ### 5. Security & Secrets (HIGH)
 

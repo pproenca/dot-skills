@@ -9,8 +9,6 @@ tags: cache, cache-mount, package-manager, buildkit
 
 Without cache mounts, each build that misses the layer cache re-downloads every package from the internet. A `RUN --mount=type=cache` instruction persists a directory across builds so package managers can reuse previously downloaded files, even when the dependency manifest changes. This turns a full download into an incremental update.
 
-### pip (Python)
-
 **Incorrect (re-downloads everything on cache miss):**
 
 ```dockerfile
@@ -20,9 +18,9 @@ COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 ```
 
-(Adding a single new dependency forces pip to re-download all 47 packages from PyPI.)
+(Adding a single new dependency forces pip to re-download all packages from PyPI.)
 
-**Correct (cache mount preserves downloaded wheels):**
+**Correct (cache mount preserves downloaded packages):**
 
 ```dockerfile
 FROM python:3.13-slim
@@ -32,81 +30,29 @@ RUN --mount=type=cache,target=/root/.cache/pip \
     pip install -r requirements.txt
 ```
 
-(Adding a new dependency only downloads that one package. The other 47 are served from the persistent cache.)
+(Adding a new dependency only downloads that one package. The cached data lives in the mount on the host, not in the image layer — so images stay small without explicit cleanup commands.)
 
-### npm (Node.js)
+### Package Manager Cache Directories
 
-**Incorrect (clean npm cache on every build):**
+| Package Manager | Cache Target | Notes |
+|----------------|-------------|-------|
+| apt (Debian/Ubuntu) | `/var/cache/apt` + `/var/lib/apt` | Requires disabling `docker-clean` hook; use `sharing=locked` |
+| pip (Python) | `/root/.cache/pip` | Remove `--no-cache-dir` flag when using cache mounts |
+| npm | `/root/.npm` | Works with `npm ci` and `npm install` |
+| yarn Classic v1 | `/root/.yarn` | Set `YARN_CACHE_FOLDER=/root/.yarn` |
+| yarn Berry v4 | `/root/.yarn/berry/cache` | Use `--immutable` instead of `--frozen-lockfile` |
+| pnpm | `/root/.local/share/pnpm/store` | Content-addressable store deduplicates across projects |
+| Go modules | `/go/pkg/mod` | Also cache `/root/.cache/go-build` for compiled artifacts |
 
-```dockerfile
-FROM node:22-slim
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN npm ci
-```
+### Language-Specific Details
 
-(Every cache miss downloads the full dependency tree from the npm registry.)
+For full examples with incorrect/correct patterns and edge cases, see the dedicated rules:
 
-**Correct (cache mount preserves npm store):**
+- [`dep-cache-mount-apt`](dep-cache-mount-apt.md) — apt/Debian/Ubuntu (requires `docker-clean` removal)
+- [`dep-cache-mount-npm`](dep-cache-mount-npm.md) — npm, yarn Classic, yarn Berry, pnpm
+- [`dep-cache-mount-pip`](dep-cache-mount-pip.md) — pip/Python
 
-```dockerfile
-FROM node:22-slim
-WORKDIR /app
-COPY package.json package-lock.json ./
-RUN --mount=type=cache,target=/root/.npm \
-    npm ci
-```
-
-(npm reuses tarballs from the persistent cache directory, only fetching new or updated packages.)
-
-### apt (Debian/Ubuntu)
-
-**Incorrect (re-downloads package lists and .deb files every build):**
-
-```dockerfile
-FROM debian:bookworm-slim
-RUN apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    ca-certificates \
-    && rm -rf /var/lib/apt/lists/*
-```
-
-(Every build re-downloads the full package index and all .deb files from scratch.)
-
-**Correct (cache mount preserves apt data):**
-
-```dockerfile
-FROM debian:bookworm-slim
-
-# Official Debian/Ubuntu Docker images ship a post-invoke hook that deletes
-# /var/cache/apt/archives after every install. Remove it so the cache mount
-# actually persists downloaded .deb files across builds.
-RUN rm -f /etc/apt/apt.conf.d/docker-clean; \
-    echo 'Binary::apt::APT::Keep-Downloaded-Packages "true";' > /etc/apt/apt.conf.d/keep-cache
-
-RUN --mount=type=cache,target=/var/cache/apt,sharing=locked \
-    --mount=type=cache,target=/var/lib/apt,sharing=locked \
-    apt-get update && apt-get install -y --no-install-recommends \
-    curl \
-    ca-certificates
-```
-
-(The `sharing=locked` flag prevents concurrent builds from corrupting the shared cache. The `docker-clean` removal is required — without it, apt deletes cached `.deb` files before the cache mount can persist them. Downloaded `.deb` files and package lists persist across builds.)
-
-### Go modules
-
-**Incorrect (re-downloads modules on every build):**
-
-```dockerfile
-FROM golang:1.23
-WORKDIR /app
-COPY go.mod go.sum ./
-RUN go mod download
-```
-
-(A module update re-downloads every dependency from proxy.golang.org.)
-
-**Correct (cache mount preserves module cache):**
+### Go Modules (Quick Reference)
 
 ```dockerfile
 FROM golang:1.23

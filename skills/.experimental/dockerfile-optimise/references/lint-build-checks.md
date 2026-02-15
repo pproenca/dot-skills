@@ -37,8 +37,8 @@ docker build --check .
 Or embed the check directive directly in the Dockerfile to enforce checks on every build:
 
 ```dockerfile
-# check=error=true
 # syntax=docker/dockerfile:1
+# check=error=true
 
 FROM ubuntu:24.04
 

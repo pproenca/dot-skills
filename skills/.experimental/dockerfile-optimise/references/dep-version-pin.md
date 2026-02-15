@@ -23,19 +23,19 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 (Installs whatever version the Ubuntu mirror resolves today. A build on Monday may get `nginx 1.24` while the same Dockerfile on Friday gets `nginx 1.26` after an archive update — silently breaking reverse-proxy configuration.)
 
-**Correct (pinned to major.minor with wildcard patch):**
+**Correct (pinned to exact versions):**
 
 ```dockerfile
 FROM ubuntu:24.04
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
-    python3=3.12.* \
-    nginx=1.24.* \
-    postgresql-client=16.* \
+    python3=3.12.3-1ubuntu2 \
+    nginx=1.24.0-2ubuntu7 \
+    postgresql-client-16=16.2-1ubuntu4 \
     && rm -rf /var/lib/apt/lists/*
 ```
 
-(Pins each package to a specific major.minor series while still accepting patch-level security updates. Builds are reproducible across machines and time, and upstream minor bumps cannot silently break your image.)
+(Pins each package to an exact version. Builds are reproducible across machines and time, and upstream updates cannot silently break your image. Use `docker run --rm ubuntu:24.04 apt-cache policy <package>` to discover available versions for your base image.)
 
 ### pip — use a locked requirements file
 

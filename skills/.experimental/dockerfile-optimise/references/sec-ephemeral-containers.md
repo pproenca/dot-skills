@@ -40,16 +40,19 @@ COPY package.json package-lock.json ./
 RUN npm ci --production
 COPY . .
 
-# Declare mutable data paths as volumes to make it explicit
-# that these directories contain data managed externally
-VOLUME ["/data/uploads"]
+# /data/uploads is expected to be provided as an external mount
+# at runtime (docker run -v or compose volumes). Do not use
+# the VOLUME instruction — it creates anonymous volumes that
+# are hard to track and prevents downstream images from
+# modifying this directory.
+RUN mkdir -p /data/uploads && chown node:node /data/uploads
 
 USER node
 EXPOSE 3000
 CMD ["node", "server.js"]
 ```
 
-(The Dockerfile declares `VOLUME ["/data/uploads"]` to make it explicit that this path contains externally managed data. The `USER node` instruction drops privileges. The application should store uploads in object storage (S3, GCS, MinIO), sessions in Redis or a database, and write logs to stdout for collection by the container runtime.)
+(The `/data/uploads` directory is created and owned by the `node` user. It is expected to be mounted at runtime via `docker run -v` or compose volumes — never via the `VOLUME` Dockerfile instruction, which creates untracked anonymous volumes. The application should store uploads in object storage (S3, GCS, MinIO), sessions in Redis or a database, and write logs to stdout for collection by the container runtime.)
 
 **Correct (Docker Compose with externalized state):**
 

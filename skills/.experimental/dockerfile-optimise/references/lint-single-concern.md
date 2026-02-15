@@ -1,7 +1,7 @@
 ---
 title: One Concern per Container
-impact: LOW-MEDIUM
-impactDescription: enables independent scaling, updates, and failure isolation
+impact: MEDIUM
+impactDescription: enables independent scaling, updates, and failure isolation per service
 tags: lint, single-concern, architecture, decoupling
 ---
 
