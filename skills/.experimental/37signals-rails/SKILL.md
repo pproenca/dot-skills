@@ -1,5 +1,5 @@
 ---
-name: signals-rails
+name: 37signals-rails
 description: 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the Fizzy/Basecamp/HEY codebase. This skill should be used when writing, reviewing, or refactoring Ruby on Rails code following the 37signals philosophy — vanilla Rails, CRUD controllers, rich domain models, concerns, no service objects, Hotwire, Turbo, Stimulus, Solid Queue, Solid Cache, Solid Cable, multi-tenancy, Minitest, custom auth, or DHH conventions.
 ---
 
