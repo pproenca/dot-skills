@@ -1,37 +1,15 @@
 ---
-title: Extract Protocol Interfaces for External Dependencies
-impact: MEDIUM
-impactDescription: enables unit testing and SwiftUI previews with mock data
-tags: arch, protocol, dependency-injection, testing, previews
+title: Extract Protocol Dependencies through ViewModel Layer
+impact: HIGH
+impactDescription: enables unit testing and SwiftUI previews — views never touch repositories directly
+tags: arch, protocol, dependency-injection, viewmodel, clean-architecture
 ---
 
-## Extract Protocol Interfaces for External Dependencies
+## Extract Protocol Dependencies through ViewModel Layer
 
-Views that call concrete services like URLSession or database clients directly cannot be tested without network access, and SwiftUI previews either crash or hang waiting for real responses. Extracting a protocol interface lets you inject a lightweight mock for tests and previews while keeping the real implementation for production. This one change makes the difference between previews that load instantly and previews that timeout.
+Views that call concrete services or protocol dependencies directly violate Clean Architecture's layer boundaries — the view layer reaches into the data layer. Extract protocol interfaces and route them through an `@Observable` ViewModel. The ViewModel calls Use Cases, Use Cases call Repository protocols, and the view only reads display-ready state. This makes views, ViewModels, and Use Cases independently testable.
 
-**Incorrect (concrete dependency makes previews and tests impossible without network):**
-
-```swift
-struct ArticleListView: View {
-    @State private var articles: [Article] = []
-    @State private var isLoading = false
-
-    var body: some View {
-        List(articles) { article in
-            Text(article.title)
-        }
-        .task {
-            isLoading = true
-            let url = URL(string: "https://api.example.com/articles")!
-            let (data, _) = try! await URLSession.shared.data(from: url)
-            articles = try! JSONDecoder().decode([Article].self, from: data)
-            isLoading = false
-        }
-    }
-}
-```
-
-**Correct (protocol enables mock injection for previews and tests):**
+**Incorrect (view directly uses a service protocol — breaks layer boundary):**
 
 ```swift
 protocol ArticleFetching {
@@ -42,6 +20,8 @@ struct ArticleListView: View {
     let fetcher: ArticleFetching
     @State private var articles: [Article] = []
     @State private var isLoading = false
+    // View directly accesses data layer — untestable without mocking at view level
+    // Business logic (loading state, error handling) lives in the view
 
     var body: some View {
         List(articles) { article in
@@ -54,24 +34,70 @@ struct ArticleListView: View {
         }
     }
 }
+```
 
-struct LiveArticleFetcher: ArticleFetching {
-    func fetchArticles() async throws -> [Article] {
-        let url = URL(string: "https://api.example.com/articles")!
-        let (data, _) = try await URLSession.shared.data(from: url)
-        return try JSONDecoder().decode([Article].self, from: data)
+**Correct (protocol routed through ViewModel — proper layer separation):**
+
+```swift
+// Domain layer — protocol and use case
+protocol ArticleRepository: Sendable {
+    func fetchArticles() async throws -> [Article]
+}
+
+protocol FetchArticlesUseCase {
+    func execute() async throws -> [Article]
+}
+
+final class FetchArticlesUseCaseImpl: FetchArticlesUseCase {
+    private let repository: ArticleRepository
+
+    init(repository: ArticleRepository) {
+        self.repository = repository
+    }
+
+    func execute() async throws -> [Article] {
+        try await repository.fetchArticles()
     }
 }
 
-struct MockArticleFetcher: ArticleFetching {
-    func fetchArticles() async throws -> [Article] {
-        [Article(id: "1", title: "Preview Article")]
+// Presentation layer — ViewModel owns the logic
+@Observable
+class ArticleListViewModel {
+    var articles: [Article] = []
+    var isLoading: Bool = false
+    var errorMessage: String?
+
+    private let fetchArticles: FetchArticlesUseCase
+
+    init(fetchArticles: FetchArticlesUseCase) {
+        self.fetchArticles = fetchArticles
+    }
+
+    func load() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            articles = try await fetchArticles.execute()
+        } catch {
+            errorMessage = error.localizedDescription
+        }
     }
 }
 
-#Preview {
-    ArticleListView(fetcher: MockArticleFetcher())
+// View — thin rendering layer, no data access
+struct ArticleListView: View {
+    @State var viewModel: ArticleListViewModel
+
+    var body: some View {
+        List(viewModel.articles) { article in
+            Text(article.title)
+        }
+        .overlay {
+            if viewModel.isLoading { ProgressView() }
+        }
+        .task { await viewModel.load() }
+    }
 }
 ```
 
-Reference: [Previews in Xcode](https://developer.apple.com/documentation/swiftui/previews-in-xcode)
+Reference: [Clean Architecture for SwiftUI](https://nalexn.github.io/clean-architecture-swiftui/)

@@ -1,15 +1,15 @@
 ---
-title: Centralize navigationDestination at Stack Root
+title: Refactor Navigation to Coordinator Pattern
 impact: HIGH
-impactDescription: prevents duplicate destination registrations and routing conflicts
-tags: nav, destination, centralize, routing, navigationstack
+impactDescription: centralizes navigation logic, enables deep linking, keeps views testable
+tags: nav, coordinator, destination, navigationstack, routing
 ---
 
-## Centralize navigationDestination at Stack Root
+## Refactor Navigation to Coordinator Pattern
 
-When `.navigationDestination(for:)` modifiers are scattered across child views, SwiftUI may register the same type multiple times, leading to duplicate registrations and unpredictable routing where the wrong destination view appears. Centralizing all destination modifiers at the NavigationStack root ensures each type is registered exactly once and makes the routing table immediately visible in a single location.
+Scattered `.navigationDestination(for:)` modifiers across child views cause duplicate registrations and unpredictable routing. Refactor to a coordinator pattern: an `@Observable` class that owns the `NavigationPath` and all routing decisions. Views request navigation by calling coordinator methods — they never create destinations inline. This centralizes flow logic, enables deep linking, and makes navigation testable.
 
-**Incorrect (destination modifiers scattered across child views):**
+**Incorrect (destinations scattered across child views — no coordinator):**
 
 ```swift
 struct AppRootView: View {
@@ -51,46 +51,68 @@ struct ProductListView: View {
 }
 ```
 
-**Correct (all destinations centralized at NavigationStack root):**
+**Correct (coordinator owns NavigationStack and all routing):**
 
 ```swift
-struct AppRootView: View {
-    @State private var path = NavigationPath()
+enum CatalogRoute: Hashable {
+    case category(Category)
+    case product(Product)
+}
+
+@Observable
+final class CatalogCoordinator {
+    var path = NavigationPath()
+
+    func navigate(to route: CatalogRoute) {
+        path.append(route)
+    }
+
+    func pop() {
+        guard !path.isEmpty else { return }
+        path.removeLast()
+    }
+
+    func popToRoot() {
+        path.removeLast(path.count)
+    }
+
+    func handle(url: URL) -> Bool {
+        guard let route = CatalogRoute(url: url) else { return false }
+        navigate(to: route)
+        return true
+    }
+}
+
+struct CatalogFlowView: View {
+    @State private var coordinator = CatalogCoordinator()
 
     var body: some View {
-        NavigationStack(path: $path) {
+        NavigationStack(path: $coordinator.path) {
             CategoryListView()
-                .navigationDestination(for: Category.self) { category in
-                    ProductListView(category: category)
-                }
-                .navigationDestination(for: Product.self) { product in
-                    ProductDetailView(product: product)
+                .navigationDestination(for: CatalogRoute.self) { route in
+                    switch route {
+                    case .category(let category):
+                        ProductListView(category: category)
+                    case .product(let product):
+                        ProductDetailView(product: product)
+                    }
                 }
         }
+        .environment(coordinator)
     }
 }
 
 struct CategoryListView: View {
+    @Environment(CatalogCoordinator.self) private var coordinator
+
     var body: some View {
         List(Category.allCases) { category in
-            NavigationLink(value: category) {
+            Button { coordinator.navigate(to: .category(category)) } label: {
                 CategoryRow(category: category)
-            }
-        }
-    }
-}
-
-struct ProductListView: View {
-    let category: Category
-
-    var body: some View {
-        List(category.products) { product in
-            NavigationLink(value: product) {
-                ProductRow(product: product)
             }
         }
     }
 }
 ```
 
-Reference: [Migrating to new navigation types](https://developer.apple.com/documentation/swiftui/migrating-to-new-navigation-types)
+Reference: [Advanced iOS App Architecture (4th Ed.)](https://www.kodeco.com/books/advanced-ios-app-architecture)

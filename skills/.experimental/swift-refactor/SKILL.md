@@ -1,38 +1,83 @@
 ---
 name: swift-refactor
-description: Swift and SwiftUI refactoring patterns for code quality, API modernization, state architecture, view decomposition, navigation refactoring, architecture patterns, type safety, and Swift language fundamentals. This skill should be used when refactoring Swift/SwiftUI code, migrating deprecated APIs, restructuring state management, decomposing views, modernizing navigation, improving architecture, or learning Swift language basics.
+description: Swift and SwiftUI refactoring patterns aligned with Airbnb's Clean MVVM + Coordinator architecture for iOS 17+. Enforces @Observable ViewModels, @Equatable diffing, NavigationStack coordinators, Clean Architecture layers, and modern SwiftUI APIs. This skill should be used when refactoring Swift/SwiftUI code, migrating deprecated APIs, restructuring state management, decomposing views, modernizing navigation, improving architecture, or strengthening type safety.
 ---
 
-# Swift Refactor — Code Quality & Modernization
+# Airbnb Swift/SwiftUI Best Practices
 
-Comprehensive guide for refactoring Swift and SwiftUI code. Contains 42 rules across 7 categories covering API modernization, state architecture, view decomposition, navigation refactoring, architecture patterns, type safety, and Swift fundamentals.
+Comprehensive refactoring guide for migrating Swift/SwiftUI code to the Airbnb Clean MVVM + Coordinator architecture. Contains 60 rules across 12 categories covering view diffing, API modernization, state architecture, view composition, navigation coordinators, layer architecture, dependency injection, list performance, async patterns, and type safety.
+
+## Mandated Architecture Stack
+
+```
+┌─────────────────────────────────────────────────────┐
+│  Presentation Layer (SwiftUI Views)                 │
+│  ├── Views: @Equatable, decomposed, max 10 nodes    │
+│  ├── ViewModels: @Observable classes via @State      │
+│  └── Coordinators: NavigationStack + enum routes     │
+├─────────────────────────────────────────────────────┤
+│  Domain Layer (Pure Swift)                          │
+│  ├── Use Cases / Interactors (stateless, protocol)  │
+│  ├── Domain Models (value types, Equatable)         │
+│  └── Repository Protocols (abstractions only)       │
+├─────────────────────────────────────────────────────┤
+│  Data Layer (Implementation)                        │
+│  ├── Repository Implementations                     │
+│  ├── Network Services                               │
+│  └── Persistence (SwiftData / CoreData)             │
+└─────────────────────────────────────────────────────┘
+```
+
+**Dependency Rule**: Arrows point inward only. Views -> Domain <- Data. Domain has zero framework imports.
 
 ## When to Apply
 
 Reference these guidelines when:
 - Migrating from deprecated SwiftUI APIs (ObservableObject, NavigationView, old onChange)
-- Restructuring state management to reduce re-renders
-- Decomposing large views into maintainable components
-- Refactoring navigation to use NavigationStack and NavigationPath
-- Improving architecture with protocol dependencies and Environment keys
-- Strengthening type safety with tagged identifiers and Result types
-- Writing idiomatic Swift with proper naming, optionals, and closures
+- Restructuring state management to use @Observable ViewModels
+- Adding @Equatable diffing to views for performance
+- Decomposing large views into 10-node maximum bodies
+- Refactoring navigation to coordinator pattern with enum routes
+- Extracting Clean Architecture layers (Domain, Data, Presentation)
+- Setting up dependency injection via @Environment
+- Improving list/collection scroll performance
+- Replacing manual Task management with .task modifier
+
+## Non-Negotiable Constraints (iOS 17+)
+
+- `@Observable` everywhere, `ObservableObject` / `@Published` never
+- `NavigationStack` + coordinator pattern, `NavigationLink(destination:)` never
+- `@Equatable` macro on every view, `AnyView` never
+- Domain layer has zero SwiftUI/UIKit imports
+- Views never access repositories directly
 
 ## Rule Categories by Priority
 
-| Priority | Category | Impact | Prefix |
-|----------|----------|--------|--------|
-| 1 | API Modernization | CRITICAL | `api-` |
-| 2 | State Architecture | CRITICAL | `state-` |
-| 3 | View Decomposition | HIGH | `view-` |
-| 4 | Navigation Refactoring | HIGH | `nav-` |
-| 5 | Architecture Patterns | HIGH | `arch-` |
-| 6 | Type Safety & Protocols | MEDIUM-HIGH | `type-` |
-| 7 | Swift Language Fundamentals | MEDIUM | `swift-` |
+| Priority | Category | Impact | Prefix | Rules |
+|----------|----------|--------|--------|-------|
+| 1 | View Identity & Diffing | CRITICAL | `diff-` | 4 |
+| 2 | API Modernization | CRITICAL | `api-` | 7 |
+| 3 | State Architecture | CRITICAL | `state-` | 6 |
+| 4 | View Composition | HIGH | `view-` | 7 |
+| 5 | Navigation & Coordination | HIGH | `nav-` | 5 |
+| 6 | Layer Architecture | HIGH | `layer-` | 5 |
+| 7 | Architecture Patterns | HIGH | `arch-` | 5 |
+| 8 | Dependency Injection | MEDIUM-HIGH | `di-` | 2 |
+| 9 | Type Safety & Protocols | MEDIUM-HIGH | `type-` | 4 |
+| 10 | List & Collection Performance | MEDIUM | `list-` | 4 |
+| 11 | Async & Data Flow | MEDIUM | `data-` | 3 |
+| 12 | Swift Language Fundamentals | MEDIUM | `swift-` | 8 |
 
 ## Quick Reference
 
-### 1. API Modernization (CRITICAL)
+### 1. View Identity & Diffing (CRITICAL)
+
+- [`diff-equatable-views`](references/diff-equatable-views.md) - Add @Equatable macro to every SwiftUI view
+- [`diff-closure-skip`](references/diff-closure-skip.md) - Use @EquatableIgnored for closure properties
+- [`diff-identity-stability`](references/diff-identity-stability.md) - Use stable O(1) identifiers in ForEach
+- [`diff-printchanges-debug`](references/diff-printchanges-debug.md) - Use _printChanges() to diagnose re-renders
+
+### 2. API Modernization (CRITICAL)
 
 - [`api-observable-macro`](references/api-observable-macro.md) - Migrate ObservableObject to @Observable macro
 - [`api-navigationstack-migration`](references/api-navigationstack-migration.md) - Replace NavigationView with NavigationStack
@@ -42,49 +87,75 @@ Reference these guidelines when:
 - [`api-list-foreach-identifiable`](references/api-list-foreach-identifiable.md) - Replace id: \.self with Identifiable conformance
 - [`api-toolbar-migration`](references/api-toolbar-migration.md) - Replace navigationBarItems with toolbar modifier
 
-### 2. State Architecture (CRITICAL)
+### 3. State Architecture (CRITICAL)
 
 - [`state-scope-minimization`](references/state-scope-minimization.md) - Minimize state scope to nearest consumer
 - [`state-derived-over-stored`](references/state-derived-over-stored.md) - Use computed properties over redundant @State
 - [`state-binding-extraction`](references/state-binding-extraction.md) - Extract @Binding to isolate child re-renders
-- [`state-remove-observation`](references/state-remove-observation.md) - Remove unnecessary @ObservedObject
+- [`state-remove-observation`](references/state-remove-observation.md) - Migrate @ObservedObject to @Observable tracking
 - [`state-onappear-to-task`](references/state-onappear-to-task.md) - Replace onAppear closures with .task modifier
-- [`state-stateobject-placement`](references/state-stateobject-placement.md) - Move @StateObject to app root for shared state
+- [`state-stateobject-placement`](references/state-stateobject-placement.md) - Migrate @StateObject to @State with @Observable
 
-### 3. View Decomposition (HIGH)
+### 4. View Composition (HIGH)
 
-- [`view-extract-subviews`](references/view-extract-subviews.md) - Extract subviews for composition
+- [`view-extract-subviews`](references/view-extract-subviews.md) - Extract subviews for diffing checkpoints
 - [`view-eliminate-anyview`](references/view-eliminate-anyview.md) - Replace AnyView with @ViewBuilder or generics
 - [`view-computed-to-struct`](references/view-computed-to-struct.md) - Convert computed view properties to struct views
 - [`view-modifier-extraction`](references/view-modifier-extraction.md) - Extract repeated modifiers into custom ViewModifiers
 - [`view-conditional-content`](references/view-conditional-content.md) - Use Group or conditional modifiers over conditional views
 - [`view-preference-keys`](references/view-preference-keys.md) - Replace callback closures with PreferenceKey
-- [`view-body-complexity`](references/view-body-complexity.md) - Reduce view body to under 30 lines
+- [`view-body-complexity`](references/view-body-complexity.md) - Reduce view body to maximum 10 nodes
 
-### 4. Navigation Refactoring (HIGH)
+### 5. Navigation & Coordination (HIGH)
 
-- [`nav-centralize-destinations`](references/nav-centralize-destinations.md) - Centralize navigationDestination at stack root
-- [`nav-value-based-links`](references/nav-value-based-links.md) - Replace destination-based NavigationLink with value-based
+- [`nav-centralize-destinations`](references/nav-centralize-destinations.md) - Refactor navigation to coordinator pattern
+- [`nav-value-based-links`](references/nav-value-based-links.md) - Replace NavigationLink with coordinator routes
 - [`nav-path-state-management`](references/nav-path-state-management.md) - Use NavigationPath for programmatic navigation
 - [`nav-split-view-adoption`](references/nav-split-view-adoption.md) - Use NavigationSplitView for multi-column layouts
 - [`nav-sheet-item-pattern`](references/nav-sheet-item-pattern.md) - Replace boolean sheet triggers with item binding
 
-### 5. Architecture Patterns (HIGH)
+### 6. Layer Architecture (HIGH)
 
-- [`arch-viewmodel-elimination`](references/arch-viewmodel-elimination.md) - Eliminate unnecessary view models
-- [`arch-protocol-dependencies`](references/arch-protocol-dependencies.md) - Extract protocol interfaces for external dependencies
+- [`layer-dependency-rule`](references/layer-dependency-rule.md) - Extract domain layer with zero framework imports
+- [`layer-usecase-protocol`](references/layer-usecase-protocol.md) - Extract use cases as protocols with single execute
+- [`layer-repository-protocol`](references/layer-repository-protocol.md) - Repository protocols in Domain, implementations in Data
+- [`layer-no-view-repository`](references/layer-no-view-repository.md) - Remove direct repository access from views
+- [`layer-viewmodel-boundary`](references/layer-viewmodel-boundary.md) - Refactor ViewModels to expose display-ready state only
+
+### 7. Architecture Patterns (HIGH)
+
+- [`arch-viewmodel-elimination`](references/arch-viewmodel-elimination.md) - Restructure inline state into @Observable ViewModel
+- [`arch-protocol-dependencies`](references/arch-protocol-dependencies.md) - Extract protocol dependencies through ViewModel layer
 - [`arch-environment-key-injection`](references/arch-environment-key-injection.md) - Use Environment keys for service injection
 - [`arch-feature-module-extraction`](references/arch-feature-module-extraction.md) - Extract features into independent modules
-- [`arch-model-view-separation`](references/arch-model-view-separation.md) - Separate model logic from view code
+- [`arch-model-view-separation`](references/arch-model-view-separation.md) - Extract business logic into ViewModel and Use Cases
 
-### 6. Type Safety & Protocols (MEDIUM-HIGH)
+### 8. Dependency Injection (MEDIUM-HIGH)
+
+- [`di-container-composition`](references/di-container-composition.md) - Compose dependency container at app root
+- [`di-mock-testing`](references/di-mock-testing.md) - Add mock implementation for every protocol dependency
+
+### 9. Type Safety & Protocols (MEDIUM-HIGH)
 
 - [`type-tagged-identifiers`](references/type-tagged-identifiers.md) - Replace String IDs with tagged types
 - [`type-result-over-optionals`](references/type-result-over-optionals.md) - Use Result type over optional with error flag
 - [`type-phantom-types`](references/type-phantom-types.md) - Use phantom types for compile-time state machines
 - [`type-force-unwrap-elimination`](references/type-force-unwrap-elimination.md) - Eliminate force unwraps with safe alternatives
 
-### 7. Swift Language Fundamentals (MEDIUM)
+### 10. List & Collection Performance (MEDIUM)
+
+- [`list-constant-viewcount`](references/list-constant-viewcount.md) - Ensure ForEach produces constant view count per element
+- [`list-filter-in-model`](references/list-filter-in-model.md) - Move filter/sort logic from ForEach into ViewModel
+- [`list-lazy-stacks`](references/list-lazy-stacks.md) - Replace VStack/HStack with Lazy variants for unbounded content
+- [`list-id-keypath`](references/list-id-keypath.md) - Provide explicit id keyPath — never rely on implicit identity
+
+### 11. Async & Data Flow (MEDIUM)
+
+- [`data-task-modifier`](references/data-task-modifier.md) - Replace onAppear async work with .task modifier
+- [`data-error-loadable`](references/data-error-loadable.md) - Model loading states as enum instead of boolean flags
+- [`data-cancellation`](references/data-cancellation.md) - Use .task automatic cancellation — never manage Tasks manually
+
+### 12. Swift Language Fundamentals (MEDIUM)
 
 - [`swift-let-vs-var`](references/swift-let-vs-var.md) - Use let for constants, var for variables
 - [`swift-structs-vs-classes`](references/swift-structs-vs-classes.md) - Prefer structs over classes

@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "date": "2026-02-16",
+  "technology": "Swift/SwiftUI",
+  "organization": "Airbnb",
+  "abstract": "Refactoring patterns aligned with Airbnb's Clean MVVM + Coordinator architecture for iOS 17+. Covers @Observable migration, @Equatable diffing, coordinator navigation, Clean Architecture layers, and modern SwiftUI APIs.",
+  "references": [
+    "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/",
+    "https://developer.apple.com/wwdc23/10149",
+    "https://developer.apple.com/documentation/swiftui/migrating-from-the-observable-object-protocol-to-the-observable-macro",
+    "https://nalexn.github.io/clean-architecture-swiftui/",
+    "https://www.kodeco.com/books/advanced-ios-app-architecture"
+  ]
+}

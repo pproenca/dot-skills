@@ -1,15 +1,15 @@
 ---
-title: Remove @ObservedObject When Only Reading
+title: Migrate @ObservedObject to @Observable Property-Level Tracking
 impact: CRITICAL
-impactDescription: eliminates spurious re-renders from unrelated property changes
-tags: state, observed-object, observation, over-observation, refactoring
+impactDescription: eliminates O(N) broadcast re-renders — only views reading changed property update
+tags: state, observed-object, observable, migration, over-observation
 ---
 
-## Remove @ObservedObject When Only Reading
+## Migrate @ObservedObject to @Observable Property-Level Tracking
 
-With ObservableObject (push-based observation), marking a dependency as @ObservedObject subscribes the view to every @Published property change on that object. If the view only reads one property, it still re-renders when any other property changes. When you only need a snapshot of a single value, pass that value directly as a parameter. This eliminates the observation subscription entirely and confines re-renders to views that actually need live updates. With @Observable (pull-based, iOS 17+), SwiftUI tracks only the properties each view reads, making this problem less common, but the principle still applies to ObservableObject codebases.
+With `ObservableObject`, marking a dependency as `@ObservedObject` subscribes the view to every `@Published` change — even properties it never reads. With `@Observable` (iOS 17+), SwiftUI automatically tracks which properties each view accesses and only re-renders when those specific properties change. Replace `@ObservedObject` with a plain property and let `@Observable` handle targeted tracking.
 
-**Incorrect (observes entire object but reads only one property):**
+**Incorrect (@ObservedObject re-renders on every @Published change):**
 
 ```swift
 class OrderViewModel: ObservableObject {
@@ -21,33 +21,56 @@ class OrderViewModel: ObservableObject {
 
 struct OrderHeader: View {
     @ObservedObject var viewModel: OrderViewModel
+    // Re-renders when deliveryAddress, paymentMethod, or items change
+    // even though it only reads orderTotal
 
     var body: some View {
-        // Re-renders when deliveryAddress, paymentMethod,
-        // or items change, even though it only reads orderTotal
         Text("Total: \(viewModel.orderTotal, format: .currency(code: "USD"))")
     }
 }
 ```
 
-**Correct (receives only the value it needs, no observation overhead):**
+**Correct (@Observable — automatic property-level tracking):**
 
 ```swift
-class OrderViewModel: ObservableObject {
-    @Published var items: [OrderItem] = []
-    @Published var deliveryAddress: String = ""
-    @Published var paymentMethod: String = ""
-    @Published var orderTotal: Decimal = 0
+@Observable
+class OrderViewModel {
+    var items: [OrderItem] = []
+    var deliveryAddress: String = ""
+    var paymentMethod: String = ""
+
+    var orderTotal: Decimal {
+        items.reduce(0) { $0 + $1.price }
+    }
 }
 
 struct OrderHeader: View {
-    let orderTotal: Decimal
+    var viewModel: OrderViewModel
+    // Only re-renders when orderTotal (computed from items) changes
+    // Changes to deliveryAddress or paymentMethod are ignored
 
     var body: some View {
-        // Only re-renders when parent passes a new orderTotal value
+        Text("Total: \(viewModel.orderTotal, format: .currency(code: "USD"))")
+    }
+}
+```
+
+**Pass primitives for maximum isolation:**
+
+```swift
+struct OrderHeader: View {
+    let orderTotal: Decimal
+    // Zero observation — only re-renders when parent passes new value
+
+    var body: some View {
         Text("Total: \(orderTotal, format: .currency(code: "USD"))")
     }
 }
 ```
+
+**Migration checklist:**
+- `@ObservedObject var` → plain `var` (for injected @Observable)
+- `@StateObject var` → `@State var` (for owned @Observable)
+- Or pass individual properties instead of entire objects for maximum isolation
 
 Reference: [Comparing @Observable to ObservableObjects](https://www.donnywals.com/comparing-observable-to-observableobjects/)

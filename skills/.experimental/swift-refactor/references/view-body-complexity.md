@@ -1,26 +1,24 @@
 ---
-title: Reduce View Body to Under 30 Lines
+title: Reduce View Body to Maximum 10 Nodes
 impact: HIGH
-impactDescription: faster body evaluation, easier reasoning about re-renders
-tags: view, body, complexity, readability, refactoring
+impactDescription: bodies exceeding 10 nodes prevent isolated diffing, multiplying re-render cost
+tags: view, body, complexity, diffing, performance, swiftlint
 ---
 
-## Reduce View Body to Under 30 Lines
+## Reduce View Body to Maximum 10 Nodes
 
-Every line inside `body` executes on every state change. Long bodies that mix layout code, conditional logic, and data transformation make it hard to reason about what re-renders and why. Keeping body under 30 lines by extracting subviews and moving data transformations into model methods or computed properties makes re-render behavior obvious at a glance and reduces the work SwiftUI does on each evaluation pass.
+When a view body contains more than ~10 direct child nodes, SwiftUI cannot efficiently isolate which subtree changed. The entire body re-evaluates on any property change. Decompose monolithic bodies into focused subviews — each subview creates a diffing checkpoint that SwiftUI can skip when its inputs haven't changed.
 
-**Incorrect (body mixes layout, conditionals, and data transformation):**
+**Incorrect (monolithic body with 15+ inline nodes — entire body re-evaluates on any change):**
 
 ```swift
 struct ActivityFeedView: View {
-    @State private var activities: [Activity]
-    @State private var filter: ActivityFilter = .all
-    @State private var searchText: String = ""
+    @State var viewModel: ActivityFeedViewModel
 
     var body: some View {
         NavigationStack {
             VStack {
-                Picker("Filter", selection: $filter) {
+                Picker("Filter", selection: $viewModel.filter) {
                     ForEach(ActivityFilter.allCases, id: \.self) { filter in
                         Text(filter.displayName).tag(filter)
                     }
@@ -28,12 +26,7 @@ struct ActivityFeedView: View {
                 .pickerStyle(.segmented)
                 .padding(.horizontal)
 
-                let filtered = activities.filter { activity in
-                    (filter == .all || activity.type == filter)
-                        && (searchText.isEmpty || activity.title.localizedCaseInsensitiveContains(searchText))
-                }
-
-                if filtered.isEmpty {
+                if viewModel.filteredActivities.isEmpty {
                     VStack(spacing: 12) {
                         Image(systemName: "tray")
                             .font(.system(size: 48))
@@ -46,7 +39,7 @@ struct ActivityFeedView: View {
                     }
                     .frame(maxHeight: .infinity)
                 } else {
-                    List(filtered) { activity in
+                    List(viewModel.filteredActivities) { activity in
                         HStack {
                             Image(systemName: activity.iconName)
                                 .foregroundStyle(activity.accentColor)
@@ -60,36 +53,30 @@ struct ActivityFeedView: View {
                     }
                 }
             }
-            .searchable(text: $searchText)
+            .searchable(text: $viewModel.searchText)
             .navigationTitle("Activity")
         }
     }
 }
 ```
 
-**Correct (body under 20 lines, logic and sections extracted):**
+**Correct (decomposed to under 10 nodes — each subview diffs independently):**
 
 ```swift
 struct ActivityFeedView: View {
-    @State private var activities: [Activity]
-    @State private var filter: ActivityFilter = .all
-    @State private var searchText: String = ""
-
-    private var filteredActivities: [Activity] {
-        activities.matching(filter: filter, search: searchText)
-    }
+    @State var viewModel: ActivityFeedViewModel
 
     var body: some View {
         NavigationStack {
             VStack {
-                ActivityFilterPicker(selection: $filter)
-                if filteredActivities.isEmpty {
+                ActivityFilterPicker(selection: $viewModel.filter)
+                if viewModel.filteredActivities.isEmpty {
                     ActivityEmptyState()
                 } else {
-                    ActivityList(activities: filteredActivities)
+                    ActivityList(activities: viewModel.filteredActivities)
                 }
             }
-            .searchable(text: $searchText)
+            .searchable(text: $viewModel.searchText)
             .navigationTitle("Activity")
         }
     }
@@ -101,6 +88,23 @@ struct ActivityList: View {
     var body: some View {
         List(activities) { activity in
             ActivityRow(activity: activity)
+        }
+    }
+}
+
+struct ActivityRow: View {
+    let activity: Activity
+
+    var body: some View {
+        HStack {
+            Image(systemName: activity.iconName)
+                .foregroundStyle(activity.accentColor)
+            VStack(alignment: .leading) {
+                Text(activity.title).font(.headline)
+                Text(activity.timestamp, style: .relative)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+            }
         }
     }
 }

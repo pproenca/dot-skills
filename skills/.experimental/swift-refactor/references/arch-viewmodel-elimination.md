@@ -1,74 +1,111 @@
 ---
-title: Eliminate Unnecessary View Models
-impact: MEDIUM
-impactDescription: eliminates 1 class + 1 file per view, reduces boilerplate by 30-50%
-tags: arch, viewmodel, mvvm, simplification, refactoring
+title: Restructure Inline State into @Observable ViewModel
+impact: HIGH
+impactDescription: centralizes business logic for testability, enables property-level observation
+tags: arch, viewmodel, observable, refactoring, testability
 ---
 
-## Eliminate Unnecessary View Models
+## Restructure Inline State into @Observable ViewModel
 
-SwiftUI views already manage their own state through property wrappers like @State and computed properties -- they ARE the view model in a declarative framework. Wrapping simple state in a separate ViewModel class adds an indirection layer without benefit: more files, more boilerplate, and a @StateObject lifecycle to manage. Reserve dedicated view models for complex business logic, multi-step flows, or when you need to unit test logic in isolation.
+Views that mix @State declarations with business logic (validation, formatting, network calls) become untestable and hard to reason about. Extract state and logic into an `@Observable` class held via `@State` in the owning view. The ViewModel exposes display-ready properties and the view becomes a thin rendering layer. This enables unit testing of all logic without launching the UI.
 
-**Incorrect (unnecessary ViewModel wrapping simple state):**
+**Incorrect (business logic mixed into view, untestable):**
 
 ```swift
-class CounterViewModel: ObservableObject {
-    @Published var count: Int = 0
-    @Published var stepSize: Int = 1
+struct OrderSummaryView: View {
+    @State private var items: [OrderItem] = []
+    @State private var promoCode: String = ""
+    @State private var isLoading: Bool = false
+    @State private var errorMessage: String?
 
-    var countLabel: String {
-        "Count: \(count)"
+    private var subtotal: Decimal {
+        items.reduce(0) { $0 + $1.price * Decimal($1.quantity) }
     }
 
-    func increment() {
-        count += stepSize
+    private var discount: Decimal {
+        promoCode == "SAVE20" ? subtotal * Decimal(0.20) : 0
     }
 
-    func decrement() {
-        count -= stepSize
+    private var total: Decimal {
+        subtotal - discount
     }
-}
-
-struct CounterView: View {
-    @StateObject private var viewModel = CounterViewModel()
 
     var body: some View {
-        VStack(spacing: 16) {
-            Text(viewModel.countLabel)
-                .font(.title)
-            Stepper("Step: \(viewModel.stepSize)", value: $viewModel.stepSize, in: 1...10)
-            HStack {
-                Button("Decrement") { viewModel.decrement() }
-                Button("Increment") { viewModel.increment() }
+        VStack {
+            if isLoading { ProgressView() }
+            List(items) { item in
+                Text(item.name)
+            }
+            TextField("Promo", text: $promoCode)
+            Text("Total: \(total, format: .currency(code: "USD"))")
+        }
+        .task {
+            isLoading = true
+            defer { isLoading = false }
+            do {
+                items = try await OrderService.shared.fetchItems()
+            } catch {
+                errorMessage = error.localizedDescription
             }
         }
     }
 }
 ```
 
-**Correct (state and logic live directly in the view):**
+**Correct (@Observable ViewModel — testable, property-level tracking):**
 
 ```swift
-struct CounterView: View {
-    @State private var count: Int = 0
-    @State private var stepSize: Int = 1
+@Observable
+class OrderSummaryViewModel {
+    var items: [OrderItem] = []
+    var promoCode: String = ""
+    var isLoading: Bool = false
+    var errorMessage: String?
 
-    private var countLabel: String {
-        "Count: \(count)"
+    private let fetchOrdersUseCase: FetchOrdersUseCase
+
+    init(fetchOrdersUseCase: FetchOrdersUseCase) {
+        self.fetchOrdersUseCase = fetchOrdersUseCase
     }
 
-    var body: some View {
-        VStack(spacing: 16) {
-            Text(countLabel)
-                .font(.title)
-            Stepper("Step: \(stepSize)", value: $stepSize, in: 1...10)
-            HStack {
-                Button("Decrement") { count -= stepSize }
-                Button("Increment") { count += stepSize }
-            }
+    var subtotal: Decimal {
+        items.reduce(0) { $0 + $1.price * Decimal($1.quantity) }
+    }
+
+    var discount: Decimal {
+        promoCode == "SAVE20" ? subtotal * Decimal(0.20) : 0
+    }
+
+    var total: Decimal {
+        subtotal - discount
+    }
+
+    func loadItems() async {
+        isLoading = true
+        defer { isLoading = false }
+        do {
+            items = try await fetchOrdersUseCase.execute()
+        } catch {
+            errorMessage = error.localizedDescription
         }
+    }
+}
+
+struct OrderSummaryView: View {
+    @State var viewModel: OrderSummaryViewModel
+
+    var body: some View {
+        VStack {
+            if viewModel.isLoading { ProgressView() }
+            List(viewModel.items) { item in
+                Text(item.name)
+            }
+            TextField("Promo", text: $viewModel.promoCode)
+            Text("Total: \(viewModel.total, format: .currency(code: "USD"))")
+        }
+        .task { await viewModel.loadItems() }
     }
 }
 ```
 
-Reference: [Building Large-Scale Apps with SwiftUI](https://azamsharp.com/2023/02/28/building-large-scale-apps-swiftui.html)
+Reference: [WWDC23 — Discover Observation in SwiftUI](https://developer.apple.com/wwdc23/10149)

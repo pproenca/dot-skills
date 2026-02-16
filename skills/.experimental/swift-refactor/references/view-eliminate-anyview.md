@@ -2,12 +2,12 @@
 title: Replace AnyView with @ViewBuilder or Generics
 impact: HIGH
 impactDescription: restores type-based diffing, prevents full-tree redraws
-tags: view, anyview, viewbuilder, type-erasure, performance, generics
+tags: view, anyview, viewbuilder, type-erasure, performance, diffing
 ---
 
 ## Replace AnyView with @ViewBuilder or Generics
 
-AnyView erases the concrete type of a view, which destroys SwiftUI's ability to perform type-based structural diffing. Instead of comparing individual properties, SwiftUI must tear down the entire subtree and rebuild it from scratch on every update. Replacing AnyView with @ViewBuilder, generics, or Group preserves type information so SwiftUI can diff efficiently and animate transitions correctly.
+`AnyView` erases the concrete type of a view, destroying SwiftUI's ability to perform type-based structural diffing. Instead of comparing individual properties, SwiftUI must tear down the entire subtree and rebuild it from scratch on every update. Never use `AnyView` — replace with `@ViewBuilder`, generics, or `Group` to preserve type information.
 
 **Incorrect (AnyView erases types, forcing full subtree rebuilds):**
 
@@ -68,20 +68,6 @@ struct MediaCard: View {
 }
 ```
 
-**Alternative with Group:**
-
-```swift
-var body: some View {
-    Group {
-        if showImage {
-            AsyncImage(url: imageURL)
-        } else {
-            Text(placeholder)
-        }
-    }
-}
-```
-
 **Using generics instead of type erasure:**
 
 ```swift
@@ -100,10 +86,5 @@ struct Card<Content: View>: View {
     }
 }
 ```
-
-**When AnyView is acceptable:**
-- Heterogeneous collections where type erasure is unavoidable
-- Plugin systems with unknown view types
-- Rarely-updated views where diffing cost is negligible
 
 Reference: [Avoiding SwiftUI's AnyView](https://www.swiftbysundell.com/articles/avoiding-anyview-in-swiftui/)

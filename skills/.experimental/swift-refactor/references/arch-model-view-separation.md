@@ -1,15 +1,15 @@
 ---
-title: Separate Model Logic from View Code
-impact: MEDIUM
+title: Extract Business Logic into ViewModel and Use Cases
+impact: HIGH
 impactDescription: enables unit testing of business logic without UI framework dependency
-tags: arch, model, separation, testing, business-logic
+tags: arch, viewmodel, usecase, separation, clean-architecture
 ---
 
-## Separate Model Logic from View Code
+## Extract Business Logic into ViewModel and Use Cases
 
-Business logic embedded in the view body -- validation rules, data formatting, filtering -- cannot be unit tested without launching the UI. It also re-executes on every render pass, even when the inputs haven't changed. Extracting logic into plain Swift types makes it testable with simple XCTest assertions, cacheable with computed properties, and reusable across multiple views. The view becomes a thin rendering layer that calls into well-tested model code.
+Business logic embedded in the view body — validation, formatting, network calls, data transformation — cannot be unit tested without launching the UI. Extract logic into an `@Observable` ViewModel that delegates to domain Use Cases. The view becomes a thin rendering layer, the ViewModel exposes display-ready state, and Use Cases contain reusable business rules testable with plain XCTest.
 
-**Incorrect (business logic inline in view body, untestable without UI):**
+**Incorrect (business logic inline in view body, untestable):**
 
 ```swift
 struct OrderSummaryView: View {
@@ -33,73 +33,68 @@ struct OrderSummaryView: View {
 
             Divider()
             TextField("Promo code", text: $promoCode)
-            Text("Subtotal: $\(String(format: "%.2f", subtotal))")
-            Text("Discount: -$\(String(format: "%.2f", discount))")
-            Text("Tax: $\(String(format: "%.2f", tax))")
             Text("Total: $\(String(format: "%.2f", total))")
                 .font(.headline)
         }
-        .padding()
     }
 }
 ```
 
-**Correct (logic extracted to a testable model, view only renders):**
+**Correct (ViewModel + Use Case — testable, clean layer separation):**
 
 ```swift
-struct OrderCalculator {
-    let items: [OrderItem]
-    let promoCode: String
+// Domain layer — pure Swift, zero framework imports
+protocol CalculateOrderTotalUseCase {
+    func execute(items: [OrderItem], promoCode: String) -> OrderTotal
+}
 
-    var subtotal: Double {
-        items.reduce(0.0) { $0 + $1.price * Double($1.quantity) }
-    }
+struct OrderTotal: Equatable {
+    let subtotal: Decimal
+    let discount: Decimal
+    let tax: Decimal
+    let total: Decimal
+}
 
-    var discount: Double {
-        promoCode == "SAVE20" ? subtotal * 0.20 : 0
-    }
-
-    var tax: Double {
-        (subtotal - discount) * 0.08875
-    }
-
-    var total: Double {
-        subtotal - discount + tax
-    }
-
-    func formatted(_ value: Double) -> String {
-        String(format: "$%.2f", value)
+final class CalculateOrderTotalUseCaseImpl: CalculateOrderTotalUseCase {
+    func execute(items: [OrderItem], promoCode: String) -> OrderTotal {
+        let subtotal = items.reduce(Decimal.zero) { $0 + $1.price * Decimal($1.quantity) }
+        let discount = promoCode == "SAVE20" ? subtotal * Decimal(0.20) : Decimal.zero
+        let tax = (subtotal - discount) * Decimal(string: "0.08875")!
+        let total = subtotal - discount + tax
+        return OrderTotal(subtotal: subtotal, discount: discount, tax: tax, total: total)
     }
 }
 
-struct OrderSummaryView: View {
-    let items: [OrderItem]
-    @State private var promoCode: String = ""
+// Presentation layer — @Observable ViewModel
+@Observable
+class OrderSummaryViewModel {
+    var promoCode: String = ""
 
-    private var calculator: OrderCalculator {
-        OrderCalculator(items: items, promoCode: promoCode)
+    private let items: [OrderItem]
+    private let calculateTotal: CalculateOrderTotalUseCase
+
+    init(items: [OrderItem], calculateTotal: CalculateOrderTotalUseCase) {
+        self.items = items
+        self.calculateTotal = calculateTotal
     }
+
+    var orderTotal: OrderTotal {
+        calculateTotal.execute(items: items, promoCode: promoCode)
+    }
+}
+
+// View — thin rendering layer
+struct OrderSummaryView: View {
+    @State var viewModel: OrderSummaryViewModel
 
     var body: some View {
         VStack(alignment: .leading, spacing: 12) {
-            ForEach(items) { item in
-                HStack {
-                    Text(item.name)
-                    Spacer()
-                    Text(calculator.formatted(item.price * Double(item.quantity)))
-                }
-            }
-            Divider()
-            TextField("Promo code", text: $promoCode)
-            Text("Subtotal: \(calculator.formatted(calculator.subtotal))")
-            Text("Discount: -\(calculator.formatted(calculator.discount))")
-            Text("Tax: \(calculator.formatted(calculator.tax))")
-            Text("Total: \(calculator.formatted(calculator.total))")
+            TextField("Promo code", text: $viewModel.promoCode)
+            Text("Total: \(viewModel.orderTotal.total, format: .currency(code: "USD"))")
                 .font(.headline)
         }
-        .padding()
     }
 }
 ```
 
-Reference: [Managing model data in your app](https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app)
+Reference: [Clean Architecture for SwiftUI](https://nalexn.github.io/clean-architecture-swiftui/)

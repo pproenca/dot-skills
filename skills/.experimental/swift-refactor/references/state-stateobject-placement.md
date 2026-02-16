@@ -1,42 +1,15 @@
 ---
-title: Move @StateObject to App Root for Shared State
+title: Migrate @StateObject to @State with @Observable
 impact: CRITICAL
-impactDescription: prevents accidental re-initialization on view rebuild
-tags: state, stateobject, lifecycle, initialization, architecture
+impactDescription: eliminates ObservableObject broadcast — only views reading changed property re-render
+tags: state, stateobject, observable, migration, ios17
 ---
 
-## Move @StateObject to App Root for Shared State
+## Migrate @StateObject to @State with @Observable
 
-When @StateObject is declared inside a child view, SwiftUI creates a new instance of the observed object each time the view struct is created. If the parent view rebuilds, the child's @StateObject initializer runs again, silently replacing the existing object and losing all accumulated state. Moving @StateObject to the App struct (or the highest stable ancestor) ensures the object is initialized exactly once and survives child view rebuilds. The object can then be injected down via `.environmentObject`. With @Observable (iOS 17+), use @State at the App level and `.environment` instead.
+`@StateObject` belongs to the `ObservableObject` protocol, which broadcasts ALL property changes to ALL subscribing views. With `@Observable` (iOS 17+), `@State` replaces `@StateObject` for ViewModel ownership, and `@Environment` replaces `@EnvironmentObject` for injection. The ownership semantics are identical — `@State` creates and retains the instance across view rebuilds — but observation is now property-level instead of whole-object.
 
-**Incorrect (@StateObject in child view re-initializes on parent rebuild):**
-
-```swift
-struct ContentView: View {
-    @State private var tabIndex = 0
-
-    var body: some View {
-        TabView(selection: $tabIndex) {
-            // When tabIndex changes, SwiftUI may recreate
-            // DashboardTab, causing a new AnalyticsStore
-            DashboardTab()
-                .tag(0)
-            SettingsTab()
-                .tag(1)
-        }
-    }
-}
-
-struct DashboardTab: View {
-    @StateObject private var store = AnalyticsStore()
-
-    var body: some View {
-        DashboardCharts(store: store)
-    }
-}
-```
-
-**Correct (@StateObject at app root survives all child rebuilds):**
+**Incorrect (@StateObject + @EnvironmentObject — legacy ObservableObject pattern):**
 
 ```swift
 @main
@@ -53,6 +26,8 @@ struct MyApp: App {
 
 struct DashboardTab: View {
     @EnvironmentObject var store: AnalyticsStore
+    // Runtime crash if .environmentObject(store) is missing
+    // ALL views re-render when ANY @Published property changes
 
     var body: some View {
         DashboardCharts(store: store)
@@ -60,4 +35,48 @@ struct DashboardTab: View {
 }
 ```
 
-Reference: [StateObject](https://developer.apple.com/documentation/swiftui/stateobject)
+**Correct (@State + @Environment with @Observable — compile-time safety, targeted re-renders):**
+
+```swift
+@Observable
+class AnalyticsStore {
+    var events: [AnalyticsEvent] = []
+    var isProcessing: Bool = false
+    var lastSyncDate: Date?
+
+    func track(_ event: AnalyticsEvent) {
+        events.append(event)
+    }
+}
+
+@main
+struct MyApp: App {
+    @State private var store = AnalyticsStore()
+
+    var body: some Scene {
+        WindowGroup {
+            ContentView()
+                .environment(store)
+        }
+    }
+}
+
+struct DashboardTab: View {
+    @Environment(AnalyticsStore.self) private var store
+    // Compile-time type verification
+    // Only re-renders when properties THIS view reads actually change
+
+    var body: some View {
+        DashboardCharts(events: store.events)
+    }
+}
+```
+
+**Migration checklist:**
+- `@StateObject` → `@State`
+- `@EnvironmentObject` → `@Environment`
+- `.environmentObject()` → `.environment()`
+- `ObservableObject` → `@Observable`
+- `@Published var` → plain `var`
+
+Reference: [Migrating from the Observable Object protocol to the Observable macro](https://developer.apple.com/documentation/swiftui/migrating-from-the-observable-object-protocol-to-the-observable-macro)
