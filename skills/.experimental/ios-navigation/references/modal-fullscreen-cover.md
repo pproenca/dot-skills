@@ -7,7 +7,7 @@ tags: modal, fullscreen-cover, immersive, close-button
 
 ## Use fullScreenCover Only for Immersive Standalone Experiences
 
-fullScreenCover has no swipe-to-dismiss gesture and covers the entire screen, including the parent navigation bar. This signals to the user that they have entered a distinct mode. Reserve it for login flows, onboarding, media playback, or camera capture where accidental dismissal would be disruptive. Always provide an explicit close button because there is no other way to leave.
+fullScreenCover has no swipe-to-dismiss gesture and covers the entire screen, including the parent navigation bar. This signals to the user that they have entered a distinct mode. Reserve it for login flows, onboarding, media playback, or camera capture where accidental dismissal would be disruptive. Always provide an explicit close button because there is no other way to leave. The fullScreenCover presentation must be driven by coordinator-owned state, not local @State booleans.
 
 **Incorrect (using fullScreenCover for a settings form):**
 
@@ -29,25 +29,56 @@ struct ProfileView: View {
 }
 ```
 
-**Correct (fullScreenCover for camera capture with explicit close button):**
+**Correct (coordinator-driven fullScreenCover for camera capture with explicit close button):**
 
 ```swift
+enum FullScreenRoute: Identifiable {
+    case camera
+
+    var id: String {
+        switch self {
+        case .camera: "camera"
+        }
+    }
+}
+
+@Observable @MainActor
+final class PostComposerCoordinator {
+    var presentedFullScreenCover: FullScreenRoute?
+
+    func presentCamera() {
+        presentedFullScreenCover = .camera
+    }
+
+    func dismissFullScreenCover() {
+        presentedFullScreenCover = nil
+    }
+}
+
+@Equatable
 struct PostComposerView: View {
-    @State private var showCamera = false
+    @Environment(PostComposerCoordinator.self) private var coordinator
 
     var body: some View {
-        Button("Take Photo") { showCamera = true }
+        @Bindable var coordinator = coordinator
+
+        Button("Take Photo") { coordinator.presentCamera() }
             // GOOD: Camera capture is immersive and standalone.
             // Accidental swipe-dismiss could lose a photo mid-capture.
             // fullScreenCover prevents that and signals a clear mode switch.
-            .fullScreenCover(isPresented: $showCamera) {
-                CameraCaptureView()
+            // Presentation is driven by coordinator-owned state.
+            .fullScreenCover(item: $coordinator.presentedFullScreenCover) { route in
+                switch route {
+                case .camera:
+                    CameraCaptureView()
+                }
             }
     }
 }
 
+@Equatable
 struct CameraCaptureView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(PostComposerCoordinator.self) private var coordinator
     @State private var camera = CameraManager()
 
     var body: some View {
@@ -59,7 +90,9 @@ struct CameraCaptureView: View {
                 HStack {
                     // GOOD: Explicit close button is mandatory for fullScreenCover.
                     // Without it, the user has no way to leave the screen.
-                    Button("Close") { dismiss() }
+                    // Dismissal goes through the coordinator, keeping it as
+                    // the single source of truth for presentation state.
+                    Button("Close") { coordinator.dismissFullScreenCover() }
                         .font(.body.weight(.medium))
                         .padding()
                     Spacer()

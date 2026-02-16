@@ -52,6 +52,7 @@ struct RootView: View {
 **Correct (@SceneStorage for per-window navigation persistence):**
 
 ```swift
+@Equatable
 struct RootView: View {
     @State private var path = NavigationPath()
 

@@ -45,6 +45,7 @@ struct CheckoutView: View {
 **Correct (side effects in lifecycle modifiers):**
 
 ```swift
+@Equatable
 struct CheckoutView: View {
     @State private var viewModel = CheckoutViewModel()
 

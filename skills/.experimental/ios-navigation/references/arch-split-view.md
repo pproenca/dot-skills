@@ -14,6 +14,7 @@ NavigationSplitView provides 2-column or 3-column layouts that automatically col
 ```swift
 // COST: Duplicates navigation logic, state sync breaks on rotation
 // Back-swipe gesture disappears, toolbar items render incorrectly
+// NOTE: @StateObject is also legacy — replaced by @State with @Observable
 struct MailboxView: View {
     @StateObject private var viewModel = MailboxViewModel()
     @Environment(\.horizontalSizeClass) private var sizeClass
@@ -48,6 +49,7 @@ struct MailboxView: View {
 ```swift
 // BENEFIT: Automatic column layout, collapse, sidebar visibility
 // iPhone becomes stack, iPad renders resizable sidebar
+@Equatable
 struct MailboxView: View {
     @State private var viewModel = MailboxViewModel()
     @State private var selectedFolder: Folder?

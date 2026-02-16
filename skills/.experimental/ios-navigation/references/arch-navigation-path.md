@@ -55,6 +55,7 @@ struct DashboardView: View {
 
 ```swift
 // Option A: NavigationPath for mixed Hashable types
+@Equatable
 struct DashboardView: View {
     @State private var path = NavigationPath()
     var body: some View {
@@ -79,6 +80,7 @@ struct DashboardView: View {
 }
 
 // Option B: Typed [Route] array for single enum
+@Equatable
 struct DashboardView_TypedPath: View {
     @State private var path: [DashboardRoute] = []
     var body: some View {

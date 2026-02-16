@@ -7,7 +7,7 @@ tags: modal, sheet, placement, dismiss-bug
 
 ## Place .sheet on Container View, Not on NavigationLink
 
-Placing .sheet on a NavigationLink or inside a ForEach row causes the sheet to be tied to that specific row's lifecycle. When the row is recycled during scrolling or the source view is removed, the sheet dismisses unexpectedly or presents duplicate sheets. Always attach .sheet to the outermost stable container like the List, VStack, or NavigationStack itself.
+Placing .sheet on a NavigationLink or inside a ForEach row causes the sheet to be tied to that specific row's lifecycle. When the row is recycled during scrolling or the source view is removed, the sheet dismisses unexpectedly or presents duplicate sheets. Always attach .sheet to the outermost stable container like the List, VStack, or NavigationStack itself. Sheet presentation must be driven by coordinator-owned state — the coordinator holds the selected item and the view binds to it, ensuring a single source of truth.
 
 **Incorrect (sheet attached to each row inside ForEach):**
 
@@ -37,18 +37,30 @@ struct ContactsView: View {
 }
 ```
 
-**Correct (sheet attached to stable parent container):**
+**Correct (coordinator-driven sheet attached to stable parent container):**
 
 ```swift
+@Observable @MainActor
+final class ContactsCoordinator {
+    var selectedContact: Contact?
+
+    func presentContact(_ contact: Contact) {
+        selectedContact = contact
+    }
+}
+
+@Equatable
 struct ContactsView: View {
-    @State private var selectedContact: Contact?
+    @Environment(ContactsCoordinator.self) private var coordinator
 
     var body: some View {
+        @Bindable var coordinator = coordinator
+
         NavigationStack {
             List {
                 ForEach(contacts) { contact in
                     Button(contact.name) {
-                        selectedContact = contact
+                        coordinator.presentContact(contact)
                     }
                 }
             }
@@ -56,8 +68,9 @@ struct ContactsView: View {
             // GOOD: A single .sheet modifier on the List (or NavigationStack).
             // The sheet lifecycle is tied to the stable parent, not to any
             // individual row. No duplicate presentations, no dismiss-on-recycle.
-            // The $selectedContact binding drives which contact is shown.
-            .sheet(item: $selectedContact) { contact in
+            // The coordinator owns the selected contact, keeping presentation
+            // state out of the view and in a single source of truth.
+            .sheet(item: $coordinator.selectedContact) { contact in
                 ContactDetailView(contact: contact)
             }
         }

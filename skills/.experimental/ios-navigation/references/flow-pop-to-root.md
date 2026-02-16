@@ -50,7 +50,7 @@ struct RootView: View {
 ```swift
 // GOOD: Pop-to-root by clearing the path — direct, testable,
 // no side channels or UIKit dependencies
-@Observable
+@Observable @MainActor
 class NavigationCoordinator {
     var path = NavigationPath()
 
@@ -66,6 +66,7 @@ class NavigationCoordinator {
     }
 }
 
+@Equatable
 struct RootView: View {
     @State private var coordinator = NavigationCoordinator()
 
@@ -80,6 +81,7 @@ struct RootView: View {
     }
 }
 
+@Equatable
 struct DeepChildView: View {
     @Environment(NavigationCoordinator.self) private var coordinator
 

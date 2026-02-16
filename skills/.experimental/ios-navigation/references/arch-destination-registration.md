@@ -65,6 +65,7 @@ struct SearchResultsView: View {
 // BENEFIT: All destinations registered once at the stack root. No
 // duplicates, no race conditions, deterministic resolution. Adding
 // a new route is a single case in the enum and a single switch branch.
+@Equatable
 struct CatalogTab: View {
     @State private var path = NavigationPath()
 
@@ -87,6 +88,7 @@ struct CatalogTab: View {
     }
 }
 
+@Equatable
 struct CatalogGrid: View {
     let products: [Product]
 

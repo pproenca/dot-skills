@@ -40,6 +40,7 @@ struct OrderListView: View {
 **Correct (single optional drives navigation):**
 
 ```swift
+@Equatable
 struct OrderListView: View {
     @State private var selectedOrder: Order?
 

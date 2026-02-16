@@ -55,6 +55,7 @@ struct AppRootView: View {
 ```swift
 // BENEFIT: Deep links produce same navigation state as manual navigation
 // Full back stack preserved, state restoration works
+@Equatable
 struct AppRootView: View {
     @Environment(AppCoordinator.self) private var coordinator
     var body: some View {

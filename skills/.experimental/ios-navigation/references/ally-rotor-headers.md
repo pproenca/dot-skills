@@ -49,6 +49,7 @@ struct SettingsView: View {
 **Correct (headers marked with .isHeader trait for rotor navigation):**
 
 ```swift
+@Equatable
 struct SettingsView: View {
     var body: some View {
         NavigationStack {

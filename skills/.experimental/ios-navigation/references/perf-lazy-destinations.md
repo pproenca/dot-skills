@@ -33,6 +33,7 @@ struct ProductListView: View {
 struct ProductDetailView: View {
     // Each instance allocates a view model, date formatter,
     // currency formatter, and image loader on init.
+    // NOTE: @ObservedObject is legacy — use plain property with @Observable
     @ObservedObject var viewModel: ProductDetailViewModel
 
     init(product: Product) {
@@ -51,6 +52,7 @@ struct ProductDetailView: View {
 ```swift
 // Destination is constructed ONLY when the user taps a row.
 // Cost goes from O(n) to O(1) at render time.
+@Equatable
 struct ProductListView: View {
     let products: [Product] // 500 items
 
@@ -69,6 +71,7 @@ struct ProductListView: View {
     }
 }
 
+@Equatable
 struct ProductDetailView: View {
     @State private var viewModel: ProductDetailViewModel
 

@@ -1,11 +1,19 @@
 ---
 name: ios-navigation
-description: SwiftUI NavigationStack, NavigationSplitView, and navigation transition patterns for iOS 16-18+. Covers @Observable coordinators, zoom transitions, hero animations, sheet vs push decisions, multi-step flows, anti-patterns, performance, accessibility, deep linking, and state restoration. This skill should be used when designing navigation hierarchies, implementing screen transitions, choosing between sheet and push, orchestrating multi-step flows, using @Observable with @Environment and @Bindable, or reviewing navigation code for anti-patterns.
+description: Opinionated SwiftUI navigation enforcement for iOS 17+ apps using Airbnb's Clean MVVM + Coordinator architecture. Enforces @Equatable views, @Observable-only state, coordinator-owned NavigationStack and modals, zoom transitions, and strict anti-patterns. This skill should be used when designing navigation hierarchies, implementing screen transitions, choosing between sheet and push, orchestrating multi-step flows, building coordinator patterns with @Observable/@Environment/@Bindable, or reviewing navigation code for anti-patterns and Airbnb architecture compliance.
 ---
 
-# Apple iOS Navigation Best Practices
+# Airbnb iOS Navigation Best Practices
 
-Comprehensive guide for building fluid, golden-standard navigation in iOS apps with SwiftUI. Contains 51 rules across 8 categories covering architecture, anti-patterns, transitions, modals, flow orchestration, performance, accessibility, and state restoration.
+Opinionated, strict navigation enforcement for SwiftUI iOS 17+ apps. Contains 54 rules across 8 categories derived from Airbnb Engineering, Apple WWDC sessions, and Clean Architecture patterns. Mandates @Equatable views, @Observable-only state, coordinator-owned navigation, and zero legacy APIs.
+
+## Non-Negotiable Constraints (iOS 17+)
+
+- `@Equatable` macro on every navigation view, `AnyView` never
+- `@Observable` everywhere, `ObservableObject` / `@Published` never
+- Coordinator-owned `NavigationStack` + enum routes, `NavigationLink(destination:)` never
+- Coordinator-owned modal state, inline `@State` booleans for sheets never
+- Domain layer has zero SwiftUI/UIKit imports
 
 ## When to Apply
 
@@ -15,7 +23,7 @@ Reference these guidelines when:
 - Implementing hero animations, zoom transitions, or gesture-driven dismissals
 - Building multi-step flows (onboarding, checkout, registration)
 - Using @Observable with @Environment and @Bindable for shared navigation state
-- Reviewing code for navigation anti-patterns
+- Reviewing code for navigation anti-patterns and Airbnb architecture compliance
 - Adding deep linking, state restoration, or tab persistence
 - Ensuring VoiceOver and reduce motion support for navigation
 
@@ -25,6 +33,7 @@ Reference these guidelines when:
 |----------|----------|--------|--------|
 | 1 | Navigation Architecture | CRITICAL | `arch-` |
 | 2 | Navigation Anti-Patterns | CRITICAL | `anti-` |
+
 | 3 | Transition & Animation | HIGH | `anim-` |
 | 4 | Modal Presentation | HIGH | `modal-` |
 | 5 | Flow Orchestration | HIGH | `flow-` |
@@ -46,6 +55,10 @@ Reference these guidelines when:
 - [`arch-observable-environment`](references/arch-observable-environment.md) - Use @Environment with @Observable and @Bindable for shared state
 - [`arch-deep-linking`](references/arch-deep-linking.md) - Handle deep links by appending to NavigationPath
 - [`arch-navigation-path`](references/arch-navigation-path.md) - Use NavigationPath for heterogeneous type-erased navigation
+- [`arch-equatable-views`](references/arch-equatable-views.md) - Apply @Equatable macro to every navigation view
+- [`arch-observable-only`](references/arch-observable-only.md) - Use @Observable only — never ObservableObject or @Published
+- [`arch-no-anyview`](references/arch-no-anyview.md) - Never use AnyView in navigation — use @ViewBuilder or generics
+- [`arch-coordinator-modals`](references/arch-coordinator-modals.md) - Present all modals via coordinator — never inline @State
 
 ### 2. Navigation Anti-Patterns (CRITICAL)
 
@@ -91,7 +104,7 @@ Reference these guidelines when:
 - [`perf-task-modifier`](references/perf-task-modifier.md) - Use .task for async data loading on navigation
 - [`perf-state-object-ownership`](references/perf-state-object-ownership.md) - Own @Observable state with @State, pass as plain property
 - [`perf-avoid-body-side-effects`](references/perf-avoid-body-side-effects.md) - Avoid side effects in view body
-- [`perf-lazy-view-wrapper`](references/perf-lazy-view-wrapper.md) - Use LazyView wrapper for pre-iOS 16 destination loading
+
 
 ### 7. Navigation Accessibility (MEDIUM)
 

@@ -49,6 +49,7 @@ struct ConversationListView: View {
 **Correct (elements combined into a single VoiceOver stop):**
 
 ```swift
+@Equatable
 struct ConversationListView: View {
     let conversations: [Conversation]
     var body: some View {

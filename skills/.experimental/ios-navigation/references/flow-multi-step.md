@@ -43,13 +43,14 @@ enum OnboardingStep: Hashable {
     case name, plan, confirmation
 }
 
-@Observable
+@Observable @MainActor
 class OnboardingData {
     var name: String = ""
     var selectedPlan: Plan?
     var steps: [OnboardingStep] = []
 }
 
+@Equatable
 struct OnboardingFlow: View {
     @State private var flowData = OnboardingData()
     var body: some View {
@@ -69,6 +70,7 @@ struct OnboardingFlow: View {
     }
 }
 
+@Equatable
 struct NameEntryView: View {
     @Environment(OnboardingData.self) private var data
     var body: some View {

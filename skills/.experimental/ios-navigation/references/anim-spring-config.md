@@ -48,6 +48,7 @@ struct ExpandableCard: View {
 **Correct (modern duration/bounce spring syntax):**
 
 ```swift
+@Equatable
 struct ExpandableCard: View {
     @State private var isExpanded = false
 

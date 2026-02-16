@@ -42,6 +42,7 @@ struct PhotoGalleryView: View {
 **Correct (matchedGeometryEffect for in-place expansion, zoom for navigation):**
 
 ```swift
+@Equatable
 struct PhotoGalleryView: View { // In-place expand/collapse (no navigation push)
     @Namespace private var animation
     @State private var expandedPhoto: Photo?
@@ -71,6 +72,7 @@ struct PhotoGalleryView: View { // In-place expand/collapse (no navigation push)
     }
 }
 // OPTION B: Navigation push with zoom transition (iOS 18+)
+@Equatable
 struct PhotoGalleryNavigationView: View {
     @Namespace private var zoomNamespace
     var body: some View {

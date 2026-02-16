@@ -7,7 +7,7 @@ tags: modal, nested, navigation-stack, sheet
 
 ## Use Separate NavigationStack Inside Modals
 
-Modals are not part of the parent NavigationStack. If you need drill-down navigation inside a sheet, you must embed a separate NavigationStack within it. Trying to use NavigationLink or navigationDestination inside a modal without its own stack will either silently fail or produce undefined behavior, because the modal has no reference to the parent's navigation context.
+Modals are not part of the parent NavigationStack. If you need drill-down navigation inside a sheet, you must embed a separate NavigationStack within it. Trying to use NavigationLink or navigationDestination inside a modal without its own stack will either silently fail or produce undefined behavior, because the modal has no reference to the parent's navigation context. The sheet presentation must be coordinator-driven, while the in-modal NavigationStack manages its own local navigation independently.
 
 **Incorrect (NavigationLink inside a sheet with no NavigationStack):**
 
@@ -43,33 +43,65 @@ struct SupportTopicsView: View {
 }
 ```
 
-**Correct (dedicated NavigationStack inside the modal):**
+**Correct (coordinator-driven sheet with dedicated NavigationStack inside the modal):**
 
 ```swift
+enum SheetRoute: Identifiable {
+    case support
+
+    var id: String {
+        switch self {
+        case .support: "support"
+        }
+    }
+}
+
+@Observable @MainActor
+final class OrdersCoordinator {
+    var presentedSheet: SheetRoute?
+
+    func presentSupport() {
+        presentedSheet = .support
+    }
+
+    func dismissSheet() {
+        presentedSheet = nil
+    }
+}
+
+@Equatable
 struct OrdersView: View {
-    @State private var showSupport = false
+    @Environment(OrdersCoordinator.self) private var coordinator
 
     var body: some View {
+        @Bindable var coordinator = coordinator
+
         NavigationStack {
             OrderListView()
-                .sheet(isPresented: $showSupport) {
-                    // GOOD: The sheet has its own NavigationStack.
-                    // Navigation inside the modal is fully independent of
-                    // the parent stack. Pushing and popping views within
-                    // this sheet does not affect OrdersView's navigation state.
-                    NavigationStack {
-                        SupportTopicsView()
-                            .navigationDestination(for: SupportTopic.self) { topic in
-                                SupportDetailView(topic: topic)
-                            }
+                .sheet(item: $coordinator.presentedSheet) { route in
+                    switch route {
+                    case .support:
+                        // GOOD: The sheet has its own NavigationStack.
+                        // Navigation inside the modal is fully independent of
+                        // the parent stack. Pushing and popping views within
+                        // this sheet does not affect OrdersView's navigation state.
+                        // Sheet presentation is coordinator-driven; in-modal
+                        // navigation is managed by the local NavigationStack.
+                        NavigationStack {
+                            SupportTopicsView()
+                                .navigationDestination(for: SupportTopic.self) { topic in
+                                    SupportDetailView(topic: topic)
+                                }
+                        }
                     }
                 }
         }
     }
 }
 
+@Equatable
 struct SupportTopicsView: View {
-    @Environment(\.dismiss) private var dismiss
+    @Environment(OrdersCoordinator.self) private var coordinator
 
     var body: some View {
         List(supportTopics) { topic in
@@ -82,10 +114,11 @@ struct SupportTopicsView: View {
         .navigationTitle("Support")
         .toolbar {
             ToolbarItem(placement: .cancellationAction) {
-                // GOOD: Explicit close button to dismiss the entire modal.
+                // GOOD: Explicit close button dismisses via the coordinator,
+                // keeping it as the single source of truth for presentation state.
                 // The back button handles in-modal navigation; this handles
                 // leaving the modal entirely.
-                Button("Close") { dismiss() }
+                Button("Close") { coordinator.dismissSheet() }
             }
         }
     }

@@ -50,6 +50,7 @@ struct CollapsibleHeaderView: View {
 **Correct (onScrollGeometryChange for scroll-linked effects):**
 
 ```swift
+@Equatable
 struct CollapsibleHeaderView: View {
     @State private var scrollOffset: CGFloat = 0
 

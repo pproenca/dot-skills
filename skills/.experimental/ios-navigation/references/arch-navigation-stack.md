@@ -15,6 +15,7 @@ NavigationView was deprecated in iOS 16 and exhibits undefined column behavior o
 // COST: NavigationView is deprecated in iOS 16+. On iPad it defaults to
 // DoubleColumnNavigationViewStyle, causing blank detail panes and layout
 // bugs. No programmatic push/pop or state restoration support.
+// NOTE: @StateObject is also legacy — replaced by @State with @Observable
 struct ProductCatalogView: View {
     @StateObject private var viewModel = CatalogViewModel()
 
@@ -38,6 +39,7 @@ struct ProductCatalogView: View {
 // BENEFIT: NavigationStack provides a data-driven path, type-safe
 // destinations, lazy view construction, and programmatic navigation.
 // State restoration is built-in via Codable NavigationPath.
+@Equatable
 struct ProductCatalogView: View {
     @State private var viewModel = CatalogViewModel()
     @State private var path = NavigationPath()

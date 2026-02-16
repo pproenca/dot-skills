@@ -61,6 +61,7 @@ struct User: Hashable, Codable {
     let avatarURL: URL  // URL is Codable, resolve to UIImage at display time
 }
 
+@Equatable
 struct ContentView: View {
     @State private var path = NavigationPath()
     @SceneStorage("navigation") private var pathData: Data?

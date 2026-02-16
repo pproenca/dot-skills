@@ -51,6 +51,7 @@ struct CustomModalView: View {
 **Correct (conditional animation respecting reduce motion):**
 
 ```swift
+@Equatable
 struct CustomModalView: View {
     @Binding var isPresented: Bool
     @State private var offset: CGFloat = 0

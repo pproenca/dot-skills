@@ -1,7 +1,7 @@
 ---
 title: Avoid Mixing NavigationLink(destination:) with NavigationLink(value:)
 impact: CRITICAL
-impactDescription: 100% crash rate from double-pop bugs and NavigationPath corruption
+impactDescription: causes double-pop bugs in 100% of mixed stacks — ghost entries corrupt NavigationPath, breaking programmatic navigation and deep links
 tags: anti, navigation-link, migration, stack-corruption
 ---
 
@@ -45,6 +45,7 @@ struct CatalogView: View {
 // GOOD: Every link pushes through NavigationPath.
 // removeLast(), popToRoot, and deep-link append all work
 // because there is a single source of truth for the stack.
+@Equatable
 struct CatalogView: View {
     @State private var path = NavigationPath()
 

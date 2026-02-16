@@ -68,6 +68,7 @@ enum Route: Hashable, Codable {
     }
 }
 
+@Equatable
 struct ContentView: View {
     @State private var path = NavigationPath()
     @SceneStorage("navigation") private var pathData: Data?

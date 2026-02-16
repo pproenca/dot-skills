@@ -37,45 +37,70 @@ struct MainView: View {
 }
 ```
 
-**Correct (each tab owns its own NavigationStack):**
+**Correct (each tab owns its own coordinator and NavigationStack):**
 
 ```swift
-// GOOD: Each tab manages its own NavigationStack and path —
+// Each tab gets its own coordinator — no cross-tab state bleed
+@Observable @MainActor
+final class HomeCoordinator {
+    var path = NavigationPath()
+    func navigate(to route: HomeRoute) { path.append(route) }
+    func popToRoot() { path = NavigationPath() }
+}
+
+@Observable @MainActor
+final class SearchCoordinator {
+    var path = NavigationPath()
+    func navigate(to route: SearchRoute) { path.append(route) }
+    func popToRoot() { path = NavigationPath() }
+}
+
+@Observable @MainActor
+final class ProfileCoordinator {
+    var path = NavigationPath()
+    func navigate(to route: ProfileRoute) { path.append(route) }
+    func popToRoot() { path = NavigationPath() }
+}
+
+// GOOD: Each tab manages its own coordinator and NavigationStack —
 // tab switches preserve per-tab navigation history
+@Equatable
 struct MainView: View {
-    // Independent path arrays — no cross-tab state bleed
-    @State private var homePath = NavigationPath()
-    @State private var searchPath = NavigationPath()
-    @State private var profilePath = NavigationPath()
+    @State private var homeCoordinator = HomeCoordinator()
+    @State private var searchCoordinator = SearchCoordinator()
+    @State private var profileCoordinator = ProfileCoordinator()
 
     var body: some View {
         TabView {
             Tab("Home", systemImage: "house") {
-                // Home tab has its own stack and back history
-                NavigationStack(path: $homePath) {
+                @Bindable var coordinator = homeCoordinator
+                NavigationStack(path: $coordinator.path) {
                     HomeView()
                         .navigationDestination(for: HomeRoute.self) { route in
                             HomeDetailView(route: route)
                         }
                 }
+                .environment(homeCoordinator)
             }
             Tab("Search", systemImage: "magnifyingglass") {
-                // Search tab preserves drill-down state independently
-                NavigationStack(path: $searchPath) {
+                @Bindable var coordinator = searchCoordinator
+                NavigationStack(path: $coordinator.path) {
                     SearchView()
                         .navigationDestination(for: SearchRoute.self) { route in
                             SearchResultView(route: route)
                         }
                 }
+                .environment(searchCoordinator)
             }
             Tab("Profile", systemImage: "person") {
-                // Profile tab maintains its own navigation depth
-                NavigationStack(path: $profilePath) {
+                @Bindable var coordinator = profileCoordinator
+                NavigationStack(path: $coordinator.path) {
                     ProfileView()
                         .navigationDestination(for: ProfileRoute.self) { route in
                             ProfileDetailView(route: route)
                         }
                 }
+                .environment(profileCoordinator)
             }
         }
     }

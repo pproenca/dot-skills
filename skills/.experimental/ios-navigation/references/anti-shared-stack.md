@@ -45,6 +45,7 @@ struct AppRootView: View {
 // GOOD: Independent stacks per tab. Each tab has its own
 // back stack, path state, and navigation bar configuration.
 // Switching tabs preserves each tab's navigation history.
+@Equatable
 struct AppRootView: View {
     @State private var selectedTab = 0
 

@@ -41,6 +41,7 @@ struct ProductDetailView: View {
 // GOOD: init() only stores the product ID — near-zero cost.
 // All expensive work runs asynchronously in .task {},
 // which fires after the view appears so the push stays at 60fps.
+@Equatable
 struct ProductDetailView: View {
     @State private var viewModel: ProductDetailViewModel
 

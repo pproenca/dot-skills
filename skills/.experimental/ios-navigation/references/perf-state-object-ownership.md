@@ -35,6 +35,7 @@ struct ProductDetailView: View {
 **Correct (@State owns the model — survives parent re-renders):**
 
 ```swift
+@Equatable
 struct ProductDetailView: View {
     // @State owns the object — survives parent re-renders.
     @State private var viewModel: ProductDetailViewModel
@@ -53,6 +54,7 @@ struct ProductDetailView: View {
     }
 }
 
+@Equatable
 struct ProductHeaderView: View {
     // Plain property — no wrapper needed for read access.
     var viewModel: ProductDetailViewModel
@@ -62,35 +64,12 @@ struct ProductHeaderView: View {
     }
 }
 
-@Observable
+@Observable @MainActor
 class ProductDetailViewModel {
     var product: Product
     var details: ProductDetails?
 
     init(product: Product) { self.product = product }
     func loadDetails() async { /* ... */ }
-}
-```
-
-**Legacy (iOS 16 and below — @StateObject / @ObservedObject):**
-
-For codebases targeting iOS 16 or below where `@Observable` is unavailable, use `@StateObject` at the creation point and `@ObservedObject` when receiving from a parent. `@StateObject` uses `@autoclosure` for true lazy initialization — the wrapped value initializer runs only once, unlike `@State` with `@Observable`.
-
-```swift
-struct ProductDetailView: View {
-    @StateObject private var viewModel: ProductDetailViewModel
-
-    init(product: Product) {
-        _viewModel = StateObject(
-            wrappedValue: ProductDetailViewModel(product: product)
-        )
-    }
-
-    var body: some View {
-        ScrollView {
-            Text(viewModel.details?.description ?? "Loading...")
-        }
-        .task { await viewModel.loadDetails() }
-    }
 }
 ```

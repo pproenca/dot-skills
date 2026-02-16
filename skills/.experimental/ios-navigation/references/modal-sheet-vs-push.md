@@ -7,7 +7,7 @@ tags: modal, sheet, push, navigation-link, mental-model
 
 ## Use Push for Drill-Down, Sheet for Supplementary Content
 
-Push navigation (NavigationLink) is for hierarchical drill-down where users expect a back button and swipe-back gesture. Sheets are for supplementary, self-contained tasks like forms, filters, or composition flows. Choosing the wrong presentation style breaks the user's mental model of where they are in the app's hierarchy.
+Push navigation (NavigationLink) is for hierarchical drill-down where users expect a back button and swipe-back gesture. Sheets are for supplementary, self-contained tasks like forms, filters, or composition flows. Choosing the wrong presentation style breaks the user's mental model of where they are in the app's hierarchy. Sheet presentation must be driven by coordinator-owned state — the coordinator exposes a `presentedSheet` property and views call coordinator methods instead of toggling local @State booleans.
 
 Decision matrix: Push = content is part of the navigation hierarchy. Sheet = supplementary task the user can complete and dismiss. FullScreenCover = immersive standalone experience that demands focus.
 
@@ -33,13 +33,35 @@ struct ProductListView: View {
 }
 ```
 
-**Correct (push for detail, sheet for supplementary filter):**
+**Correct (push for detail, coordinator-driven sheet for supplementary filter):**
 
 ```swift
+enum SheetRoute: Identifiable {
+    case filters
+
+    var id: String {
+        switch self {
+        case .filters: "filters"
+        }
+    }
+}
+
+@Observable @MainActor
+final class ProductListCoordinator {
+    var presentedSheet: SheetRoute?
+
+    func presentFilters() {
+        presentedSheet = .filters
+    }
+}
+
+@Equatable
 struct ProductListView: View {
-    @State private var showFilters = false
+    @Environment(ProductListCoordinator.self) private var coordinator
 
     var body: some View {
+        @Bindable var coordinator = coordinator
+
         NavigationStack {
             List(products) { product in
                 // GOOD: Product detail is hierarchical drill-down.
@@ -51,15 +73,20 @@ struct ProductListView: View {
             }
             .navigationTitle("Products")
             .toolbar {
-                Button("Filters") { showFilters = true }
+                Button("Filters") { coordinator.presentFilters() }
             }
             .navigationDestination(for: Product.self) { product in
                 ProductDetailView(product: product)
             }
             // GOOD: Filters are a supplementary task — user adjusts criteria
-            // and dismisses. This does not belong in the navigation hierarchy.
-            .sheet(isPresented: $showFilters) {
-                FilterSortView()
+            // and dismisses. Sheet presentation is driven by coordinator-owned
+            // state, not a local @State boolean. The coordinator is the single
+            // source of truth for what is presented.
+            .sheet(item: $coordinator.presentedSheet) { route in
+                switch route {
+                case .filters:
+                    FilterSortView()
+                }
             }
         }
     }

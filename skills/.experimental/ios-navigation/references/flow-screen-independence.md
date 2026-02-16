@@ -54,6 +54,7 @@ struct OrderDetailView: View {
 ```swift
 // GOOD: Screen takes all data through its initializer and uses
 // @Environment(\.dismiss) — works in push, sheet, or deep link
+@Equatable
 struct OrderDetailView: View {
     // Generic dismiss action works regardless of presentation:
     // pops from stack, dismisses sheet, or closes full-screen cover
@@ -61,7 +62,7 @@ struct OrderDetailView: View {
 
     // All data passed via init — no assumptions about navigation
     let order: Order
-    let onAction: ((OrderAction) -> Void)?
+    @SkipEquatable let onAction: ((OrderAction) -> Void)?
 
     // Default closure keeps the view usable in previews and tests
     init(order: Order, onAction: ((OrderAction) -> Void)? = nil) {

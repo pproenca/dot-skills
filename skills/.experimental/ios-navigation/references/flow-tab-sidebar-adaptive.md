@@ -9,7 +9,7 @@ tags: flow, tab-view, sidebar, adaptive, ios18
 
 iOS 18+ TabView with `.tabViewStyle(.sidebarAdaptable)` automatically converts the tab bar into a sidebar on iPad, giving users a richer navigation surface on larger screens while keeping the familiar tab bar on iPhone. Writing separate TabView and NavigationSplitView implementations with device-checking logic doubles maintenance, introduces layout bugs across size classes, and breaks when Apple ships new form factors.
 
-**Incorrect (separate implementations with device checks):**
+**Incorrect (separate implementations with device checks using pre-iOS 18 APIs):**
 
 ```swift
 // BAD: Two completely separate navigation hierarchies maintained
@@ -32,9 +32,12 @@ struct AdaptiveRootView: View {
             }
         } else {
             TabView {
-                Tab("Home", systemImage: "house") { HomeView() }
-                Tab("Search", systemImage: "magnifyingglass") { SearchView() }
-                Tab("Settings", systemImage: "gear") { SettingsView() }
+                HomeView()
+                    .tabItem { Label("Home", systemImage: "house") }
+                SearchView()
+                    .tabItem { Label("Search", systemImage: "magnifyingglass") }
+                SettingsView()
+                    .tabItem { Label("Settings", systemImage: "gear") }
             }
         }
     }
@@ -46,6 +49,7 @@ struct AdaptiveRootView: View {
 ```swift
 // GOOD: Single TabView definition — tab bar on iPhone, sidebar on iPad,
 // with user-customizable tab ordering persisted automatically
+@Equatable
 struct AdaptiveRootView: View {
     // Apple manages persistence automatically when tabs have .customizationID()
     @State private var customization = TabViewCustomization()

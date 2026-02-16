@@ -61,22 +61,38 @@ enum AppRoute: Hashable, Codable {
     }
 }
 
+// Coordinator owns the typed route array — see arch-coordinator for full pattern
+@Observable @MainActor
+final class AppCoordinator {
+    var path: [AppRoute] = []
+    func navigate(to route: AppRoute) { path.append(route) }
+    func popToRoot() { path.removeAll() }
+
+    @ViewBuilder
+    func destinationView(for route: AppRoute) -> some View {
+        switch route {
+        case .productList(let categoryId): ProductListView(categoryId: categoryId)
+        case .productDetail(let productId): ProductDetailView(productId: productId)
+        case .sellerProfile(let sellerId): SellerProfileView(sellerId: sellerId)
+        case .checkout(let cartId): CheckoutView(cartId: cartId)
+        case .settings: SettingsView()
+        case .search(let query): SearchResultsView(query: query)
+        }
+    }
+}
+
+@Equatable
 struct AppRootView: View {
-    @State private var path: [AppRoute] = []
+    @State private var coordinator = AppCoordinator()
     var body: some View {
-        NavigationStack(path: $path) {
+        @Bindable var coordinator = coordinator
+        NavigationStack(path: $coordinator.path) {
             HomeView()
                 .navigationDestination(for: AppRoute.self) { route in
-                    switch route {
-                    case .productList(let categoryId): ProductListView(categoryId: categoryId)
-                    case .productDetail(let productId): ProductDetailView(productId: productId)
-                    case .sellerProfile(let sellerId): SellerProfileView(sellerId: sellerId)
-                    case .checkout(let cartId): CheckoutView(cartId: cartId)
-                    case .settings: SettingsView()
-                    case .search(let query): SearchResultsView(query: query)
-                    }
+                    coordinator.destinationView(for: route)
                 }
         }
+        .environment(coordinator)
     }
 }
 ```

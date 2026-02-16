@@ -48,6 +48,7 @@ struct SectionDividerView: View {
 **Correct (decorative elements hidden from VoiceOver):**
 
 ```swift
+@Equatable
 struct MenuItemView: View {
     let item: MenuItem
     var body: some View {
@@ -69,6 +70,7 @@ struct MenuItemView: View {
     }
 }
 
+@Equatable
 struct SectionDividerView: View {
     var body: some View {
         HStack {
@@ -82,6 +84,7 @@ struct SectionDividerView: View {
 }
 
 // Exception: meaningful icons need labels, not hiding
+@Equatable
 struct StatusBadge: View {
     let isOnline: Bool
     var body: some View {

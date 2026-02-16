@@ -43,7 +43,7 @@ struct MyApp: App {
 **Correct (@Environment + @Bindable for @Observable objects):**
 
 ```swift
-@Observable
+@Observable @MainActor
 class AppCoordinator {
     var path: [Route] = []
     var presentedSheet: SheetDestination?
@@ -52,6 +52,7 @@ class AppCoordinator {
     func popToRoot() { path.removeAll() }
 }
 
+@Equatable
 struct HomeView: View {
     // Read @Observable from environment — type-safe, no protocol needed
     @Environment(AppCoordinator.self) private var coordinator

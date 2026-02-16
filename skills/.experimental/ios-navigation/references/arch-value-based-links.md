@@ -42,6 +42,7 @@ struct ProductListView: View {
 // view is constructed lazily when the user actually navigates. Memory
 // stays flat regardless of list size, and the value integrates with
 // NavigationPath for programmatic push/pop and deep linking.
+@Equatable
 struct ProductListView: View {
     let products: [Product]
 

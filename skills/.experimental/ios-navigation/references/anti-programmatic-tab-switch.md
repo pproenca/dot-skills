@@ -61,6 +61,7 @@ struct MainTabView: View {
 // GOOD: The user is always in control of which tab is active.
 // Deep links and events update badge counts and in-tab banners
 // to guide the user's attention without forcefully switching context.
+@Equatable
 struct MainTabView: View {
     @State private var selectedTab: Tab = .home
     @Environment(NotificationHandler.self) private var notificationHandler

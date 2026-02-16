@@ -17,6 +17,7 @@ struct MyShopApp: App {
     // BAD: @State in App struct shared across ALL scenes
     // iPad Stage Manager: navigating Window A pushes onto Window B's stack
     @State private var navigationPath = NavigationPath()
+    // NOTE: ObservableObject/@Published are legacy — use @Observable
     @StateObject private var router = AppRouter()
     var body: some Scene {
         WindowGroup {
@@ -46,9 +47,26 @@ class AppRouter: ObservableObject {
 }
 ```
 
-**Correct (NavigationPath owned per scene in the root view):**
+**Correct (@Observable coordinator owned per scene — each window gets its own instance):**
 
 ```swift
+@Observable @MainActor
+final class SceneCoordinator {
+    var path = NavigationPath()
+    func navigate(to route: Route) { path.append(route) }
+    func popToRoot() { path = NavigationPath() }
+
+    func saveState() -> Data? {
+        try? JSONEncoder().encode(path.codable)
+    }
+    func restoreState(from data: Data) {
+        guard let codable = try? JSONDecoder().decode(
+            NavigationPath.CodableRepresentation.self, from: data
+        ) else { return }
+        path = NavigationPath(codable)
+    }
+}
+
 @main
 struct MyShopApp: App {
     var body: some Scene {
@@ -56,11 +74,14 @@ struct MyShopApp: App {
     }
 }
 
+@Equatable
 struct ContentView: View {
-    @State private var path = NavigationPath()
+    @State private var coordinator = SceneCoordinator()
     @SceneStorage("navigation") private var pathData: Data?
+
     var body: some View {
-        NavigationStack(path: $path) {
+        @Bindable var coordinator = coordinator
+        NavigationStack(path: $coordinator.path) {
             HomeView()
                 .navigationDestination(for: Route.self) { route in
                     switch route {
@@ -71,34 +92,19 @@ struct ContentView: View {
                     }
                 }
         }
-        .onChange(of: path) { newPath in
-            pathData = try? JSONEncoder().encode(newPath.codable)
+        .environment(coordinator)
+        .onChange(of: coordinator.path) { _, newPath in
+            pathData = coordinator.saveState()
         }
         .task {
-            guard let data = pathData,
-                  let codable = try? JSONDecoder().decode(NavigationPath.CodableRepresentation.self, from: data)
-            else { return }
-            path = NavigationPath(codable)
+            guard let data = pathData else { return }
+            coordinator.restoreState(from: data)
         }
         .onOpenURL { url in
             guard let routes = Route.fromURL(url) else { return }
-            path = NavigationPath(); for route in routes { path.append(route) }
+            coordinator.popToRoot()
+            for route in routes { coordinator.navigate(to: route) }
         }
-    }
-}
-// Router pattern per-scene (each scene gets its own instance)
-@Observable class SceneRouter {
-    var path = NavigationPath()
-    func navigate(to route: Route) { path.append(route) }
-}
-
-struct ContentViewWithRouter: View {
-    @State private var router = SceneRouter()
-    var body: some View {
-        @Bindable var router = router
-        NavigationStack(path: $router.path) {
-            HomeView().navigationDestination(for: Route.self) { $0.destination }
-        }.environment(router)
     }
 }
 ```

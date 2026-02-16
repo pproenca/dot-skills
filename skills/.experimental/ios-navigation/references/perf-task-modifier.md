@@ -39,6 +39,7 @@ struct OrderDetailView: View {
 **Correct (automatic cancellation with .task):**
 
 ```swift
+@Equatable
 struct OrderDetailView: View {
     @State private var viewModel = OrderDetailViewModel()
     let orderId: String
@@ -59,7 +60,7 @@ struct OrderDetailView: View {
     }
 }
 
-@Observable
+@Observable @MainActor
 class OrderDetailViewModel {
     var order: Order?
     var isLoading = false

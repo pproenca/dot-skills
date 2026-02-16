@@ -1,126 +1,151 @@
 ---
 name: ios-ui-refactor
-description: Principal-level iOS UI review and refactoring patterns for SwiftUI. Evaluates visual hierarchy, typography, color systems, motion, transitions, materials, spacing, and iOS 17+ modernization. This skill should be used when reviewing, auditing, or refactoring existing SwiftUI views, screens, transitions, animations, or color usage to reach Apple-quality design standards while preserving the app's brand identity.
+description: Principal-level iOS UI review and refactoring patterns for SwiftUI, grounded in Dieter Rams' Ten Principles for Good Design, Ken Segall's Insanely Simple, and John Edson's Design Like Apple. This skill should be used when reviewing, auditing, or refactoring existing SwiftUI views, screens, transitions, animations, or color usage to reach Apple-quality design standards while preserving the app's brand identity.
 ---
 
 # Apple HIG SwiftUI iOS 17+ Best Practices
 
-A principal designer's lens for evaluating and refactoring SwiftUI interfaces to Apple-quality standards. Contains 48 rules across 8 categories, ordered by the visual review process a senior Apple designer follows when auditing an app. Each rule identifies a specific anti-pattern, explains why it degrades the experience, and provides the iOS 17+ fix while respecting the app's brand voice.
+A principal designer's lens for evaluating and refactoring SwiftUI interfaces to Apple-quality standards, grounded in Rams, Segall, and Edson. Contains 51 rules across 8 categories, each grounded in specific principles from three foundational design texts:
+
+- **Dieter Rams** — *Ten Principles for Good Design* ("less, but better," "design should be honest")
+- **Ken Segall** — *Insanely Simple* (simplicity as a core principle for intuitive, beautiful products)
+- **John Edson** — *Design Like Apple* (design-focused culture, prototyping to perfection, the product is the marketing)
+
+Categories are ordered by a visual review process: start with what to remove, then what to clarify, then what to make honest, invisible, systematic, thorough, enduring, and finally what to refine.
 
 ## Scope & Relationship to Sibling Skills
 
-This skill is the **refactoring and review lens** — it evaluates existing UI and identifies visual anti-patterns to fix. When loaded alongside `ios-design` (building new UI), `ios-hig` (HIG compliance), or `swift-refactor` (code-level refactoring), this skill supersedes overlapping rules with more detailed "incorrect → correct" transformations and "When NOT to apply" guidance. Use this skill for auditing and improving existing screens; use the siblings for greenfield implementation.
+This skill is the **refactoring and review lens** — it evaluates existing UI and identifies visual anti-patterns to fix. When loaded alongside `ios-design` (building new UI), `ios-hig` (HIG compliance), or `swift-refactor` (code-level refactoring), this skill supersedes overlapping rules with more detailed "incorrect -> correct" transformations and "When NOT to apply" guidance. Use this skill for auditing and improving existing screens; use the siblings for greenfield implementation.
 
 ## When to Apply
 
 Reference these guidelines when:
 - Reviewing existing SwiftUI screens for visual quality issues
-- Auditing typography scale, weight usage, and type treatments
-- Evaluating color system coherence across light and dark mode
-- Refactoring animations from legacy easeInOut to spring-based motion
-- Fixing navigation transitions that break spatial continuity
-- Replacing custom overlays with Apple's materials system
-- Standardizing spacing, touch targets, and corner radii
-- Adopting iOS 17-18 APIs like scrollTransition, PhaseAnimator, or MeshGradient
+- Auditing whether every element on screen earns its place (Rams #10)
+- Evaluating if the interface is self-explanatory without tooltips (Rams #4)
+- Checking that colors, states, and hierarchy tell the truth (Rams #6)
+- Ensuring animations and materials are invisible, not decorative (Rams #5)
+- Verifying spacing, radii, and colors form a coherent system (Edson "Systems Thinking")
+- Confirming edge cases — reduce motion, touch targets, safe areas — are handled (Rams #8)
+- Adopting iOS 17-18 APIs that refine previously impossible interactions (Edson "Design Out Loud")
 
 ## Rule Categories by Priority
 
-| Priority | Category | Impact | Prefix |
-|----------|----------|--------|--------|
-| 1 | Visual Hierarchy | CRITICAL | `hier-` |
-| 2 | Typography Discipline | CRITICAL | `typo-` |
-| 3 | Color System | CRITICAL | `color-` |
-| 4 | Motion & Animation | HIGH | `motion-` |
-| 5 | Screen Transitions | HIGH | `trans-` |
-| 6 | Materials & Depth | HIGH | `depth-` |
-| 7 | Spacing & Rhythm | MEDIUM-HIGH | `rhythm-` |
-| 8 | iOS 17+ Modernization | MEDIUM | `modern-` |
+| Priority | Category | Principle | Impact | Prefix | Rules |
+|----------|----------|-----------|--------|--------|-------|
+| 1 | Less, But Better | Rams #10 + Segall "Think Minimal" | CRITICAL | `less-` | 7 |
+| 2 | Self-Evident Design | Rams #4 + Segall "Think Human" | CRITICAL | `evident-` | 6 |
+| 3 | Honest Interfaces | Rams #6 + Segall "Think Brutal" | CRITICAL | `honest-` | 6 |
+| 4 | Invisible Design | Rams #5 + Edson "Product Is Marketing" | HIGH | `invisible-` | 6 |
+| 5 | Systems, Not Pieces | Edson "Systems Thinking" + Rams #8 | HIGH | `system-` | 6 |
+| 6 | Thorough to the Last Detail | Rams #8 + Rams #2 | HIGH | `thorough-` | 7 |
+| 7 | Enduring Over Trendy | Rams #7 + Edson "Design With Conviction" | MEDIUM-HIGH | `enduring-` | 5 |
+| 8 | Refined Through Iteration | Edson "Design Out Loud" + Rams #1/#3 | MEDIUM | `refined-` | 8 |
 
 ## Quick Reference
 
-### 1. Visual Hierarchy (CRITICAL)
+### 1. Less, But Better (CRITICAL)
 
-- [`hier-single-focal`](references/hier-single-focal.md) - One primary focal point per screen
-- [`hier-size-weight-contrast`](references/hier-size-weight-contrast.md) - Combine size, weight, and contrast for hierarchy
-- [`hier-progressive-disclosure`](references/hier-progressive-disclosure.md) - Use progressive disclosure for dense information
-- [`hier-card-modularity`](references/hier-card-modularity.md) - Use self-contained cards for dashboard layouts
-- [`hier-whitespace-grouping`](references/hier-whitespace-grouping.md) - Use whitespace to separate conceptual groups
-- [`hier-reading-order`](references/hier-reading-order.md) - Align visual weight with logical reading order
+Rams #10: "Good design is as little design as possible." Segall: Apple succeeded by saying no to a thousand things.
 
-### 2. Typography Discipline (CRITICAL)
+- [`less-single-focal`](references/less-single-focal.md) - One primary focal point per screen
+- [`less-type-restraint`](references/less-type-restraint.md) - Limit to 3-4 distinct type treatments per screen
+- [`less-one-typeface`](references/less-one-typeface.md) - One typeface per app, differentiate with weight and size
+- [`less-color-restraint`](references/less-color-restraint.md) - Reserve saturated colors for small interactive elements
+- [`less-one-color-purpose`](references/less-one-color-purpose.md) - Each semantic color serves exactly one purpose
+- [`less-purposeful-motion`](references/less-purposeful-motion.md) - Every animation must communicate state change or provide feedback
+- [`less-fewer-controls`](references/less-fewer-controls.md) - Remove controls that do not serve the core task
 
-- [`typo-system-text-styles`](references/typo-system-text-styles.md) - Use Apple text styles, never fixed font sizes
-- [`typo-weight-not-caps`](references/typo-weight-not-caps.md) - Use weight for emphasis, not ALL CAPS
-- [`typo-single-typeface`](references/typo-single-typeface.md) - One typeface per app, differentiate with weight and size
-- [`typo-max-styles-per-screen`](references/typo-max-styles-per-screen.md) - Limit to 3-4 distinct type treatments per screen
-- [`typo-no-light-body`](references/typo-no-light-body.md) - Avoid light font weights for body text
-- [`typo-foreground-style`](references/typo-foreground-style.md) - Use foregroundStyle over foregroundColor
+### 2. Self-Evident Design (CRITICAL)
 
-### 3. Color System (CRITICAL)
+Rams #4: "Good design makes a product understandable." Segall: interfaces must speak in terms people understand.
 
-- [`color-semantic-always`](references/color-semantic-always.md) - Use semantic colors, never hard-coded black or white
-- [`color-role-naming`](references/color-role-naming.md) - Name custom colors by role, not hue
-- [`color-contrast-aa`](references/color-contrast-aa.md) - Ensure WCAG AA contrast ratios
-- [`color-saturated-small`](references/color-saturated-small.md) - Reserve saturated colors for small interactive elements
-- [`color-dark-mode-pairs`](references/color-dark-mode-pairs.md) - Define light and dark variants for every custom color
-- [`color-brand-within-system`](references/color-brand-within-system.md) - Map brand palette onto iOS semantic color roles
-- [`color-one-purpose`](references/color-one-purpose.md) - Each semantic color serves exactly one purpose
+- [`evident-visual-weight`](references/evident-visual-weight.md) - Combine size, weight, and contrast for hierarchy
+- [`evident-whitespace-grouping`](references/evident-whitespace-grouping.md) - Use whitespace to separate conceptual groups
+- [`evident-progressive-disclosure`](references/evident-progressive-disclosure.md) - Use progressive disclosure for dense information
+- [`evident-reading-order`](references/evident-reading-order.md) - Align visual weight with logical reading order
+- [`evident-navigation-intent`](references/evident-navigation-intent.md) - Sheets for tasks and creation, push for drill-down hierarchy
+- [`evident-label-clarity`](references/evident-label-clarity.md) - Use clear labels over ambiguous icons
 
-### 4. Motion & Animation (HIGH)
+### 3. Honest Interfaces (CRITICAL)
 
-- [`motion-spring-default`](references/motion-spring-default.md) - Default to spring animations for all UI transitions
-- [`motion-spring-presets`](references/motion-spring-presets.md) - Use .smooth for routine, .snappy for interactive, .bouncy for delight
-- [`motion-no-linear-easeInOut`](references/motion-no-linear-easeInOut.md) - Prefer springs over linear and easeInOut for UI elements
-- [`motion-symbol-effects`](references/motion-symbol-effects.md) - Use built-in symbolEffect, not manual symbol animation
-- [`motion-content-transition`](references/motion-content-transition.md) - Use contentTransition for changing text and numbers
-- [`motion-reduce-motion`](references/motion-reduce-motion.md) - Always provide reduce motion fallback
-- [`motion-purposeful`](references/motion-purposeful.md) - Every animation must communicate state change or provide feedback
+Rams #6: "Good design is honest." Segall: clarity without sugar-coating.
 
-### 5. Screen Transitions (HIGH)
+- [`honest-semantic-colors`](references/honest-semantic-colors.md) - Use semantic colors, never hard-coded black or white
+- [`honest-contrast`](references/honest-contrast.md) - Ensure WCAG AA contrast ratios
+- [`honest-dark-mode`](references/honest-dark-mode.md) - Define light and dark variants for every custom color
+- [`honest-foreground-style`](references/honest-foreground-style.md) - Use foregroundStyle over foregroundColor
+- [`honest-depth-cues`](references/honest-depth-cues.md) - Use materials for layering, not drop shadows for depth
+- [`honest-loading-states`](references/honest-loading-states.md) - Show real progress, not indefinite spinners
 
-- [`trans-zoom-collections`](references/trans-zoom-collections.md) - Use zoom transitions for collection-to-detail navigation
-- [`trans-sheet-vs-push`](references/trans-sheet-vs-push.md) - Sheets for tasks and creation, push for drill-down hierarchy
-- [`trans-multi-detent-sheets`](references/trans-multi-detent-sheets.md) - Provide multiple sheet detents with drag indicator
-- [`trans-matched-geometry`](references/trans-matched-geometry.md) - Use matchedGeometryEffect for contextual origin transitions
-- [`trans-no-hard-cuts`](references/trans-no-hard-cuts.md) - Always animate between states, even minimally
-- [`trans-preserve-swipe-back`](references/trans-preserve-swipe-back.md) - Never break the system back-swipe gesture
+### 4. Invisible Design (HIGH)
 
-### 6. Materials & Depth (HIGH)
+Rams #5: "Good design is unobtrusive." Edson: the product itself is the marketing.
 
-- [`depth-materials-not-opacity`](references/depth-materials-not-opacity.md) - Use system materials, not custom semi-transparent backgrounds
-- [`depth-vibrancy-hierarchy`](references/depth-vibrancy-hierarchy.md) - Match vibrancy level to content importance
-- [`depth-material-thickness`](references/depth-material-thickness.md) - Choose material thickness by contrast needs
-- [`depth-background-interaction`](references/depth-background-interaction.md) - Enable background interaction for peek-style sheets
-- [`depth-shadow-vs-material`](references/depth-shadow-vs-material.md) - Use materials for layering, not drop shadows for depth
+- [`invisible-spring-physics`](references/invisible-spring-physics.md) - Default to spring animations for all UI transitions
+- [`invisible-spring-presets`](references/invisible-spring-presets.md) - Use .smooth for routine, .snappy for interactive, .bouncy for delight
+- [`invisible-no-easing`](references/invisible-no-easing.md) - Prefer springs over linear and easeInOut for UI elements
+- [`invisible-system-materials`](references/invisible-system-materials.md) - Use system materials, not custom semi-transparent backgrounds
+- [`invisible-symbol-effects`](references/invisible-symbol-effects.md) - Use built-in symbolEffect, not manual symbol animation
+- [`invisible-content-transitions`](references/invisible-content-transitions.md) - Use contentTransition for changing text and numbers
 
-### 7. Spacing & Rhythm (MEDIUM-HIGH)
+### 5. Systems, Not Pieces (HIGH)
 
-- [`rhythm-consistent-grid`](references/rhythm-consistent-grid.md) - Use a 4pt base unit for all spacing
-- [`rhythm-touch-targets`](references/rhythm-touch-targets.md) - All interactive elements at least 44x44 points
-- [`rhythm-consistent-radii`](references/rhythm-consistent-radii.md) - Standardize corner radii per component type
-- [`rhythm-consistent-padding`](references/rhythm-consistent-padding.md) - Use consistent padding across all screens
-- [`rhythm-alignment-consistency`](references/rhythm-alignment-consistency.md) - Consistent alignment per content type within a screen
-- [`rhythm-safe-area-respect`](references/rhythm-safe-area-respect.md) - Always respect safe areas
+Edson: "Design is systems thinking." Rams #8: nothing must be arbitrary or left to chance.
 
-### 8. iOS 17+ Modernization (MEDIUM)
+- [`system-spacing-grid`](references/system-spacing-grid.md) - Use a 4pt base unit for all spacing
+- [`system-consistent-padding`](references/system-consistent-padding.md) - Use consistent padding across all screens
+- [`system-corner-radii`](references/system-corner-radii.md) - Standardize corner radii per component type
+- [`system-alignment`](references/system-alignment.md) - Consistent alignment per content type within a screen
+- [`system-color-naming`](references/system-color-naming.md) - Name custom colors by role, not hue
+- [`system-brand-integration`](references/system-brand-integration.md) - Map brand palette onto iOS semantic color roles
 
-- [`modern-scroll-transitions`](references/modern-scroll-transitions.md) - Use scrollTransition for scroll-position visual effects
-- [`modern-phase-animator`](references/modern-phase-animator.md) - Use PhaseAnimator for multi-step animation sequences
-- [`modern-mesh-gradients`](references/modern-mesh-gradients.md) - Use MeshGradient for premium dynamic backgrounds
-- [`modern-text-renderer`](references/modern-text-renderer.md) - Use TextRenderer for hero text animations only
-- [`modern-inspector`](references/modern-inspector.md) - Use inspector for trailing-edge detail panels
+### 6. Thorough to the Last Detail (HIGH)
+
+Rams #8: "Care and accuracy in the design process show respect for the user." Rams #2: if the user cannot reliably use it, the product has failed.
+
+- [`thorough-reduce-motion`](references/thorough-reduce-motion.md) - Always provide reduce motion fallback
+- [`thorough-touch-targets`](references/thorough-touch-targets.md) - All interactive elements at least 44x44 points
+- [`thorough-safe-areas`](references/thorough-safe-areas.md) - Always respect safe areas
+- [`thorough-readable-weights`](references/thorough-readable-weights.md) - Avoid light font weights for body text
+- [`thorough-vibrancy-levels`](references/thorough-vibrancy-levels.md) - Match vibrancy level to content importance
+- [`thorough-material-thickness`](references/thorough-material-thickness.md) - Choose material thickness by contrast needs
+- [`thorough-background-interaction`](references/thorough-background-interaction.md) - Enable background interaction for peek-style sheets
+
+### 7. Enduring Over Trendy (MEDIUM-HIGH)
+
+Rams #7: "Good design is long-lasting." Edson: commit to a voice that persists across product generations.
+
+- [`enduring-system-text-styles`](references/enduring-system-text-styles.md) - Use Apple text styles, never fixed font sizes
+- [`enduring-weight-not-caps`](references/enduring-weight-not-caps.md) - Use weight for emphasis, not ALL CAPS
+- [`enduring-swipe-back`](references/enduring-swipe-back.md) - Never break the system back-swipe gesture
+- [`enduring-zoom-navigation`](references/enduring-zoom-navigation.md) - Use zoom transitions for collection-to-detail navigation
+- [`enduring-card-modularity`](references/enduring-card-modularity.md) - Use self-contained cards for dashboard layouts
+
+### 8. Refined Through Iteration (MEDIUM)
+
+Edson: "Design out loud" — prototype relentlessly until every interaction feels inevitable. Rams #1: innovation serves genuine purpose.
+
+- [`refined-scroll-transitions`](references/refined-scroll-transitions.md) - Use scrollTransition for scroll-position visual effects
+- [`refined-phase-animator`](references/refined-phase-animator.md) - Use PhaseAnimator for multi-step animation sequences
+- [`refined-mesh-gradients`](references/refined-mesh-gradients.md) - Use MeshGradient for premium dynamic backgrounds
+- [`refined-text-renderer`](references/refined-text-renderer.md) - Use TextRenderer for hero text animations only
+- [`refined-inspector`](references/refined-inspector.md) - Use inspector for trailing-edge detail panels
+- [`refined-multi-detent`](references/refined-multi-detent.md) - Provide multiple sheet detents with drag indicator
+- [`refined-matched-geometry`](references/refined-matched-geometry.md) - Use matchedGeometryEffect for contextual origin transitions
+- [`refined-no-hard-cuts`](references/refined-no-hard-cuts.md) - Always animate between states, even minimally
 
 ## How to Use
 
 Read individual reference files for detailed explanations and code examples:
 
-- [Section definitions](references/_sections.md) - Category structure and impact levels
+- [Section definitions](references/_sections.md) - Category structure, principle sources, and impact levels
 - [Rule template](assets/templates/_template.md) - Template for adding new rules
 
 ## Reference Files
 
 | File | Description |
 |------|-------------|
-| [references/_sections.md](references/_sections.md) | Category definitions and ordering |
+| [references/_sections.md](references/_sections.md) | Category definitions and principle grounding |
 | [assets/templates/_template.md](assets/templates/_template.md) | Template for new rules |
 | [metadata.json](metadata.json) | Version and reference information |

@@ -56,6 +56,7 @@ struct ChildViewB: View {
 // GOOD: One registration per Hashable type at the stack root.
 // Every NavigationLink(value: Item) resolves to the same,
 // predictable destination regardless of where the link lives.
+@Equatable
 struct ContentView: View {
     var body: some View {
         NavigationStack {
@@ -70,6 +71,7 @@ struct ContentView: View {
     }
 }
 
+@Equatable
 struct ChildViewA: View {
     var body: some View {
         List(itemsA) { item in
@@ -78,6 +80,7 @@ struct ChildViewA: View {
     }
 }
 
+@Equatable
 struct ChildViewB: View {
     var body: some View {
         List(itemsB) { item in

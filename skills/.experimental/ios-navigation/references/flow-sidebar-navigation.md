@@ -66,6 +66,7 @@ enum MenuItem: String, CaseIterable, Identifiable {
     }
 }
 
+@Equatable
 struct MailView: View {
     @State private var selectedItem: MenuItem?
     @State private var columnVisibility =

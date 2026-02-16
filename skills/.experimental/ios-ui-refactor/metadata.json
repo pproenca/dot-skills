@@ -1,10 +1,13 @@
 {
-  "version": "1.0.1",
-  "organization": "Apple HIG",
+  "version": "2.0.0",
+  "organization": "Apple HIG + Rams · Segall · Edson",
   "technology": "SwiftUI iOS 17+",
   "date": "February 2026",
-  "abstract": "Principal-level iOS UI review and refactoring guide for SwiftUI, designed for AI agents and LLMs. Contains 48 rules across 8 categories ordered by the visual review process: visual hierarchy (CRITICAL), typography discipline (CRITICAL), color system (CRITICAL), motion and animation (HIGH), screen transitions (HIGH), materials and depth (HIGH), spacing and rhythm (MEDIUM-HIGH), and iOS 17+ modernization (MEDIUM). Each rule identifies a specific anti-pattern, explains the design impact, and provides the correct iOS 17+ SwiftUI implementation while preserving brand identity.",
+  "abstract": "Principal-level iOS UI review and refactoring guide for SwiftUI, grounded in three foundational design texts: Dieter Rams' Ten Principles for Good Design (less but better, honest, thorough), Ken Segall's Insanely Simple (remove complexity, speak human), and John Edson's Design Like Apple (systems thinking, the product is the marketing, prototype to perfection). Contains 51 rules across 8 principle-based categories: Less But Better (CRITICAL), Self-Evident Design (CRITICAL), Honest Interfaces (CRITICAL), Invisible Design (HIGH), Systems Not Pieces (HIGH), Thorough to the Last Detail (HIGH), Enduring Over Trendy (MEDIUM-HIGH), and Refined Through Iteration (MEDIUM). Each rule identifies a specific anti-pattern, grounds the fix in a named principle, and provides the correct iOS 17+ SwiftUI implementation.",
   "references": [
+    "Dieter Rams: Ten Principles for Good Design — Cees W. de Jong (Prestel, 2017)",
+    "Insanely Simple: The Obsession That Drives Apple's Success — Ken Segall (Portfolio/Penguin, 2012)",
+    "Design Like Apple: Seven Principles For Creating Insanely Great Products, Services, and Experiences — John Edson (Wiley, 2012)",
     "https://developer.apple.com/design/human-interface-guidelines/",
     "https://developer.apple.com/design/human-interface-guidelines/color",
     "https://developer.apple.com/design/human-interface-guidelines/typography",

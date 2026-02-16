@@ -47,6 +47,7 @@ struct DismissableCardView: View {
 **Correct (interactive spring during gesture, velocity-aware spring on release):**
 
 ```swift
+@Equatable
 struct DismissableCardView: View {
     @State private var offset: CGFloat = 0
     @State private var isDismissed = false

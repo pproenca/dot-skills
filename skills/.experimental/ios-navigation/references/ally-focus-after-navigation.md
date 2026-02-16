@@ -41,6 +41,7 @@ struct ProfileView: View {
 **Correct (focus directed to confirmation after dismissal):**
 
 ```swift
+@Equatable
 struct ProfileView: View {
     @State private var showEditSheet = false
     @State private var saveConfirmation = ""
@@ -70,6 +71,7 @@ struct ProfileView: View {
 }
 
 // Enum-based focus for forms with multiple error targets:
+@Equatable
 struct SignUpView: View {
     enum FocusTarget: Hashable { case emailError, passwordError }
     @AccessibilityFocusState private var focusTarget: FocusTarget?

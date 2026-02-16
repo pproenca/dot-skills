@@ -33,6 +33,7 @@ struct OrderDetailView: View {
 // GOOD: System back button remains — swipe-back works automatically.
 // Custom toolbar items add functionality alongside the back button,
 // not as a replacement for it.
+@Equatable
 struct OrderDetailView: View {
     var body: some View {
         ScrollView {
@@ -52,6 +53,7 @@ struct OrderDetailView: View {
 If you absolutely must hide the system back button (e.g., for a branded navigation bar), re-enable the swipe-back gesture through UIKit interop. **Warning:** Setting `delegate = nil` on `interactivePopGestureRecognizer` can cause a frozen state if the user swipes back from the root view. This approach relies on UIKit internals and may break across iOS versions. Test thoroughly.
 
 ```swift
+@Equatable
 struct BrandedDetailView: View {
     @Environment(\.dismiss) private var dismiss
 

@@ -53,6 +53,7 @@ struct CreateAccountView: View {
 **Correct (@FocusState enables keyboard navigation and error focus):**
 
 ```swift
+@Equatable
 struct CreateAccountView: View {
     enum Field: Hashable { case name, email, password }
     @State private var name = ""

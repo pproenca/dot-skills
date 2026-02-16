@@ -49,6 +49,7 @@ struct RecipeListView: View {
 **Correct (zoom navigation transition with matched source):**
 
 ```swift
+@Equatable
 struct RecipeListView: View {
     @Namespace private var zoomNamespace
 

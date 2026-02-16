@@ -71,6 +71,7 @@ struct MainView: View {
 // Users can see every section and switch with a single tap.
 // On iPad, NavigationSplitView provides a persistent sidebar
 // that matches platform conventions.
+@Equatable
 struct MainView: View {
     @State private var selectedTab: AppSection = .home
     @Environment(\.horizontalSizeClass) private var sizeClass

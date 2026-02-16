@@ -47,6 +47,7 @@ struct PlaceListView: View {
 **Correct (styling via matchedTransitionSource configuration closure):**
 
 ```swift
+@Equatable
 struct PlaceListView: View {
     @Namespace private var zoomNamespace
 

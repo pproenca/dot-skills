@@ -47,6 +47,7 @@ struct SidebarApp: View {
 **Correct (@SceneStorage persists tab across launches):**
 
 ```swift
+@Equatable
 struct MainTabView: View {
     // @SceneStorage persists per scene, each iPad window independent
     @SceneStorage("selectedTab") private var selectedTab = "home"
@@ -65,6 +66,7 @@ struct MainTabView: View {
     }
 }
 
+@Equatable
 struct SidebarApp: View {
     @SceneStorage("sidebarSection") private var selectedSection: String?
     var body: some View {
