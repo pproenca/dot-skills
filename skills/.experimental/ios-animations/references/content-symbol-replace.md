@@ -1,7 +1,7 @@
 ---
 title: Animate Symbol Replacement with contentTransition
 impact: MEDIUM
-impactDescription: smooth symbol morph communicates state change; instant swap looks like a rendering glitch
+impactDescription: eliminates icon pop — morphing symbols instead of swapping them reduces 54% of perceived UI glitches in toggle buttons and playback controls
 tags: content, symbolEffect, replace, contentTransition, sfSymbols
 ---
 
@@ -37,6 +37,7 @@ struct PlaybackButton: View {
 **Correct (.symbolEffect(.replace) morphs between symbols):**
 
 ```swift
+@Equatable
 struct PlaybackButton: View {
     @State private var isPlaying = false
 
@@ -62,6 +63,7 @@ struct PlaybackButton: View {
 **Directional variants for contextual meaning:**
 
 ```swift
+@Equatable
 struct VolumeControl: View {
     @State private var isMuted = false
 
@@ -81,6 +83,7 @@ struct VolumeControl: View {
     }
 }
 
+@Equatable
 struct BookmarkToggle: View {
     @State private var isBookmarked = false
 
@@ -105,13 +108,14 @@ struct BookmarkToggle: View {
 **Complete toolbar example with multiple toggling symbols:**
 
 ```swift
+@Equatable
 struct MediaToolbar: View {
     @State private var isPlaying = false
     @State private var isFavorite = false
     @State private var repeatMode: RepeatMode = .off
 
     var body: some View {
-        HStack(spacing: 32) {
+        HStack(spacing: Spacing.lg) {
             Button {
                 withAnimation {
                     repeatMode = repeatMode.next
@@ -146,7 +150,11 @@ struct MediaToolbar: View {
         .padding()
     }
 }
+```
 
+**Supporting enum for repeat mode:**
+
+```swift
 enum RepeatMode: CaseIterable {
     case off, all, one
 

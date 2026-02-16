@@ -8,7 +8,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 1. Spring Physics (spring)
 
 **Impact:** CRITICAL
-**Description:** Springs are the universal iOS animation primitive — the only animation type that preserves velocity on interruption. Using easeInOut or linear for UI interactions makes every screen feel non-native. Wrong spring choice cascades through the entire app's tactile quality.
+**Description:** Springs are the universal iOS animation primitive — the only animation type that preserves velocity on interruption. Motion tokens (enum Motion) standardize spring selection across the app, preventing scattered .smooth/.snappy/.bouncy literals. Wrong spring choice cascades through the entire app's tactile quality. Airbnb tokenizes motion values as part of their DLS.
 
 ## 2. Timing & Feel (feel)
 
@@ -30,17 +30,17 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 **Impact:** HIGH
 **Description:** Button press scale, haptic pairing, symbol effects, and toggle animations. These sub-second moments accumulate into the overall sensation of quality — or cheapness. Apple's own apps obsess over these details.
 
-## 6. Content Motion (content)
+## 6. Orchestration (orch)
+
+**Impact:** HIGH
+**Description:** When multiple elements animate, they must form a choreography — not a mob. PhaseAnimator, KeyframeAnimator, and staggered reveals create the composed, intentional motion that distinguishes premium apps like Airbnb's Host Passport. Complex animation state orchestration should use @Observable ViewModels per swift-ui-architect constraints.
+
+## 7. Craft & Polish (craft)
+
+**Impact:** HIGH
+**Description:** Respecting reduce motion (accessibility requirement, not polish), blur bridging imperfect states, Metal-backed rendering for complex scenes, and layout animation isolation. These patterns are essential for production-quality animation — 35% of adults experience motion sensitivity.
+
+## 8. Content Motion (content)
 
 **Impact:** MEDIUM-HIGH
 **Description:** Numbers that roll, text that morphs, symbols that replace, scroll items that react to position. Making content changes feel physical rather than digital eliminates the "database on a screen" feel.
-
-## 7. Orchestration (orch)
-
-**Impact:** MEDIUM
-**Description:** When multiple elements animate, they must form a choreography — not a mob. PhaseAnimator, KeyframeAnimator, and staggered reveals create the composed, intentional motion that distinguishes premium apps.
-
-## 8. Craft & Polish (craft)
-
-**Impact:** MEDIUM
-**Description:** Respecting reduce motion, blur bridging imperfect states, Metal-backed rendering for complex scenes, and layout animation isolation. The finishing touches that separate good animations from great ones.

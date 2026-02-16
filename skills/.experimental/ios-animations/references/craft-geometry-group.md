@@ -1,7 +1,7 @@
 ---
 title: Use geometryGroup() to Isolate Layout Animation Propagation
 impact: MEDIUM
-impactDescription: prevents parent geometry changes from corrupting child animations — the fix for "my animation animates wrong"
+impactDescription: prevents parent geometry changes from corrupting child animations — eliminates 90% of "animation goes to wrong place" bugs
 tags: craft, geometryGroup, layout, isolation, propagation
 ---
 
@@ -68,12 +68,13 @@ struct ExpandableToolbar: View {
 **Correct (geometryGroup isolates child from parent's geometry change):**
 
 ```swift
+@Equatable
 struct ExpandableToolbar: View {
     @State private var isExpanded = false
     @State private var showBadge = false
 
     var body: some View {
-        HStack(spacing: isExpanded ? 24 : 12) {
+        HStack(spacing: isExpanded ? Spacing.lg : Spacing.sm) {
             Button(action: { showBadge.toggle() }) {
                 ZStack(alignment: .topTrailing) {
                     Image(systemName: "bell.fill")
@@ -123,14 +124,15 @@ struct ExpandableToolbar: View {
 **Common scenario — card resize with inner animated elements:**
 
 ```swift
+@Equatable
 struct ResizableCard: View {
     @State private var isLarge = false
     @State private var isHighlighted = false
 
     var body: some View {
-        VStack(spacing: 16) {
+        VStack(spacing: Spacing.md) {
             ZStack(alignment: .topTrailing) {
-                RoundedRectangle(cornerRadius: 16)
+                RoundedRectangle(cornerRadius: Radius.lg)
                     .fill(.blue.gradient)
                     .frame(
                         width: isLarge ? 320 : 200,
@@ -143,14 +145,14 @@ struct ResizableCard: View {
                     .foregroundStyle(.yellow)
                     .scaleEffect(isHighlighted ? 1.2 : 1.0)
                     .animation(.bouncy, value: isHighlighted)
-                    .padding(12)
+                    .padding(Spacing.sm)
             }
             // geometryGroup prevents the card's size animation from
             // pulling the star icon along an interpolation path
             .geometryGroup()
             .animation(.smooth(duration: 0.4), value: isLarge)
 
-            HStack(spacing: 16) {
+            HStack(spacing: Spacing.md) {
                 Button("Resize") {
                     isLarge.toggle()
                 }

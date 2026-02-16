@@ -1,7 +1,7 @@
 ---
 title: Respect accessibilityReduceMotion with Crossfade Fallback
-impact: HIGH
-impactDescription: motion-sensitive users experience dizziness and nausea from animated transitions — crossfade is the universal safe alternative
+impact: CRITICAL
+impactDescription: 35% of adults experience motion sensitivity — ignoring reduce motion is an accessibility violation affecting 1 in 3 users
 tags: craft, accessibility, reduceMotion, crossfade, fallback
 ---
 
@@ -53,6 +53,7 @@ struct CardStack: View {
 **Correct (crossfade fallback when reduce motion is enabled):**
 
 ```swift
+@Equatable
 struct CardStack: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var selectedTab = 0
@@ -61,7 +62,7 @@ struct CardStack: View {
         VStack {
             TabView(selection: $selectedTab) {
                 ForEach(0..<3, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: Radius.lg)
                         .fill(
                             [Color.blue, .purple, .orange][index].gradient
                         )
@@ -71,7 +72,7 @@ struct CardStack: View {
             }
             .tabViewStyle(.page)
 
-            HStack(spacing: 8) {
+            HStack(spacing: Spacing.sm) {
                 ForEach(0..<3, id: \.self) { index in
                     Circle()
                         .fill(index == selectedTab ? .primary : .secondary)
@@ -121,6 +122,7 @@ extension AnyTransition {
 **Production example — screen entrance with reduce motion awareness:**
 
 ```swift
+@Equatable
 struct OnboardingCard: View {
     @Environment(\.accessibilityReduceMotion) private var reduceMotion
     @State private var isVisible = false
@@ -130,7 +132,7 @@ struct OnboardingCard: View {
     let iconName: String
 
     var body: some View {
-        VStack(spacing: 20) {
+        VStack(spacing: Spacing.md) {
             Image(systemName: iconName)
                 .font(.system(size: 56))
                 .foregroundStyle(.blue)
@@ -167,7 +169,7 @@ struct OnboardingCard: View {
                     value: isVisible
                 )
         }
-        .padding(32)
+        .padding(Spacing.xl)
         .task {
             try? await Task.sleep(for: .milliseconds(50))
             isVisible = true

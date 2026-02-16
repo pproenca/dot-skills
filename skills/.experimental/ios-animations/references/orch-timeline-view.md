@@ -1,7 +1,7 @@
 ---
 title: Use TimelineView for Continuous Repeating Animations
 impact: LOW-MEDIUM
-impactDescription: TimelineView runs on the display link — no Timer overhead, no animation queue buildup
+impactDescription: TimelineView syncs to display refresh (60/120Hz) with zero Timer overhead — prevents animation queue buildup and dropped frames from misaligned 30fps Timer.publish calls
 tags: orch, timelineView, continuous, repeating, displayLink
 ---
 
@@ -20,7 +20,7 @@ struct AudioVisualizer: View {
     let timer = Timer.publish(every: 1.0 / 30.0, on: .main, in: .common).autoconnect()
 
     var body: some View {
-        HStack(alignment: .bottom, spacing: 4) {
+        HStack(alignment: .bottom, spacing: Spacing.xs) {
             ForEach(0..<8, id: \.self) { index in
                 RoundedRectangle(cornerRadius: 2)
                     .fill(.blue.gradient)
@@ -46,6 +46,7 @@ struct AudioVisualizer: View {
 **Correct (TimelineView — synced to display, auto-pauses when off-screen):**
 
 ```swift
+@Equatable
 struct AudioVisualizer: View {
     var body: some View {
         // .animation schedule: refreshes at the display refresh rate,
@@ -53,7 +54,7 @@ struct AudioVisualizer: View {
         TimelineView(.animation) { context in
             let time = context.date.timeIntervalSinceReferenceDate
 
-            HStack(alignment: .bottom, spacing: 4) {
+            HStack(alignment: .bottom, spacing: Spacing.xs) {
                 ForEach(0..<8, id: \.self) { index in
                     let phase = time * 3 + Double(index) * 0.4
                     let height = 0.3 + 0.7 * abs(sin(phase))
@@ -72,6 +73,7 @@ struct AudioVisualizer: View {
 **Pulsing ring indicator (live activity style):**
 
 ```swift
+@Equatable
 struct LiveIndicator: View {
     var body: some View {
         TimelineView(.animation) { context in
@@ -95,6 +97,7 @@ struct LiveIndicator: View {
 **Gradient shift animation (background ambiance):**
 
 ```swift
+@Equatable
 struct AnimatedGradientBackground: View {
     var body: some View {
         TimelineView(.animation) { context in
@@ -127,6 +130,7 @@ struct AnimatedGradientBackground: View {
 **Lower-frequency updates with `.periodic`:**
 
 ```swift
+@Equatable
 struct ClockView: View {
     var body: some View {
         // Update once per second — no need for 60fps for a clock

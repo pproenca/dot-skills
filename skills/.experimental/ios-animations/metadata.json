@@ -1,9 +1,9 @@
 {
-  "version": "1.0.0",
+  "version": "2.0.0",
   "organization": "dot-skills",
   "technology": "iOS SwiftUI Animations",
   "date": "February 2026",
-  "abstract": "Comprehensive animation craft guide for SwiftUI apps, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (spring physics, timing) to incremental (orchestration, craft polish). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "abstract": "Airbnb-aligned animation craft guide for SwiftUI iOS 17+ apps, designed for AI agents and LLMs. Contains 50 rules across 8 categories, prioritized by impact. Enforces @Equatable on all animated views, motion tokens for spring/timing values, and design system tokens for layout. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics. Coherent with ios-design-system and swift-ui-architect sibling skills.",
   "references": [
     "https://developer.apple.com/documentation/swiftui/animation",
     "https://developer.apple.com/documentation/swiftui/spring",
@@ -16,8 +16,12 @@
     "https://developer.apple.com/documentation/swiftui/symboleffect",
     "https://developer.apple.com/wwdc23/10156",
     "https://developer.apple.com/wwdc23/10157",
+    "https://developer.apple.com/wwdc23/10158",
     "https://developer.apple.com/wwdc23/10160",
     "https://developer.apple.com/wwdc24/10145",
-    "https://developer.apple.com/wwdc24/10151"
+    "https://developer.apple.com/wwdc24/10151",
+    "https://medium.com/airbnb-engineering/motion-engineering-at-scale-5ffabfc878",
+    "https://medium.com/airbnb-engineering/animations-bringing-the-host-passport-to-life-on-ios-72856aea68a7",
+    "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/"
   ]
 }

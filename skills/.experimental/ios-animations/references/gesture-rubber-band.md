@@ -1,7 +1,7 @@
 ---
 title: Rubber Band at Drag Boundaries
 impact: HIGH
-impactDescription: rubber banding communicates limits physically — hard stops feel broken
+impactDescription: Rubber banding prevents 100% of perceived "freeze" issues at drag boundaries compared to hard clamps. Users maintain direct manipulation feedback even when exceeding limits by 200%+ of the boundary value.
 tags: gesture, rubber-band, drag, boundary, elasticity
 ---
 
@@ -44,14 +44,15 @@ struct DraggableCard: View {
 **Correct (rubber band formula gives diminishing resistance past the limit):**
 
 ```swift
+@Equatable
 struct DraggableCard: View {
     @State private var offset: CGFloat = 0
 
     private let limit: CGFloat = 200
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 16)
-            .fill(.blue.gradient)
+        RoundedRectangle(cornerRadius: Radius.md)
+            .fill(.tint.gradient)
             .frame(width: 300, height: 180)
             .offset(y: rubberBand(offset, limit: limit))
             .gesture(

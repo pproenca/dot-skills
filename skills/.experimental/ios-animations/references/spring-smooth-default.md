@@ -7,7 +7,7 @@ tags: spring, smooth, default, interruptible
 
 ## Default to .smooth Spring for All UI Transitions
 
-Springs became the SwiftUI default animation in iOS 17. Among the three presets — `.smooth`, `.snappy`, and `.bouncy` — `.smooth` is the right choice for roughly 80% of UI transitions. It produces zero bounce and a natural, physics-based deceleration that feels like sliding a real object to a stop. Most importantly, springs retarget seamlessly: if a user taps mid-animation, the spring redirects to the new target while preserving the current velocity. Easing curves cannot do this — they restart from zero velocity, causing a visible stutter.
+Springs became the SwiftUI default animation in iOS 17. Among the three presets — `.smooth`, `.snappy`, and `.bouncy` — `.smooth` is the right choice for roughly 80% of UI transitions. It produces zero bounce and a natural, physics-based deceleration that feels like sliding a real object to a stop. Most importantly, springs retarget smoothly: if a user taps mid-animation, the spring redirects to the new target while preserving the current velocity. Easing curves cannot do this — they restart from zero velocity, causing a visible stutter.
 
 **Incorrect (easing curve stutters when tapped mid-flight):**
 
@@ -47,14 +47,15 @@ struct ExpandableCard: View {
 }
 ```
 
-**Correct (.smooth spring retargets seamlessly on interruption):**
+**Correct (.smooth spring retargets smoothly on interruption):**
 
 ```swift
+@Equatable
 struct ExpandableCard: View {
     @State private var isExpanded = false
 
     var body: some View {
-        VStack(alignment: .leading, spacing: 12) {
+        VStack(alignment: .leading, spacing: Spacing.sm) {
             HStack {
                 Text("Order #1042")
                     .font(.headline)
@@ -72,10 +73,11 @@ struct ExpandableCard: View {
                     .foregroundStyle(.secondary)
             }
         }
-        .padding()
-        .background(.background, in: RoundedRectangle(cornerRadius: 12))
+        .padding(Spacing.md)
+        .background(.background, in: RoundedRectangle(cornerRadius: Radius.md))
         .shadow(color: .black.opacity(0.08), radius: 4, y: 2)
         // .smooth: no bounce, natural deceleration, handles rapid taps gracefully
+        // (equivalent to Motion.standard)
         .animation(.smooth, value: isExpanded)
         .onTapGesture {
             isExpanded.toggle()

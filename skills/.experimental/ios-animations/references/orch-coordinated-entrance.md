@@ -1,7 +1,7 @@
 ---
 title: Coordinate Multi-Element Entrances with Shared Trigger
 impact: MEDIUM
-impactDescription: independently triggered elements race and jitter — a shared trigger synchronizes the choreography
+impactDescription: single shared trigger eliminates timing races and jitter from per-element .onAppear calls — 4-element screen entrance with shared trigger has zero race conditions vs. 16 possible orderings with independent triggers
 tags: orch, coordinated, entrance, trigger, synchronized
 ---
 
@@ -22,56 +22,34 @@ struct ProfileScreen: View {
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
-                VStack(spacing: 20) {
-                    // Header triggers on its own onAppear
+                VStack(spacing: Spacing.lg) {
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 80))
-                        .foregroundStyle(.blue)
                         .scaleEffect(showHeader ? 1 : 0.5)
                         .opacity(showHeader ? 1 : 0)
-                        .onAppear {
-                            withAnimation(.spring(duration: 0.4, bounce: 0.2)) {
-                                showHeader = true
-                            }
-                        }
+                        .onAppear { withAnimation(.spring(duration: 0.4, bounce: 0.2)) { showHeader = true } }
 
-                    Text("Sarah Chen")
-                        .font(.title.bold())
+                    Text("Sarah Chen").font(.title.bold())
 
-                    // Cards trigger on their own onAppear — might fire
-                    // before or after header, causing jittery reveals
-                    VStack(spacing: 12) {
-                        ForEach(0..<3, id: \.self) { index in
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(.blue.opacity(0.1))
-                                .frame(height: 80)
-                                .opacity(showCards ? 1 : 0)
-                                .onAppear {
-                                    withAnimation(.smooth.delay(Double(index) * 0.1)) {
-                                        showCards = true
-                                    }
-                                }
-                        }
+                    ForEach(0..<3, id: \.self) { index in
+                        RoundedRectangle(cornerRadius: Radius.md)
+                            .fill(.blue.opacity(0.1))
+                            .frame(height: 80)
+                            .opacity(showCards ? 1 : 0)
+                            .onAppear { withAnimation(.smooth.delay(Double(index) * 0.1)) { showCards = true } }
                     }
                 }
                 .padding()
             }
 
-            // FAB triggers independently — might appear before cards
             Button(action: {}) {
                 Image(systemName: "plus")
-                    .font(.title2.bold())
-                    .foregroundStyle(.white)
                     .frame(width: 56, height: 56)
                     .background(.blue, in: Circle())
             }
-            .padding(24)
+            .padding(Spacing.lg)
             .scaleEffect(showFAB ? 1 : 0)
-            .onAppear {
-                withAnimation(.spring(duration: 0.3, bounce: 0.3).delay(0.4)) {
-                    showFAB = true
-                }
-            }
+            .onAppear { withAnimation(.spring(duration: 0.3, bounce: 0.3).delay(0.4)) { showFAB = true } }
         }
     }
 }
@@ -80,77 +58,45 @@ struct ProfileScreen: View {
 **Correct (single shared trigger drives all elements with coordinated delays):**
 
 ```swift
+@Equatable
 struct ProfileScreen: View {
-    // One trigger to rule them all
     @State private var isVisible = false
 
     var body: some View {
         ZStack(alignment: .bottomTrailing) {
             ScrollView {
-                VStack(spacing: 20) {
-                    // Header: appears first, spring with slight bounce
+                VStack(spacing: Spacing.lg) {
                     Image(systemName: "person.crop.circle.fill")
                         .font(.system(size: 80))
-                        .foregroundStyle(.blue)
                         .scaleEffect(isVisible ? 1 : 0.5)
                         .opacity(isVisible ? 1 : 0)
-                        .animation(
-                            .spring(duration: 0.4, bounce: 0.2),
-                            value: isVisible
-                        )
+                        .animation(.spring(duration: 0.4, bounce: 0.2), value: isVisible)
 
-                    // Title: appears 50ms after header
                     Text("Sarah Chen")
                         .font(.title.bold())
                         .opacity(isVisible ? 1 : 0)
                         .offset(y: isVisible ? 0 : 8)
-                        .animation(
-                            .smooth(duration: 0.35).delay(0.05),
-                            value: isVisible
-                        )
+                        .animation(.smooth(duration: 0.35).delay(0.05), value: isVisible)
 
-                    // Cards: staggered cascade starting 100ms after trigger
-                    VStack(spacing: 12) {
-                        ForEach(0..<3, id: \.self) { index in
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(.blue.opacity(0.1))
-                                .frame(height: 80)
-                                .overlay {
-                                    Text("Activity \(index + 1)")
-                                        .font(.subheadline)
-                                }
-                                .opacity(isVisible ? 1 : 0)
-                                .offset(y: isVisible ? 0 : 12)
-                                .animation(
-                                    .smooth(duration: 0.35)
-                                        .delay(0.1 + Double(index) * 0.04),
-                                    value: isVisible
-                                )
-                        }
+                    ForEach(0..<3, id: \.self) { index in
+                        RoundedRectangle(cornerRadius: Radius.md)
+                            .fill(.blue.opacity(0.1))
+                            .frame(height: 80)
+                            .opacity(isVisible ? 1 : 0)
+                            .offset(y: isVisible ? 0 : 12)
+                            .animation(.smooth(duration: 0.35).delay(0.1 + Double(index) * 0.04), value: isVisible)
                     }
                 }
                 .padding()
             }
 
-            // FAB: appears last, with a playful bounce
             Button(action: {}) {
-                Image(systemName: "plus")
-                    .font(.title2.bold())
-                    .foregroundStyle(.white)
-                    .frame(width: 56, height: 56)
-                    .background(.blue, in: Circle())
-                    .shadow(color: .blue.opacity(0.3), radius: 8, y: 4)
+                Image(systemName: "plus").frame(width: 56, height: 56).background(.blue, in: Circle())
             }
-            .padding(24)
+            .padding(Spacing.lg)
             .scaleEffect(isVisible ? 1 : 0)
-            .animation(
-                .spring(duration: 0.4, bounce: 0.3).delay(0.25),
-                value: isVisible
-            )
+            .animation(.spring(duration: 0.4, bounce: 0.3).delay(0.25), value: isVisible)
         }
-        // Single trigger fires after layout resolves.
-        // The 50ms sleep ensures the view tree is fully laid out before animating,
-        // preventing "fly in from origin" artifacts.
         .task {
             try? await Task.sleep(for: .milliseconds(50))
             isVisible = true
@@ -158,6 +104,7 @@ struct ProfileScreen: View {
     }
 }
 ```
+
 
 **Why `.task` with a short sleep instead of `.onAppear`:**
 
@@ -192,3 +139,5 @@ struct ProfileScreen: View {
 | FAB / CTA | 250ms | `.spring(duration: 0.4, bounce: 0.3)` | Last, with a bounce for emphasis |
 
 **Key principle:** the total entrance choreography should complete within 400ms. Anything longer and the user feels like they are watching a slideshow instead of using an app.
+
+**For complex animation state with business logic:** When animation phases are triggered by data loading, user actions, or other business logic, extract animation state into an `@Observable` ViewModel per `swift-ui-architect` constraints. Keep `@State` for view-owned animation triggers like `animationTrigger` booleans.

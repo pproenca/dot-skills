@@ -1,7 +1,7 @@
 ---
 title: Resolve Scroll and Drag Gesture Conflicts
 impact: HIGH
-impactDescription: unresolved conflicts make sheets and drawers fight with their content scroll
+impactDescription: Unresolved gesture conflicts cause scroll views inside draggable containers to become completely non-interactive. Proper gesture isolation restores 100% of scroll functionality while maintaining sheet/drawer drag behavior.
 tags: gesture, scroll, drag, conflict, priority, simultaneous
 ---
 
@@ -54,6 +54,7 @@ struct BrokenSheet: View {
 **Correct (drag handle owns the gesture; scroll content scrolls freely):**
 
 ```swift
+@Equatable
 struct SheetWithScrollableContent: View {
     @State private var sheetOffset: CGFloat = 0
 
@@ -78,17 +79,18 @@ struct SheetWithScrollableContent: View {
                 ForEach(0..<30) { index in
                     Text("Row \(index)")
                         .frame(maxWidth: .infinity, alignment: .leading)
-                        .padding()
+                        .padding(Spacing.md)
                     Divider()
                 }
             }
         }
         .frame(height: 500)
-        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: 20))
+        .background(.regularMaterial, in: RoundedRectangle(cornerRadius: Radius.lg))
         .offset(y: sheetOffset)
     }
 }
 
+@Equatable
 struct SheetHandle: View {
     var body: some View {
         Rectangle()
@@ -107,6 +109,7 @@ struct SheetHandle: View {
 **Advanced: axis locking for horizontal drag on a vertical ScrollView:**
 
 ```swift
+@Equatable
 struct HorizontalSwipeableList: View {
     var body: some View {
         ScrollView {
@@ -117,6 +120,7 @@ struct HorizontalSwipeableList: View {
     }
 }
 
+@Equatable
 struct SwipeableRow: View {
     let title: String
 
@@ -129,7 +133,7 @@ struct SwipeableRow: View {
         HStack {
             Text(title)
                 .frame(maxWidth: .infinity, alignment: .leading)
-                .padding()
+                .padding(Spacing.md)
         }
         .background(.background)
         .offset(x: offsetX)

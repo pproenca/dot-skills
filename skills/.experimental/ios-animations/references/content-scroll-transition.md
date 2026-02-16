@@ -52,14 +52,15 @@ struct CardScrollView: View {
 **Correct (.scrollTransition — zero layout cost, declarative phases):**
 
 ```swift
+@Equatable
 struct CardScrollView: View {
     let items = Array(0..<20)
 
     var body: some View {
         ScrollView {
-            LazyVStack(spacing: 16) {
+            LazyVStack(spacing: Spacing.md) {
                 ForEach(items, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 16)
+                    RoundedRectangle(cornerRadius: Radius.md)
                         .fill(Color.blue.gradient)
                         .frame(height: 120)
                         .overlay {
@@ -85,14 +86,15 @@ struct CardScrollView: View {
 **Directional effects using phase values (carousel rotation):**
 
 ```swift
+@Equatable
 struct CarouselView: View {
     let items = Array(0..<15)
 
     var body: some View {
         ScrollView(.horizontal, showsIndicators: false) {
-            LazyHStack(spacing: 16) {
+            LazyHStack(spacing: Spacing.md) {
                 ForEach(items, id: \.self) { index in
-                    RoundedRectangle(cornerRadius: 20)
+                    RoundedRectangle(cornerRadius: Radius.lg)
                         .fill(
                             LinearGradient(
                                 colors: [.purple, .blue],

@@ -1,7 +1,7 @@
 ---
 title: Use PhaseAnimator for Multi-Step Sequences
 impact: MEDIUM
-impactDescription: eliminates 15-30 lines of DispatchQueue chaining — phases are declarative, cancellable, and accessibility-aware
+impactDescription: eliminates 15-30 lines of DispatchQueue chaining per multi-step sequence — phases are declarative, cancellable, and accessibility-aware without manual bookkeeping
 tags: orch, phaseAnimator, sequence, multi-step, declarative
 ---
 
@@ -55,13 +55,12 @@ struct CelebrationBadge: View {
 **Correct (PhaseAnimator — declarative multi-step sequence):**
 
 ```swift
+@Equatable
 struct CelebrationBadge: View {
     @State private var animationTrigger = false
 
     enum AnimationPhase: CaseIterable {
-        case initial
-        case scaleUp
-        case settle
+        case initial, scaleUp, settle
 
         var scale: CGFloat {
             switch self {
@@ -71,12 +70,7 @@ struct CelebrationBadge: View {
             }
         }
 
-        var opacity: Double {
-            switch self {
-            case .initial: return 0
-            case .scaleUp, .settle: return 1
-            }
-        }
+        var opacity: Double { self == .initial ? 0 : 1 }
 
         var rotation: Double {
             switch self {
@@ -96,10 +90,7 @@ struct CelebrationBadge: View {
     }
 
     var body: some View {
-        PhaseAnimator(
-            AnimationPhase.allCases,
-            trigger: animationTrigger
-        ) { phase in
+        PhaseAnimator(AnimationPhase.allCases, trigger: animationTrigger) { phase in
             Image(systemName: "star.fill")
                 .font(.system(size: 64))
                 .foregroundStyle(.yellow)
@@ -109,9 +100,7 @@ struct CelebrationBadge: View {
         } animation: { phase in
             phase.animation
         }
-        .onAppear {
-            animationTrigger.toggle()
-        }
+        .onAppear { animationTrigger.toggle() }
     }
 }
 ```
@@ -119,6 +108,7 @@ struct CelebrationBadge: View {
 **Continuous looping with PhaseAnimator (no trigger — runs forever):**
 
 ```swift
+@Equatable
 struct PulsingIndicator: View {
     enum PulsePhase: CaseIterable {
         case resting
@@ -160,6 +150,7 @@ struct PulsingIndicator: View {
 **Modifier form (.phaseAnimator) for inline use:**
 
 ```swift
+@Equatable
 struct NotificationBell: View {
     @State private var hasNotification = false
 
@@ -193,5 +184,7 @@ struct NotificationBell: View {
 | Continuous frame-level animation | `TimelineView` |
 
 **Note:** do not use `PhaseAnimator` for single-step transitions — it adds unnecessary complexity. A simple `.animation(.smooth, value: state)` is clearer for one-step changes.
+
+**For complex animation state with business logic:** When animation phases are triggered by data loading, user actions, or other business logic, extract animation state into an `@Observable` ViewModel per `swift-ui-architect` constraints. Keep `@State` for view-owned animation triggers like `animationTrigger` booleans.
 
 Reference: [WWDC 2023 — Explore SwiftUI animation](https://developer.apple.com/wwdc23/10156)

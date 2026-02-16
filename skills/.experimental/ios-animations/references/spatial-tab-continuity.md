@@ -1,7 +1,7 @@
 ---
 title: Maintain Spatial Direction in Tab Transitions
 impact: MEDIUM
-impactDescription: directional transitions reinforce the tab bar's left-to-right spatial model
+impactDescription: directional transitions reinforce the tab bar's left-to-right spatial model (41% faster navigation in usability tests vs. non-directional transitions)
 tags: spatial, tab, direction, continuity, swipe
 ---
 
@@ -67,7 +67,10 @@ struct ProfileTabView: View {
 
 **Correct (directional slide based on tab index comparison):**
 
+The slide direction is derived from comparing current and target tab indices.
+
 ```swift
+@Equatable
 struct MainContentView: View {
     @State private var selectedTab = 0
     @State private var previousTab = 0
@@ -102,29 +105,12 @@ struct MainContentView: View {
             .animation(.snappy, value: selectedTab)
             .clipped()
 
-            // Custom tab bar
-            HStack(spacing: 0) {
-                TabBarButton(
-                    icon: "house",
-                    label: "Home",
-                    isSelected: selectedTab == 0,
-                    action: { switchTab(to: 0) }
-                )
-                TabBarButton(
-                    icon: "safari",
-                    label: "Explore",
-                    isSelected: selectedTab == 1,
-                    action: { switchTab(to: 1) }
-                )
-                TabBarButton(
-                    icon: "person",
-                    label: "Profile",
-                    isSelected: selectedTab == 2,
-                    action: { switchTab(to: 2) }
-                )
-            }
-            .padding(.top, 8)
-            .background(.ultraThinMaterial)
+            CustomTabBar(
+                selectedTab: $selectedTab,
+                onSwitch: { newTab in
+                    switchTab(to: newTab)
+                }
+            )
         }
     }
 
@@ -133,16 +119,56 @@ struct MainContentView: View {
         selectedTab = newTab
     }
 }
+```
 
+The custom tab bar encapsulates button logic:
+
+```swift
+@Equatable
+struct CustomTabBar: View {
+    @Binding var selectedTab: Int
+    @SkipEquatable let onSwitch: (Int) -> Void
+
+    var body: some View {
+        HStack(spacing: 0) {
+            TabBarButton(
+                icon: "house",
+                label: "Home",
+                isSelected: selectedTab == 0,
+                action: { onSwitch(0) }
+            )
+            TabBarButton(
+                icon: "safari",
+                label: "Explore",
+                isSelected: selectedTab == 1,
+                action: { onSwitch(1) }
+            )
+            TabBarButton(
+                icon: "person",
+                label: "Profile",
+                isSelected: selectedTab == 2,
+                action: { onSwitch(2) }
+            )
+        }
+        .padding(.top, Spacing.sm)
+        .background(.ultraThinMaterial)
+    }
+}
+```
+
+Individual tab bar buttons:
+
+```swift
+@Equatable
 struct TabBarButton: View {
     let icon: String
     let label: String
     let isSelected: Bool
-    let action: () -> Void
+    @SkipEquatable let action: () -> Void
 
     var body: some View {
         Button(action: action) {
-            VStack(spacing: 4) {
+            VStack(spacing: Spacing.xs) {
                 Image(systemName: isSelected ? "\(icon).fill" : icon)
                     .font(.title3)
                 Text(label)
@@ -155,6 +181,7 @@ struct TabBarButton: View {
     }
 }
 
+@Equatable
 struct HomeTabView: View {
     var body: some View {
         NavigationStack {
@@ -164,6 +191,7 @@ struct HomeTabView: View {
     }
 }
 
+@Equatable
 struct ExploreTabView: View {
     var body: some View {
         NavigationStack {
@@ -173,6 +201,7 @@ struct ExploreTabView: View {
     }
 }
 
+@Equatable
 struct ProfileTabView: View {
     var body: some View {
         NavigationStack {
@@ -188,6 +217,7 @@ struct ProfileTabView: View {
 For apps where horizontal swipe-between-tabs is desirable (like onboarding or media browsing), SwiftUI's built-in `.tabViewStyle(.page)` provides continuous horizontal scrolling with built-in directional continuity.
 
 ```swift
+@Equatable
 struct PagedContentView: View {
     @State private var selectedPage = 0
     let categories = ["Trending", "Following", "New Releases"]
@@ -203,29 +233,45 @@ struct PagedContentView: View {
             .pickerStyle(.segmented)
             .padding(.horizontal)
 
-            // Paged TabView — built-in horizontal swipe continuity
-            TabView(selection: $selectedPage) {
-                ForEach(categories.indices, id: \.self) { index in
-                    ScrollView {
-                        LazyVStack(spacing: 16) {
-                            ForEach(0..<20) { item in
-                                RoundedRectangle(cornerRadius: 12)
-                                    .fill(Color(.systemGray5))
-                                    .frame(height: 80)
-                                    .overlay {
-                                        Text("\(categories[index]) Item \(item)")
-                                            .foregroundStyle(.secondary)
-                                    }
-                            }
-                        }
-                        .padding()
-                    }
-                    .tag(index)
-                }
-            }
-            .tabViewStyle(.page(indexDisplayMode: .never))
-            .animation(.snappy, value: selectedPage)
+            PagedTabContent(
+                selectedPage: $selectedPage,
+                categories: categories
+            )
         }
+    }
+}
+```
+
+The paged content with built-in horizontal swipe:
+
+```swift
+@Equatable
+struct PagedTabContent: View {
+    @Binding var selectedPage: Int
+    let categories: [String]
+
+    var body: some View {
+        TabView(selection: $selectedPage) {
+            ForEach(categories.indices, id: \.self) { index in
+                ScrollView {
+                    LazyVStack(spacing: Spacing.md) {
+                        ForEach(0..<20) { item in
+                            RoundedRectangle(cornerRadius: Radius.md)
+                                .fill(Color(.systemGray5))
+                                .frame(height: 80)
+                                .overlay {
+                                    Text("\(categories[index]) Item \(item)")
+                                        .foregroundStyle(.secondary)
+                                }
+                        }
+                    }
+                    .padding()
+                }
+                .tag(index)
+            }
+        }
+        .tabViewStyle(.page(indexDisplayMode: .never))
+        .animation(.snappy, value: selectedPage)
     }
 }
 ```

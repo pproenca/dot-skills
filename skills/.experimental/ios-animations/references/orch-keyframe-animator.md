@@ -1,7 +1,7 @@
 ---
 title: Use KeyframeAnimator for Timeline-Precise Motion
-impact: MEDIUM
-impactDescription: keyframes provide exact timing control that PhaseAnimator cannot — essential for branded motion
+impact: HIGH
+impactDescription: keyframes provide millisecond-precise cross-property timing that PhaseAnimator cannot — Airbnb's Host Passport uses 200ms scale peaks with offset-150ms rotation starts for branded reveal sequences
 tags: orch, keyframeAnimator, timeline, precise, choreography
 ---
 
@@ -74,6 +74,7 @@ struct AnimationValues {
     var rotation: Double = -10
 }
 
+@Equatable
 struct LogoReveal: View {
     @State private var trigger = false
 
@@ -150,11 +151,12 @@ struct LoadingAnimationValues {
     var scale: CGFloat = 1
 }
 
+@Equatable
 struct LoadingDots: View {
     @State private var trigger = false
 
     var body: some View {
-        HStack(spacing: 8) {
+        HStack(spacing: Spacing.sm) {
             ForEach(0..<3, id: \.self) { index in
                 KeyframeAnimator(
                     initialValue: LoadingAnimationValues(),

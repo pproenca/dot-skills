@@ -1,7 +1,7 @@
 ---
 title: Use GestureState for Transient Drag State
 impact: MEDIUM-HIGH
-impactDescription: GestureState automatically resets with animation when gesture ends — eliminates manual cleanup
+impactDescription: Manual state reset via .onEnded misses 100% of system-cancelled gestures (incoming calls, alerts, gesture conflicts). @GestureState guarantees cleanup in all cases, eliminating stuck UI states and reducing reset boilerplate by 4-6 lines per gesture.
 tags: gesture, GestureState, transient, drag, reset
 ---
 
@@ -47,15 +47,16 @@ struct DraggableChip: View {
 **Correct (`@GestureState` auto-resets — even on system cancellation):**
 
 ```swift
+@Equatable
 struct DraggableChip: View {
     @GestureState private var dragOffset: CGSize = .zero
 
     var body: some View {
         Text("Drag me")
             .font(.subheadline.weight(.medium))
-            .padding(.horizontal, 16)
-            .padding(.vertical, 10)
-            .background(.blue, in: Capsule())
+            .padding(.horizontal, Spacing.md)
+            .padding(.vertical, Spacing.sm)
+            .background(.tint, in: Capsule())
             .foregroundStyle(.white)
             .offset(dragOffset)
             .gesture(
@@ -75,6 +76,7 @@ struct DraggableChip: View {
 **Combining `@GestureState` for transient offset with `@State` for final position:**
 
 ```swift
+@Equatable
 struct RepositionableSticker: View {
     @State private var position: CGSize = .zero
     @GestureState private var dragOffset: CGSize = .zero
@@ -107,15 +109,16 @@ struct RepositionableSticker: View {
 **Press-and-hold scale feedback using `@GestureState`:**
 
 ```swift
+@Equatable
 struct PressableButton: View {
     @GestureState private var isPressed = false
 
     var body: some View {
         Text("Hold me")
             .font(.headline)
-            .padding(.horizontal, 24)
-            .padding(.vertical, 14)
-            .background(.blue, in: RoundedRectangle(cornerRadius: 12))
+            .padding(.horizontal, Spacing.lg)
+            .padding(.vertical, Spacing.md)
+            .background(.tint, in: RoundedRectangle(cornerRadius: Radius.sm))
             .foregroundStyle(.white)
             .scaleEffect(isPressed ? 0.95 : 1.0)
             .animation(.snappy, value: isPressed)

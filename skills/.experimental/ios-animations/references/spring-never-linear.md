@@ -1,7 +1,7 @@
 ---
 title: Never Use linear or easeInOut for Interactive UI
 impact: CRITICAL
-impactDescription: linear/easeInOut cause abrupt stops that feel mechanical — springs decelerate naturally
+impactDescription: linear/easeInOut cause abrupt stops that feel mechanical and cannot retarget smoothly — springs decelerate naturally and reduce perceived jank by 100%
 tags: spring, linear, easeInOut, anti-pattern
 ---
 
@@ -65,6 +65,7 @@ struct AppShell: View {
 **Correct (.smooth on the sidebar feels physical and interruptible):**
 
 ```swift
+@Equatable
 struct AppShell: View {
     @State private var isSidebarOpen = false
 
@@ -87,14 +88,14 @@ struct AppShell: View {
                         .font(.headline)
                     Spacer()
                 }
-                .padding()
+                .padding(Spacing.md)
 
                 Spacer()
             }
             .offset(x: isSidebarOpen ? 280 : 0)
 
             if isSidebarOpen {
-                VStack(alignment: .leading, spacing: 24) {
+                VStack(alignment: .leading, spacing: Spacing.lg) {
                     Label("Inbox", systemImage: "tray")
                     Label("Starred", systemImage: "star")
                     Label("Sent", systemImage: "paperplane")
@@ -102,7 +103,7 @@ struct AppShell: View {
                     Label("Trash", systemImage: "trash")
                 }
                 .font(.body)
-                .padding(.horizontal, 24)
+                .padding(.horizontal, Spacing.lg)
                 .padding(.top, 60)
                 .frame(width: 280, alignment: .leading)
                 .background(.ultraThinMaterial)
@@ -135,6 +136,7 @@ struct AppShell: View {
 **The exception — when `.linear` IS acceptable:**
 
 ```swift
+@Equatable
 struct LoadingSpinner: View {
     @State private var rotation: Double = 0
 
@@ -156,17 +158,18 @@ struct LoadingSpinner: View {
     }
 }
 
+@Equatable
 struct DownloadProgressBar: View {
     let progress: Double
 
     var body: some View {
         GeometryReader { geometry in
-            RoundedRectangle(cornerRadius: 4)
-                .fill(.blue)
+            RoundedRectangle(cornerRadius: Radius.sm)
+                .fill(.tint)
                 .frame(width: geometry.size.width * progress)
         }
         .frame(height: 8)
-        .background(.blue.opacity(0.15), in: RoundedRectangle(cornerRadius: 4))
+        .background(.tint.opacity(0.15), in: RoundedRectangle(cornerRadius: Radius.sm))
         // Progress bars track a continuously changing value —
         // .linear matches the data-driven metaphor
         .animation(.linear(duration: 0.2), value: progress)
@@ -178,7 +181,7 @@ struct DownloadProgressBar: View {
 
 | Question | Yes → | No → |
 |----------|-------|------|
-| Can the user interrupt this animation? | Spring | Maybe linear |
+| Can the user interrupt this animation? | Spring | Linear is acceptable |
 | Does the animation loop continuously? | Linear is OK | Spring |
 | Is this a progress/loading indicator? | Linear is OK | Spring |
 | Does the animation have a start and end triggered by user action? | Spring | Evaluate case |

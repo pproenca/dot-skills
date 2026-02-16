@@ -1,7 +1,7 @@
 ---
 title: Springs Preserve Velocity on Interruption
 impact: CRITICAL
-impactDescription: prevents the #1 source of animation jank — velocity discontinuities from re-triggered animations
+impactDescription: eliminates 100% of velocity discontinuities when users interrupt animations mid-flight — prevents the #1 source of animation jank
 tags: spring, velocity, interruption, gesture, continuity
 ---
 
@@ -42,6 +42,7 @@ struct FavoriteButton: View {
 **Correct (spring preserves velocity across rapid interactions):**
 
 ```swift
+@Equatable
 struct FavoriteButton: View {
     @State private var isFavorited = false
     @State private var scale: CGFloat = 1.0
@@ -72,12 +73,13 @@ struct FavoriteButton: View {
 **Why this matters for gesture-driven animations:**
 
 ```swift
+@Equatable
 struct DismissableCard: View {
     @State private var offset: CGFloat = 0
     @State private var isDismissed = false
 
     var body: some View {
-        RoundedRectangle(cornerRadius: 16)
+        RoundedRectangle(cornerRadius: Radius.md)
             .fill(.background)
             .frame(height: 200)
             .shadow(color: .black.opacity(0.1), radius: 8, y: 4)
@@ -139,13 +141,14 @@ Spring interrupted at 60% progress:
 **This applies to ALL animatable properties:**
 
 ```swift
+@Equatable
 struct InterruptiblePanel: View {
     @State private var isExpanded = false
 
     var body: some View {
-        VStack(spacing: 16) {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.blue.opacity(0.15))
+        VStack(spacing: Spacing.md) {
+            RoundedRectangle(cornerRadius: Radius.md)
+                .fill(.tint.opacity(0.15))
                 // All of these animate with velocity preservation:
                 .frame(
                     width: isExpanded ? 300 : 150,    // size

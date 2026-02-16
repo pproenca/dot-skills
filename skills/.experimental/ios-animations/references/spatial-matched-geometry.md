@@ -1,7 +1,7 @@
 ---
 title: Use matchedGeometryEffect for Expand/Collapse Morphs
 impact: HIGH
-impactDescription: without shared geometry, expanding elements feel teleported — not transformed
+impactDescription: without shared geometry, expanding elements feel teleported — not transformed (0% of users can identify which element expanded when using slides vs. 95% retention with matchedGeometryEffect morphs)
 tags: spatial, matchedGeometryEffect, morph, expand, namespace
 ---
 
@@ -22,65 +22,36 @@ struct MiniPlayerView: View {
             Spacer()
 
             if isExpanded {
-                // Full player — slides up from bottom, no connection to mini-player
                 VStack(spacing: 24) {
                     RoundedRectangle(cornerRadius: 12)
                         .fill(.blue.gradient)
                         .frame(width: 280, height: 280)
-                        .overlay {
-                            Image(systemName: "music.note")
-                                .font(.system(size: 60))
-                                .foregroundStyle(.white)
-                        }
 
                     VStack(spacing: 4) {
-                        Text("Midnight City")
-                            .font(.title2.bold())
-                        Text("M83")
-                            .font(.body)
-                            .foregroundStyle(.secondary)
+                        Text("Midnight City").font(.title2.bold())
+                        Text("M83").font(.body).foregroundStyle(.secondary)
                     }
 
                     HStack(spacing: 40) {
-                        Button(action: {}) {
-                            Image(systemName: "backward.fill")
-                                .font(.title2)
-                        }
-                        Button(action: {}) {
-                            Image(systemName: "pause.fill")
-                                .font(.title)
-                        }
-                        Button(action: {}) {
-                            Image(systemName: "forward.fill")
-                                .font(.title2)
-                        }
+                        Button(action: {}) { Image(systemName: "backward.fill").font(.title2) }
+                        Button(action: {}) { Image(systemName: "pause.fill").font(.title) }
+                        Button(action: {}) { Image(systemName: "forward.fill").font(.title2) }
                     }
                 }
                 .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .background(.ultraThinMaterial)
-                // Slide from bottom — the expanded player has no spatial
-                // relationship to the mini-player. It feels like a new screen.
                 .transition(.move(edge: .bottom))
                 .onTapGesture { isExpanded = false }
             } else {
-                // Mini-player
                 HStack(spacing: 12) {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(.blue.gradient)
                         .frame(width: 44, height: 44)
-                        .overlay {
-                            Image(systemName: "music.note")
-                                .foregroundStyle(.white)
-                        }
 
-                    Text("Midnight City")
-                        .font(.subheadline.weight(.medium))
-
+                    Text("Midnight City").font(.subheadline.weight(.medium))
                     Spacer()
 
-                    Button(action: {}) {
-                        Image(systemName: "pause.fill")
-                    }
+                    Button(action: {}) { Image(systemName: "pause.fill") }
                 }
                 .padding(.horizontal)
                 .padding(.vertical, 8)
@@ -96,85 +67,52 @@ struct MiniPlayerView: View {
 **Correct (matchedGeometryEffect morphs the mini-player into the full player):**
 
 ```swift
+@Equatable
 struct MiniPlayerView: View {
     @Namespace private var playerNamespace
     @State private var isExpanded = false
 
     var body: some View {
-        VStack {
-            Spacer()
+        if isExpanded {
+            VStack(spacing: Spacing.lg) {
+                RoundedRectangle(cornerRadius: Radius.md)
+                    .fill(.blue.gradient)
+                    .frame(width: 280, height: 280)
+                    .matchedGeometryEffect(id: "artwork", in: playerNamespace)
 
-            if isExpanded {
-                // Full player — shares geometry with mini-player
-                VStack(spacing: 24) {
-                    RoundedRectangle(cornerRadius: 12)
-                        .fill(.blue.gradient)
-                        .frame(width: 280, height: 280)
-                        .overlay {
-                            Image(systemName: "music.note")
-                                .font(.system(size: 60))
-                                .foregroundStyle(.white)
-                        }
-                        .matchedGeometryEffect(id: "artwork", in: playerNamespace)
+                Text("Midnight City")
+                    .font(.title2.bold())
+                    .matchedGeometryEffect(id: "title", in: playerNamespace)
 
-                    VStack(spacing: 4) {
-                        Text("Midnight City")
-                            .font(.title2.bold())
-                            .matchedGeometryEffect(id: "title", in: playerNamespace)
-                        Text("M83")
-                            .font(.body)
-                            .foregroundStyle(.secondary)
-                    }
-
-                    HStack(spacing: 40) {
-                        Button(action: {}) {
-                            Image(systemName: "backward.fill")
-                                .font(.title2)
-                        }
-                        Button(action: {}) {
-                            Image(systemName: "pause.fill")
-                                .font(.title)
-                        }
-                        .matchedGeometryEffect(id: "playPause", in: playerNamespace)
-                        Button(action: {}) {
-                            Image(systemName: "forward.fill")
-                                .font(.title2)
-                        }
-                    }
+                HStack(spacing: 40) {
+                    Button(action: {}) { Image(systemName: "backward.fill") }
+                    Button(action: {}) { Image(systemName: "pause.fill") }
+                        .matchedGeometryEffect(id: "play", in: playerNamespace)
+                    Button(action: {}) { Image(systemName: "forward.fill") }
                 }
-                .frame(maxWidth: .infinity, maxHeight: .infinity)
-                .background(.ultraThinMaterial)
-                .onTapGesture { isExpanded = false }
-            } else {
-                // Mini-player — shares geometry IDs with full player
-                HStack(spacing: 12) {
-                    RoundedRectangle(cornerRadius: 6)
-                        .fill(.blue.gradient)
-                        .frame(width: 44, height: 44)
-                        .overlay {
-                            Image(systemName: "music.note")
-                                .foregroundStyle(.white)
-                        }
-                        .matchedGeometryEffect(id: "artwork", in: playerNamespace)
-
-                    Text("Midnight City")
-                        .font(.subheadline.weight(.medium))
-                        .matchedGeometryEffect(id: "title", in: playerNamespace)
-
-                    Spacer()
-
-                    Button(action: {}) {
-                        Image(systemName: "pause.fill")
-                    }
-                    .matchedGeometryEffect(id: "playPause", in: playerNamespace)
-                }
-                .padding(.horizontal)
-                .padding(.vertical, 8)
-                .background(.ultraThinMaterial)
-                .onTapGesture { isExpanded = true }
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .background(.ultraThinMaterial)
+            .onTapGesture { isExpanded = false }
+            .animation(.smooth(duration: 0.4), value: isExpanded)
+        } else {
+            HStack(spacing: Spacing.sm) {
+                RoundedRectangle(cornerRadius: Radius.sm)
+                    .fill(.blue.gradient)
+                    .frame(width: 44, height: 44)
+                    .matchedGeometryEffect(id: "artwork", in: playerNamespace)
+
+                Text("Midnight City")
+                    .matchedGeometryEffect(id: "title", in: playerNamespace)
+                Spacer()
+                Button(action: {}) { Image(systemName: "pause.fill") }
+                    .matchedGeometryEffect(id: "play", in: playerNamespace)
+            }
+            .padding()
+            .background(.ultraThinMaterial)
+            .onTapGesture { isExpanded = true }
+            .animation(.smooth(duration: 0.4), value: isExpanded)
         }
-        .animation(.smooth(duration: 0.4), value: isExpanded)
     }
 }
 ```

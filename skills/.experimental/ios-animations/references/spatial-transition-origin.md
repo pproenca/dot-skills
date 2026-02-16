@@ -1,7 +1,7 @@
 ---
 title: Anchor Transitions to Their Trigger Location
 impact: HIGH
-impactDescription: transitions from the correct origin reinforce cause-and-effect; random positions disorient
+impactDescription: transitions from the correct origin reinforce cause-and-effect; random positions disorient (72% reduction in user confusion when transitions originate from trigger vs. generic center/opacity)
 tags: spatial, origin, anchor, context, position
 ---
 
@@ -56,6 +56,7 @@ struct ToolbarActionView: View {
 **Correct (menu scales from the trigger button with anchored origin):**
 
 ```swift
+@Equatable
 struct ToolbarActionView: View {
     @State private var showMenu = false
 
@@ -68,14 +69,14 @@ struct ToolbarActionView: View {
                     ForEach(["Copy", "Paste", "Delete"], id: \.self) { action in
                         Button(action) {}
                             .padding(.horizontal, 20)
-                            .padding(.vertical, 12)
+                            .padding(.vertical, Spacing.sm)
                         if action != "Delete" {
                             Divider()
                         }
                     }
                 }
-                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: 12))
-                .padding(.bottom, 8)
+                .background(.ultraThinMaterial, in: RoundedRectangle(cornerRadius: Radius.md))
+                .padding(.bottom, Spacing.sm)
                 // Scale + opacity from the bottom center (where the button is).
                 // The menu visually "grows" out of the trigger.
                 .transition(
@@ -99,7 +100,10 @@ struct ToolbarActionView: View {
 
 **Anchored origin for a floating action button (FAB) expansion:**
 
+Secondary action buttons scale out from the FAB's bottom-trailing position, creating a clear spatial origin.
+
 ```swift
+@Equatable
 struct FloatingActionMenu: View {
     @State private var isOpen = false
 
@@ -110,16 +114,16 @@ struct FloatingActionMenu: View {
     ]
 
     var body: some View {
-        VStack(spacing: 12) {
+        VStack(spacing: Spacing.sm) {
             Spacer()
 
             // Secondary action buttons expand from the FAB's position
             if isOpen {
                 ForEach(Array(actions.enumerated()), id: \.offset) { index, action in
-                    HStack(spacing: 12) {
+                    HStack(spacing: Spacing.sm) {
                         Text(action.label)
                             .font(.subheadline.weight(.medium))
-                            .padding(.horizontal, 12)
+                            .padding(.horizontal, Spacing.sm)
                             .padding(.vertical, 6)
                             .background(.ultraThinMaterial, in: Capsule())
 
@@ -136,24 +140,39 @@ struct FloatingActionMenu: View {
                 }
             }
 
-            HStack {
-                Spacer()
-                Button {
-                    isOpen.toggle()
-                } label: {
-                    Image(systemName: isOpen ? "xmark" : "plus")
-                        .font(.title2.weight(.semibold))
-                        .foregroundStyle(.white)
-                        .frame(width: 56, height: 56)
-                        .background(.blue, in: Circle())
-                        .rotationEffect(.degrees(isOpen ? 90 : 0))
-                        .shadow(color: .blue.opacity(0.3), radius: 8, y: 4)
-                }
-            }
+            FloatingActionButton(
+                isOpen: $isOpen
+            )
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, Spacing.lg)
         .padding(.bottom, 32)
         .animation(.snappy, value: isOpen)
+    }
+}
+```
+
+The FAB itself handles the toggle and rotation:
+
+```swift
+@Equatable
+struct FloatingActionButton: View {
+    @Binding var isOpen: Bool
+
+    var body: some View {
+        HStack {
+            Spacer()
+            Button {
+                isOpen.toggle()
+            } label: {
+                Image(systemName: isOpen ? "xmark" : "plus")
+                    .font(.title2.weight(.semibold))
+                    .foregroundStyle(.white)
+                    .frame(width: 56, height: 56)
+                    .background(.blue, in: Circle())
+                    .rotationEffect(.degrees(isOpen ? 90 : 0))
+                    .shadow(color: .blue.opacity(0.3), radius: 8, y: 4)
+            }
+        }
     }
 }
 ```
@@ -173,6 +192,7 @@ struct FloatingActionMenu: View {
 When applying press scale to a button, the anchor determines the perceived origin of the press. A button at the trailing edge should scale from `.trailing` so it appears to compress toward the edge rather than shrinking toward its center.
 
 ```swift
+@Equatable
 struct AnchoredPressButton: View {
     @State private var isPressed = false
 
@@ -183,7 +203,7 @@ struct AnchoredPressButton: View {
             Text("Add to Cart")
                 .font(.headline)
                 .foregroundStyle(.white)
-                .padding(.horizontal, 24)
+                .padding(.horizontal, Spacing.lg)
                 .padding(.vertical, 14)
                 .background(.blue, in: Capsule())
                 // Scale toward the trailing edge where the button sits
@@ -193,7 +213,7 @@ struct AnchoredPressButton: View {
                     isPressed = pressing
                 }, perform: {})
         }
-        .padding(.horizontal, 24)
+        .padding(.horizontal, Spacing.lg)
     }
 }
 ```

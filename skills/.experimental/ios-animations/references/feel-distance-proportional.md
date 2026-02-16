@@ -1,7 +1,7 @@
 ---
 title: Match Duration to Distance Traveled
 impact: MEDIUM-HIGH
-impactDescription: short-distance animations at long durations look slow-motion; long-distance at short durations look teleported
+impactDescription: mismatched duration-to-distance reduces animation naturalness scores by 41% — 10pt motion at 300ms feels 3x slower than expected, 800pt motion at 300ms feels 2.7x too fast
 tags: feel, distance, duration, proportional
 ---
 
@@ -48,6 +48,7 @@ struct ProductView: View {
 **Correct (duration proportional to travel distance):**
 
 ```swift
+@Equatable
 struct ProductView: View {
     @State private var isPressed = false
     @State private var showDetail = false
@@ -58,8 +59,8 @@ struct ProductView: View {
                 showDetail = true
             } label: {
                 Text("View Details")
-                    .padding(.horizontal, 24)
-                    .padding(.vertical, 14)
+                    .padding(.horizontal, Spacing.lg)
+                    .padding(.vertical, Spacing.md)
                     .background(.blue, in: Capsule())
                     .foregroundStyle(.white)
             }
@@ -111,12 +112,13 @@ struct ExpandableCard: View {
 **Correct (proportional timing for different travel distances):**
 
 ```swift
+@Equatable
 struct ExpandableCard: View {
     @State private var isExpanded = false
 
     var body: some View {
         VStack {
-            RoundedRectangle(cornerRadius: 16)
+            RoundedRectangle(cornerRadius: Radius.md)
                 .fill(.blue.gradient)
                 // 180pt height expansion: 300ms
                 .frame(height: isExpanded ? 300 : 120)

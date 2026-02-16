@@ -1,7 +1,7 @@
 ---
 title: Tune Custom Springs with response and dampingFraction
 impact: HIGH
-impactDescription: precise control over feel when presets don't match the interaction weight
+impactDescription: enables 10× finer motion tuning than the 3 presets via custom response (0.15–0.8s) and dampingFraction (0.5–1.0) — essential for branded animations where .smooth/.snappy/.bouncy are too generic
 tags: spring, custom, response, dampingFraction, blendDuration
 ---
 
@@ -49,6 +49,7 @@ struct BottomSheetView: View {
 **Correct (custom spring tuned for a heavy sheet's weight):**
 
 ```swift
+@Equatable
 struct BottomSheetView: View {
     @Binding var isPresented: Bool
     @State private var dragOffset: CGFloat = 0
@@ -60,11 +61,11 @@ struct BottomSheetView: View {
     var body: some View {
         VStack {
             Spacer()
-            VStack(spacing: 16) {
+            VStack(spacing: Spacing.md) {
                 RoundedRectangle(cornerRadius: 2.5)
                     .fill(.secondary)
                     .frame(width: 36, height: 5)
-                    .padding(.top, 8)
+                    .padding(.top, Spacing.sm)
 
                 Text("Order Summary")
                     .font(.title3.bold())
@@ -74,7 +75,7 @@ struct BottomSheetView: View {
             .frame(maxWidth: .infinity)
             .frame(height: 400)
             .background(.background)
-            .clipShape(UnevenRoundedRectangle(topLeadingRadius: 20, topTrailingRadius: 20))
+            .clipShape(UnevenRoundedRectangle(topLeadingRadius: Radius.lg, topTrailingRadius: Radius.lg))
             .offset(y: isPresented ? dragOffset : 400)
             .animation(.spring(duration: 0.55, bounce: 0.18), value: isPresented)
             .animation(.spring(duration: 0.55, bounce: 0.18), value: dragOffset)

@@ -53,6 +53,7 @@ struct NotificationSettingsRow: View {
 **Correct (.snappy feels crisp and immediate):**
 
 ```swift
+@Equatable
 struct NotificationSettingsRow: View {
     let title: String
     let subtitle: String
@@ -60,7 +61,7 @@ struct NotificationSettingsRow: View {
 
     var body: some View {
         HStack {
-            VStack(alignment: .leading, spacing: 2) {
+            VStack(alignment: .leading, spacing: Spacing.xs) {
                 Text(title)
                     .font(.body)
                 Text(subtitle)
@@ -79,6 +80,7 @@ struct NotificationSettingsRow: View {
                         .foregroundStyle(.white)
                 }
                 // .snappy: higher stiffness, faster settle, crisp for toggles
+                // (equivalent to Motion.responsive)
                 .animation(.snappy, value: isEnabled)
         }
         .contentShape(Rectangle())
@@ -100,6 +102,7 @@ struct NotificationSettingsRow: View {
 **Where `.snappy` excels — tab bar and segmented control:**
 
 ```swift
+@Equatable
 struct CategoryTabBar: View {
     let categories = ["All", "Food", "Drinks", "Desserts"]
     @State private var selectedIndex = 0
@@ -112,20 +115,20 @@ struct CategoryTabBar: View {
                 } label: {
                     Text(categories[index])
                         .font(.subheadline.weight(.medium))
-                        .padding(.vertical, 8)
-                        .padding(.horizontal, 16)
+                        .padding(.vertical, Spacing.sm)
+                        .padding(.horizontal, Spacing.md)
                         .foregroundStyle(selectedIndex == index ? .white : .primary)
                         .background {
                             if selectedIndex == index {
                                 Capsule()
-                                    .fill(.blue)
+                                    .fill(.tint)
                             }
                         }
                 }
                 .buttonStyle(.plain)
             }
         }
-        .padding(4)
+        .padding(Spacing.xs)
         .background(.quaternary, in: Capsule())
         // .snappy makes tab switching feel instant — users notice
         // the 30ms difference when switching tabs rapidly

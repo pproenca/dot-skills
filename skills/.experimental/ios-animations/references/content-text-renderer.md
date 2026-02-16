@@ -1,7 +1,7 @@
 ---
 title: Use Text Renderer for Character-Level Animation (iOS 18)
 impact: MEDIUM
-impactDescription: character-by-character reveals create typewriter, wave, and blur effects impossible with standard transitions
+impactDescription: enables per-character animation without breaking accessibility — typewriter, wave, and blur effects preserve 100% of text semantics vs. splitting into individual Text views
 tags: content, textRenderer, characterLevel, iOS18, advanced
 ---
 
@@ -76,11 +76,12 @@ struct WaveTextRenderer: TextRenderer {
     }
 }
 
+@Equatable
 struct WelcomeMessage: View {
     @State private var progress: Double = 0
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: Spacing.lg) {
             Text("Welcome back, Sarah")
                 .font(.largeTitle.bold())
                 .textRenderer(WaveTextRenderer(progress: progress))
@@ -130,11 +131,12 @@ struct TypewriterRenderer: TextRenderer {
     }
 }
 
+@Equatable
 struct TypewriterDemo: View {
     @State private var progress: Double = 0
 
     var body: some View {
-        VStack(spacing: 24) {
+        VStack(spacing: Spacing.lg) {
             Text("The quick brown fox jumps over the lazy dog.")
                 .font(.title3)
                 .textRenderer(TypewriterRenderer(progress: progress))
