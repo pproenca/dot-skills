@@ -96,4 +96,6 @@ LazyVStack {
 - When you need simultaneous animations
 - When using `.id()` modifier (can break lazy loading)
 
+**See also:** [`list-lazy-stacks`](../../swift-ui-architect/references/list-lazy-stacks.md) in swift-ui-architect for lazy stack usage within the Airbnb architecture.
+
 Reference: [Creating Performant Scrollable Stacks](https://developer.apple.com/documentation/swiftui/creating-performant-scrollable-stacks)

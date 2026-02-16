@@ -13,15 +13,14 @@ The `.task` modifier runs async work when a view appears and automatically cance
 
 ```swift
 struct ArticleView: View {
-    let articleID: String
-    @State private var article: Article?
+    @State var viewModel: ArticleViewModel
 
     var body: some View {
-        content
+        ArticleContent(article: viewModel.article)
             .onAppear {
                 Task {
                     // This task continues even if view disappears
-                    article = try? await fetchArticle(articleID)
+                    await viewModel.loadArticle()
                 }
             }
     }
@@ -32,14 +31,30 @@ struct ArticleView: View {
 
 ```swift
 struct ArticleView: View {
-    let articleID: String
-    @State private var article: Article?
+    @State var viewModel: ArticleViewModel
 
     var body: some View {
-        content
+        ArticleContent(article: viewModel.article)
             .task {
-                article = try? await fetchArticle(articleID)
+                await viewModel.loadArticle()
             }
+    }
+}
+
+@Observable
+@MainActor
+class ArticleViewModel {
+    let articleID: String
+    var article: Article?
+    private let fetchArticleUseCase: any FetchArticleUseCase
+
+    init(articleID: String, fetchArticleUseCase: any FetchArticleUseCase) {
+        self.articleID = articleID
+        self.fetchArticleUseCase = fetchArticleUseCase
+    }
+
+    func loadArticle() async {
+        article = try? await fetchArticleUseCase.execute(id: articleID)
     }
 }
 ```
@@ -49,11 +64,11 @@ struct ArticleView: View {
 ```swift
 .task {
     do {
-        article = try await fetchArticle(articleID)
+        await viewModel.loadArticle()
     } catch is CancellationError {
         // View disappeared -- no action needed
     } catch {
-        self.error = error
+        viewModel.error = error
     }
 }
 ```
@@ -62,12 +77,12 @@ struct ArticleView: View {
 
 ```swift
 .task {
-    async let articles = fetchArticles()
-    async let user = fetchUser()
+    async let articles = viewModel.loadArticles()
+    async let user = viewModel.loadUser()
 
     // Both cancelled if view disappears
-    self.articles = try? await articles
-    self.user = try? await user
+    await articles
+    await user
 }
 ```
 
@@ -76,6 +91,6 @@ struct ArticleView: View {
 - Fire-and-forget analytics
 - UI state setup (focus, scroll position)
 
-**See also:** [`conc-task-id-pattern`](conc-task-id-pattern.md) for re-triggering async work when a value changes using `.task(id:)`.
+**See also:** [`conc-task-id-pattern`](conc-task-id-pattern.md) for re-triggering async work when a value changes using `.task(id:)`. See [`data-task-modifier`](../../swift-ui-architect/references/data-task-modifier.md) in swift-ui-architect for the architectural usage pattern with ViewModels.
 
 Reference: [task(priority:_:) Documentation](https://developer.apple.com/documentation/swiftui/view/task(priority:_:))

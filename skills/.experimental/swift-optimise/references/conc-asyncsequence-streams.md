@@ -12,18 +12,22 @@ Traditional `NotificationCenter.addObserver` requires a matching `removeObserver
 **Incorrect (manual observer removal required in deinit):**
 
 ```swift
-class ConnectivityMonitor: ObservableObject {
-    @Published var isReachable = true
+@Observable
+@MainActor
+class ConnectivityMonitor {
+    var isReachable = true
     private var observer: NSObjectProtocol?
 
-    init() {
+    func startMonitoring() {
         observer = NotificationCenter.default.addObserver(
             forName: .connectivityChanged,
             object: nil,
             queue: .main
         ) { [weak self] notification in
             let status = notification.userInfo?["reachable"] as? Bool
-            self?.isReachable = status ?? false
+            MainActor.assumeIsolated {
+                self?.isReachable = status ?? false
+            }
         }
     }
 

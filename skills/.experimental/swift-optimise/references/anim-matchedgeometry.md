@@ -47,7 +47,7 @@ struct PhotoGallery: View {
                             PhotoThumbnail(photo: photo)
                                 .matchedGeometryEffect(id: photo.id, in: animation)
                                 .onTapGesture {
-                                    withAnimation(.spring()) {
+                                    withAnimation(.spring) {
                                         selectedPhoto = photo
                                     }
                                 }
@@ -60,7 +60,7 @@ struct PhotoGallery: View {
                 PhotoDetail(photo: photo)
                     .matchedGeometryEffect(id: photo.id, in: animation)
                     .onTapGesture {
-                        withAnimation(.spring()) {
+                        withAnimation(.spring) {
                             selectedPhoto = nil
                         }
                     }
@@ -88,7 +88,7 @@ struct ExpandableCardList: View {
             CardView(card: card, isExpanded: expandedID == card.id)
                 .matchedGeometryEffect(id: card.id, in: cardAnimation)
                 .onTapGesture {
-                    withAnimation(.spring(response: 0.4)) {
+                    withAnimation(.spring(duration: 0.4)) {
                         expandedID = expandedID == card.id ? nil : card.id
                     }
                 }

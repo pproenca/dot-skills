@@ -19,8 +19,10 @@ class SearchViewModel {
     var results: [SearchResult] = []
     private var cancellables = Set<AnyCancellable>()
     private let searchTextSubject = PassthroughSubject<String, Never>()
+    private let searchService: any SearchServiceProtocol
 
-    init() {
+    init(searchService: any SearchServiceProtocol) {
+        self.searchService = searchService
         searchTextSubject
             .debounce(for: .milliseconds(300), scheduler: RunLoop.main)
             .removeDuplicates()
@@ -37,7 +39,7 @@ class SearchViewModel {
     }
 
     private func performSearch(_ query: String) async {
-        results = await SearchService.search(query: query)
+        results = await searchService.search(query: query)
     }
 }
 ```
@@ -50,9 +52,14 @@ class SearchViewModel {
 class SearchViewModel {
     var searchText = ""
     var results: [SearchResult] = []
+    private let searchService: any SearchServiceProtocol
+
+    init(searchService: any SearchServiceProtocol) {
+        self.searchService = searchService
+    }
 
     func performSearch(_ query: String) async {
-        results = await SearchService.search(query: query)
+        results = (try? await searchService.search(query: query)) ?? []
     }
 }
 
@@ -76,5 +83,7 @@ struct SearchView: View {
 ```
 
 **Note on debounce behavior:** The `.task(id:)` + `Task.sleep` pattern behaves like Combine's `.debounce` -- it waits for a pause in changes before executing. Each keystroke cancels the previous sleep and starts a new one, so the search only fires after 300ms of inactivity.
+
+**See also:** [`data-combine-avoid`](../../swift-ui-architect/references/data-combine-avoid.md) in swift-ui-architect for the architectural decision rule on when Combine is still appropriate.
 
 Reference: [AsyncSequence](https://developer.apple.com/documentation/swift/asyncsequence)

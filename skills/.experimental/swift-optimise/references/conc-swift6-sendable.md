@@ -39,8 +39,9 @@ struct AppTheme: Sendable {
 }
 
 // Option 3: MainActor isolation for UI-bound singletons
+@Observable
 @MainActor
-final class AppSettings: Observable {
+final class AppSettings {
     var theme: Theme = .system
     var fontSize: Int = 14
 }

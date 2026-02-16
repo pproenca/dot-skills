@@ -120,4 +120,6 @@ private struct ShippingSelector: View {
 - Views with < 5 child elements and no expensive computations
 - When all children depend on the same state (decomposition adds structure without reducing work)
 
+**See also:** [`view-body-complexity`](../../swift-ui-architect/references/view-body-complexity.md) and [`view-extract-subviews`](../../swift-ui-architect/references/view-extract-subviews.md) in swift-ui-architect for the maximum 10 node rule and subview extraction patterns.
+
 Reference: [Understanding and improving SwiftUI performance](https://developer.apple.com/documentation/Xcode/understanding-and-improving-swiftui-performance)

@@ -13,22 +13,19 @@ Using `.onChange` with a manually created `Task` requires the developer to track
 
 ```swift
 struct CategoryItemsView: View {
-    @State private var selectedCategory: Category = .all
-    @State private var items: [Item] = []
+    @State var viewModel: CategoryItemsViewModel
     @State private var loadTask: Task<Void, Never>?
 
     var body: some View {
         VStack {
-            CategoryPicker(selection: $selectedCategory)
-            ItemsList(items: items)
+            CategoryPicker(selection: $viewModel.selectedCategory)
+            ItemsList(items: viewModel.items)
         }
-        .onChange(of: selectedCategory) { _, newCategory in
+        .onChange(of: viewModel.selectedCategory) { _, newCategory in
             // Must remember to cancel the previous task
             loadTask?.cancel()
             loadTask = Task {
-                items = await ItemService.fetchItems(
-                    for: newCategory
-                )
+                await viewModel.loadItems(for: newCategory)
             }
         }
     }
@@ -39,21 +36,34 @@ struct CategoryItemsView: View {
 
 ```swift
 struct CategoryItemsView: View {
-    @State private var selectedCategory: Category = .all
-    @State private var items: [Item] = []
+    @State var viewModel: CategoryItemsViewModel
 
     var body: some View {
         VStack {
-            CategoryPicker(selection: $selectedCategory)
-            ItemsList(items: items)
+            CategoryPicker(selection: $viewModel.selectedCategory)
+            ItemsList(items: viewModel.items)
         }
-        .task(id: selectedCategory) {
+        .task(id: viewModel.selectedCategory) {
             // Automatically cancelled and re-launched
             // when selectedCategory changes
-            items = await ItemService.fetchItems(
-                for: selectedCategory
-            )
+            await viewModel.loadItems(for: viewModel.selectedCategory)
         }
+    }
+}
+
+@Observable
+@MainActor
+class CategoryItemsViewModel {
+    var selectedCategory: Category = .all
+    var items: [Item] = []
+    private let fetchItemsUseCase: any FetchItemsUseCase
+
+    init(fetchItemsUseCase: any FetchItemsUseCase) {
+        self.fetchItemsUseCase = fetchItemsUseCase
+    }
+
+    func loadItems(for category: Category) async {
+        items = (try? await fetchItemsUseCase.execute(category: category)) ?? []
     }
 }
 ```

@@ -1,17 +1,17 @@
 ---
-title: Add Equatable Conformance to Prevent Spurious Redraws
-impact: MEDIUM
-impactDescription: skips redundant body re-evaluations for views with closures or non-Equatable properties, 2-5x fewer body calls in closure-heavy lists
-tags: perf, equatable, diffing, re-renders, optimization
+title: Apply @Equatable Macro to Prevent Spurious Redraws
+impact: CRITICAL
+impactDescription: 15% scroll hitch reduction measured at Airbnb — compile-time guarantee prevents entire view from becoming non-diffable when closures or non-Equatable properties are added
+tags: perf, equatable, diffing, re-renders, optimization, macro
 ---
 
-## Add Equatable Conformance to Prevent Spurious Redraws
+## Apply @Equatable Macro to Prevent Spurious Redraws
 
-When a view conforms to Equatable, SwiftUI uses your equality implementation instead of reflection-based diffing. When a view receives a closure or a non-Equatable property, SwiftUI cannot prove equality and conservatively re-evaluates `body` on every parent invalidation. Adding `Equatable` conformance with a custom `==` that compares only the meaningful inputs lets SwiftUI skip body re-evaluation when the view's semantic content has not changed.
+When a view contains ANY non-Equatable property (closures, reference types), SwiftUI's reflection-based diffing fails silently and conservatively re-evaluates `body` on every parent invalidation. The `@Equatable` macro generates `Equatable` conformance for all stored properties, excluding those marked `@SkipEquatable`. Build fails if a non-Equatable property is added without `@SkipEquatable` — acting as a compile-time performance linter.
 
-**iOS 17+ note:** With `@Observable`, SwiftUI tracks property access at the individual property level -- only views that read a changed property are invalidated. This eliminates many scenarios where Equatable was previously necessary. Equatable still helps when views receive **closures**, **non-Observable data**, or **non-Equatable properties** that SwiftUI cannot diff automatically.
+**iOS 17+ note:** With `@Observable`, SwiftUI tracks property access at the individual property level — only views that read a changed property are invalidated. `@Equatable` still prevents unnecessary body re-evaluations when views receive **closures**, **non-Observable data**, or **non-Equatable properties** that SwiftUI cannot diff automatically.
 
-**Incorrect (closure property forces re-evaluation every time):**
+**Incorrect (no @Equatable — closure makes entire view non-diffable):**
 
 ```swift
 struct MetricCard: View {
@@ -33,17 +33,14 @@ struct MetricCard: View {
 }
 ```
 
-**Correct (Equatable conformance lets SwiftUI skip unchanged views):**
+**Correct (@Equatable macro — compile-time diffability guarantee):**
 
 ```swift
-struct MetricCard: View, Equatable {
+@Equatable
+struct MetricCard: View {
     let title: String
     let value: Int
-    let onTap: () -> Void
-
-    static func == (lhs: MetricCard, rhs: MetricCard) -> Bool {
-        lhs.title == rhs.title && lhs.value == rhs.value
-    }
+    @SkipEquatable let onTap: () -> Void
 
     var body: some View {
         VStack {
@@ -53,26 +50,21 @@ struct MetricCard: View, Equatable {
                 .font(.title.bold())
         }
         .onTapGesture { onTap() }
-        // SwiftUI uses == to skip body when title and value
-        // are unchanged, even though the closure is new
+        // Body only re-evaluates when title or value changes
+        // Closure excluded from comparison via @SkipEquatable
     }
 }
 ```
 
-**Complex view with nested data (reflection-based diffing is expensive):**
+**Complex list row with multiple closures:**
 
 ```swift
-struct MessageRow: View, Equatable {
+@Equatable
+struct MessageRow: View {
     let message: Message
     let isSelected: Bool
-    let onTap: () -> Void
-
-    static func == (lhs: MessageRow, rhs: MessageRow) -> Bool {
-        lhs.message.id == rhs.message.id &&
-        lhs.message.updatedAt == rhs.message.updatedAt &&
-        lhs.isSelected == rhs.isSelected
-        // Intentionally ignore onTap closure
-    }
+    @SkipEquatable let onTap: () -> Void
+    @SkipEquatable let onSwipeDelete: () -> Void
 
     var body: some View {
         HStack {
@@ -86,24 +78,43 @@ struct MessageRow: View, Equatable {
         .onTapGesture(perform: onTap)
     }
 }
-
-// Usage with .equatable() modifier
-List(messages) { message in
-    MessageRow(
-        message: message,
-        isSelected: selectedID == message.id,
-        onTap: { selectedID = message.id }
-    )
-    .equatable()  // Tells SwiftUI to use Equatable
-}
 ```
 
-**When to use Equatable:**
-- Views with closures (callbacks, actions)
+**Prerequisite:** The `@Equatable` macro requires the [`ordo-one/equatable`](https://github.com/ordo-one/equatable) SPM package (or equivalent). This is NOT built into SwiftUI. Add it via `Package.swift` or Xcode's package manager. The open-source package uses `@EquatableIgnored` instead of `@SkipEquatable` (which is Airbnb's internal name).
+
+**Alternative (built-in SwiftUI, no third-party dependency):**
+
+```swift
+struct MetricCard: View, Equatable {
+    let title: String
+    let value: Int
+    let onTap: () -> Void
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.title == rhs.title && lhs.value == rhs.value
+    }
+
+    var body: some View {
+        VStack {
+            Text(title).font(.caption)
+            Text("\(value)").font(.title.bold())
+        }
+        .onTapGesture { onTap() }
+    }
+}
+// Use with .equatable() modifier
+```
+
+**When to use @Equatable:**
+- Every view that receives closures (callbacks, actions)
 - Views with complex nested data
 - List/grid rows that update frequently
-- Views where you want to control what triggers updates
+- Views where you want compile-time diffability enforcement
 
-**Note:** For simple value-type-only views, SwiftUI's automatic diffing is usually sufficient.
+**When manual Equatable is acceptable:**
+- Projects that cannot add the ordo-one/equatable dependency
+- Simple views with no closures where SwiftUI's automatic diffing suffices
 
-Reference: [EquatableView Documentation](https://developer.apple.com/documentation/swiftui/equatableview)
+**See also:** [`diff-equatable-views`](../../swift-ui-architect/references/diff-equatable-views.md), [`diff-closure-skip`](../../swift-ui-architect/references/diff-closure-skip.md) in swift-ui-architect for the full diffing strategy.
+
+Reference: [Airbnb Engineering — Understanding and Improving SwiftUI Performance](https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/)
