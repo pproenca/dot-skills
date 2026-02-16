@@ -1,13 +1,25 @@
 {
-  "version": "1.0.2",
-  "organization": "Apple",
-  "date": "2025-01-01",
-  "technology": "SwiftUI / iOS",
-  "abstract": "SwiftUI implementation patterns for building Apple-quality iOS UIs. Covers design systems, state management, layout, view composition, navigation, components, accessibility, and animation polish.",
+  "version": "2.0.0",
+  "organization": "Apple HIG + Kocienda · Edson",
+  "technology": "SwiftUI iOS 17+",
+  "date": "February 2026",
+  "abstract": "SwiftUI implementation patterns for building Apple-quality iOS interfaces, grounded in two foundational design texts: Ken Kocienda's Creative Selection (empathy for the user, craft in coding, taste in choosing the best solution, and the demo culture of iterative refinement) and John Edson's Design Like Apple (systems thinking, the product is the marketing, design out loud, and design with conviction). Contains 62 rules across 8 principle-based categories: Empathy in Every Pixel (CRITICAL), The Visual System (CRITICAL), Craft: State as Foundation (CRITICAL), Creative Composition (HIGH), Taste: The Right Choice (HIGH), Navigation as Conversation (HIGH), Design Out Loud: Layout (HIGH), and The Product Speaks (MEDIUM). Each rule identifies a specific anti-pattern, grounds the fix in a named principle, and provides the correct iOS 17+ SwiftUI implementation.",
   "references": [
+    "Creative Selection: Inside Apple's Design Process During the Golden Age of Steve Jobs — Ken Kocienda (St. Martin's Press, 2018)",
+    "Design Like Apple: Seven Principles For Creating Insanely Great Products, Services, and Experiences — John Edson (Wiley, 2012)",
     "https://developer.apple.com/design/human-interface-guidelines/",
-    "https://developer.apple.com/documentation/swiftui/",
-    "https://developer.apple.com/tutorials/develop-in-swift/",
-    "https://developer.apple.com/videos/play/wwdc2024/10144/"
+    "https://developer.apple.com/design/human-interface-guidelines/color",
+    "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "https://developer.apple.com/design/human-interface-guidelines/motion",
+    "https://developer.apple.com/design/human-interface-guidelines/materials",
+    "https://developer.apple.com/design/human-interface-guidelines/layout",
+    "https://developer.apple.com/design/human-interface-guidelines/accessibility",
+    "https://developer.apple.com/documentation/swiftui/animation",
+    "https://developer.apple.com/documentation/swiftui/view-fundamentals",
+    "https://developer.apple.com/videos/play/wwdc2023/10156/",
+    "https://developer.apple.com/videos/play/wwdc2023/10257/",
+    "https://developer.apple.com/videos/play/wwdc2024/10151/",
+    "https://developer.apple.com/videos/play/wwdc2024/10145/",
+    "https://developer.apple.com/design/awards/"
   ]
 }

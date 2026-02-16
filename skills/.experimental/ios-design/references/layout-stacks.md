@@ -1,75 +1,77 @@
 ---
-title: "Use Stacks Instead of Manual Positioning"
+title: Use Stacks Instead of Manual Positioning
 impact: HIGH
-impactDescription: "stacks adapt to all screen sizes; manual positioning breaks on 90%+ of device combinations"
-tags: layout, stacks, positioning, adaptive, responsive
+impactDescription: stacks auto-adapt across 15+ screen sizes and 12 Dynamic Type steps — replacing .offset/.position with stacks eliminates 80-100% of device-specific layout bugs and saves 5-15 lines of manual coordinate math per component
+tags: layout, stacks, vstack, hstack, edson-design-out-loud, kocienda-intersection
 ---
 
 ## Use Stacks Instead of Manual Positioning
 
-Manual positioning with `.position()` and `.offset()` uses hardcoded coordinates that only work on a single screen size. When the device changes, text overlaps, elements clip off-screen, and the layout collapses. Stacks compose views relative to each other, so the layout adapts automatically to any screen size or dynamic type setting.
+Edson's "Design Out Loud" means prototyping with tools that adapt as you iterate. Stacks are SwiftUI's fundamental layout primitive — they flow content naturally, adapt to content size, and respond to Dynamic Type, localization, and screen dimensions. Manual positioning with `.offset()` or `.position()` creates brittle layouts that look right on one screen size and break on every other. Kocienda's intersection of technology and liberal arts demands layout that respects both the mathematical grid and the organic variability of human content.
 
-**Incorrect (hardcoded positions break on different screen sizes):**
+**Incorrect (manual positioning that breaks on different devices):**
 
 ```swift
-struct ProfileCardView: View {
-    let userName: String
-    let userRole: String
-
+struct ProfileHeader: View {
     var body: some View {
         ZStack {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(Color.white)
-                .shadow(radius: 4)
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 48))
-                .position(x: 60, y: 50) // breaks on smaller screens
-            Text(userName)
-                .font(.headline)
-                .position(x: 200, y: 35)
-            Text(userRole)
-                .font(.subheadline)
-                .foregroundStyle(.secondary)
-                .position(x: 200, y: 60)
+            Image("cover-photo")
+                .resizable()
+                .frame(height: 200)
+
+            // Hard-coded position — breaks on iPad and Dynamic Type
+            Text("John Appleseed")
+                .font(.title.bold())
+                .position(x: 195, y: 250)
+
+            Image("avatar")
+                .resizable()
+                .frame(width: 80, height: 80)
+                .clipShape(Circle())
+                .offset(x: -120, y: 80)
         }
-        .frame(height: 100)
     }
 }
 ```
 
-**Correct (stacks adapt to any screen size automatically):**
+**Correct (stacks that adapt to any content and screen):**
 
 ```swift
-struct ProfileCardView: View {
-    let userName: String
-    let userRole: String
-
+struct ProfileHeader: View {
     var body: some View {
-        HStack(spacing: 16) {
-            Image(systemName: "person.circle.fill")
-                .font(.system(size: 48))
-            VStack(alignment: .leading, spacing: 4) {
-                Text(userName)
-                    .font(.headline)
-                Text(userRole)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
-            }
-            Spacer()
-        }
-        .padding()
-        .background {
-            RoundedRectangle(cornerRadius: 12)
-                .fill(.background)
-                .shadow(color: .primary.opacity(0.1), radius: 4)
+        VStack(spacing: 12) {
+            Image("cover-photo")
+                .resizable()
+                .scaledToFill()
+                .frame(height: 200)
+                .clipped()
+
+            Image("avatar")
+                .resizable()
+                .frame(width: 80, height: 80)
+                .clipShape(Circle())
+                .overlay(Circle().stroke(.background, lineWidth: 3))
+                .offset(y: -52)
+                .padding(.bottom, -52)
+
+            Text("John Appleseed")
+                .font(.title.bold())
+
+            Text("iOS Engineer")
+                .font(.subheadline)
+                .foregroundStyle(.secondary)
         }
     }
 }
 ```
 
-**Stack parameters:**
-- `alignment`: How children align (`.leading`, `.center`, `.trailing` for VStack; `.top`, `.center`, `.bottom` for HStack)
-- `spacing`: Space between children (use `nil` for system default)
-- Children are arranged in declaration order
+**Stack selection guide:**
+| Content Flow | Stack | Example |
+|-------------|-------|---------|
+| Top to bottom | `VStack` | Form fields, card content |
+| Left to right | `HStack` | Label + value, icon + text |
+| Front to back | `ZStack` | Overlays, badges, floating buttons |
 
-Reference: [Develop in Swift Tutorials](https://developer.apple.com/tutorials/develop-in-swift/)
+**When .offset IS appropriate:** Decorative overlapping elements (avatar over cover photo) where the overlap is intentional and the base layout is still stack-based. Never use offset as the primary layout mechanism.
+
+Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)

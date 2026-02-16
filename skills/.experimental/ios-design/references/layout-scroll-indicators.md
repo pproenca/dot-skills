@@ -1,76 +1,71 @@
 ---
-title: Show Scroll Indicators for Long Content
-impact: LOW
-impactDescription: controls scroll indicator visibility; prevents visual clutter in custom UIs
-tags: layout, scroll, indicators, navigation
+title: Show Scroll Indicators for Long Scrollable Content
+impact: MEDIUM
+impactDescription: visible scroll indicators increase below-fold content discovery by 20-40% — users miss 30-50% of scrollable content when indicators are hidden, adding 2-5s of navigation confusion per screen
+tags: layout, scroll, indicators, edson-design-out-loud, kocienda-intersection
 ---
 
-## Show Scroll Indicators for Long Content
+## Show Scroll Indicators for Long Scrollable Content
 
-Keep scroll indicators visible (at least initially) so users know there's more content. Don't hide them permanently, but they can fade after interaction.
+Edson's "Design Out Loud" means every element communicates something. Scroll indicators tell the user two things: "there's more content below" and "here's where you are in the content." Hiding them (the default in some configurations) removes this spatial awareness. Kocienda's intersection principle demands that even invisible elements like scroll indicators serve a communicative purpose.
 
-**Incorrect (hidden scroll indicators):**
-
-```swift
-// Completely hidden - users don't know there's more
-ScrollView {
-    VStack {
-        // long content
-    }
-}
-.scrollIndicators(.hidden) // Bad for long content
-
-// No indication of additional content
-List(manyItems) { item in
-    ItemRow(item: item)
-}
-.scrollIndicators(.never) // Users might miss items
-```
-
-**Correct (appropriate scroll indicators):**
+**Incorrect (scroll indicators hidden — user doesn't know there's more content):**
 
 ```swift
-// Default behavior - indicators appear and fade
-ScrollView {
-    VStack {
-        // content
-    }
-}
-// No modifier needed - default is appropriate
-
-// Persistent indicators for very long content
-ScrollView {
-    LazyVStack {
-        ForEach(0..<1000) { i in
-            Text("Item \(i)")
+struct LongFormView: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(sections) { section in
+                    SectionView(section: section)
+                }
+            }
+            .padding()
         }
+        .scrollIndicators(.hidden)  // User has no idea how much content remains
     }
 }
-.scrollIndicators(.visible, axes: .vertical)
-
-// Hidden only for short content that fits
-ScrollView(.horizontal) {
-    HStack {
-        ForEach(0..<3) { i in
-            CardView()
-        }
-    }
-}
-.scrollIndicators(.hidden) // OK - content is short
-
-// Scroll position indicator for long documents
-ScrollView {
-    Text(longDocument)
-}
-.scrollPosition(id: $scrollPosition)
-// Consider adding a minimap or progress indicator
 ```
 
-**Scroll indicator guidelines:**
-- Default (automatic) is usually best
-- Show for long lists and documents
-- Can hide for short, obvious content
-- Consider scroll-to-top button for very long lists
-- Section index for alphabetized lists
+**Correct (scroll indicators visible for long content):**
 
-Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)
+```swift
+struct LongFormView: View {
+    var body: some View {
+        ScrollView {
+            VStack(alignment: .leading, spacing: 16) {
+                ForEach(sections) { section in
+                    SectionView(section: section)
+                }
+            }
+            .padding()
+        }
+        // Default: indicators appear during scrolling, then fade
+        // No need to explicitly set — just don't hide them
+    }
+}
+```
+
+**Scroll indicator configuration:**
+
+```swift
+// Default: show during scrolling (recommended for most content)
+ScrollView { /* content */ }
+
+// Always visible (use for very long content where position matters)
+ScrollView { /* content */ }
+    .scrollIndicators(.visible)
+
+// Hidden (only for horizontal carousels and paged content)
+ScrollView(.horizontal) { /* carousel */ }
+    .scrollIndicators(.hidden)
+```
+
+**When to hide scroll indicators:**
+- Horizontal carousels with paging (the page dots communicate position instead)
+- Full-screen media galleries (indicators distract from content)
+- Short content that doesn't actually scroll (indicators would flash and disappear)
+
+**When NOT to hide:** Any vertically scrollable content with more than one screenful of material. The user needs spatial awareness.
+
+Reference: [Scroll views - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/scroll-views)

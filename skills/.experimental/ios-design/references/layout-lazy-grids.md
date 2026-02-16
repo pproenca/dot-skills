@@ -1,64 +1,132 @@
 ---
-title: "Use LazyVGrid for Scrollable Grid Layouts"
-impact: CRITICAL
-impactDescription: "enables lazy loading of 100+ grid items; prevents memory issues with large collections"
-tags: layout, grids, lazy-loading, performance, scrolling
+title: Use LazyVGrid for Scrollable Multi-Column Layouts
+impact: HIGH
+impactDescription: LazyVGrid loads items on demand, enabling smooth scrolling through thousands of items — non-lazy Grid loads everything at once, causing memory spikes and frozen UI
+tags: layout, lazygrid, scrollable, performance, edson-design-out-loud, kocienda-intersection
 ---
 
-## Use LazyVGrid for Scrollable Grid Layouts
+## Use LazyVGrid for Scrollable Multi-Column Layouts
 
-Building grids from nested HStacks inside a VStack creates every single view upfront, regardless of whether it is on screen. For a gallery with hundreds or thousands of items, this consumes excessive memory and causes visible frame drops on scroll. LazyVGrid only instantiates views that are currently visible, keeping memory flat and scrolling smooth.
+Edson's "Design Out Loud" means iterating on grid layouts until the spatial rhythm feels right. `LazyVGrid` is SwiftUI's scrollable grid — it creates multi-column layouts where items load on demand as they scroll into view. Kocienda's intersection principle applies: the grid must work technically (lazy loading for performance) and visually (consistent column sizes and spacing for rhythm).
 
-**Incorrect (nested stacks create all views upfront, causing memory spikes):**
+**Incorrect (non-lazy grid for large scrollable collection — loads everything at once):**
 
 ```swift
-struct PhotoGalleryView: View {
-    let photoAssets: [PhotoAsset]
+struct ProductCatalog: View {
+    let products: [Product] // Hundreds of products
 
     var body: some View {
         ScrollView {
-            VStack(spacing: 4) {
-                ForEach(0..<(photoAssets.count / 3), id: \.self) { rowIndex in
-                    HStack(spacing: 4) {
-                        ForEach(0..<3) { columnIndex in
-                            let index = rowIndex * 3 + columnIndex
-                            if index < photoAssets.count {
-                                AsyncImage(url: photoAssets[index].thumbnailURL)
-                                    .frame(width: 120, height: 120) // hardcoded, won't adapt
-                                    .clipped()
-                            }
+            // VStack loads ALL products — causes memory spike and frozen UI
+            VStack {
+                ForEach(products) { product in
+                    ProductCard(product: product)
+                }
+            }
+        }
+    }
+}
+```
+
+**Correct (LazyVGrid loads items on demand with multi-column layout):**
+
+```swift
+struct ProductCatalog: View {
+    let products: [Product]
+    private let columns = [GridItem(.adaptive(minimum: 160), spacing: 16)]
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 16) {
+                ForEach(products) { product in
+                    ProductCard(product: product)
+                }
+            }
+            .padding(.horizontal, 16)
+        }
+    }
+}
+```
+
+**Grid column configuration:**
+
+```swift
+// Fixed: exact width per column
+let columns = [
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100)),
+    GridItem(.fixed(100))
+]
+
+// Flexible: minimum and maximum width per column
+let columns = [
+    GridItem(.flexible(minimum: 100, maximum: 200)),
+    GridItem(.flexible(minimum: 100, maximum: 200))
+]
+
+// Adaptive: as many columns as fit with minimum width
+let columns = [
+    GridItem(.adaptive(minimum: 150), spacing: 12)
+]
+```
+
+**Photo gallery example:**
+
+```swift
+struct PhotoGalleryView: View {
+    let photos: [Photo]
+    private let columns = [GridItem(.adaptive(minimum: 100), spacing: 2)]
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 2) {
+                ForEach(photos) { photo in
+                    AsyncImage(url: photo.thumbnailURL) { image in
+                        image
+                            .resizable()
+                            .scaledToFill()
+                    } placeholder: {
+                        Color(.systemFill)
+                    }
+                    .frame(minHeight: 100)
+                    .clipped()
+                }
+            }
+        }
+    }
+}
+```
+
+**Product catalog with sections:**
+
+```swift
+struct CatalogView: View {
+    let categories: [Category]
+    private let columns = [GridItem(.adaptive(minimum: 160), spacing: 16)]
+
+    var body: some View {
+        ScrollView {
+            LazyVGrid(columns: columns, spacing: 16, pinnedViews: [.sectionHeaders]) {
+                ForEach(categories) { category in
+                    Section {
+                        ForEach(category.products) { product in
+                            ProductCard(product: product)
                         }
+                    } header: {
+                        Text(category.name)
+                            .font(.headline)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.vertical, 8)
+                            .background(.bar)
                     }
                 }
             }
+            .padding(.horizontal, 16)
         }
     }
 }
 ```
 
-**Correct (LazyVGrid creates views on demand with adaptive columns):**
+**When NOT to use LazyVGrid:** For aligned tabular data with fixed rows, use `Grid`. For single-column scrollable lists, use `List` or `LazyVStack`.
 
-```swift
-struct PhotoGalleryView: View {
-    let photoAssets: [PhotoAsset]
-
-    private let columns = [
-        GridItem(.adaptive(minimum: 100), spacing: 4) // adapts column count to screen width
-    ]
-
-    var body: some View {
-        ScrollView {
-            LazyVGrid(columns: columns, spacing: 4) {
-                ForEach(photoAssets) { photoAsset in
-                    AsyncImage(url: photoAsset.thumbnailURL)
-                        .frame(minHeight: 100)
-                        .clipped()
-                }
-            }
-            .padding(.horizontal, 4)
-        }
-    }
-}
-```
-
-Reference: [Develop in Swift Tutorials](https://developer.apple.com/tutorials/develop-in-swift/)
+Reference: [LazyVGrid - Apple Documentation](https://developer.apple.com/documentation/swiftui/lazyvgrid)

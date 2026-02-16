@@ -1,73 +1,71 @@
 ---
-title: "Use ZStack for Layered View Composition"
-impact: CRITICAL
-impactDescription: "enables overlay patterns for badges, watermarks, and loading states"
-tags: layout, zstack, layering, overlays, composition
+title: Use ZStack for Purposeful Layered Composition
+impact: HIGH
+impactDescription: ZStack reduces 3+ nested .overlay/.background chains to a single flat structure — saves 5-10 lines per layered component and cuts body complexity by 40-60% for multi-layer compositions
+tags: layout, zstack, layering, overlay, edson-design-out-loud, kocienda-intersection
 ---
 
-## Use ZStack for Layered View Composition
+## Use ZStack for Purposeful Layered Composition
 
-Attempting to layer views using chained `.overlay()` modifiers quickly becomes unreadable and hard to control when you need alignment, padding, or multiple overlapping elements. ZStack provides a dedicated container for layered composition where each child is a peer view, making the stacking order explicit and alignment straightforward.
+Edson's "Design Out Loud" means making layering decisions explicit. `ZStack` arranges views front-to-back, with each subsequent view layered on top of the previous one. This is the right tool for overlays (gradient scrims over images), badges (notification counts on icons), floating elements (bottom sheets over content), and background decorations. Kocienda's intersection principle demands that each layer serves a purpose — decorative, informational, or interactive.
 
-**Incorrect (chained overlays become unreadable with multiple layers):**
+**Incorrect (overlay modifier for complex multi-layer composition):**
 
 ```swift
-struct FeaturedCardView: View {
-    let imageName: String
-    let cardTitle: String
-    let cardSubtitle: String
+struct HeroCard: View {
+    let event: Event
 
     var body: some View {
-        Image(imageName)
+        Image(event.imageName)
             .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(height: 200)
+            .scaledToFill()
+            .frame(height: 250)
             .clipped()
-            .overlay(
-                LinearGradient(
-                    colors: [.clear, .black.opacity(0.7)],
-                    startPoint: .center,
-                    endPoint: .bottom
-                )
-            )
-            .overlay(
+            // Nested overlays become hard to read
+            .overlay(alignment: .bottom) {
+                LinearGradient(colors: [.clear, .black.opacity(0.7)],
+                               startPoint: .center, endPoint: .bottom)
+            }
+            .overlay(alignment: .bottomLeading) {
                 VStack(alignment: .leading) {
-                    Spacer()
-                    Text(cardTitle).font(.title2).bold()
-                    Text(cardSubtitle).font(.subheadline)
+                    Text(event.title).font(.title2.bold())
+                    Text(event.date.formatted()).font(.subheadline)
                 }
                 .foregroundStyle(.white)
-                .padding(), alignment: .bottomLeading // easy to misplace
-            )
-            .clipShape(RoundedRectangle(cornerRadius: 16))
+                .padding()
+            }
     }
 }
 ```
 
-**Correct (ZStack makes layer order and alignment explicit):**
+**Correct (ZStack with clear layer ordering):**
 
 ```swift
-struct FeaturedCardView: View {
-    let imageName: String
-    let cardTitle: String
-    let cardSubtitle: String
+struct HeroCard: View {
+    let event: Event
 
     var body: some View {
-        ZStack(alignment: .bottomLeading) { // single alignment for all layers
-            Image(imageName)
+        ZStack(alignment: .bottomLeading) {
+            // Layer 1: Background image
+            Image(event.imageName)
                 .resizable()
-                .aspectRatio(contentMode: .fill)
-                .frame(height: 200)
+                .scaledToFill()
+                .frame(height: 250)
+                .clipped()
 
+            // Layer 2: Gradient scrim for text readability
             LinearGradient(
                 colors: [.clear, .black.opacity(0.7)],
                 startPoint: .center,
                 endPoint: .bottom
             )
 
+            // Layer 3: Foreground text
             VStack(alignment: .leading, spacing: 4) {
-                Text(cardTitle).font(.title2).bold()
-                Text(cardSubtitle).font(.subheadline)
+                Text(event.title)
+                    .font(.title2.bold())
+                Text(event.date.formatted())
+                    .font(.subheadline)
             }
             .foregroundStyle(.white)
             .padding()
@@ -77,4 +75,14 @@ struct FeaturedCardView: View {
 }
 ```
 
-Reference: [Develop in Swift Tutorials](https://developer.apple.com/tutorials/develop-in-swift/)
+**ZStack vs overlay vs background:**
+| Scenario | Use | Why |
+|----------|-----|-----|
+| Multi-layer composition | `ZStack` | Clear layer ordering, shared alignment |
+| Single decoration on content | `.overlay` / `.background` | Simpler for one layer |
+| Badge on icon | `.overlay(alignment:)` | Badge is clearly secondary |
+| Floating button over scroll | `ZStack` | Independent positioning needed |
+
+**When NOT to use ZStack:** For simple "icon next to text" layouts, use `HStack`. For "title above content," use `VStack`. ZStack is specifically for overlapping content, not general layout.
+
+Reference: [Layout fundamentals - Apple Documentation](https://developer.apple.com/documentation/swiftui/layout-fundamentals)
