@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "iOS Chaos Monkey",
+  "technology": "iOS / Swift",
+  "date": "February 2026",
+  "abstract": "Adversarial crash-hunting guide for iOS and Swift applications, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by crash severity from critical (data races, memory corruption) to incremental (Objective-C interop traps). Every rule follows TDD: dangerous code, a failing test that proves the crash, and the fix that makes the test pass. Complements ios-testing, swift-optimise, and other ios-*/swift-* skills.",
+  "references": [
+    "https://developer.apple.com/documentation/swift/adoptingswift6",
+    "https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/commonproblems/",
+    "https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/CoreData/Concurrency.html",
+    "https://www.avanderlee.com/swift/thread-sanitizer-data-races/",
+    "https://www.swiftbysundell.com/articles/avoiding-race-conditions-in-swift/",
+    "https://www.hackingwithswift.com/swift/6.0/concurrency",
+    "https://developer.apple.com/documentation/swift/actor",
+    "https://www.avanderlee.com/concurrency/approachable-concurrency-in-swift-6-2-a-clear-guide/"
+  ]
+}
