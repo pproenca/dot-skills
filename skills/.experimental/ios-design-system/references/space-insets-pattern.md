@@ -81,6 +81,7 @@ extension EdgeInsets {
 
 ```swift
 // Every ProductCard now has identical padding, guaranteed:
+@Equatable
 struct ProductCard: View {
     let product: Product
 

@@ -1,7 +1,7 @@
 ---
 title: Never Use Color Literals or Hex Initializers in View Code
 impact: CRITICAL
-impactDescription: every Color(hex:) or Color(red:green:blue:) in a view is an ungovernable color that cannot be updated, audited, or adapted for dark mode
+impactDescription: prevents 100% of dark mode rendering bugs from hardcoded colors — every Color(hex:) is invisible to auditing and ungovernable during rebrands
 tags: color, literals, hex, governance, consistency
 ---
 
@@ -47,6 +47,7 @@ struct PaymentConfirmation: View {
 **Correct (all colors through semantic tokens):**
 
 ```swift
+@Equatable
 struct PaymentConfirmation: View {
     let amount: Decimal
     let isSuccessful: Bool

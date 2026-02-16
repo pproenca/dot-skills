@@ -1,7 +1,7 @@
 ---
 title: Use Views for Containers, Modifiers for Styling
 impact: HIGH
-impactDescription: using the wrong abstraction — a View where a Modifier suffices, or vice versa — adds unnecessary complexity and breaks SwiftUI's composition model
+impactDescription: reduces view hierarchy depth by 1-2 levels per styling abstraction — using the correct abstraction (View vs Modifier vs Style) preserves SwiftUI's composition model
 tags: style, view, modifier, composition, decision
 ---
 
@@ -58,40 +58,16 @@ struct CardModifier: ViewModifier {
             .padding(.cardContent)
             .background(.backgroundSurface)
             .clipShape(RoundedRectangle(cornerRadius: Radius.md))
-            .shadow(
-                color: .black.opacity(elevation.shadowOpacity),
-                radius: elevation.shadowRadius,
-                y: elevation.shadowY
-            )
+            .shadow(color: .black.opacity(elevation.shadowOpacity),
+                    radius: elevation.shadowRadius, y: elevation.shadowY)
     }
 }
 
 enum CardElevation {
     case none, low, medium
-
-    var shadowOpacity: Double {
-        switch self {
-        case .none: 0
-        case .low: 0.06
-        case .medium: 0.12
-        }
-    }
-
-    var shadowRadius: CGFloat {
-        switch self {
-        case .none: 0
-        case .low: 8
-        case .medium: 16
-        }
-    }
-
-    var shadowY: CGFloat {
-        switch self {
-        case .none: 0
-        case .low: 2
-        case .medium: 4
-        }
-    }
+    var shadowOpacity: Double { [0, 0.06, 0.12][[CardElevation.none, .low, .medium].firstIndex(of: self)!] }
+    var shadowRadius: CGFloat { self == .medium ? 16 : (self == .low ? 8 : 0) }
+    var shadowY: CGFloat { self == .medium ? 4 : (self == .low ? 2 : 0) }
 }
 
 extension View {
@@ -99,7 +75,9 @@ extension View {
         modifier(CardModifier(elevation: elevation))
     }
 }
+```
 
+```swift
 // Usage — chains naturally with any view:
 VStack(alignment: .leading) {
     Text(item.title)
@@ -158,7 +136,7 @@ Does the component define a LAYOUT of multiple children?
         ├── YES → Make it a Style (ButtonStyle, ToggleStyle, etc.)
         │         Examples: PrimaryButtonStyle, CheckboxToggleStyle
         │
-        └── It's probably just chained modifiers — don't abstract it yet.
+        └── Use chained modifiers directly — don't abstract until you repeat in 3+ places.
 ```
 
 The key test: if your "component" has only one `content` child and just applies modifiers to it, it should be a ViewModifier, not a View.

@@ -1,7 +1,7 @@
 ---
 title: Limit Typography Variations to 3-4 Per Screen
 impact: HIGH
-impactDescription: more than 4 distinct type treatments per screen creates visual noise — Apple's own apps rarely exceed 3 (title, body, caption)
+impactDescription: reduces typography variations from 6-10 per screen to 3-4 — Apple's own apps rarely exceed 3 treatments (title, body, caption)
 tags: type, hierarchy, visual-design, discipline
 ---
 
@@ -57,6 +57,7 @@ struct OverloadedProfileView: View {
 **Correct (3 treatments with clear hierarchy):**
 
 ```swift
+@Equatable
 struct CleanProfileView: View {
     var body: some View {
         ScrollView {

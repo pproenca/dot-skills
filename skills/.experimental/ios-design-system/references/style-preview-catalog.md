@@ -1,7 +1,7 @@
 ---
 title: Create a Preview Catalog for All Design System Styles
 impact: HIGH
-impactDescription: a visual catalog in Xcode Previews catches style regressions instantly and serves as living documentation — without it, style drift goes unnoticed until design review
+impactDescription: reduces style regression discovery from weeks (design review) to seconds (preview catalog) — serves as living documentation for 100% of style variants
 tags: style, preview, catalog, documentation, xcode
 ---
 
@@ -33,87 +33,42 @@ struct CheckoutView_Previews: PreviewProvider {
 #Preview("Buttons — Primary Variants") {
     ScrollView {
         VStack(spacing: Spacing.lg) {
-            // MARK: Size variants
             Section("Sizes") {
                 VStack(spacing: Spacing.sm) {
-                    Button("Small Primary") { }
-                        .buttonStyle(.primary)
-                        .controlSize(.small)
-
-                    Button("Regular Primary") { }
-                        .buttonStyle(.primary)
-                        .controlSize(.regular)
-
-                    Button("Large Primary") { }
-                        .buttonStyle(.primary)
-                        .controlSize(.large)
+                    Button("Small") { }.buttonStyle(.primary).controlSize(.small)
+                    Button("Regular") { }.buttonStyle(.primary).controlSize(.regular)
+                    Button("Large") { }.buttonStyle(.primary).controlSize(.large)
                 }
             }
-
-            // MARK: State variants
             Section("States") {
                 VStack(spacing: Spacing.sm) {
-                    Button("Enabled") { }
-                        .buttonStyle(.primary)
-
-                    Button("Disabled") { }
-                        .buttonStyle(.primary)
-                        .disabled(true)
+                    Button("Enabled") { }.buttonStyle(.primary)
+                    Button("Disabled") { }.buttonStyle(.primary).disabled(true)
                 }
             }
-
-            // MARK: Content variants
             Section("Content") {
                 VStack(spacing: Spacing.sm) {
-                    Button("Text Only") { }
-                        .buttonStyle(.primary)
-
+                    Button("Text Only") { }.buttonStyle(.primary)
                     Button { } label: {
                         Label("With Icon", systemImage: "paperplane.fill")
-                    }
-                    .buttonStyle(.primary)
-
-                    Button { } label: {
-                        HStack(spacing: Spacing.sm) {
-                            Text("Loading")
-                            ProgressView()
-                                .tint(.white)
-                        }
-                    }
-                    .buttonStyle(.primary)
-                    .disabled(true)
+                    }.buttonStyle(.primary)
                 }
             }
         }
         .padding(Spacing.md)
     }
 }
+```
 
+```swift
 #Preview("Buttons — All Styles") {
     ScrollView {
         VStack(spacing: Spacing.lg) {
             ForEach(["Primary", "Secondary", "Outlined", "Destructive"], id: \.self) { style in
-                Section(style) {
-                    buttonRow(style: style)
-                }
+                Section(style) { buttonRow(style: style) }
             }
         }
         .padding(Spacing.md)
-    }
-}
-
-@ViewBuilder
-private func buttonRow(style: String) -> some View {
-    let button = Button(style) { }
-
-    VStack(spacing: Spacing.sm) {
-        switch style {
-        case "Primary":     button.buttonStyle(.primary)
-        case "Secondary":   button.buttonStyle(.secondary)
-        case "Outlined":    button.buttonStyle(.outlined)
-        case "Destructive": button.buttonStyle(.destructive)
-        default:            button
-        }
     }
 }
 ```

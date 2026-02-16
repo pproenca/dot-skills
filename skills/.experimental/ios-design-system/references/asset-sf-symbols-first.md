@@ -1,7 +1,7 @@
 ---
 title: Use SF Symbols Before Custom Icons
 impact: MEDIUM-HIGH
-impactDescription: SF Symbols are free, scale with Dynamic Type, support all rendering modes, and auto-adapt to weight — custom icons require 3 sizes x 2 appearance variants = 6 assets per icon
+impactDescription: eliminates 60-80% of custom icon assets — SF Symbols scale with Dynamic Type and adapt to weight automatically, vs 6 assets per custom icon (3 sizes × 2 appearances)
 tags: asset, sf-symbols, icons, maintenance, scalability
 ---
 

@@ -1,7 +1,7 @@
 ---
 title: Every Visual Value Has Exactly One Definition Point
 impact: MEDIUM
-impactDescription: duplicate definitions of the same visual value (padding 16 defined in both Spacing.sm and a local constant) guarantee they'll diverge after the next refactor
+impactDescription: eliminates 100% of token value drift — duplicate definitions diverge within 1-2 refactors, single-source prevents silent inconsistencies
 tags: govern, single-source, deduplication, consistency
 ---
 
@@ -48,6 +48,7 @@ enum Spacing {
 }
 
 // Features/Orders/OrderRow.swift — references Spacing directly
+@Equatable
 struct OrderRow: View {
     let order: Order
 

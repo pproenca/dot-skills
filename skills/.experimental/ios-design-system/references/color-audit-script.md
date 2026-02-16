@@ -83,46 +83,7 @@ if [ "$FOUND_VIOLATIONS" -eq 1 ]; then
 fi
 ```
 
-**Alternative: SwiftLint custom rule:**
-
-```yaml
-# .swiftlint.yml
-custom_rules:
-  ungoverned_color_hex:
-    name: "Ungoverned Color (hex)"
-    regex: 'Color\(hex:\s*"'
-    message: "Use a semantic color token (.textPrimary, .backgroundSurface) instead of Color(hex:)"
-    severity: error
-    excluded: ".*DesignSystem/.*"
-
-  ungoverned_color_rgb:
-    name: "Ungoverned Color (RGB)"
-    regex: 'Color\(red:\s*[\d.]'
-    message: "Use a semantic color token instead of Color(red:green:blue:)"
-    severity: error
-    excluded: ".*DesignSystem/.*"
-
-  ungoverned_color_srgb:
-    name: "Ungoverned Color (sRGB)"
-    regex: 'Color\(\.sRGB'
-    message: "Use a semantic color token instead of Color(.sRGB, ...)"
-    severity: error
-    excluded: ".*DesignSystem/.*"
-
-  ungoverned_color_literal:
-    name: "Ungoverned Color Literal"
-    regex: '#colorLiteral'
-    message: "Use a semantic color token instead of #colorLiteral"
-    severity: error
-    excluded: ".*DesignSystem/.*"
-
-  ungoverned_uicolor:
-    name: "Ungoverned UIColor"
-    regex: 'UIColor\(red:\s*[\d.]'
-    message: "Use a semantic color token instead of UIColor(red:green:blue:)"
-    severity: error
-    excluded: ".*DesignSystem/.*"
-```
+**For SwiftLint-based enforcement**, see [`govern-lint-for-tokens`](govern-lint-for-tokens.md) which provides comprehensive SwiftLint custom rules covering colors, spacing, typography, and radii.
 
 **CI integration for comprehensive auditing:**
 

@@ -1,15 +1,15 @@
 ---
 title: Define Spacing Tokens as a Caseless Enum
 impact: HIGH
-impactDescription: replaces 100+ magic numbers (.padding(16), .spacing(8)) with named constants (.padding(.md)) that can be updated globally
-tags: space, tokens, enum, magic-numbers, consistency
+impactDescription: replaces 100+ scattered literal values with 7 governed tokens — enables O(1) global spacing updates instead of O(n) find-and-replace
+tags: space, tokens, enum, hardcoded-values, consistency
 ---
 
 ## Define Spacing Tokens as a Caseless Enum
 
-Magic numbers are the most common design system violation. Every `.padding(16)` is a decision that future developers must reverse-engineer: is 16 the standard card padding, or was it a one-off choice? A spacing token enum answers that question by name and makes global spacing adjustments a single-file change. Apple internally uses a 4pt base grid, and your tokens should follow the same principle.
+Hardcoded values are the most common design system violation. Every `.padding(16)` is a decision that future developers must reverse-engineer: is 16 the standard card padding, or was it a one-off choice? A spacing token enum answers that question by name and makes global spacing adjustments a single-file change. Apple internally uses a 4pt base grid, and your tokens should follow the same principle.
 
-**Incorrect (magic numbers with no system):**
+**Incorrect (hardcoded values with no system):**
 
 ```swift
 struct OrderSummaryView: View {
@@ -65,6 +65,7 @@ enum Spacing {
 }
 
 // Usage — clear intent, globally adjustable:
+@Equatable
 struct OrderSummaryView: View {
     var body: some View {
         VStack(spacing: Spacing.sm) {

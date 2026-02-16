@@ -1,7 +1,7 @@
 ---
 title: Maintain a Single Style Catalog File Per Component Type
 impact: HIGH
-impactDescription: centralizing all ButtonStyles in ButtonStyles.swift makes the full palette discoverable — scattered style definitions across feature modules create invisible duplicates
+impactDescription: reduces style discovery from O(n) file search to O(1) catalog lookup — centralizing all ButtonStyles in ButtonStyles.swift eliminates invisible duplicates
 tags: style, catalog, organization, discoverability, file-structure
 ---
 
@@ -62,11 +62,9 @@ DesignSystem/
 
 ```swift
 // DesignSystem/Styles/ButtonStyles.swift
-
 import SwiftUI
 
 // MARK: - Primary
-
 struct PrimaryButtonStyle: ButtonStyle {
     @Environment(\.controlSize) private var controlSize
     @Environment(\.isEnabled) private var isEnabled
@@ -85,7 +83,6 @@ struct PrimaryButtonStyle: ButtonStyle {
 }
 
 // MARK: - Secondary
-
 struct SecondaryButtonStyle: ButtonStyle {
     @Environment(\.isEnabled) private var isEnabled
 
@@ -101,59 +98,23 @@ struct SecondaryButtonStyle: ButtonStyle {
             .opacity(isEnabled ? (configuration.isPressed ? 0.85 : 1.0) : 0.4)
     }
 }
+```
 
-// MARK: - Outlined
-
-struct OutlinedButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(AppTypography.headlinePrimary)
-            .foregroundStyle(isEnabled ? .accentPrimary : .secondary)
-            .padding(.horizontal, Spacing.lg)
-            .padding(.vertical, Spacing.sm)
-            .frame(maxWidth: .infinity)
-            .overlay {
-                Capsule()
-                    .strokeBorder(isEnabled ? .accentPrimary : .secondary, lineWidth: 1.5)
-            }
-            .opacity(configuration.isPressed ? 0.85 : 1.0)
-    }
-}
-
-// MARK: - Destructive
-
-struct DestructiveButtonStyle: ButtonStyle {
-    @Environment(\.isEnabled) private var isEnabled
-
-    func makeBody(configuration: Configuration) -> some View {
-        configuration.label
-            .font(AppTypography.headlinePrimary)
-            .foregroundStyle(.white)
-            .padding(.horizontal, Spacing.lg)
-            .padding(.vertical, Spacing.sm)
-            .frame(maxWidth: .infinity)
-            .background(isEnabled ? .red : .fill.tertiary)
-            .clipShape(Capsule())
-            .opacity(configuration.isPressed ? 0.85 : 1.0)
-    }
-}
+```swift
+// MARK: - Outlined + Destructive (same file, continued)
+struct OutlinedButtonStyle: ButtonStyle { /* similar pattern, stroked border */ }
+struct DestructiveButtonStyle: ButtonStyle { /* similar pattern, .red background */ }
 
 // MARK: - Static Member Extensions
-
 extension ButtonStyle where Self == PrimaryButtonStyle {
     static var primary: PrimaryButtonStyle { .init() }
 }
-
 extension ButtonStyle where Self == SecondaryButtonStyle {
     static var secondary: SecondaryButtonStyle { .init() }
 }
-
 extension ButtonStyle where Self == OutlinedButtonStyle {
     static var outlined: OutlinedButtonStyle { .init() }
 }
-
 extension ButtonStyle where Self == DestructiveButtonStyle {
     static var destructive: DestructiveButtonStyle { .init() }
 }

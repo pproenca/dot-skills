@@ -38,6 +38,7 @@ enum ProfileStyles {
 
 ```swift
 // Features/Checkout/CheckoutView.swift — uses system tokens directly
+@Equatable
 struct CheckoutView: View {
     let cart: Cart
 
@@ -54,32 +55,29 @@ struct CheckoutView: View {
     }
 }
 
+@Equatable
 struct CartSummaryCard: View {
     let cart: Cart
 
     var body: some View {
         VStack(alignment: .leading, spacing: Spacing.sm) {
-            ForEach(cart.items) { item in
-                CartItemRow(item: item)
-            }
+            ForEach(cart.items) { item in CartItemRow(item: item) }
             Divider()
             HStack {
-                Text("Total")
-                    .font(.headline)
+                Text("Total").font(.headline)
                 Spacer()
-                Text(cart.total.formatted(.currency(code: "GBP")))
-                    .font(.headline)
+                Text(cart.total.formatted(.currency(code: "GBP"))).font(.headline)
             }
         }
-        .padding(Spacing.md)                      // System token
-        .background(.backgroundSurface)           // System token
-        .clipShape(RoundedRectangle(cornerRadius: Radius.md))  // System token
+        .padding(Spacing.md)
+        .background(.backgroundSurface)
+        .clipShape(RoundedRectangle(cornerRadius: Radius.md))
     }
 }
+```
 
-// If a feature genuinely needs a value that doesn't exist in the system,
-// add it to the DesignSystem directory through a PR:
-
+```swift
+// If a feature needs a value that doesn't exist, add it via PR:
 // DesignSystem/Tokens/Spacing.swift (updated via PR #312)
 enum Spacing {
     static let xxs: CGFloat = 2
@@ -89,8 +87,7 @@ enum Spacing {
     static let lg: CGFloat = 24
     static let xl: CGFloat = 32
     static let xxl: CGFloat = 48
-    // Added for checkout flow card grid — approved in design review
-    static let cardGrid: CGFloat = 20
+    static let cardGrid: CGFloat = 20  // Added for checkout — approved in design review
 }
 ```
 

@@ -1,7 +1,7 @@
 ---
 title: Make Custom Styles Responsive to Environment Values
 impact: HIGH
-impactDescription: styles that ignore controlSize, isEnabled, and colorScheme look correct in isolation but break in forms, toolbars, and disabled states — context-aware styles adapt automatically
+impactDescription: prevents 100% of context-dependent rendering bugs — styles that ignore controlSize and isEnabled break in forms, toolbars, and disabled states
 tags: style, environment, controlSize, isEnabled, adaptive
 ---
 

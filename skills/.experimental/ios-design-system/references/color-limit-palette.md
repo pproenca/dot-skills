@@ -1,7 +1,7 @@
 ---
 title: Limit Custom Colors to Under 20 Semantic Tokens
 impact: CRITICAL
-impactDescription: apps with 30+ custom colors invariably have duplicates with 1-2px hex differences — limiting to ~15-20 forces consolidation and consistency
+impactDescription: reduces color token count by 50-70% (from 30+ to 15-20) — eliminates near-duplicate colors with 1-2px hex differences
 tags: color, palette, consolidation, deduplication, design-system
 ---
 

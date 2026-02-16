@@ -1,7 +1,7 @@
 ---
 title: Define Corner Radius Tokens by Component Type
 impact: HIGH
-impactDescription: inconsistent radii (8pt on cards, 10pt on buttons, 12pt on sheets) undermine visual cohesion — standardizing to 3-4 values creates a unified feel
+impactDescription: reduces corner radius variations from N ad-hoc values to 3-4 governed tokens — eliminates per-component radius debates in code review
 tags: space, radius, corner-radius, consistency, tokens
 ---
 

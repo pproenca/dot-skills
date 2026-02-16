@@ -69,6 +69,7 @@ extension ShapeStyle where Self == Color {
 }
 
 // Usage — identical regardless of light/dark/high-contrast
+@Equatable
 struct ListingCard: View {
     let property: Property
 

@@ -1,11 +1,11 @@
 ---
-title: Don't Build a Theme System Unless You Need Multiple Themes
+title: Avoid Building a Theme System Unless You Need Multiple Themes
 impact: MEDIUM
 impactDescription: premature theme infrastructure adds 200-500 lines of code that most apps never use — asset catalog + .tint() covers 90% of branding needs
 tags: theme, pragmatism, over-engineering, yagni
 ---
 
-## Don't Build a Theme System Unless You Need Multiple Themes
+## Avoid Building a Theme System Unless You Need Multiple Themes
 
 Most iOS apps have exactly one visual identity. They don't need a `ThemeProvider`, a `ThemeManager`, or a `ThemeRepository`. The asset catalog with Any/Dark appearance variants IS the theme. The `.tint()` modifier IS the brand expression. Building theme switching infrastructure for an app that will only ever have one look is over-engineering that adds indirection without value.
 
@@ -32,8 +32,9 @@ struct DefaultTheme: ThemeProtocol {
     // ... 15 more properties, all mapping to the same asset catalog values
 }
 
-class ThemeManager: ObservableObject {
-    @Published var current: ThemeProtocol = DefaultTheme()
+@Observable
+class ThemeManager {
+    var current: ThemeProtocol = DefaultTheme()
 
     func switchTheme(_ theme: ThemeProtocol) {  // Never called
         current = theme
@@ -41,18 +42,18 @@ class ThemeManager: ObservableObject {
 }
 
 struct ThemeProvider<Content: View>: View {
-    @StateObject private var themeManager = ThemeManager()
+    @State private var themeManager = ThemeManager()
     let content: () -> Content
 
     var body: some View {
         content()
-            .environmentObject(themeManager)
+            .environment(themeManager)
     }
 }
 
 // Every view now depends on ThemeManager for colors that never change
 struct ProfileCard: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) var themeManager
 
     var body: some View {
         content
@@ -86,6 +87,7 @@ struct RecipeApp: App {
 }
 
 // Views use semantic colors directly — no indirection layer
+@Equatable
 struct ProfileCard: View {
     let user: User
 
@@ -109,7 +111,7 @@ struct ProfileCard: View {
 | Scenario | Theme System Needed? |
 |----------|---------------------|
 | Single brand, light/dark mode | No — asset catalog handles it |
-| Single brand, custom accent color picker | Maybe — `.tint()` with a stored color may suffice |
+| Single brand, custom accent color picker | Use `.tint()` with a stored color — no full theme system needed |
 | Whitelabel app (multiple client brands) | Yes |
 | User-selectable themes (like Telegram) | Yes |
 | A/B testing different visual treatments | Yes |

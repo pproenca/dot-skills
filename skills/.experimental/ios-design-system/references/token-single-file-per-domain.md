@@ -111,13 +111,11 @@ enum Spacing {
 // DesignSystem/Sources/Typography.swift
 import SwiftUI
 
-extension Font {
-    static var displayLarge: Font { .system(.largeTitle, weight: .bold) }
-    static var displayMedium: Font { .system(.title, weight: .semibold) }
-    static var titleStandard: Font { .system(.title3, weight: .semibold) }
-    static var bodyStandard: Font { .system(.body) }
-    static var bodySecondary: Font { .system(.subheadline) }
-    static var captionStandard: Font { .system(.caption) }
+enum AppTypography {
+    static let headlinePrimary: Font = .system(.headline, weight: .semibold)
+    static let bodyPrimary: Font = .system(.body)
+    static let bodySecondary: Font = .system(.subheadline)
+    static let caption: Font = .system(.caption)
 }
 ```
 

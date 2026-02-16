@@ -65,6 +65,7 @@ extension ShapeStyle where Self == Color {
     static var borderSubtle: Color { Color("borderSubtle") }
 }
 
+@Equatable
 struct RecipeCard: View {
     let title: String
     let subtitle: String

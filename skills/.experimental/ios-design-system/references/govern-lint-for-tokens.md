@@ -16,16 +16,16 @@ Code review catches design token violations when reviewers remember to look for 
 
 struct PaymentCard: View {
     var body: some View {
-        VStack(spacing: 12) {                             // Magic number, not Spacing token
+        VStack(spacing: 12) {                             // Hardcoded value, not Spacing token
             Text("Payment Method")
                 .font(.system(size: 17, weight: .semibold))  // Hardcoded font, not text style
                 .foregroundStyle(Color(hex: "#1C1C1E"))       // Literal color, not token
 
             cardContent
         }
-        .padding(20)                                       // Magic number
+        .padding(20)                                       // Hardcoded value
         .background(Color(red: 0.96, green: 0.96, blue: 0.97))  // Color literal
-        .clipShape(RoundedRectangle(cornerRadius: 16))     // Magic radius
+        .clipShape(RoundedRectangle(cornerRadius: 16))     // Hardcoded radius
     }
 }
 ```
@@ -37,17 +37,15 @@ struct PaymentCard: View {
 
 custom_rules:
   # Flag raw numeric padding values — should use Spacing tokens
-  no_magic_padding:
+  no_literal_padding:
     regex: '\.padding\(\s*\d'
-    match_kinds:
-      - identifier
-    message: "Use Spacing tokens (Spacing.sm, .md, .lg) instead of magic numbers. See DesignSystem/Tokens/Spacing.swift"
+    message: "Use Spacing tokens (Spacing.sm, .md, .lg) instead of literal values. See DesignSystem/Tokens/Spacing.swift"
     severity: warning
 
   # Flag raw numeric spacing in stacks — should use Spacing tokens
-  no_magic_spacing:
+  no_literal_spacing:
     regex: '(VStack|HStack|LazyVStack|LazyHStack)\(spacing:\s*\d'
-    message: "Use Spacing tokens instead of magic numbers for stack spacing"
+    message: "Use Spacing tokens instead of literal values for stack spacing"
     severity: warning
 
   # Flag Color(hex:), Color(red:), Color(#...) — should use asset catalog tokens
@@ -64,9 +62,9 @@ custom_rules:
     excluded: "Sources/DesignSystem/.*"
 
   # Flag hardcoded corner radius — should use Radius tokens
-  no_magic_radius:
+  no_literal_radius:
     regex: 'cornerRadius:\s*\d'
-    message: "Use Radius tokens (Radius.sm, .md, .lg) instead of magic numbers"
+    message: "Use Radius tokens (Radius.sm, .md, .lg) instead of literal values"
     severity: warning
     excluded: "Sources/DesignSystem/.*"
 
@@ -83,7 +81,7 @@ custom_rules:
 
 struct PaymentCard: View {
     var body: some View {
-        VStack(spacing: 12) {                  // ⚠️ Use Spacing tokens instead of magic numbers
+        VStack(spacing: 12) {                  // ⚠️ Use Spacing tokens instead of literal values
             Text("Payment Method")
                 .font(.system(size: 17))       // ⚠️ Use system text styles or AppTypography
                 .foregroundStyle(Color(hex: "#1C1C1E"))  // ❌ Use semantic color tokens
@@ -97,6 +95,7 @@ struct PaymentCard: View {
 }
 
 // Fixed version — zero violations:
+@Equatable
 struct PaymentCard: View {
     var body: some View {
         VStack(spacing: Spacing.sm) {

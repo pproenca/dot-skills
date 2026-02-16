@@ -1,7 +1,7 @@
 ---
 title: Prefer Configuration Structs Over Many Style Parameters
 impact: HIGH
-impactDescription: a style with 5+ parameters becomes unwieldy — a configuration struct groups related properties and provides sensible defaults
+impactDescription: reduces API surface from 2^n parameter combinations to 3-5 named presets — eliminates untested state combinations in multi-parameter styles
 tags: style, configuration, api-design, parameters, maintainability
 ---
 
@@ -49,22 +49,21 @@ Button("Submit") { }
 **Correct (configuration struct with defaults and presets):**
 
 ```swift
-// Configuration groups related properties
+// Configuration groups related properties with named presets
 struct AppButtonConfiguration {
     var size: ControlSize = .regular
     var isFullWidth: Bool = false
     var haptic: UIImpactFeedbackGenerator.FeedbackStyle? = .light
 
-    // Named presets for common combinations
     static let compact = AppButtonConfiguration(size: .small)
     static let fullWidth = AppButtonConfiguration(isFullWidth: true)
     static let hero = AppButtonConfiguration(size: .large, isFullWidth: true, haptic: .medium)
-    static let quiet = AppButtonConfiguration(haptic: nil)
 }
+```
 
+```swift
 struct PrimaryButtonStyle: ButtonStyle {
     var config: AppButtonConfiguration = .init()
-
     @Environment(\.isEnabled) private var isEnabled
 
     func makeBody(configuration: Configuration) -> some View {
@@ -77,11 +76,6 @@ struct PrimaryButtonStyle: ButtonStyle {
             .background(isEnabled ? .accentPrimary : .fill.tertiary)
             .clipShape(Capsule())
             .opacity(configuration.isPressed ? 0.85 : 1.0)
-            .onChange(of: configuration.isPressed) { _, isPressed in
-                if isPressed, let style = config.haptic {
-                    UIImpactFeedbackGenerator(style: style).impactOccurred()
-                }
-            }
     }
 
     private var font: Font {
@@ -93,33 +87,19 @@ struct PrimaryButtonStyle: ButtonStyle {
     }
 
     private var horizontalPadding: CGFloat {
-        switch config.size {
-        case .small: Spacing.sm
-        case .large, .extraLarge: Spacing.xl
-        default: Spacing.lg
-        }
+        config.size == .small ? Spacing.sm : (config.size >= .large ? Spacing.xl : Spacing.lg)
     }
 
     private var verticalPadding: CGFloat {
-        switch config.size {
-        case .small: Spacing.xs
-        case .large, .extraLarge: Spacing.md
-        default: Spacing.sm
-        }
+        config.size == .small ? Spacing.xs : (config.size >= .large ? Spacing.md : Spacing.sm)
     }
 }
 
 // Static members use presets:
 extension ButtonStyle where Self == PrimaryButtonStyle {
     static var primary: PrimaryButtonStyle { .init() }
-
-    static var primaryCompact: PrimaryButtonStyle {
-        .init(config: .compact)
-    }
-
-    static var primaryHero: PrimaryButtonStyle {
-        .init(config: .hero)
-    }
+    static var primaryCompact: PrimaryButtonStyle { .init(config: .compact) }
+    static var primaryHero: PrimaryButtonStyle { .init(config: .hero) }
 }
 ```
 

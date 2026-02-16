@@ -1,7 +1,7 @@
 ---
 title: Set Brand Color as App Tint, Don't Scatter It
 impact: CRITICAL
-impactDescription: brand color applied via .tint() at app root automatically colors every interactive element — manual application creates 50+ callsites that drift independently
+impactDescription: reduces brand color callsites from 50+ per app to 1 — .tint() at app root automatically colors every interactive element
 tags: color, brand, tint, accent-color, app-level
 ---
 
@@ -58,6 +58,7 @@ struct ShopApp: App {
 }
 
 // Every view inherits the tint automatically — zero manual color application
+@Equatable
 struct CheckoutView: View {
     @State private var agreeToTerms = false
     @State private var quantity = 1

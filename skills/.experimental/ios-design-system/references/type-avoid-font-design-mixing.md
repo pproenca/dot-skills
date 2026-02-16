@@ -51,6 +51,7 @@ struct MyApp: App {
 }
 
 // All views automatically use SF Pro Rounded:
+@Equatable
 struct DashboardView: View {
     var body: some View {
         VStack {

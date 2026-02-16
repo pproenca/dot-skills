@@ -1,7 +1,7 @@
 ---
 title: Separate Brand Identity from Design System Mechanics
 impact: MEDIUM
-impactDescription: coupling brand colors directly into component code means rebranding requires touching every component — separating brand from system makes rebranding a palette-only change
+impactDescription: reduces rebrand effort from N component file changes to 1 asset catalog update — components reference semantic roles, not brand values
 tags: theme, brand, separation, architecture, rebranding
 ---
 
@@ -59,6 +59,7 @@ extension ShapeStyle where Self == Color {
 // This is the ONLY place brand-specific values live
 
 // Layer 3: Components — reference roles exclusively
+@Equatable
 struct MembershipCard: View {
     let member: Member
 

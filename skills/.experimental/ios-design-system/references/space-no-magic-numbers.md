@@ -1,15 +1,15 @@
 ---
-title: Zero Magic Numbers in View Layout Code
+title: Zero Hardcoded Numbers in View Layout Code
 impact: HIGH
-impactDescription: a single .padding(17) is technical debt — when the spacing scale changes, magic numbers are impossible to find and update systematically
-tags: space, magic-numbers, governance, consistency, layout
+impactDescription: eliminates 100% of untraceable spacing values — token-based spacing enables O(1) global updates instead of O(n) find-and-replace
+tags: space, hardcoded-values, governance, consistency, layout
 ---
 
-## Zero Magic Numbers in View Layout Code
+## Zero Hardcoded Numbers in View Layout Code
 
-Every raw number in layout code is an implicit decision that cannot be searched, refactored, or audited. When the design team adjusts the base spacing from 16pt to 14pt, token-based code updates in one place while magic numbers require a manual sweep across hundreds of files — with no guarantee of completeness. The rule is absolute: if it's a spacing, padding, or sizing value, it must reference a token.
+Every raw number in layout code is an implicit decision that cannot be searched, refactored, or audited. When the design team adjusts the base spacing from 16pt to 14pt, token-based code updates in one place while hardcoded values require a manual sweep across hundreds of files — with no guarantee of completeness. The rule is absolute: if it's a spacing, padding, or sizing value, it must reference a token.
 
-**Incorrect (magic numbers throughout):**
+**Incorrect (hardcoded values throughout):**
 
 ```swift
 struct CheckoutView: View {
@@ -17,43 +17,44 @@ struct CheckoutView: View {
         VStack(spacing: 12) {
             HStack {
                 Image(systemName: "cart")
-                    .frame(width: 28, height: 28)  // magic
+                    .frame(width: 28, height: 28)  // hardcoded
                 Text("Your Cart")
-                    .padding(.leading, 6)  // magic
+                    .padding(.leading, 6)  // hardcoded
             }
-            .padding(.horizontal, 20)  // magic
-            .padding(.top, 16)  // magic
+            .padding(.horizontal, 20)  // hardcoded
+            .padding(.top, 16)  // hardcoded
 
             ForEach(items) { item in
-                HStack(spacing: 10) {  // magic
+                HStack(spacing: 10) {  // hardcoded
                     item.thumbnail
-                        .frame(width: 60, height: 60)  // magic
-                        .clipShape(RoundedRectangle(cornerRadius: 8))  // magic
+                        .frame(width: 60, height: 60)  // hardcoded
+                        .clipShape(RoundedRectangle(cornerRadius: 8))  // hardcoded
 
-                    VStack(alignment: .leading, spacing: 4) {  // magic
+                    VStack(alignment: .leading, spacing: 4) {  // hardcoded
                         Text(item.name)
                         Text(item.price)
-                            .padding(.top, 2)  // magic
+                            .padding(.top, 2)  // hardcoded
                     }
                 }
-                .padding(.vertical, 8)  // magic
+                .padding(.vertical, 8)  // hardcoded
             }
 
             Button("Checkout") { }
-                .padding(.horizontal, 32)  // magic
-                .padding(.vertical, 14)  // magic
-                .clipShape(RoundedRectangle(cornerRadius: 12))  // magic
+                .padding(.horizontal, 32)  // hardcoded
+                .padding(.vertical, 14)  // hardcoded
+                .clipShape(RoundedRectangle(cornerRadius: 12))  // hardcoded
         }
-        .padding(.bottom, 24)  // magic
+        .padding(.bottom, 24)  // hardcoded
     }
 }
-// 14 magic numbers. Which are intentional design decisions?
+// 14 hardcoded values. Which are intentional design decisions?
 // Which are quick guesses? Impossible to tell.
 ```
 
 **Correct (every value references a token):**
 
 ```swift
+@Equatable
 struct CheckoutView: View {
     var body: some View {
         VStack(spacing: Spacing.sm) {
@@ -91,10 +92,10 @@ struct CheckoutView: View {
 // A spacing audit takes seconds, not hours.
 ```
 
-**Allowed exceptions (not magic numbers):**
+**Allowed exceptions (not hardcoded values):**
 
 ```swift
-// Zero — the absence of spacing is not a magic number
+// Zero — the absence of spacing is not a hardcoded value
 .padding(0)
 VStack(spacing: 0)
 

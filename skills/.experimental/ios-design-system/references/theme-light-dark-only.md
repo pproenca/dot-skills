@@ -1,7 +1,7 @@
 ---
 title: Use ColorScheme for Light/Dark Switching, Not Custom Theming
 impact: MEDIUM
-impactDescription: the asset catalog's Any/Dark appearance system is the canonical way to handle light and dark mode — building a custom light/dark theme duplicates what iOS provides for free
+impactDescription: eliminates 100-300 lines of custom theme switching code — asset catalog Any/Dark appearance handles light and dark mode with 0 runtime code
 tags: theme, light-dark, colorScheme, asset-catalog, simplicity
 ---
 
@@ -14,23 +14,24 @@ Light and dark mode are not "themes" — they are system-level appearance varian
 ```swift
 // Unnecessary abstraction over a system feature
 struct LightTheme: ThemeColors {
-    let background = Color(hex: "#FFFFFF")
-    let surface = Color(hex: "#F5F5F5")
-    let labelPrimary = Color(hex: "#1C1C1E")
-    let labelSecondary = Color(hex: "#8E8E93")
-    let separator = Color(hex: "#C6C6C8")
+    let background = Color("lightBackground")
+    let surface = Color("lightSurface")
+    let labelPrimary = Color("lightLabelPrimary")
+    let labelSecondary = Color("lightLabelSecondary")
+    let separator = Color("lightSeparator")
 }
 
 struct DarkTheme: ThemeColors {
-    let background = Color(hex: "#000000")
-    let surface = Color(hex: "#1C1C1E")
-    let labelPrimary = Color(hex: "#FFFFFF")
-    let labelSecondary = Color(hex: "#8E8E93")
-    let separator = Color(hex: "#38383A")
+    let background = Color("darkBackground")
+    let surface = Color("darkSurface")
+    let labelPrimary = Color("darkLabelPrimary")
+    let labelSecondary = Color("darkLabelSecondary")
+    let separator = Color("darkSeparator")
 }
 
-class ThemeManager: ObservableObject {
-    @Published var colors: ThemeColors
+@Observable
+class ThemeManager {
+    var colors: ThemeColors
 
     init() {
         // Manually tracking what the system already tracks
@@ -46,12 +47,12 @@ class ThemeManager: ObservableObject {
 
 // Every view depends on ThemeManager instead of using asset catalog colors
 struct SettingsView: View {
-    @EnvironmentObject var themeManager: ThemeManager
+    @Environment(ThemeManager.self) var themeManager
 
     var body: some View {
         List {
             Text("Account")
-                .foregroundColor(themeManager.colors.labelPrimary)
+                .foregroundStyle(themeManager.colors.labelPrimary)
         }
         .background(themeManager.colors.background)
     }
@@ -92,6 +93,7 @@ Colors.xcassets/
 
 ```swift
 // Views use semantic colors — light/dark switching is automatic
+@Equatable
 struct SettingsView: View {
     var body: some View {
         List {

@@ -1,7 +1,7 @@
 ---
 title: Define Size Tokens for Common Dimensions
 impact: HIGH
-impactDescription: icon sizes, avatar dimensions, and touch targets scattered as magic numbers drift across screens — standardized sizes ensure visual consistency and HIG compliance
+impactDescription: standardizes 4-8 dimension categories and ensures 100% HIG 44pt touch target compliance — eliminates ad-hoc size values that drift across screens
 tags: space, size, dimensions, touch-targets, icons
 ---
 
@@ -9,7 +9,7 @@ tags: space, size, dimensions, touch-targets, icons
 
 Beyond spacing and radii, apps have recurring dimensional values: icon sizes, avatar sizes, minimum touch targets, thumbnail dimensions, and divider heights. Without tokens, these drift — one screen uses 24pt icons, another uses 20pt, a third uses 28pt. Size tokens lock these dimensions to a defined scale and ensure HIG compliance (e.g., the 44pt minimum touch target).
 
-**Incorrect (dimensions as magic numbers):**
+**Incorrect (dimensions as hardcoded values):**
 
 ```swift
 // NavigationBar.swift
@@ -95,6 +95,7 @@ enum ThumbnailSize {
 **Usage in views:**
 
 ```swift
+@Equatable
 struct MessageRow: View {
     let message: Message
 
@@ -144,4 +145,4 @@ struct FloatingActionButton: View {
 }
 ```
 
-Size tokens complement spacing tokens. Together, they eliminate all layout magic numbers.
+Size tokens complement spacing tokens. Together, they eliminate all layout hardcoded values.

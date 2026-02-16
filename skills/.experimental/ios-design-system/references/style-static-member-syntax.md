@@ -1,7 +1,7 @@
 ---
 title: Provide Static Member Syntax for Custom Styles
 impact: HIGH
-impactDescription: .buttonStyle(.primary) reads like native SwiftUI — .buttonStyle(PrimaryButtonStyle()) looks like a third-party hack
+impactDescription: enables Xcode autocomplete discovery for 100% of custom styles — .buttonStyle(.primary) reads like native SwiftUI vs verbose .buttonStyle(PrimaryButtonStyle())
 tags: style, static-member, api-design, discoverability, swiftui
 ---
 

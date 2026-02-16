@@ -55,6 +55,7 @@ struct ShopApp: App {
 }
 
 // All interactive elements automatically use the tint color
+@Equatable
 struct CheckoutView: View {
     @State private var agreeToTerms = false
     @State private var quantity = 1

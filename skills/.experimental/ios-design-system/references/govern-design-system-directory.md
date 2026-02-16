@@ -1,7 +1,7 @@
 ---
 title: Isolate All Token Definitions in a Dedicated Directory
 impact: MEDIUM
-impactDescription: tokens scattered across feature modules are invisible to auditing tools and new developers — a dedicated DesignSystem/ directory makes the system boundary explicit
+impactDescription: reduces token discovery time from O(n) codebase search to O(1) known path — a dedicated DesignSystem/ directory makes the system boundary explicit
 tags: govern, directory, organization, boundary, discoverability
 ---
 

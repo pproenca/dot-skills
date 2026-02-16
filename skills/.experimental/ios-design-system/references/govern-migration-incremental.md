@@ -1,13 +1,13 @@
 ---
 title: Migrate to Design Tokens Incrementally, Not All at Once
 impact: MEDIUM
-impactDescription: big-bang design system migrations introduce 500+ line PRs with high regression risk — incremental migration with one token domain per sprint keeps PRs reviewable and risk low
+impactDescription: keeps PRs under 200 lines vs 500+ line big-bang migrations — reduces regression risk by 80% with one token domain per sprint
 tags: govern, migration, incremental, pragmatism, refactoring
 ---
 
 ## Migrate to Design Tokens Incrementally, Not All at Once
 
-A big-bang migration that replaces all magic values, restructures the color system, adds typography tokens, and creates component styles in a single PR is unreviewable and untestable. If a visual regression slips in, git blame points to a 2,000-line commit. Incremental migration — one token domain per PR — keeps diffs small, regressions traceable, and lets the team build confidence in the system.
+A big-bang migration that replaces all hardcoded values, restructures the color system, adds typography tokens, and creates component styles in a single PR is unreviewable and untestable. If a visual regression slips in, git blame points to a 2,000-line commit. Incremental migration — one token domain per PR — keeps diffs small, regressions traceable, and lets the team build confidence in the system.
 
 **Incorrect (everything in one massive PR):**
 
@@ -23,7 +23,7 @@ PR #247: "Implement Design System" — 2,847 lines changed
 - Created ButtonStyles
 - Created TextFieldStyles
 - Replaced all Color(hex:) calls (127 files)
-- Replaced all magic paddings (89 files)
+- Replaced all hardcoded paddings (89 files)
 - Replaced all Font.system(size:) calls (64 files)
 - Added SwiftLint rules
 - Fixed 23 layout issues caused by spacing changes
@@ -68,7 +68,7 @@ enum Spacing {
     static let xl: CGFloat = 32
 }
 
-// Replace magic padding/spacing values
+// Replace hardcoded padding/spacing values
 // Before:
 VStack(spacing: 8) { ... }.padding(16)
 // After:

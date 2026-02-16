@@ -1,7 +1,7 @@
 ---
 title: Prefer System Colors Before Defining Custom Tokens
 impact: CRITICAL
-impactDescription: every custom color is maintenance debt — system colors (.primary, .secondary, .background) are free, auto-adapt, and match the platform
+impactDescription: eliminates 30-50% of custom color tokens — system colors (.primary, .secondary, .background) auto-adapt to 4 appearance modes for free
 tags: color, system-colors, platform, maintenance, pragmatism
 ---
 
@@ -9,16 +9,18 @@ tags: color, system-colors, platform, maintenance, pragmatism
 
 SwiftUI ships with a complete set of semantic system colors that auto-adapt to light mode, dark mode, high contrast, and elevated contrast — for free. Every custom color token you add is a value you must maintain across all four appearance combinations, test manually, and keep synchronized with design updates. Before adding any custom token, verify that a system color does not already serve the same purpose. The design system should extend Apple's system, not replace it.
 
-**Incorrect (custom tokens duplicating system colors):**
+**Incorrect (custom tokens that map to identical system color values):**
 
 ```swift
 extension ShapeStyle where Self == Color {
-    // These duplicate system colors with extra maintenance cost
-    static var textPrimary: Color { Color("textPrimary") }       // Same as .primary
-    static var textSecondary: Color { Color("textSecondary") }   // Same as .secondary
-    static var textDisabled: Color { Color("textDisabled") }     // Same as .tertiary
-    static var backgroundBase: Color { Color("backgroundBase") } // Same as Color(.systemBackground)
-    static var separator: Color { Color("separator") }           // Same as .separator (built-in)
+    // These map to the EXACT same appearance as system colors — unnecessary maintenance debt
+    static var textPrimary: Color { Color("textPrimary") }       // Visually identical to .primary
+    static var textSecondary: Color { Color("textSecondary") }   // Visually identical to .secondary
+    static var textDisabled: Color { Color("textDisabled") }     // Visually identical to .tertiary
+    static var backgroundBase: Color { Color("backgroundBase") } // Visually identical to Color(.systemBackground)
+    static var separator: Color { Color("separator") }           // Visually identical to .separator (built-in)
+    // If your brand text colors use specific hex values that DIFFER from system colors,
+    // then custom tokens like .textPrimary ARE correct — see token-shapestyle-extensions
 }
 
 struct SettingsRow: View {
@@ -43,6 +45,7 @@ struct SettingsRow: View {
 
 ```swift
 // Use system colors for standard roles — no custom tokens needed
+@Equatable
 struct SettingsRow: View {
     let title: String
     let detail: String

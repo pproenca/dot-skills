@@ -1,7 +1,7 @@
 ---
 title: Use a Custom EnvironmentKey for Theme Propagation
 impact: MEDIUM
-impactDescription: Environment-based theming lets any subtree override the theme without prop drilling — the same pattern Apple uses for .tint(), .font(), and .foregroundStyle()
+impactDescription: eliminates O(n) prop drilling — theme propagates to N descendant views with 1 environment modifier, matching Apple's .tint() and .font() pattern
 tags: theme, environment, EnvironmentKey, propagation, swiftui
 ---
 
@@ -76,7 +76,9 @@ struct AppShadow: Equatable {
     let radius: CGFloat
     let y: CGFloat
 }
+```
 
+```swift
 // MARK: - EnvironmentKey
 
 private struct AppThemeKey: EnvironmentKey {
@@ -95,9 +97,12 @@ extension View {
         environment(\.appTheme, theme)
     }
 }
+```
 
+```swift
 // MARK: - Usage in Views
 
+@Equatable
 struct OrderRow: View {
     let order: Order
     @Environment(\.appTheme) private var theme
@@ -106,37 +111,26 @@ struct OrderRow: View {
         HStack(spacing: Spacing.sm) {
             OrderStatusBadge(status: order.status)
             VStack(alignment: .leading, spacing: Spacing.xxs) {
-                Text(order.title)
-                    .font(.headline)
-                Text(order.subtitle)
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                Text(order.title).font(.headline)
+                Text(order.subtitle).font(.subheadline).foregroundStyle(.secondary)
             }
         }
         .padding(Spacing.md)
         .background(theme.cardBackground)
         .clipShape(RoundedRectangle(cornerRadius: theme.cornerRadius))
-        .shadow(color: theme.elevationShadow.color,
-                radius: theme.elevationShadow.radius,
-                y: theme.elevationShadow.y)
     }
 }
 
-// MARK: - Subtree Override (Premium Section)
-
+// Subtree override — premium users see a different visual treatment
 struct AccountView: View {
     let user: User
-
     var body: some View {
         VStack {
             ProfileHeader(user: user)
-
             if user.isPremium {
-                // Premium users see a different visual treatment in this subtree only
                 PremiumBenefitsCard()
                     .appTheme(.premium)
             }
-
             SettingsList()
         }
     }

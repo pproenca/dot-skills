@@ -7,7 +7,7 @@ tags: token, enum, namespace, organization, swift
 
 ## Use Caseless Enums for Token Namespaces
 
-A struct with static properties can be instantiated — `let s = Spacing()` compiles and produces a meaningless value. A caseless enum (an enum with no cases) makes this a compile-time error. This is the standard Swift pattern used by Apple themselves (e.g., `DispatchTimeInterval`, `UIFont.TextStyle`). It provides zero-cost namespacing and communicates to readers that the type exists purely as a container for related constants.
+A struct with static properties can be instantiated — `let s = Spacing()` compiles and produces a meaningless value. A caseless enum (an enum with no cases) makes this a compile-time error. This is the standard Swift pattern for constant namespaces, recommended by the Swift community and used extensively in production codebases. It provides zero-cost namespacing and communicates to readers that the type exists purely as a container for related constants.
 
 **Incorrect (struct allows accidental instantiation):**
 

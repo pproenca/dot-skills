@@ -7,7 +7,7 @@ tags: token, architecture, design-system, hierarchy, maintainability
 
 ## Use a Three-Layer Token Hierarchy: Raw to Semantic to Component
 
-Magic values scattered across a codebase are impossible to audit, update, or keep consistent. A three-layer token hierarchy solves this by separating the actual value from its meaning from its usage context. Raw tokens hold the literal values and are never referenced by views. Semantic tokens describe purpose and are the primary API for view code. Component tokens exist only when a complex shared component needs its own vocabulary. During a rebrand, you change raw token values, semantic mappings update automatically, and zero view code changes.
+Scattered values scattered across a codebase are impossible to audit, update, or keep consistent. A three-layer token hierarchy solves this by separating the actual value from its meaning from its usage context. Raw tokens hold the literal values and are never referenced by views. Semantic tokens describe purpose and are the primary API for view code. Component tokens exist only when a complex shared component needs its own vocabulary. During a rebrand, you change raw token values, semantic mappings update automatically, and zero view code changes.
 
 **Incorrect (views reference raw values directly):**
 
@@ -37,27 +37,21 @@ struct ProfileHeader: View {
 
 ```swift
 // MARK: - Layer 1: Raw Tokens (private, never used in views)
-// File: DesignSystem/RawTokens/RawColors.swift
-
 enum RawColor {
-    static let ink900 = Color(hex: "#1A1A2E")
-    static let ink400 = Color(hex: "#8E8E93")
-    static let cloud50 = Color(hex: "#F2F2F7")
-    static let brand500 = Color(hex: "#5856D6")
+    static let ink900 = Color("ink900")      // #1A1A2E — sourced from asset catalog
+    static let ink400 = Color("ink400")      // #8E8E93
+    static let cloud50 = Color("cloud50")    // #F2F2F7
+    static let brand500 = Color("brand500")  // #5856D6
 }
 
 enum RawSize {
     static let s4: CGFloat = 4
     static let s8: CGFloat = 8
-    static let s12: CGFloat = 12
     static let s16: CGFloat = 16
-    static let s20: CGFloat = 20
     static let s24: CGFloat = 24
 }
 
 // MARK: - Layer 2: Semantic Tokens (the public API for views)
-// File: DesignSystem/Colors.swift
-
 extension ShapeStyle where Self == Color {
     static var textPrimary: Color { RawColor.ink900 }
     static var textSecondary: Color { RawColor.ink400 }
@@ -65,17 +59,16 @@ extension ShapeStyle where Self == Color {
     static var accentPrimary: Color { RawColor.brand500 }
 }
 
-// File: DesignSystem/Spacing.swift
 enum Spacing {
     static let xs: CGFloat = RawSize.s4
     static let sm: CGFloat = RawSize.s8
     static let md: CGFloat = RawSize.s16
     static let lg: CGFloat = RawSize.s24
 }
+```
 
+```swift
 // MARK: - Layer 3: Component Tokens (only for complex shared components)
-// File: DesignSystem/ComponentTokens/ProfileCardTokens.swift
-
 enum ProfileCardTokens {
     static let avatarSize: CGFloat = 48
     static let contentSpacing: CGFloat = Spacing.sm
@@ -84,6 +77,7 @@ enum ProfileCardTokens {
 }
 
 // MARK: - View uses semantic tokens
+@Equatable
 struct ProfileHeader: View {
     let displayName: String
     let memberSince: String
@@ -93,7 +87,6 @@ struct ProfileHeader: View {
             Text(displayName)
                 .font(.headline)
                 .foregroundStyle(.textPrimary)
-
             Text("Member since \(memberSince)")
                 .font(.subheadline)
                 .foregroundStyle(.textSecondary)

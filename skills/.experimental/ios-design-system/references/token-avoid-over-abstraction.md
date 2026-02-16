@@ -7,7 +7,7 @@ tags: token, pragmatism, over-engineering, maintainability
 
 ## Avoid Over-Abstracting Tokens Beyond Three Layers
 
-Token hierarchies follow the law of diminishing returns. The jump from zero layers (magic values) to two layers (raw + semantic) eliminates most maintenance pain. The optional third layer (component tokens) helps complex shared components. Beyond that, each additional layer — alias tokens, theme tokens, platform tokens, variant tokens — adds indirection that slows down every developer who needs to trace a value back to its source. Apple's own apps use at most two explicit layers. The web design system community's deep token hierarchies do not translate to iOS, where the asset catalog already handles multi-appearance resolution.
+Token hierarchies follow the law of diminishing returns. The jump from zero layers (hardcoded values) to two layers (raw + semantic) eliminates most maintenance pain. The optional third layer (component tokens) helps complex shared components. Beyond that, each additional layer — alias tokens, theme tokens, platform tokens, variant tokens — adds indirection that slows down every developer who needs to trace a value back to its source. Apple's own apps use at most two explicit layers. The web design system community's deep token hierarchies do not translate to iOS, where the asset catalog already handles multi-appearance resolution.
 
 **Incorrect (5 layers of indirection):**
 
@@ -107,7 +107,7 @@ enum SearchBarTokens {
 | Condition | Use semantic tokens directly | Add component tokens |
 |---|---|---|
 | Component used in 1-2 places | Yes | No |
-| Component used across 5+ screens | Maybe | Yes |
+| Component used across 5+ screens | Evaluate | Yes |
 | Component has 3+ configurable dimensions | No | Yes |
 | Component is in a shared framework/package | No | Yes |
 | Token name is self-explanatory from context | Yes | No |

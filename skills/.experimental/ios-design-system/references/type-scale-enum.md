@@ -9,7 +9,7 @@ tags: type, typography, scale, dynamic-type, enum
 
 A type scale enum gives the entire codebase a single vocabulary for typography. Without one, developers pick arbitrary sizes and weights per view, creating visual inconsistency that compounds with every new screen. Centralizing also makes a brand-wide typography refresh a single-file change instead of a multi-day grep-and-replace.
 
-**Incorrect (magic sizes scattered across views):**
+**Incorrect (ad-hoc sizes scattered across views):**
 
 ```swift
 // ProfileHeaderView.swift
