@@ -25,4 +25,6 @@ Large text (headings) needs tighter line height (1.0-1.25). Small text (body) ne
 </div>
 ```
 
+**Taste checkpoint:** After setting line heights, read a multi-line heading and a body paragraph aloud. If the heading lines feel like separate elements instead of one phrase, the line-height is too loose. If the body paragraph feels cramped, it's too tight.
+
 Reference: Refactoring UI — "Designing Text"

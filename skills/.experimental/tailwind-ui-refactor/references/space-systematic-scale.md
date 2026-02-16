@@ -25,4 +25,6 @@ A linear spacing scale (2, 4, 6, 8...) creates too many similar options and lead
 </div>
 ```
 
+**Taste checkpoint:** After applying systematic spacing, ask: "Does this feel mechanical or natural?" Systematic spacing is the foundation, but identical spacing between every section of a page can feel robotic. Use your system as the vocabulary, but vary it to create rhythm — tighter spacing for related sections, more generous spacing for section breaks.
+
 Reference: Refactoring UI — "Layout and Spacing"

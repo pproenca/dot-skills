@@ -29,4 +29,8 @@ Adding styling to 6 buttons does not fix the problem of having 6 buttons. Hick's
 
 The goal is not to style all actions — it is to surface the right action for the user's current context. Hide the rest behind a dropdown or secondary screen.
 
+**When NOT to reduce actions:** Power-user interfaces where speed matters more than simplicity. A code editor's command palette shows many options because the user is searching, not choosing. Reduce choices in consumer flows; preserve density in expert tools. See [`intent-match-context-fidelity`](intent-match-context-fidelity.md).
+
+**Taste checkpoint:** After reducing actions, does the remaining set feel like a clear decision or a confusing pair? Sometimes reducing from 5 options to 2 creates a harder choice than the original 5 — because both remaining options seem equally valid. If that happens, you may need to rethink the interaction, not just the count.
+
 Reference: Refactoring UI — "Hierarchy is Everything"

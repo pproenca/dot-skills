@@ -23,4 +23,6 @@ Lines longer than 75 characters force the eye to travel too far, causing readers
 
 Note: Tailwind's `max-w-prose` sets max-width to 65ch, which is the ideal reading width.
 
+**Taste checkpoint:** After setting max-width for text, read a full paragraph at the constrained width. Does your eye flow naturally to the next line? If you frequently lose your place, the column is too wide. If it feels choppy, it's too narrow.
+
 Reference: Refactoring UI — "Designing Text"

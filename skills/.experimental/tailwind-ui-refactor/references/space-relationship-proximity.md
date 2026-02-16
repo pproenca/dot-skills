@@ -37,4 +37,6 @@ Elements that are related should be closer together than elements that aren't. W
 </div>
 ```
 
+**Taste checkpoint:** After adjusting proximity, cover the labels with your hand. Can you still tell which input belongs to which group from spacing alone? If yes, the proximity is working. Proximity should be strong enough that it communicates relationships without any other visual cue.
+
 Reference: Refactoring UI — "Layout and Spacing"

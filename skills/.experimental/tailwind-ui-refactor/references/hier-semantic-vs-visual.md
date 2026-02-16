@@ -29,4 +29,6 @@ HTML heading levels (h1-h6) exist for document structure and accessibility — n
 </aside>
 ```
 
+**Taste checkpoint:** After styling headings visually, verify that screen reader users still get a logical document outline. Visual hierarchy is for sighted users; heading levels are for assistive technology. Both must work independently. Empathy means designing for both at once.
+
 Reference: Refactoring UI — "Hierarchy is Everything"

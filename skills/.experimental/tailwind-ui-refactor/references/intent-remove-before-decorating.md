@@ -5,7 +5,7 @@ impactDescription: eliminates visual noise by removing purposeless elements befo
 tags: intent, simplify, remove, reduce, declutter
 ---
 
-The instinct is to make every element look better. The better instinct is to ask whether each element needs to exist. Removing a wrapper div eliminates 5+ utility classes. Removing a decorative icon eliminates an SVG. Subtraction is the most effective design tool.
+The instinct is to make every element look better. The better instinct is to ask whether each element needs to exist. Removing a wrapper div eliminates 5+ utility classes. Removing a decorative icon eliminates an SVG. Subtraction is the most impactful design tool.
 
 **Incorrect (decorating everything instead of simplifying):**
 ```html
@@ -38,4 +38,6 @@ The instinct is to make every element look better. The better instinct is to ask
 
 Before styling, list every element and justify its existence. If you cannot explain what information it adds, remove it.
 
-Reference: Refactoring UI — "Start with a Feature, Not a Layout"
+**Taste checkpoint:** After removing elements, does the component still have enough visual identity? Subtraction is essential but has a floor — a component that's been stripped to one line of text might not be scannable in a list. The goal is removing *purposeless* elements, not reducing everything to the bare minimum.
+
+Reference: Refactoring UI — "Start with a Feature, Not a Layout" · Ken Kocienda, Creative Selection — the best designs are those where nothing can be added and nothing can be taken away

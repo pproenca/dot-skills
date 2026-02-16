@@ -40,4 +40,6 @@ Count the DOM depth. If a component is 4+ levels deep, look for wrappers that ex
 
 **Important:** The key insight is removing wrapper divs and decorative borders — not content elements. If an icon, image, or label serves as a visual anchor for scanning (e.g., notification icons in a list, user avatars in a feed), keep it. Only remove elements that exist purely for visual decoration or structural nesting without semantic purpose.
 
+**Taste checkpoint:** After simplifying, does the component still communicate its purpose at a glance? A notification icon, user avatar, or status indicator may look decorative but serves as a visual anchor for scanning. Remove structural wrappers, not functional signifiers. If you can't tell what a component does without reading the text, you may have over-simplified.
+
 Reference: Refactoring UI — "Start with a Feature, Not a Layout"

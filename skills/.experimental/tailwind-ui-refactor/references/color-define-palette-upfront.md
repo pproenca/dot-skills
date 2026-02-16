@@ -27,4 +27,6 @@ Picking colors one at a time leads to 47 slightly different blues across the app
 </div>
 ```
 
-Reference: Refactoring UI — "Working with Color"
+**Taste checkpoint:** After defining your palette, build one complete component using only your palette colors. If you find yourself reaching for arbitrary hex values, your palette has a gap — expand the palette, don't bypass it.
+
+Reference: Refactoring UI — "Working with Color" · John Edson, Design Like Apple — Principle 4: "Design Is Systems Thinking"

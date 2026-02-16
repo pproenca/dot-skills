@@ -29,4 +29,8 @@ Just because the viewport is 1920px wide doesn't mean your content should be 192
 </div>
 ```
 
+**When NOT to constrain width:** Data-heavy admin tables, spreadsheet-like interfaces, and multi-panel IDEs benefit from full viewport width. The decision depends on context: are users reading content (constrain) or scanning data (expand)? See [`intent-match-context-fidelity`](intent-match-context-fidelity.md).
+
+**Taste checkpoint:** After constraining width, check: does the page feel focused or claustrophobic? If the latter, your max-width might be too narrow for the content density. Aim for the width where line length is comfortable and the surrounding whitespace feels intentional.
+
 Reference: Refactoring UI — "Layout and Spacing"

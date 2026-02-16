@@ -48,4 +48,8 @@ Before restyling a component, check how sibling components in the same UI are al
 
 Before refactoring, ask: (1) What border radius do sibling components use? (2) What spacing scale is established? (3) What heading sizes and weights are set? (4) What separator style (border, shadow, background) is the norm? Match those patterns first, then improve the whole set together if needed.
 
-Reference: Refactoring UI — "Hierarchy is Everything"
+**When NOT to match existing patterns:** When the existing patterns are themselves inconsistent or poorly designed. Matching bad patterns amplifies the problem. If the sibling components are a mess, fix the whole set together rather than matching the mess. See [`system-brand-voice-consistency`](system-brand-voice-consistency.md) for establishing system-level consistency.
+
+**Taste checkpoint:** After matching sibling patterns, ask: "Am I making the whole set better, or am I conforming to mediocrity?" Consistency is not a goal in itself — it's a means to user trust. Consistent mediocrity is worse than one great component that inspires upgrading the rest.
+
+Reference: Refactoring UI — "Hierarchy is Everything" · John Edson, Design Like Apple — Principle 4: "Design Is Systems Thinking"
