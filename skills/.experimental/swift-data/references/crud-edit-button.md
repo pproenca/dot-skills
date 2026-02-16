@@ -12,18 +12,18 @@ tags: crud, edit-button, toolbar, accessibility
 **Incorrect (only swipe-to-delete — poor accessibility):**
 
 ```swift
+@Equatable
 struct FriendList: View {
-    @Environment(\.modelContext) private var context
-    @Query(sort: \Friend.name) private var friends: [Friend]
+    @State private var viewModel: FriendListViewModel
 
     var body: some View {
         NavigationStack {
             List {
-                ForEach(friends) { friend in
+                ForEach(viewModel.friends) { friend in
                     Text(friend.name)
                 }
                 .onDelete { offsets in
-                    for index in offsets { context.delete(friends[index]) }
+                    Task { await viewModel.deleteFriends(at: offsets) }
                 }
             }
             // No EditButton — users must discover swipe gesture on their own
@@ -35,18 +35,22 @@ struct FriendList: View {
 **Correct (EditButton alongside swipe-to-delete):**
 
 ```swift
+@Equatable
 struct FriendList: View {
-    @Environment(\.modelContext) private var context
-    @Query(sort: \Friend.name) private var friends: [Friend]
+    @State private var viewModel: FriendListViewModel
+
+    init(friendRepository: FriendRepository) {
+        _viewModel = State(initialValue: FriendListViewModel(friendRepository: friendRepository))
+    }
 
     var body: some View {
         NavigationStack {
             List {
-                ForEach(friends) { friend in
+                ForEach(viewModel.friends) { friend in
                     Text(friend.name)
                 }
                 .onDelete { offsets in
-                    for index in offsets { context.delete(friends[index]) }
+                    Task { await viewModel.deleteFriends(at: offsets) }
                 }
             }
             .toolbar {
@@ -55,6 +59,7 @@ struct FriendList: View {
                 }
             }
         }
+        .task { await viewModel.loadFriends() }
     }
 }
 ```

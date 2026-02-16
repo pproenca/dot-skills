@@ -12,6 +12,7 @@ tags: query, predicate, filtering, type-safety
 **Incorrect (in-memory filtering after fetching all records):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Query private var friends: [Friend]
     @State private var searchText = ""
@@ -29,6 +30,7 @@ struct FriendList: View {
 **Correct (predicate pushes filtering to SwiftData):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Query private var friends: [Friend]
 

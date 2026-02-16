@@ -12,6 +12,7 @@ Relationship arrays (e.g., `movie.favoritedBy`) have no guaranteed order. SwiftD
 **Incorrect (unsorted relationship array — random order on every render):**
 
 ```swift
+@Equatable
 struct MovieDetail: View {
     var movie: Movie
 
@@ -31,6 +32,7 @@ struct MovieDetail: View {
 **Correct (explicitly sorted before display):**
 
 ```swift
+@Equatable
 struct MovieDetail: View {
     var movie: Movie
 

@@ -1,43 +1,22 @@
 ---
-title: Use Sheets for Focused Data Creation
+title: Use Sheets for Focused Data Creation via ViewModel
 impact: MEDIUM
 impactDescription: prevents accidental navigation away from incomplete data entry
-tags: crud, sheet, modal, creation, ux
+tags: crud, sheet, modal, creation, ux, viewmodel
 ---
 
-## Use Sheets for Focused Data Creation
+## Use Sheets for Focused Data Creation via ViewModel
 
-Present new item creation in a sheet rather than pushing a navigation view. Sheets keep users focused on the creation task and provide a clear Save/Cancel flow. Combined with `.interactiveDismissDisabled()`, they prevent accidental dismissal of partially entered data.
+Present new item creation in a sheet rather than pushing a navigation view. Sheets keep users focused on the creation task and provide a clear Save/Cancel flow. The ViewModel manages creation state and delegates persistence to the repository. Combined with `.interactiveDismissDisabled()`, sheets prevent accidental dismissal.
 
-**Incorrect (navigation push for creation — easy to lose data):**
-
-```swift
-struct FriendList: View {
-    @Query(sort: \Friend.name) private var friends: [Friend]
-
-    var body: some View {
-        NavigationStack {
-            List(friends) { friend in
-                Text(friend.name)
-            }
-            .toolbar {
-                // User can swipe back mid-entry and lose partially entered data
-                NavigationLink("Add Friend") {
-                    FriendDetailView(friend: Friend(name: ""))
-                }
-            }
-        }
-    }
-}
-```
-
-**Correct (sheet with dismiss protection):**
+**Incorrect (view creates and inserts entity directly — persistence logic in presentation):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Environment(\.modelContext) private var context
-    @Query(sort: \Friend.name) private var friends: [Friend]
-    @State private var newFriend: Friend?
+    @Query(sort: \FriendEntity.name) private var friends: [FriendEntity]
+    @State private var newFriend: FriendEntity?
 
     var body: some View {
         NavigationStack {
@@ -46,23 +25,85 @@ struct FriendList: View {
             }
             .toolbar {
                 Button("Add Friend") {
-                    let friend = Friend(name: "")
-                    context.insert(friend)
+                    let friend = FriendEntity(name: "")
+                    context.insert(friend) // Data layer logic in view
                     newFriend = friend
                 }
-            }
-            .sheet(item: $newFriend) { friend in
-                NavigationStack {
-                    FriendDetailView(friend: friend, isNew: true)
-                }
-                .interactiveDismissDisabled()
             }
         }
     }
 }
 ```
 
-**Important:** This pattern inserts the model before the sheet appears. With autosave enabled, an empty record may persist if the app is killed before the user cancels. Always pair this with a cancel handler that deletes the unsaved model — see [`crud-cancel-delete`](crud-cancel-delete.md).
+**Correct (ViewModel manages creation flow, repository handles persistence):**
+
+```swift
+@Observable
+final class FriendListViewModel {
+    private let friendRepository: FriendRepository
+    var friends: [Friend] = []
+    var isCreating = false
+    var newFriend = Friend(id: UUID().uuidString, name: "", birthday: .now)
+
+    init(friendRepository: FriendRepository) {
+        self.friendRepository = friendRepository
+    }
+
+    func loadFriends() async {
+        friends = (try? await friendRepository.fetchAll()) ?? []
+    }
+
+    func startCreation() {
+        newFriend = Friend(id: UUID().uuidString, name: "", birthday: .now)
+        isCreating = true
+    }
+
+    func saveNewFriend() async {
+        try? await friendRepository.save(newFriend)
+        isCreating = false
+        await loadFriends()
+    }
+
+    func cancelCreation() {
+        isCreating = false // No orphaned records — nothing was persisted yet
+    }
+}
+```
+
+```swift
+@Equatable
+struct FriendListView: View {
+    @State private var viewModel: FriendListViewModel
+
+    init(friendRepository: FriendRepository) {
+        _viewModel = State(initialValue: FriendListViewModel(friendRepository: friendRepository))
+    }
+
+    var body: some View {
+        NavigationStack {
+            List(viewModel.friends) { friend in
+                Text(friend.name)
+            }
+            .toolbar {
+                Button("Add Friend") { viewModel.startCreation() }
+            }
+            .sheet(isPresented: $viewModel.isCreating) {
+                NavigationStack {
+                    FriendEditorView(
+                        friend: $viewModel.newFriend,
+                        onSave: { Task { await viewModel.saveNewFriend() } },
+                        onCancel: { viewModel.cancelCreation() }
+                    )
+                }
+                .interactiveDismissDisabled()
+            }
+        }
+        .task { await viewModel.loadFriends() }
+    }
+}
+```
+
+**Key advantage over insert-before-present:** The domain struct is created in memory without being persisted. Cancellation simply discards the struct — no orphaned records in the database, no cleanup needed.
 
 **Benefits:**
 - Clear modal context signals "you are creating something new"

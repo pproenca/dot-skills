@@ -1,9 +1,9 @@
 {
-  "version": "1.1.0",
-  "organization": "Apple Developer",
+  "version": "1.2.0",
+  "organization": "Apple Developer + Airbnb Clean Architecture",
   "technology": "SwiftData",
   "date": "February 2026",
-  "abstract": "Comprehensive data modeling, persistence, state management, sync architecture, and error handling guide for Swift and SwiftUI applications using SwiftData, designed for AI agents and LLMs. Contains 58 rules across 9 categories, prioritized by impact from critical (data modeling, persistence setup) to production architecture (sync, error recovery, state management). Each rule includes detailed explanations and real-world examples comparing incorrect vs. correct implementations to guide automated refactoring and code generation.",
+  "abstract": "Comprehensive data modeling, persistence, state management, sync architecture, and error handling guide for Swift and SwiftUI applications using SwiftData, aligned with Clean MVVM + Repository architecture (see swift-ui-architect). Contains 60 rules across 9 categories, prioritized by impact from critical (data modeling, persistence setup) to production architecture (sync, error recovery, state management). SwiftData types (@Model, ModelContext, @Query) live exclusively in the Data layer behind repository protocols. Views read data from @Observable ViewModels; business logic lives in domain value types and use cases. Each rule includes detailed explanations and real-world examples comparing incorrect vs. correct implementations to guide automated refactoring and code generation.",
   "references": [
     "https://developer.apple.com/tutorials/develop-in-swift/welcome-to-data-modeling",
     "https://developer.apple.com/tutorials/develop-in-swift/model-data-with-custom-types",

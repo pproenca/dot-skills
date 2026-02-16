@@ -26,6 +26,7 @@ import SwiftData
 **Correct (@State for transient UI data — reset on view creation, never persisted):**
 
 ```swift
+@Equatable
 struct ContentView: View {
     @State private var searchText = ""
     @State private var isSheetPresented = false

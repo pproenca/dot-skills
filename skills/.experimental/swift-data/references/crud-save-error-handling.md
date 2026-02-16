@@ -1,86 +1,85 @@
 ---
-title: Handle context.save() Failures Instead of Ignoring Errors
+title: Handle Repository Save Failures With User Feedback
 impact: HIGH
 impactDescription: prevents silent data loss when persistence writes fail
-tags: crud, save, error, handling, model-context, data-integrity
+tags: crud, save, error, handling, repository, data-integrity
 ---
 
-## Handle context.save() Failures Instead of Ignoring Errors
+## Handle Repository Save Failures With User Feedback
 
-`ModelContext.save()` can fail due to uniqueness constraint violations, validation errors, or underlying store issues. Using `try?` or ignoring the error means the user thinks their data was saved when it was not — leading to silent data loss. Always catch save errors, present them to the user, and either retry or roll back the operation.
+Repository `save()` calls can fail due to uniqueness constraint violations, validation errors, or underlying store issues. The ViewModel must catch errors and surface them to the view as display-ready state. Silently swallowing errors with `try?` means the user thinks their data was saved when it was not.
 
-**Incorrect (save error silently ignored — user thinks data was saved):**
+**Incorrect (save error silently ignored in ViewModel):**
 
 ```swift
-struct TripEditorView: View {
-    @Environment(\.modelContext) private var context
-    @Environment(\.dismiss) private var dismiss
-    @Bindable var trip: Trip
+@Observable
+final class TripEditorViewModel {
+    private let tripRepository: TripRepository
 
-    var body: some View {
-        Form {
-            TextField("Name", text: $trip.name)
-            DatePicker("Start", selection: $trip.startDate)
-        }
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
-                    try? context.save() // Failure is silently swallowed
-                    dismiss() // User thinks trip was saved — it was not
-                }
-            }
+    func save(_ trip: Trip) async {
+        try? await tripRepository.save(trip) // Failure silently swallowed
+        // User thinks trip was saved — it was not
+    }
+}
+```
+
+**Correct (ViewModel catches error, view presents it):**
+
+```swift
+@Observable
+final class TripEditorViewModel {
+    private let tripRepository: TripRepository
+    var trip: Trip
+    var saveError: String?
+    var isSaved = false
+
+    init(trip: Trip, tripRepository: TripRepository) {
+        self.trip = trip
+        self.tripRepository = tripRepository
+    }
+
+    func save() async {
+        do {
+            try await tripRepository.save(trip)
+            isSaved = true
+        } catch {
+            saveError = error.localizedDescription
         }
     }
 }
 ```
 
-**Correct (catch error and present it to the user):**
-
 ```swift
+@Equatable
 struct TripEditorView: View {
-    @Environment(\.modelContext) private var context
+    @State private var viewModel: TripEditorViewModel
     @Environment(\.dismiss) private var dismiss
-    @Bindable var trip: Trip
-    @State private var saveError: Error?
+
+    init(trip: Trip, tripRepository: TripRepository) {
+        _viewModel = State(initialValue: TripEditorViewModel(trip: trip, tripRepository: tripRepository))
+    }
 
     var body: some View {
         Form {
-            TextField("Name", text: $trip.name)
-            DatePicker("Start", selection: $trip.startDate)
+            TextField("Name", text: $viewModel.trip.name)
+            DatePicker("Start", selection: $viewModel.trip.startDate)
         }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
-                    do {
-                        try context.save()
-                        dismiss()
-                    } catch {
-                        saveError = error
-                    }
-                }
+                Button("Save") { Task { await viewModel.save() } }
             }
         }
-        .alert(
-            "Unable to Save",
-            isPresented: Binding(
-                get: { saveError != nil },
-                set: { if !$0 { saveError = nil } }
-            )
-        ) {
-            Button("Retry") {
-                do {
-                    try context.save()
-                    dismiss()
-                } catch {
-                    saveError = error
-                }
-            }
-            Button("Discard Changes", role: .destructive) {
-                context.rollback()
-                dismiss()
-            }
+        .onChange(of: viewModel.isSaved) { _, saved in
+            if saved { dismiss() }
+        }
+        .alert("Unable to Save", isPresented: Binding(
+            get: { viewModel.saveError != nil },
+            set: { if !$0 { viewModel.saveError = nil } }
+        )) {
+            Button("Retry") { Task { await viewModel.save() } }
+            Button("Discard", role: .destructive) { dismiss() }
         } message: {
-            Text(saveError?.localizedDescription ?? "An unknown error occurred.")
+            Text(viewModel.saveError ?? "An unknown error occurred.")
         }
     }
 }
@@ -88,12 +87,10 @@ struct TripEditorView: View {
 
 **When NOT to use:**
 - Preview and test code where save failures should crash immediately to surface bugs
-- Autosave-only flows where the system handles persistence — but still log errors for diagnostics
 
 **Benefits:**
 - User always knows whether their data was persisted
 - Retry option recovers from transient failures
-- Rollback option prevents the context from accumulating invalid state
-- `localizedDescription` gives actionable feedback for constraint violations
+- Error state is testable in the ViewModel without SwiftUI
 
 Reference: [SwiftData — Saving Models with ModelContext — Medium](https://medium.com/@nicrofilm/swiftdata-saving-models-with-modelcontext-747e29605980)

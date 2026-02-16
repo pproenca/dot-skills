@@ -12,6 +12,7 @@ tags: query, dynamic, initializer, search
 **Incorrect (filtering @Query results in the view body):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Query(sort: \Friend.name) private var friends: [Friend]
     var searchText: String
@@ -31,6 +32,7 @@ struct FriendList: View {
 **Correct (custom init constructs @Query dynamically):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Query private var friends: [Friend]
 
@@ -53,6 +55,7 @@ struct FriendList: View {
 }
 
 // Parent view drives the filter
+@Equatable
 struct ContentView: View {
     @State private var searchText = ""
 

@@ -1,17 +1,20 @@
 ---
-title: Access ModelContext via @Environment
+title: Access ModelContext via @Environment (Data Layer)
 impact: HIGH
 impactDescription: using wrong context causes data to save to the wrong store or not at all
-tags: persist, model-context, environment, swiftdata
+tags: persist, model-context, environment, swiftdata, data-layer
 ---
 
-## Access ModelContext via @Environment
+## Access ModelContext via @Environment (Data Layer)
 
-Always access the `ModelContext` through SwiftUI's `@Environment` property wrapper. The environment context is automatically connected to the container you set up at the app level. Creating your own context without proper configuration leads to data saving to a separate store that the rest of your app never reads. Threading context through view initializers also increases coupling and makes it easier to accidentally mutate with the wrong context after refactors.
+Within the Data layer, always access the `ModelContext` through the container you set up at the app level. Creating your own context without proper configuration leads to data saving to a separate store that the rest of your app never reads.
+
+**Architecture note:** In Clean MVVM architecture, `ModelContext` is a Data layer concern — it belongs in repository implementations, not in views or ViewModels. Views access data through `@Observable` ViewModels backed by repository protocols. See [`persist-repository-wrapper`](persist-repository-wrapper.md) for the repository pattern and [`state-dependency-injection`](state-dependency-injection.md) for injecting repositories via `@Environment`.
 
 **Incorrect (manually created context — separate store):**
 
 ```swift
+@Equatable
 struct FriendListView: View {
     // Creates a completely separate store — data saved here is invisible to @Query
     let context = try! ModelContext(ModelContainer(for: Friend.self))
@@ -29,6 +32,7 @@ struct FriendListView: View {
 **Correct (environment-provided context):**
 
 ```swift
+@Equatable
 struct FriendListView: View {
     @Environment(\.modelContext) private var context
     @Query private var friends: [Friend]

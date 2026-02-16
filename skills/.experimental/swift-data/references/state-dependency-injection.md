@@ -1,80 +1,132 @@
 ---
-title: Inject ModelContainer for Testable Service Architecture
-impact: MEDIUM
-impactDescription: enables unit testing of persistence logic without launching the full app or SwiftUI views
-tags: state, dependency-injection, testing, model-container, architecture
+title: Inject Repository Protocols via @Environment
+impact: MEDIUM-HIGH
+impactDescription: eliminates init parameter drilling and enables testing without SwiftData framework
+tags: state, dependency-injection, testing, environment, protocol, architecture
 ---
 
-## Inject ModelContainer for Testable Service Architecture
+## Inject Repository Protocols via @Environment
 
-Services and `@ModelActor` types should receive their `ModelContainer` via initializer injection, not create it internally or access a global singleton. This makes services testable with in-memory containers, replaceable in previews, and decoupled from the app's storage configuration.
+Services and repositories should be injected as protocol types via SwiftUI's `@Environment`, not as concrete SwiftData types (`ModelContainer`, `ModelContext`). Define custom `EnvironmentKey` types for each repository protocol and inject implementations at the app root. This keeps views and ViewModels decoupled from persistence frameworks and enables mock injection for testing.
 
-**Incorrect (service creates its own container — untestable, couples to disk):**
+**Incorrect (injecting concrete ModelContainer — coupled to SwiftData, hard to test):**
 
 ```swift
-@ModelActor
-actor TripSyncService {
-    static let shared = {
-        // Hardcoded container — cannot be replaced in tests
-        let container = try! ModelContainer(for: Trip.self)
-        return TripSyncService(modelContainer: container)
-    }()
+@Observable
+final class TripListViewModel {
+    private let container: ModelContainer // Concrete framework type
 
-    func importTrips(from dtos: [TripDTO]) throws {
-        for dto in dtos {
-            modelContext.insert(Trip(name: dto.name, startDate: dto.startDate))
-        }
-        try modelContext.save()
+    init(container: ModelContainer) {
+        self.container = container
+    }
+
+    func loadTrips() async throws {
+        // Must create ModelContext here — framework coupling
+        let context = ModelContext(container)
+        let descriptor = FetchDescriptor<TripEntity>()
+        // ...
     }
 }
 
-// Test cannot control the store:
-func testImport() async throws {
-    // Uses real disk store — test data persists between runs
-    try await TripSyncService.shared.importTrips(from: testDTOs)
+// Cannot test without a real ModelContainer
+```
+
+**Correct (injecting protocol via @Environment — decoupled, testable):**
+
+```swift
+// Domain/Repositories/TripRepository.swift — pure Swift protocol
+
+protocol TripRepository: Sendable {
+    func fetchAll() async throws -> [Trip]
+    func save(_ trip: Trip) async throws
+    func delete(id: String) async throws
+}
+
+// App/Environment/RepositoryKeys.swift — @Entry shorthand (Xcode 16+)
+
+import SwiftUI
+import SwiftData
+
+extension EnvironmentValues {
+    @Entry var tripRepository: any TripRepository = SwiftDataTripRepository(
+        modelContainer: try! ModelContainer(for: TripEntity.self)
+    )
 }
 ```
 
-**Correct (container injected — testable with in-memory store):**
+**App root injects the live implementation once:**
 
 ```swift
-@ModelActor
-actor TripSyncService {
-    func importTrips(from dtos: [TripDTO]) throws {
-        for dto in dtos {
-            modelContext.insert(Trip(name: dto.name, startDate: dto.startDate))
+@main
+struct TripApp: App {
+    let container: ModelContainer
+
+    init() {
+        do {
+            container = try ModelContainer(for: TripEntity.self)
+        } catch {
+            fatalError("Failed to create ModelContainer: \(error)")
         }
-        try modelContext.save()
+    }
+
+    var body: some Scene {
+        WindowGroup {
+            TripListView()
+                .environment(\.tripRepository, SwiftDataTripRepository(modelContainer: container))
+        }
     }
 }
+```
 
-// Production setup (in App init or dependency container):
-let container = try ModelContainer(for: Trip.self)
-let syncService = TripSyncService(modelContainer: container)
+**ViewModel reads from @Environment via view init:**
 
-// Test setup (in-memory, isolated):
-func testImport() async throws {
-    let config = ModelConfiguration(isStoredInMemoryOnly: true)
-    let container = try ModelContainer(for: Trip.self, configurations: [config])
-    let service = TripSyncService(modelContainer: container)
+```swift
+@Equatable
+struct TripListView: View {
+    @Environment(\.tripRepository) private var tripRepository
+    @State private var viewModel: TripListViewModel?
 
-    let dtos = [TripDTO(name: "Paris", startDate: .now)]
-    try await service.importTrips(from: dtos)
+    var body: some View {
+        Group {
+            if let viewModel {
+                TripListContent(viewModel: viewModel)
+            }
+        }
+        .task {
+            if viewModel == nil {
+                viewModel = TripListViewModel(tripRepository: tripRepository)
+                await viewModel?.loadTrips()
+            }
+        }
+    }
+}
+```
 
-    let context = ModelContext(container)
-    let trips = try context.fetch(FetchDescriptor<Trip>())
-    XCTAssertEqual(trips.count, 1)
-    XCTAssertEqual(trips.first?.name, "Paris")
+**Testing with mock repository:**
+
+```swift
+func testTripListLoading() async {
+    let mockRepo = MockTripRepository()
+    mockRepo.trips = [
+        Trip(id: "1", name: "Paris", startDate: .now, endDate: .now.addingTimeInterval(86400))
+    ]
+
+    let viewModel = TripListViewModel(tripRepository: mockRepo)
+    await viewModel.loadTrips()
+
+    XCTAssertEqual(viewModel.trips.count, 1)
+    XCTAssertEqual(viewModel.trips.first?.name, "Paris")
 }
 ```
 
 **When NOT to use:**
-- Simple apps with a single container and no unit tests for persistence logic
-- Previews that already use `SampleData.shared` — the preview singleton pattern is sufficient
+- Prototype apps where speed matters more than testability
+- Simple apps with a single view and no unit tests
 
 **Benefits:**
-- Tests run with in-memory containers — fast, isolated, no cleanup needed
-- Services are decoupled from the app's storage strategy
-- Same service code works with disk, in-memory, or App Group configurations
+- ViewModels are testable with mock repositories — no SwiftData or simulator needed
+- No parameter drilling — intermediate views are unaware of dependencies they don't use
+- Repository implementations are swappable without touching views or ViewModels
+- Testing injects mocks via `.environment(\.tripRepository, MockTripRepository())`
 
-Reference: [How to use MVVM to separate SwiftData from your views — Hacking with Swift](https://www.hackingwithswift.com/quick-start/swiftdata/how-to-use-mvvm-to-separate-swiftdata-from-your-views)
+Reference: [Apple Documentation — Environment values](https://developer.apple.com/documentation/swiftui/environmentvalues)

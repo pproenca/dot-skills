@@ -1,40 +1,81 @@
 ---
-title: Insert Models via ModelContext
+title: Insert Models via ModelContext in Repository Implementations
 impact: HIGH
 impactDescription: prevents silent data loss — untracked models are never persisted
-tags: crud, insert, model-context, persistence
+tags: crud, insert, model-context, persistence, data-layer
 ---
 
-## Insert Models via ModelContext
+## Insert Models via ModelContext in Repository Implementations
 
-Creating a model instance with `Friend(name: "x")` only allocates it in memory. You must call `context.insert()` to register it with SwiftData for persistence. Without this step, the model vanishes when the app relaunches.
+Creating an entity instance with `FriendEntity(name: "x")` only allocates it in memory. You must call `context.insert()` to register it with SwiftData for persistence. This operation belongs in repository implementations (Data layer), not in views or ViewModels.
 
-**Incorrect (model created but never persisted):**
+**Incorrect (view inserts directly into ModelContext — bypasses architecture layers):**
 
 ```swift
+@Equatable
 struct AddFriendView: View {
     @Environment(\.modelContext) private var context
 
     var body: some View {
         Button("Add Friend") {
-            // Created in memory only — never saved to the database
-            let friend = Friend(name: "New Friend")
-            // friend is lost when the view disappears
+            let friend = FriendEntity(name: "New Friend")
+            context.insert(friend) // Persistence logic in view — violates layer boundary
         }
     }
 }
 ```
 
-**Correct (model inserted into context for persistence):**
+**Correct (repository handles insertion, ViewModel coordinates, view triggers):**
 
 ```swift
+// Data/Repositories/SwiftDataFriendRepository.swift
+
+final class SwiftDataFriendRepository: FriendRepository, @unchecked Sendable {
+    private let modelContainer: ModelContainer
+
+    init(modelContainer: ModelContainer) {
+        self.modelContainer = modelContainer
+    }
+
+    @MainActor
+    func save(_ friend: Friend) async throws {
+        let entity = FriendEntity(name: friend.name, birthday: friend.birthday)
+        modelContainer.mainContext.insert(entity) // Data layer owns insert
+        try modelContainer.mainContext.save()
+    }
+}
+
+// Presentation/ViewModels/AddFriendViewModel.swift
+
+@Observable
+final class AddFriendViewModel {
+    private let friendRepository: FriendRepository
+    var isSaved = false
+
+    init(friendRepository: FriendRepository) {
+        self.friendRepository = friendRepository
+    }
+
+    func addFriend(name: String) async {
+        let friend = Friend(id: UUID().uuidString, name: name, birthday: .now)
+        try? await friendRepository.save(friend)
+        isSaved = true
+    }
+}
+
+// Presentation/Views/AddFriendView.swift
+
+@Equatable
 struct AddFriendView: View {
-    @Environment(\.modelContext) private var context
+    @State private var viewModel: AddFriendViewModel
+
+    init(friendRepository: FriendRepository) {
+        _viewModel = State(initialValue: AddFriendViewModel(friendRepository: friendRepository))
+    }
 
     var body: some View {
         Button("Add Friend") {
-            let friend = Friend(name: "New Friend")
-            context.insert(friend) // Now tracked by SwiftData and persisted
+            Task { await viewModel.addFriend(name: "New Friend") }
         }
     }
 }
@@ -42,6 +83,6 @@ struct AddFriendView: View {
 
 **When NOT to use:**
 - Temporary objects used only for computation that should never be saved
-- Preview or test data that uses an in-memory model container (insertion still works but data is discarded)
+- Preview or test data that uses an in-memory model container
 
 Reference: [Develop in Swift — Save Data](https://developer.apple.com/tutorials/develop-in-swift/save-data)

@@ -1,17 +1,20 @@
 ---
-title: Use @Query for Declarative Data Fetching
+title: Use @Query for Declarative Data Fetching (Data Layer)
 impact: HIGH
 impactDescription: automatic view updates when data changes, zero boilerplate
-tags: query, property-wrapper, swiftui, swiftdata
+tags: query, property-wrapper, swiftui, swiftdata, data-layer
 ---
 
-## Use @Query for Declarative Data Fetching
+## Use @Query for Declarative Data Fetching (Data Layer)
 
-`@Query` fetches SwiftData models and automatically updates the view when underlying data changes — no `onAppear`, `NotificationCenter`, or manual refresh logic needed. Manual fetching with `context.fetch()` in views misses updates, requires extra state management, and inevitably produces stale UI states.
+`@Query` fetches SwiftData entities and automatically updates the view when underlying data changes — no `onAppear`, `NotificationCenter`, or manual refresh logic needed. Manual fetching with `context.fetch()` in views misses updates, requires extra state management, and inevitably produces stale UI states.
+
+**Architecture note:** In Clean MVVM architecture, `@Query` and `FetchDescriptor` are Data layer implementation details — they belong in repository implementations, not in views or ViewModels. Views read data from `@Observable` ViewModels, which read from repository protocols. See [`state-query-vs-viewmodel`](state-query-vs-viewmodel.md) for the recommended architecture and [`persist-repository-wrapper`](persist-repository-wrapper.md) for the repository pattern.
 
 **Incorrect (manual fetch misses live updates):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Environment(\.modelContext) private var context
     @State var friends: [Friend] = []
@@ -31,6 +34,7 @@ struct FriendList: View {
 **Correct (declarative @Query with automatic updates):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Query private var friends: [Friend]
 

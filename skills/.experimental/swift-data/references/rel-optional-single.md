@@ -41,6 +41,7 @@ import SwiftData
 }
 
 // Usage in a Picker — include a "None" option with nil tag
+@Equatable
 struct FriendEditor: View {
     @Bindable var friend: Friend
     @Query(sort: \Movie.title) private var movies: [Movie]

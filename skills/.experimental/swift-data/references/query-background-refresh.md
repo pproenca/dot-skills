@@ -23,6 +23,7 @@ actor TripImporter {
     }
 }
 
+@Equatable
 struct TripListView: View {
     @Query(sort: \.startDate) private var trips: [Trip]
 
@@ -47,6 +48,7 @@ actor TripImporter {
     }
 }
 
+@Equatable
 struct TripListView: View {
     @Query(sort: \.startDate) private var trips: [Trip]
     @State private var refreshToken = UUID()

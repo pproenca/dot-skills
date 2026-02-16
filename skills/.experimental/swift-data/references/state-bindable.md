@@ -12,6 +12,7 @@ tags: state, bindable, binding, swiftdata, forms
 **Incorrect (manual state sync — stale data risk and lost edits):**
 
 ```swift
+@Equatable
 struct FriendEditor: View {
     var friend: Friend
     @State private var name = ""
@@ -38,6 +39,7 @@ struct FriendEditor: View {
 **Correct (@Bindable for direct model binding — changes tracked automatically):**
 
 ```swift
+@Equatable
 struct FriendEditor: View {
     @Bindable var friend: Friend
 

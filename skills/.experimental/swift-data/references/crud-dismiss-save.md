@@ -1,54 +1,31 @@
 ---
-title: Use Environment Dismiss for Modal Save Flow
+title: Dismiss Modal After ViewModel Save Completes
 impact: MEDIUM
-impactDescription: avoids redundant save() calls when autosave is enabled
-tags: crud, dismiss, save, modal, environment
+impactDescription: prevents 100% data loss when user dismisses before save completes
+tags: crud, dismiss, save, modal, viewmodel
 ---
 
-## Use Environment Dismiss for Modal Save Flow
+## Dismiss Modal After ViewModel Save Completes
 
-Use `@Environment(\.dismiss)` to close sheets after saving. Since SwiftData autosaves, changes made via `@Bindable` are already tracked by the model context. Simply dismissing the modal is sufficient to persist the data — no manual `context.save()` call is needed.
+Use `@Environment(\.dismiss)` to close sheets after the ViewModel confirms a successful save. The ViewModel calls the repository's `save()` method and sets a `isSaved` flag. The view observes this flag and dismisses. This ensures the user is never dismissed before their data is persisted.
 
-**Incorrect (manual save with custom dismiss logic):**
-
-```swift
-struct FriendDetailView: View {
-    @Environment(\.modelContext) private var context
-    @Bindable var friend: Friend
-    @Binding var isPresented: Bool
-
-    var body: some View {
-        Form {
-            TextField("Name", text: $friend.name)
-        }
-        .toolbar {
-            ToolbarItem(placement: .confirmationAction) {
-                Button("Save") {
-                    // Unnecessary — SwiftData autosaves
-                    try? context.save()
-                    isPresented = false
-                }
-            }
-        }
-    }
-}
-```
-
-**Correct (environment dismiss with autosave):**
+**Incorrect (dismiss without confirming save — may lose data):**
 
 ```swift
+@Equatable
 struct FriendDetailView: View {
     @Environment(\.dismiss) private var dismiss
-    @Bindable var friend: Friend
+    @State private var viewModel: FriendEditorViewModel
 
     var body: some View {
         Form {
-            TextField("Name", text: $friend.name)
+            TextField("Name", text: $viewModel.friend.name)
         }
         .toolbar {
             ToolbarItem(placement: .confirmationAction) {
                 Button("Save") {
-                    dismiss() // SwiftData autosave handles persistence
+                    Task { await viewModel.save() }
+                    dismiss() // Dismisses immediately — save may not have completed
                 }
             }
         }
@@ -56,8 +33,43 @@ struct FriendDetailView: View {
 }
 ```
 
-**When NOT to use:**
-- If you have explicitly disabled autosave on the model container — then you must call `context.save()` manually
-- In batch import scenarios where you need precise control over when writes are flushed
+**Correct (dismiss only after save confirms):**
+
+```swift
+@Equatable
+struct FriendDetailView: View {
+    @Environment(\.dismiss) private var dismiss
+    @State private var viewModel: FriendEditorViewModel
+
+    init(friend: Friend, friendRepository: FriendRepository) {
+        _viewModel = State(initialValue: FriendEditorViewModel(
+            friend: friend, isNew: true, friendRepository: friendRepository
+        ))
+    }
+
+    var body: some View {
+        Form {
+            TextField("Name", text: $viewModel.friend.name)
+        }
+        .toolbar {
+            ToolbarItem(placement: .confirmationAction) {
+                Button("Save") {
+                    Task { await viewModel.save() }
+                }
+            }
+        }
+        .onChange(of: viewModel.isSaved) { _, saved in
+            if saved { dismiss() }
+        }
+    }
+}
+```
+
+**Reconciliation with autosave:** If your repository implementation relies on SwiftData autosave (no explicit `context.save()`), the repository `save()` method should still explicitly call `context.save()` to ensure data is flushed before returning. For flows where autosave is acceptable (e.g., editing existing records with @Bindable), dismiss immediately — but only if you have verified autosave is enabled on the container. See [`crud-save-error-handling`](crud-save-error-handling.md) for the error handling pattern.
+
+**Benefits:**
+- User data is confirmed persisted before the modal closes
+- Async save completion prevents race conditions
+- Clean separation: ViewModel owns the save lifecycle, view owns the dismiss
 
 Reference: [Develop in Swift — Create, Update, and Delete Data](https://developer.apple.com/tutorials/develop-in-swift/create-update-and-delete-data)

@@ -12,6 +12,7 @@ Without explicit sorting, `@Query` returns items in undefined order that changes
 **Incorrect (undefined order changes on every launch):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     // Order is unpredictable — items shuffle between launches
     @Query private var friends: [Friend]
@@ -27,6 +28,7 @@ struct FriendList: View {
 **Correct (explicit sort for stable ordering):**
 
 ```swift
+@Equatable
 struct FriendList: View {
     @Query(sort: \Friend.name) private var friends: [Friend]
 

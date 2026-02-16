@@ -12,6 +12,7 @@ When a `@Query` depends on user input (search text, filter selection), the `@Sta
 **Incorrect (single view with both @State and @Query — cannot pass state to Query init):**
 
 ```swift
+@Equatable
 struct MovieListScreen: View {
     @State private var searchText = ""
     // ERROR: Cannot use 'searchText' in @Query — @State is not
@@ -32,6 +33,7 @@ struct MovieListScreen: View {
 
 ```swift
 // Wrapper: owns the search state
+@Equatable
 struct MovieListScreen: View {
     @State private var searchText = ""
 
@@ -44,6 +46,7 @@ struct MovieListScreen: View {
 }
 
 // Child: builds @Query from the filter parameter
+@Equatable
 struct MovieList: View {
     @Query private var movies: [Movie]
 

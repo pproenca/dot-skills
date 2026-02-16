@@ -8,12 +8,12 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 1. Data Modeling (model)
 
 **Impact:** CRITICAL
-**Description:** Custom types and @Model design are the foundation. Wrong model definitions cascade into broken persistence, faulty queries, and corrupt relationships.
+**Description:** @Model entity design and entity-to-domain struct mapping are the foundation. Wrong model definitions cascade into broken persistence, faulty queries, and corrupt relationships. Entity classes live in the Data layer; domain structs (Equatable, Sendable) live in the Domain layer.
 
 ## 2. Persistence Setup (persist)
 
 **Impact:** CRITICAL
-**Description:** ModelContainer, ModelContext, and @ModelActor configuration determines whether data survives app launches and whether concurrent access is safe. Incorrect setup silently loses user data or causes crashes.
+**Description:** ModelContainer, ModelContext, @ModelActor, and repository protocol implementations determine whether data survives app launches and whether concurrent access is safe. Repository protocols are defined in the Domain layer; SwiftData implementations live in the Data layer. Incorrect setup silently loses user data or causes crashes.
 
 ## 3. Querying & Filtering (query)
 
@@ -23,12 +23,12 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 4. CRUD Operations (crud)
 
 **Impact:** HIGH
-**Description:** Insert, update, and delete patterns through ModelContext. Wrong mutation patterns cause data corruption and UI inconsistencies. Error handling for save failures is critical to prevent silent data loss.
+**Description:** Insert, update, and delete patterns routed through ViewModels and repository implementations. All mutations flow View -> ViewModel -> Repository -> SwiftData. Wrong patterns cause data corruption and UI inconsistencies. Error handling for save failures is critical to prevent silent data loss.
 
 ## 5. Sync & Networking (sync)
 
 **Impact:** HIGH
-**Description:** Fetching from APIs, persisting to SwiftData, offline-first architecture, and conflict resolution. Most production apps require network-to-persistence sync, and wrong patterns cause data races, duplicate records, and stale UI.
+**Description:** Injected sync services fetch from APIs and persist to SwiftData via @ModelActor. Sync protocols are defined in the Domain layer; implementations live in the Data layer. ViewModels coordinate repository reads and background sync. Wrong patterns cause data races, duplicate records, and stale UI.
 
 ## 6. Relationships (rel)
 
@@ -38,7 +38,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 7. SwiftUI State Flow (state)
 
 **Impact:** MEDIUM-HIGH
-**Description:** @Bindable, @State, @Environment, @Query, and @Observable coordinate data flow through the view hierarchy. Architecture decisions (ViewModel vs @Query, business logic placement) determine long-term maintainability and testability.
+**Description:** @Observable ViewModels, @Bindable, @State, and @Environment coordinate data flow through the view hierarchy following Clean MVVM + Repository architecture. All data access routes through ViewModels backed by repository protocols. Business logic lives in domain value types and use cases, not in views or ViewModels.
 
 ## 8. Schema & Migration (schema)
 

@@ -2,12 +2,12 @@
 title: Enable Undo and Use It to Cancel Edits
 impact: MEDIUM-HIGH
 impactDescription: enables cancel/undo flows for edits without manual state copying
-tags: crud, undo, cancel, editing, state
+tags: crud, undo, cancel, editing, state, data-layer
 ---
 
 ## Enable Undo and Use It to Cancel Edits
 
-SwiftData can integrate with the system `UndoManager` so edits to persistent models can be undone and redone using standard platform gestures. With undo enabled, you can also implement a "Cancel" flow for *editing an existing model* without copying every field into a separate draft state.
+SwiftData can integrate with the system `UndoManager` so edits to persistent entities can be undone and redone using standard platform gestures. With undo enabled, you can implement a "Cancel" flow for *editing an existing entity* without copying every field into a separate draft state. This is a Data layer technique — it applies when editing `@Model` entities directly (e.g., in a detail view that wraps entity binding via the repository layer).
 
 **Incorrect (manual draft state copy for editing):**
 
@@ -16,7 +16,7 @@ import SwiftUI
 import SwiftData
 
 struct TripEditView: View {
-    @Bindable var trip: Trip
+    @Bindable var trip: TripEntity
 
     @State private var draftName: String = ""
     @State private var draftStart: Date = .now
@@ -47,7 +47,7 @@ struct TripEditView: View {
 }
 ```
 
-**Prerequisite:** Enable undo on the container: `.modelContainer(for: Trip.self, isUndoEnabled: true)`
+**Prerequisite:** Enable undo on the container: `.modelContainer(for: TripEntity.self, isUndoEnabled: true)`
 
 **Correct (undo grouping for cancel-on-edit):**
 
