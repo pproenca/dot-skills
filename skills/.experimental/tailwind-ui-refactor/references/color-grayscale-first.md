@@ -38,6 +38,4 @@ Designing in grayscale forces you to establish hierarchy through spacing, size, 
 
 The only difference between Step 1 and Step 2 is the badge color. If the hierarchy breaks without color, the grayscale structure needs more work.
 
-**Taste checkpoint:** After adding color, toggle it back to grayscale mentally. Does the hierarchy still work? If removing color breaks the hierarchy, the underlying structure needs more work — color should enhance, never compensate.
-
 Reference: Refactoring UI — "Working with Color"

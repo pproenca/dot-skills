@@ -1,11 +1,11 @@
 ---
 title: Prefer Removing a Wrapper Over Adding 5 Utility Classes to It
-impact: CRITICAL
-impactDescription: reduces DOM depth, visual surfaces, and class count by eliminating unnecessary wrapper elements and decorative containers
-tags: intent, simplify, remove-wrappers, flat-markup, less-is-more, subtraction
+impact: HIGH
+impactDescription: reduces DOM depth and class count by eliminating unnecessary wrapper elements
+tags: intent, simplify, remove-wrappers, flat-markup, less-is-more
 ---
 
-When a component looks wrong, the reflex is to add classes: rounded corners, shadows, borders, background colors. But often the real fix is structural — remove a wrapper div, merge two elements into one, collapse nested containers, or drop the card treatment entirely. Every wrapper you remove eliminates class noise and usually improves clarity.
+When a component looks wrong, the reflex is to add classes: rounded corners, shadows, borders, background colors. But often the real fix is structural — remove a wrapper div, merge two elements into one, or collapse a nested structure. Every div you remove eliminates its entire class list.
 
 **Incorrect (adding styling to fix nested layout issues):**
 ```html
@@ -27,21 +27,17 @@ When a component looks wrong, the reflex is to add classes: rounded corners, sha
 </div>
 ```
 
-**Correct (flatten structure and remove unnecessary card surface):**
+**Correct (flatten structure, remove unnecessary wrappers):**
 ```html
-<div class="space-y-1">
+<div class="rounded-lg border border-gray-200 bg-white p-6 shadow-sm">
   <h3 class="text-base font-semibold text-gray-900">New Message</h3>
   <p class="mt-1 text-sm text-gray-500">From support team</p>
-  <p class="pt-2 text-sm leading-relaxed text-gray-600">Your request has been received.</p>
+  <p class="mt-4 text-sm leading-relaxed text-gray-600">Your request has been received.</p>
 </div>
 ```
 
-Count both DOM depth and visual surfaces. If a component is 4+ levels deep, or if it stacks border + shadow + background without clear purpose, remove structure until each remaining layer communicates something specific.
-
-**Simplicity gate:** Before adding any new border, shadow, ring, or container, confirm what user problem it solves. If the answer is only "looks nicer," prefer spacing/typography adjustments first.
+Count the DOM depth. If a component is 4+ levels deep, look for wrappers that exist only for styling. Remove them and let the remaining elements handle their own spacing.
 
 **Important:** The key insight is removing wrapper divs and decorative borders — not content elements. If an icon, image, or label serves as a visual anchor for scanning (e.g., notification icons in a list, user avatars in a feed), keep it. Only remove elements that exist purely for visual decoration or structural nesting without semantic purpose.
-
-**Taste checkpoint:** After simplifying, does the component still communicate its purpose at a glance? A notification icon, user avatar, or status indicator may look decorative but serves as a visual anchor for scanning. Remove structural wrappers, not functional signifiers. If you can't tell what a component does without reading the text, you may have over-simplified.
 
 Reference: Refactoring UI — "Start with a Feature, Not a Layout"

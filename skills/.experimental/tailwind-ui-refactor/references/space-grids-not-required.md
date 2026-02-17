@@ -38,6 +38,4 @@ Not everything needs to live in a flexible grid. Sidebars, form fields, and fixe
 </div>
 ```
 
-**Taste checkpoint:** After using a fixed-width sidebar, resize the browser window from 768px to 1920px. Does the content area grow gracefully? A fixed sidebar with a fluid content area should feel comfortable at all sizes, not just the one you tested at.
-
 Reference: Refactoring UI — "Layout and Spacing"

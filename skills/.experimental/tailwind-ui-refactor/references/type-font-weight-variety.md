@@ -27,6 +27,4 @@ Fonts with limited weight options (just regular and bold) force you to rely on s
 </div>
 ```
 
-**Taste checkpoint:** After setting up weight-based hierarchy, check that the weight differences are perceivable. The jump from font-normal (400) to font-medium (500) is subtle and may not create enough visual distinction. For clear hierarchy, ensure at least a two-step jump (e.g., 400 → 600) between hierarchy levels.
-
 Reference: Refactoring UI — "Designing Text"

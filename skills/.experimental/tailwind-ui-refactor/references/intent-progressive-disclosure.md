@@ -44,8 +44,4 @@ Showing everything at once overwhelms users. Progressive disclosure shows only w
 
 Decide what the user needs to see first. Everything else goes behind a click.
 
-**When NOT to use progressive disclosure:** When the user needs to compare multiple data points simultaneously (e.g., a comparison table, a multi-field form where fields depend on each other). Hiding fields that the user needs to see together creates frustrating reveal-compare-reveal cycles. Progressive disclosure works for sequential information, not parallel information.
-
-**Taste checkpoint:** After hiding secondary content, try the flow as a first-time user. Is the disclosure mechanism obvious? A `<details>` element or "Show more" link that blends into the background might as well not exist. The user must be able to discover the hidden content without guessing.
-
 Reference: Refactoring UI — "Start with a Feature, Not a Layout"

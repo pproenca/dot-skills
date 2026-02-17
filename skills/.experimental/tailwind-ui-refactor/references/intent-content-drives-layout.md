@@ -46,6 +46,4 @@ Designing a layout and then pouring content into it leads to components that fig
 
 Before choosing a grid, list the actual content items and their sizes. If items vary widely, use `flex-wrap` instead of rigid columns.
 
-**Taste checkpoint:** After building the layout, populate it with real data — including edge cases. What happens with a 3-word title vs. a 30-word title? An empty description vs. a paragraph? A name like "Jo" vs. "Alexander Bartholomew III"? The layout should gracefully handle the full range of real content, not just the happy path.
-
-Reference: Refactoring UI — "Start with a Feature, Not a Layout" · Ken Kocienda, Creative Selection — Apple tested with real content, not placeholder data
+Reference: Refactoring UI — "Start with a Feature, Not a Layout"

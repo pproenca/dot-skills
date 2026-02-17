@@ -25,8 +25,4 @@ When everything is the same size and weight, nothing stands out. Use three lever
 </div>
 ```
 
-**When NOT to use three-level hierarchy:** Not every component needs three levels. A simple notification ("New message from Alex") is one level. A card with title and subtitle is two levels. Forcing a third level where the content doesn't have three levels of importance creates artificial complexity. Match hierarchy depth to content depth.
-
-**Taste checkpoint:** After setting hierarchy, squint at the component. Can you immediately identify the primary content without reading? If not, the hierarchy isn't working — adjust color or weight contrast, not size.
-
 Reference: Refactoring UI — "Hierarchy is Everything"

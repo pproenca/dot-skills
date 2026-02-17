@@ -1,14 +1,12 @@
 {
-  "version": "2.0.0",
-  "organization": "Refactoring UI + Apple Design Philosophy",
+  "version": "1.1.0",
+  "organization": "Refactoring UI",
   "technology": "Tailwind CSS",
   "date": "February 2026",
-  "abstract": "Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, informed by the design philosophy of Creative Selection (Ken Kocienda) and Design Like Apple (John Edson). Contains 62 rules across 12 categories, organized into three meta-layers: Empathy (understand the user's task and emotional state), Craft (mechanical transforms for hierarchy, spacing, typography, color, depth, and polish with a simplification-first gate), and Taste (judgment, iteration, conviction, and knowing when to break rules). Each rule includes incorrect vs. correct Tailwind HTML examples, taste checkpoints for developing design judgment, and 'When NOT to use' guidance for context-dependent decisions. Uses Tailwind CSS v4 syntax (v3 notes provided where syntax differs).",
+  "abstract": "Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 52 rules across 9 categories, prioritized by design impact from critical (design intent, visual hierarchy, layout & spacing) to incremental (polish & details). Each rule includes incorrect vs. correct Tailwind HTML examples showing the exact transformation to apply.",
   "references": [
     "https://refactoringui.com/",
     "https://tailwindcss.com/docs",
-    "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html",
-    "Ken Kocienda, Creative Selection: Inside Apple's Design Process During the Golden Age of Steve Jobs (2018)",
-    "John Edson, Design Like Apple: Seven Principles For Creating Insanely Great Products, Services, and Experiences (2012)"
+    "https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html"
   ]
 }

@@ -29,6 +29,4 @@ When a UI element feels too subtle, the instinct is to make it bigger or bolder.
 
 When labels add no information (e.g., "3 bedrooms" is self-explanatory), see [`hier-label-value-pairs`](hier-label-value-pairs.md) for removing them entirely. Use this de-emphasis pattern when labels are needed for disambiguation (e.g., "Status: Active" in a detail view).
 
-**Taste checkpoint:** After de-emphasizing, check the squint test: with the screen slightly unfocused, can you still read the de-emphasized text? If it vanishes, you've gone too far — you've hidden information, not de-emphasized it. De-emphasis means "read this second," not "struggle to read this."
-
 Reference: Refactoring UI — "Visual Hierarchy"
