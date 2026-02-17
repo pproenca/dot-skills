@@ -53,32 +53,19 @@ struct HealthDashboard: View {
                         standHours: 10
                     )
 
-                    // Summary cards — one per conceptual group
-                    NavigationLink {
-                        HeartDetailView()
-                    } label: {
-                        SummaryCard(
-                            title: "Heart",
-                            headline: "72 BPM",
-                            subtitle: "Resting average today",
-                            systemImage: "heart.fill",
-                            tint: .red
-                        )
+                    // Summary cards — tap to drill into detail
+                    NavigationLink { HeartDetailView() } label: {
+                        SummaryCard(title: "Heart", headline: "72 BPM",
+                                    subtitle: "Resting average today",
+                                    systemImage: "heart.fill", tint: .red)
                     }
 
-                    NavigationLink {
-                        SleepDetailView()
-                    } label: {
-                        SummaryCard(
-                            title: "Sleep",
-                            headline: "7h 23m",
-                            subtitle: "Last night",
-                            systemImage: "bed.double.fill",
-                            tint: .cyan
-                        )
+                    NavigationLink { SleepDetailView() } label: {
+                        SummaryCard(title: "Sleep", headline: "7h 23m",
+                                    subtitle: "Last night",
+                                    systemImage: "bed.double.fill", tint: .cyan)
                     }
 
-                    // Expandable section for secondary data
                     DisclosureGroup("More Health Data") {
                         LabeledContent("Blood Oxygen", value: "98%")
                         LabeledContent("Respiratory Rate", value: "14 brpm")

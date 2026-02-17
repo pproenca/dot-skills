@@ -95,28 +95,18 @@ enum CheckmarkPhase: CaseIterable {
 
     var scale: CGFloat {
         switch self {
-        case .hidden: 0.3
-        case .draw: 0.9
-        case .overshoot: 1.25
+        case .hidden: 0.3; case .draw: 0.9; case .overshoot: 1.25
         case .settle, .radiate, .complete: 1.0
         }
     }
     var opacity: Double { self == .hidden ? 0 : 1 }
     var particleScale: CGFloat { self == .radiate ? 1.8 : 0.01 }
     var particleOpacity: Double { self == .radiate ? 0.7 : 0 }
-    var trimEnd: CGFloat {
-        switch self {
-        case .hidden: 0
-        case .draw: 1.0
-        default: 1.0
-        }
-    }
 }
 
 struct CelebrationCheckmark: View {
     var body: some View {
         ZStack {
-            // Radiating particles
             ForEach(0..<6, id: \.self) { i in
                 let angle = Angle.degrees(Double(i) * 60)
                 PhaseAnimator(CheckmarkPhase.allCases) { phase in
@@ -129,7 +119,6 @@ struct CelebrationCheckmark: View {
                                 y: sin(angle.radians) * 30)
                 } animation: { _ in .spring(duration: 0.4, bounce: 0.1) }
             }
-            // Main checkmark
             PhaseAnimator(CheckmarkPhase.allCases) { phase in
                 Image(systemName: "checkmark.circle.fill")
                     .font(.system(size: 48))

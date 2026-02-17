@@ -109,8 +109,7 @@ struct MiniBar: View {
     var ns: Namespace.ID
     var body: some View {
         HStack(spacing: 12) {
-            RoundedRectangle(cornerRadius: 6)
-                .fill(.secondary)
+            RoundedRectangle(cornerRadius: 6).fill(.secondary)
                 .frame(width: 44, height: 44)
                 .matchedGeometryEffect(id: "artwork", in: ns)
             Text("Song Title").font(.subheadline.weight(.medium))
@@ -128,16 +127,14 @@ struct ExpandedPlayer: View {
     var ns: Namespace.ID
     var body: some View {
         VStack(spacing: 24) {
-            RoundedRectangle(cornerRadius: 16)
-                .fill(.secondary)
+            RoundedRectangle(cornerRadius: 16).fill(.secondary)
                 .frame(width: 280, height: 280)
                 .matchedGeometryEffect(id: "artwork", in: ns)
             Text("Song Title").font(.title2.weight(.semibold))
                 .matchedGeometryEffect(id: "title", in: ns)
             Image(systemName: "pause.fill").font(.title)
                 .matchedGeometryEffect(id: "action", in: ns)
-        }
-        .padding(32)
+        }.padding(32)
     }
 }
 ```

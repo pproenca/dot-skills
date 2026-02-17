@@ -95,17 +95,11 @@ struct ProductDetailView: View {
 
 ```swift
 enum Spacing {
-    static let xxs: CGFloat = 4
-    static let xs: CGFloat = 8
-    static let sm: CGFloat = 12
-    static let md: CGFloat = 16
-    static let lg: CGFloat = 20
-    static let xl: CGFloat = 24
-    static let xxl: CGFloat = 32
-    static let xxxl: CGFloat = 40
-
-    /// Extra generous top margin for section headers —
-    /// creates chapter-like pauses in the scroll.
+    static let xxs: CGFloat = 4;  static let xs: CGFloat = 8
+    static let sm: CGFloat = 12;  static let md: CGFloat = 16
+    static let lg: CGFloat = 20;  static let xl: CGFloat = 24
+    static let xxl: CGFloat = 32; static let xxxl: CGFloat = 40
+    /// Extra generous margin before section headers
     static let sectionBreak: CGFloat = 48
 }
 
@@ -133,22 +127,18 @@ struct SettingsView: View {
     }
 
     private func sectionHeader(_ title: String) -> some View {
-        Text(title)
-            .font(.footnote.weight(.semibold))
-            .foregroundStyle(.secondary)
-            .textCase(.uppercase)
+        Text(title).font(.footnote.weight(.semibold))
+            .foregroundStyle(.secondary).textCase(.uppercase)
             .padding(.bottom, Spacing.sm)
     }
 
     private func settingsRow(_ title: String, value: String = "",
                              toggle: Bool = false) -> some View {
         HStack {
-            Text(title)
-            Spacer()
+            Text(title); Spacer()
             if toggle { Toggle("", isOn: .constant(true)).labelsHidden() }
             else { Text(value).foregroundStyle(.secondary) }
-        }
-        .padding(.vertical, Spacing.sm)
+        }.padding(.vertical, Spacing.sm)
     }
 }
 ```

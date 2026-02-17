@@ -54,37 +54,29 @@ struct DashboardView: View {
             ScrollView {
                 VStack(spacing: 16) {
                     DashboardCard {
-                        VStack(alignment: .leading, spacing: 8) {
-                            Label("Today's Summary", systemImage: "chart.bar.fill")
-                                .font(.subheadline)
-                                .fontWeight(.medium)
-                                .foregroundStyle(.blue)
-
-                            Text("$12,430")
-                                .font(.largeTitle)
-                                .fontWeight(.bold)
-
-                            HStack(spacing: 16) {
-                                LabeledContent("Orders", value: "84")
-                                LabeledContent("Avg", value: "$148")
-                            }
-                            .font(.subheadline)
-                            .foregroundStyle(.secondary)
+                        Label("Today's Summary", systemImage: "chart.bar.fill")
+                            .font(.subheadline.weight(.medium))
+                            .foregroundStyle(.blue)
+                        Text("$12,430")
+                            .font(.largeTitle.weight(.bold))
+                        HStack(spacing: 16) {
+                            LabeledContent("Orders", value: "84")
+                            LabeledContent("Avg", value: "$148")
                         }
+                        .font(.subheadline)
+                        .foregroundStyle(.secondary)
                     }
 
                     DashboardCard {
-                        // Top Products card — same pattern
                         Label("Top Products", systemImage: "star.fill")
-                            .font(.subheadline).fontWeight(.medium)
+                            .font(.subheadline.weight(.medium))
                             .foregroundStyle(.orange)
                         // ... product rows
                     }
 
                     DashboardCard {
-                        // Recent Activity card — same pattern
                         Label("Recent Activity", systemImage: "clock.fill")
-                            .font(.subheadline).fontWeight(.medium)
+                            .font(.subheadline.weight(.medium))
                             .foregroundStyle(.green)
                         // ... activity rows
                     }

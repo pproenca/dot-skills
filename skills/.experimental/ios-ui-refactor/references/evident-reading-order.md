@@ -78,17 +78,13 @@ struct RestaurantDetailView: View {
                     .clipped()
 
                 VStack(alignment: .leading, spacing: 20) {
-                    // POSITION 2: Name + rating — primary identity
+                    // POSITION 2: Name + rating
                     VStack(alignment: .leading, spacing: 4) {
                         Text("Osteria Francescana")
-                            .font(.title2)
-                            .fontWeight(.bold)
-
+                            .font(.title2.weight(.bold))
                         HStack(spacing: 4) {
-                            Text("4.8 ★")
-                                .fontWeight(.medium)
-                            Text("(2,340 reviews)")
-                                .foregroundStyle(.secondary)
+                            Text("4.8 ★").fontWeight(.medium)
+                            Text("(2,340 reviews)").foregroundStyle(.secondary)
                         }
                         .font(.subheadline)
                     }
@@ -99,23 +95,17 @@ struct RestaurantDetailView: View {
                         Label("$$", systemImage: "dollarsign.circle")
                         Label("Open until 10 PM", systemImage: "clock")
                     }
-                    .font(.subheadline)
-                    .foregroundStyle(.secondary)
+                    .font(.subheadline).foregroundStyle(.secondary)
 
-                    // POSITION 4: Primary action — where the eye arrives
-                    Button {
-                        // reserve action
-                    } label: {
-                        Text("Reserve a Table")
-                            .frame(maxWidth: .infinity)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .controlSize(.large)
+                    // POSITION 4: Primary action
+                    Button("Reserve a Table") { }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.large)
+                        .frame(maxWidth: .infinity)
 
-                    // POSITION 5: Supporting detail (scrollable)
+                    // POSITION 5: Supporting detail
                     Label("Via Stella 22, Modena", systemImage: "mappin")
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        .font(.subheadline).foregroundStyle(.secondary)
                 }
                 .padding()
             }
