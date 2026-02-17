@@ -5,8 +5,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 Sections are organized into three meta-layers based on Creative Selection (Ken Kocienda)
 and Design Like Apple (John Edson): Empathy, Craft, and Taste.
 
-Impact ordering: CRITICAL categories first, then HIGH, MEDIUM, LOW-MEDIUM.
-Within each impact level, the workflow order is: Empathy → Craft → Taste.
+Category order follows workflow priority: Empathy first, then Craft, then Taste.
+Impact labels indicate expected leverage, but simplification and user clarity take precedence over decorative impact.
 
 ---
 
@@ -14,7 +14,7 @@ Within each impact level, the workflow order is: Empathy → Craft → Taste.
 
 **Impact:** CRITICAL
 **Meta-layer:** Empathy
-**Description:** Styling without understanding the UI's purpose produces polished but bloated interfaces. Auditing user goals, removing unnecessary elements, and reducing cognitive load before touching CSS prevents overengineered markup and creates focused, effective UI. As Creative Selection teaches: start by understanding what the user is trying to accomplish and how they feel while doing it.
+**Description:** Styling without understanding the UI's purpose produces polished but bloated interfaces. Auditing user goals, removing unnecessary elements, and reducing cognitive load before touching CSS prevents overengineered markup and creates focused, effective UI. Default to fewer wrappers and fewer visual surfaces unless extra structure clearly helps comprehension. As Creative Selection teaches: start by understanding what the user is trying to accomplish and how they feel while doing it.
 
 ## 2. Emotional Context (emotion)
 
@@ -62,19 +62,19 @@ Within each impact level, the workflow order is: Empathy → Craft → Taste.
 
 **Impact:** MEDIUM
 **Meta-layer:** Craft
-**Description:** Flat interfaces lack visual cues for elevation and interactivity. A consistent shadow scale creates dimension and guides user attention to interactive elements. Shadows should communicate — "this is clickable," "this is floating above" — not merely decorate.
+**Description:** Flat interfaces lack visual cues for elevation and interactivity. A consistent shadow scale creates dimension and guides user attention to interactive elements. Shadows should communicate — "this is clickable," "this is floating above" — not merely decorate. Prefer one clear elevation layer over stacked shadow/ring/border combinations.
 
 ## 10. Borders & Separation (sep)
 
 **Impact:** MEDIUM
 **Meta-layer:** Craft
-**Description:** Over-reliance on borders creates cluttered, busy interfaces. Replacing borders with spacing, shadows, and background color differences produces cleaner separation. The best separation is invisible — the user perceives the grouping without seeing the mechanism.
+**Description:** Over-reliance on borders creates cluttered, busy interfaces. Replacing borders with spacing, subtle contrast shifts, and selective shadows produces cleaner separation. The best separation is invisible — the user perceives the grouping without seeing the mechanism.
 
 ## 11. Polish & Delight (polish)
 
-**Impact:** MEDIUM
+**Impact:** LOW
 **Meta-layer:** Taste
-**Description:** Small finishing touches — accent borders, custom icons, subtle gradients — compound into a polished, professional feel. Design Like Apple's Principle 3: "The Product Is the Marketing." Every pixel communicates quality. Users notice when details are cared for, even if they can't articulate what they notice.
+**Description:** Small finishing touches — accent borders, custom icons, subtle gradients — can compound into a polished, professional feel. Apply these only after structure and hierarchy are already clear; polish should never add visual noise or extra boxes. Design Like Apple's Principle 3: "The Product Is the Marketing." Every pixel communicates quality, and restraint is part of quality.
 
 ## 12. Images & Content (img)
 

@@ -7,7 +7,7 @@ tags: thorough, materials, thickness, rams-8, rams-2, contrast
 
 ## Choose Material Thickness by Contrast Needs
 
-Rams' #8 demands care in every detail. Using .ultraThinMaterial over a pale gradient renders text illegible — the detail was left to chance. Rams' #2: if the text is unreadable, the material is not useful. Thoroughness means matching material thickness to background variance.
+The card that is barely there — ultra-thin material over a pale background makes the card boundary almost invisible, and text floats in ambiguous space. The user cannot tell where the card ends and the background begins, so the grouping that the card was supposed to communicate dissolves. It looks like a rendering bug, not a design choice. Matching material thickness to background variance is the craft decision: vivid backgrounds can afford thin materials that let content show through, but subtle backgrounds need thicker materials to establish the boundary that gives the card its reason to exist.
 
 **Incorrect (ultra-thin material over a low-contrast background — illegible text):**
 
@@ -105,6 +105,6 @@ struct SummaryCard: View {
 | Subtle gradient / near-solid | `.thickMaterial` | Needs stronger separation to define the card boundary |
 | Text-heavy or uniform background | `.ultraThickMaterial` | Maximum readability, minimal background distraction |
 
-**When NOT to use thick materials:** Over rich photography or artwork where the visual content behind the overlay is the primary experience (e.g., album art, hero images). Thick materials obscure too much of the background, defeating the purpose of layered depth.
+**When NOT to apply:** Over rich photography or artwork where the visual content behind the overlay is the primary experience (e.g., album art, hero images). Thick materials obscure too much of the background, defeating the purpose of layered depth.
 
 Reference: [Materials - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/materials)

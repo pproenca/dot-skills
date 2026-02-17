@@ -7,7 +7,7 @@ tags: refined, animation, state-change, edson-prototype, rams-3, transition
 
 ## Always Animate Between States, Even Minimally
 
-Edson's iterative refinement demands that no state transition go unpolished. A hard cut from loading to loaded is the unfinished version — the version before someone prototyped the transition. Rams' aesthetic principle: even a 200ms opacity fade transforms a perceived bug into an intentional design decision.
+A hard cut between loading and loaded feels like a flinch — the screen blinks and your brain stutters: "wait, what just happened? Is this the same screen?" Even a 200ms fade gives your visual cortex time to register that the change was expected, maintaining the feeling of continuity and control. The hard cut is the unfinished version — the version before someone cared enough to smooth the seam. That small fade transforms a perceived rendering bug into an intentional design decision.
 
 **Incorrect (hard cut between loading and loaded states):**
 
@@ -92,8 +92,6 @@ Text(statusMessage)
     .animation(.smooth, value: statusMessage)
 ```
 
-**When NOT to use:**
-- Users with Reduce Motion enabled — always respect `AccessibilityReduceMotion` by falling back to `.opacity` with shorter duration, or no animation at all
-- Real-time data displays (stock tickers, live scores) where constant animation becomes distracting — use `contentTransition(.numericText())` instead of full view transitions
+**When NOT to apply:** When Reduce Motion is enabled, fall back to `.opacity` with shorter duration or no animation at all. Also avoid for real-time data displays (stock tickers, live scores) where constant animation becomes distracting -- use `contentTransition(.numericText())` instead of full view transitions.
 
 **Reference:** Apple HIG — Motion, WWDC 2023 "Animate with springs" — recommends that every state change include at least a spring-driven opacity transition.

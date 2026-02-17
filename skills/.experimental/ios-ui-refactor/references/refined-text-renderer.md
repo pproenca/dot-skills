@@ -7,7 +7,7 @@ tags: refined, animation, text, edson-prototype, rams-1, ios18
 
 ## Use TextRenderer for Hero Text Animations Only
 
-Edson's iterative refinement means replacing crude hacks with elegant solutions. Splitting strings into individual Text views is a hack — TextRenderer provides direct GPU access to glyph runs while preserving accessibility and Dynamic Type. Rams' innovation: this is the correct tool for the job, replacing a workaround with a purpose-built API.
+The visual difference is unmistakable: hero text where characters move independently with GPU-level smoothness, each glyph tracked and rendered as part of a unified layout — versus the janky hack of splitting a string into individual `Text` views that know nothing about each other's metrics, kerning, or line breaks. `TextRenderer` gives you direct access to glyph runs while preserving accessibility and Dynamic Type, replacing a workaround with the purpose-built tool it was always waiting for.
 
 **Incorrect (ForEach over characters with individual modifiers):**
 
@@ -85,5 +85,7 @@ Text(score, format: .number)
 ```
 
 `TextRenderer` requires iOS 18+. On iOS 17, fall back to `.contentTransition` or static text.
+
+**When NOT to apply:** Body text, list rows, and any content where per-glyph animation would be distracting rather than delightful. For routine numeric changes, `.contentTransition(.numericText())` is the correct tool; `TextRenderer` is reserved for hero moments only.
 
 Reference: WWDC 2024 — "Create custom visual effects with SwiftUI"

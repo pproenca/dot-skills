@@ -7,7 +7,7 @@ tags: enduring, cards, dashboard, rams-7, edson-conviction, modularity
 
 ## Use Self-Contained Cards for Dashboard Layouts
 
-Rams designed the Braun T3 radio in 1958 — its modular face with distinct functional zones is still referenced today. Cards are the digital equivalent: self-contained modules that can be rearranged, added, or removed without breaking the dashboard. Edson's Design With Conviction means committing to the card pattern because it has proven itself across every Apple app — Weather, Health, Fitness — and will remain valid for years.
+Rams designed the Braun T3 radio with modular zones that are still referenced 65 years later. Cards are the digital equivalent — self-contained modules that feel complete on their own and compose into any arrangement. Apple's Weather, Health, and Fitness apps all bet on this pattern because it scales from iPhone SE to iPad. A flat list of mixed content forces the user to mentally group related data; cards do that grouping visually, creating scannable islands of meaning. Each card can be rearranged, added, or removed without breaking the whole — modularity that earns its keep at every screen size.
 
 **Incorrect (flat list of heterogeneous data without visual boundaries):**
 
@@ -117,8 +117,6 @@ struct DashboardCard<Content: View>: View {
 - Card spacing: 16pt between cards, tighter within cards
 - Each card has a label header with icon + tint for scannability
 
-**When NOT to use:**
-- Simple lists of homogeneous items (use `List` instead)
-- Forms and settings screens (use `Form` with sections)
+**When NOT to apply:** Simple lists of homogeneous items (use `List` instead) and forms or settings screens (use `Form` with sections).
 
 Reference: [Materials - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/materials), [WWDC22 — What's new in SwiftUI](https://developer.apple.com/videos/play/wwdc2022/10052/) (layout patterns)

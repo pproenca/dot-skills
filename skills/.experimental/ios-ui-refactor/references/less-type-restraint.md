@@ -7,7 +7,7 @@ tags: less, typography, rams-10, segall-minimal, cognitive-load
 
 ## Limit to 3-4 Distinct Type Treatments Per Screen
 
-Rams' "less, but better" means that every additional type treatment is a decision you're forcing on the reader. When a screen uses six different font/weight/color combinations, every piece of text demands a separate parsing cycle — is this a heading, a label, a value, a caption? Segall showed that Apple succeeded by offering four products, not twenty. The same restraint applies to typography. A "type treatment" is a unique combination of text style, weight, and color. Apple's own screens rarely exceed three levels. Look at Apple Music's Now Playing: large title (song name), body (artist), caption (album) — three treatments that create an instantly scannable hierarchy. Every additional level flattens the hierarchy rather than enriching it.
+Open Apple Music's Now Playing screen and count the type treatments: song name (large, bold), artist (body, regular), album (small, secondary). Three. That is enough to create an instantly scannable hierarchy — your eye lands on the song, then the artist, then the album, in under a second. Now imagine that same screen with six type treatments: a caps overline, a bold title, a light subtitle, a colored price, body text, and a footnote. Each piece of text demands its own parsing cycle — "is this a heading? a label? a value?" — and the hierarchy collapses into noise. The screen no longer guides you; it interrogates you. Typographic restraint is not about limiting your tools — it is about respecting the reader's attention. Three levels is a conversation; six is a crowd.
 
 **Incorrect (6+ type treatments creating visual noise):**
 

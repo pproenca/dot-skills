@@ -1,13 +1,13 @@
 ---
 title: Use Clear Labels Over Ambiguous Icons
 impact: HIGH
-impactDescription: unlabeled icons increase discovery time by 3-5 seconds per action — users cannot tap what they cannot identify, reducing feature adoption by 40-60% for icon-only interfaces
+impactDescription: unlabeled icons force trial-and-error discovery — users cannot tap what they cannot identify, and icon-only interfaces see significantly lower feature adoption than labeled ones
 tags: evident, labels, icons, rams-4, segall-human, discoverability
 ---
 
 ## Use Clear Labels Over Ambiguous Icons
 
-Rams insisted that good design makes a product understandable — ideally self-explanatory. An icon without a label is a riddle. Segall's Think Human demands that interfaces speak in the user's language, not in abstract pictograms. Apple's own tab bars always pair icons with text labels because even well-known icons (a square with an arrow — is that share, export, or upload?) are ambiguous without words.
+A tiny square with an arrow pointing up. Is that share? Export? Upload? You hesitate for just a moment — but that moment is a crack in your confidence. Multiply it across five unlabeled toolbar icons and the interface becomes a guessing game, each tap a small leap of faith. The frustration is quiet but real: the app is speaking in pictograms and expecting you to translate. Words dissolve that ambiguity instantly. A label beneath the icon turns a riddle into a statement. Apple's own tab bars always pair icons with text because even familiar glyphs carry just enough uncertainty to slow you down. Self-evident design speaks the user's language, not in symbols that demand interpretation.
 
 **Incorrect (icon-only toolbar, no labels):**
 

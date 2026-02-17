@@ -1,13 +1,13 @@
 ---
 title: Every Animation Must Communicate State Change or Provide Feedback
 impact: HIGH
-impactDescription: removes gratuitous motion that increases cognitive load by 20-30%, reduces distraction, and focuses user attention on meaningful state transitions
+impactDescription: removes gratuitous motion that adds cognitive load without purpose, reduces distraction, and focuses user attention on meaningful state transitions
 tags: less, motion, rams-10, segall-minimal, design-intent
 ---
 
 ## Every Animation Must Communicate State Change or Provide Feedback
 
-Rams' "as little design as possible" applied to motion means every animation that doesn't communicate a state change or provide feedback is visual clutter. Animation is communication, not decoration. Segall's "Think Minimal" means removing the animations that add nothing, not adding more. Gratuitous animations — bouncing logos on load, parallax backgrounds, entrance animations on static content — train users to ignore motion, so when something important does animate, they miss it. Every animated element should answer one of three questions: "What changed?" (state transition), "Where should I look?" (attention direction), or "Did my action work?" (feedback confirmation).
+Gratuitous motion is the visual equivalent of background music you did not choose — it fills the space without serving the listener. A logo that bounces on every app launch, cards that slide in from the sides, a parallax background that drifts as you scroll — these animations train the user's brain to ignore motion entirely. And once motion has been devalued, the *important* animations — the badge that appears to say "you have a message," the item that slides away to confirm deletion — get lost in the noise. Animation is communication: every moving element should answer one of three questions — "What changed?" (state transition), "Where should I look?" (attention direction), or "Did my action work?" (feedback confirmation). If an animation cannot answer any of these, it is not adding polish — it is adding clutter, and the user's subconscious registers the difference.
 
 **Incorrect (decorative animations that serve no functional purpose):**
 
@@ -100,5 +100,7 @@ struct HomeView: View {
 | **Confirm** user action | Save completed, message sent, item favorited | `.bouncy` |
 
 If an animation does not fit one of these three categories, remove it.
+
+**When NOT to apply:** Games, creative tools, and media apps where ambient motion (particle effects, subtle background animation) is part of the experience design and contributes to immersion rather than UI communication.
 
 **Reference:** WWDC 2023 "Animate with springs" — Apple frames animation as a tool for communication, recommending developers ask "what is this animation telling the user?" before adding any motion to the interface.

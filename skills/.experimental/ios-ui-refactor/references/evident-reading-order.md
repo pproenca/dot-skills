@@ -1,13 +1,13 @@
 ---
 title: Align Visual Weight with Logical Reading Order
 impact: CRITICAL
-impactDescription: burying the primary action or key information below the fold causes 30-50% of users to miss it entirely — aligning weight with priority eliminates dead-end screens
+impactDescription: burying the primary action or key information below the fold causes a large share of users to miss it entirely — aligning weight with priority eliminates dead-end screens
 tags: evident, reading-order, visual-weight, rams-4, segall-human, layout
 ---
 
 ## Align Visual Weight with Logical Reading Order
 
-Rams believed the best design clarifies a product's structure. When visual weight contradicts reading priority — burying the restaurant name below decorative metadata — the structure lies. Segall's Think Human means meeting users where their eyes naturally go: top-left to right, then down.
+You open a restaurant page and the first thing you see is a pair of grey capsules — "Italian" and "$$" — followed by the opening hours. Somewhere below all that decorative metadata, the restaurant's actual name finally appears. The frustration is immediate: your eye went where the layout told it to go, but the layout lied about what was important. Good visual structure is honest. It places the heaviest weight on the thing users came to find, then walks them naturally through supporting detail — top-left to right, then down — so the eye never has to hunt. When position and priority agree, the screen reads like a story told in the right order.
 
 **Incorrect (key action buried, secondary info dominates the top):**
 
@@ -146,8 +146,6 @@ struct RestaurantDetailView: View {
 }
 ```
 
-**When NOT to use top-heavy layout:**
-- Content-browsing screens (Photos, Instagram) where the content itself is the primary element — here, content fills the viewport edge-to-edge with minimal chrome
-- Search-first screens (Maps, Spotlight) where the input field correctly dominates
+**When NOT to apply:** Content-browsing screens (Photos, Instagram) where the content itself is the primary element and fills the viewport edge-to-edge with minimal chrome, and search-first screens (Maps, Spotlight) where the input field correctly dominates.
 
 Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout), [WWDC23 — Design with SwiftUI](https://developer.apple.com/videos/play/wwdc2023/10115/)

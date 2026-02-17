@@ -1,13 +1,13 @@
 ---
 title: Sheets for Tasks and Creation, Push for Drill-Down Hierarchy
 impact: HIGH
-impactDescription: prevents 2-3 navigation dead-ends per flow — correct paradigm reduces "where am I?" confusion that causes 20-30% task abandonment
+impactDescription: prevents 2-3 navigation dead-ends per flow — correct paradigm eliminates the "where am I?" confusion that drives users to abandon tasks mid-flow
 tags: evident, navigation, sheet, push, rams-4, segall-human, mental-model
 ---
 
 ## Sheets for Tasks and Creation, Push for Drill-Down Hierarchy
 
-Rams demanded that products be self-explanatory — no manual required. When push navigation is used for a compose screen, the user must figure out that the back button means "cancel" and there's no "send." Segall's Think Human means using the navigation paradigm that matches the user's mental model: push means "go deeper," sheet means "do something and return."
+You tap "Compose" and the screen slides in from the right — the same animation as drilling into a message thread. For a split second, something feels wrong. Where's the Send button? The back arrow sits where Cancel should be, but does going back discard your draft or save it? That flicker of disorientation is the cost of mismatched navigation intent. Users carry a deep, learned vocabulary of motion: a push means "I'm going deeper into content," a sheet rising from below means "I'm doing a task and coming back." When the paradigm matches the mental model, navigation feels invisible. When it doesn't, every transition becomes a small riddle the user shouldn't have to solve.
 
 **Incorrect (push navigation for a creation/task flow):**
 
@@ -87,5 +87,7 @@ struct InboxView: View {
 | Create, edit, or complete a task | `.sheet` | Compose email, add contact, edit profile |
 | Immersive content requiring full attention | `.fullScreenCover` | Video playback, onboarding, camera |
 | Quick reference without leaving context | `.popover` on iPad, `.sheet` on iPhone | Date picker, font selector |
+
+**When NOT to apply:** Wizard-style multi-step creation flows where each step builds on the previous one -- push navigation through the steps preserves the back-trackable history that sheets would lose.
 
 **Reference:** [Apple HIG — Modality](https://developer.apple.com/design/human-interface-guidelines/modality) — "Use a modal presentation only when it makes sense to require people to complete a task or dismiss a message before continuing."

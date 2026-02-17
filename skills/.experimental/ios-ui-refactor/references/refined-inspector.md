@@ -7,7 +7,7 @@ tags: refined, layout, ipad, edson-prototype, rams-1, navigation
 
 ## Use Inspector for Trailing-Edge Detail Panels
 
-Edson's Design Out Loud recognizes that the first implementation (custom HStack sidebar with manual width management) is rarely the final one. The .inspector() modifier is Apple's refined answer — one modifier replaces 50+ lines of conditional layout code. Rams' innovation: a solution that adapts between iPhone and iPad automatically is better than one that requires manual code paths.
+There is a moment of recognition when you realize your custom HStack-sidebar-with-manual-width-management is a rough draft of what Apple's `.inspector()` modifier already does in one line. The first implementation is rarely the final one — and `.inspector()` is Apple's own iteration on the trailing-edge detail panel, replacing 50+ lines of conditional size-class logic with a single modifier that adapts between iPhone sheet and iPad side panel automatically.
 
 **Incorrect (custom overlay for a detail panel on iPad):**
 
@@ -61,5 +61,7 @@ struct EditorView: View {
 ```
 
 Use `.inspector()` for contextual detail panels — property inspectors, filters, settings, and metadata views shown alongside primary content. Do not use it for primary navigation flows; use `NavigationSplitView` for master-detail navigation instead. The inspector is best suited for non-blocking, supplementary information that the user toggles on and off while working with the main content.
+
+**When NOT to apply:** Primary navigation hierarchies where `NavigationSplitView` is the correct pattern, and iPhone-only apps where a sheet or push navigation is more natural than a trailing panel the user cannot see simultaneously with the main content.
 
 Reference: WWDC 2023 — "Inspectors in SwiftUI: Discover the details"

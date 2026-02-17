@@ -7,7 +7,7 @@ tags: invisible, materials, blur, rams-5, edson-product, dark-mode
 
 ## Use System Materials, Not Custom Semi-Transparent Backgrounds
 
-Rams compared good products to neutral tools — they leave room for the user's self-expression. Hand-tuned opacity backgrounds call attention to themselves; system materials disappear, letting content remain the focus. Edson's principle that the product is the marketing means the quality of the material system speaks for itself without the developer manually calibrating blur values.
+There is a difference between a hand-tuned `Color.black.opacity(0.3)` overlay and `.ultraThinMaterial` that you can feel before you can explain. The hand-tuned value is a developer's best guess — it looks passable in light mode on one wallpaper, then falls apart in dark mode, or washes out over a bright photo, or ignores Increase Contrast entirely. It whispers "look at my clever blur." A system material says nothing at all. It simply lets content through at exactly the right density, adapts to every appearance setting automatically, and gets out of the way so you can focus on what is behind the glass. The craft is in choosing the material that disappears. Rams called this neutrality: a good tool leaves room for the user's world, never competing with it.
 
 **Incorrect (hand-tuned opacity that ignores appearance and vibrancy):**
 
@@ -66,6 +66,6 @@ struct WeatherCard: View {
 - `.thickMaterial` / `.ultraThickMaterial` — low-contrast or text-heavy backgrounds where readability is critical.
 - `.bar` — matches the exact treatment of system toolbars and tab bars.
 
-**When NOT to use:** Solid-color backgrounds where no content sits behind the layer. Materials over a plain white background waste GPU compositing for zero visual benefit — use `Color(.secondarySystemBackground)` instead.
+**When NOT to apply:** Solid-color backgrounds where no content sits behind the layer. Materials over a plain white background waste GPU compositing for zero visual benefit -- use `Color(.secondarySystemBackground)` instead.
 
 Reference: [Materials - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/materials), [WWDC21 — What's new in SwiftUI](https://developer.apple.com/videos/play/wwdc2021/10018/) (material modifiers)

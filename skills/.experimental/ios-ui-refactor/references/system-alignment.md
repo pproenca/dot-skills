@@ -1,13 +1,13 @@
 ---
 title: Consistent Alignment Per Content Type Within a Screen
 impact: MEDIUM-HIGH
-impactDescription: mixed alignment within a single screen breaks the vertical reading edge — the eye has to re-anchor on every element, increasing cognitive load by 20-40%
+impactDescription: mixed alignment within a single screen breaks the vertical reading edge — the eye has to re-anchor on every element, noticeably increasing cognitive load
 tags: system, alignment, layout, edson-systems, rams-8, readability
 ---
 
 ## Consistent Alignment Per Content Type Within a Screen
 
-Edson's systems thinking means every element relates to every other. When title, body, and caption each use different alignment, the system has no coherent edge. Rams' thoroughness demands one alignment convention per content type, applied without exception.
+Reading a screen where alignment shifts on every element is like reading a book where the margins change on every page — your eye has to re-anchor each time, searching for the new left edge instead of absorbing the content. A centered title followed by left-aligned body text followed by a centered caption forces the user to solve a layout puzzle that should be invisible. One alignment convention per content type, applied without exception, gives the eye a single rail to follow from top to bottom.
 
 **Incorrect (alignment changes on every element):**
 
@@ -128,5 +128,7 @@ struct OrderConfirmationView: View {
 // Rule: pick ONE text alignment per screen and apply it to ALL text.
 // The only element that may differ is a full-width button (inherently centered).
 ```
+
+**When NOT to apply:** Asymmetric layouts where intentional alignment contrast creates visual hierarchy (e.g., a centered hero section above a left-aligned detail section), as long as each section is internally consistent and the contrast is deliberate rather than accidental.
 
 Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)

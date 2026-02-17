@@ -1,45 +1,46 @@
 ---
-title: Upgrade Radio Buttons to Selectable Cards for Key Choices
-impact: LOW-MEDIUM
-impactDescription: enables 2 to 5 selection options to include descriptions and visual emphasis via selectable cards
-tags: sep, forms, radio-buttons, cards, selection, upgrade
+title: Use Selectable Cards Only for High-Stakes Radio Choices
+impact: LOW
+impactDescription: keeps radio controls compact by default and introduces card-style options only when decision context requires extra explanation
+tags: sep, forms, radio-buttons, cards, selection, simplify
 ---
 
-When options are important to the user's decision, consider upgrading standard radio buttons into selectable cards. Cards give each option more visual real estate and let you include descriptions. This works for pricing tiers, plan selection, and feature toggles — but is not a universal replacement for radio buttons.
+Standard radios are the default. Only upgrade to selectable cards when the choice is high-stakes, there are very few options, and each option needs supporting detail. Card styling on routine settings adds visual noise and too many boxes.
 
-**Incorrect (plain radio buttons for a high-stakes choice like pricing):**
+**Incorrect (card-ifying a routine settings choice):**
+```html
+<fieldset class="grid gap-3">
+  <label class="cursor-pointer rounded-lg border bg-white p-4 shadow-sm">
+    <input type="radio" name="email-frequency" value="daily" class="sr-only" />
+    <span class="text-sm font-semibold">Daily summary</span>
+    <p class="mt-1 text-xs text-gray-500">Get one email every day</p>
+  </label>
+  <label class="cursor-pointer rounded-lg border bg-white p-4 shadow-sm">
+    <input type="radio" name="email-frequency" value="weekly" class="sr-only" />
+    <span class="text-sm font-semibold">Weekly summary</span>
+    <p class="mt-1 text-xs text-gray-500">Get one email every week</p>
+  </label>
+</fieldset>
+```
+
+**Correct (keep routine choices compact):**
 ```html
 <fieldset class="space-y-2">
   <label class="flex items-center gap-2">
-    <input type="radio" name="plan" value="basic" />
-    <span class="text-sm">Basic — $9/mo</span>
+    <input type="radio" name="email-frequency" value="daily" />
+    <span class="text-sm text-gray-700">Daily summary</span>
   </label>
   <label class="flex items-center gap-2">
-    <input type="radio" name="plan" value="pro" />
-    <span class="text-sm">Pro — $29/mo</span>
-  </label>
-  <label class="flex items-center gap-2">
-    <input type="radio" name="plan" value="enterprise" />
-    <span class="text-sm">Enterprise — $99/mo</span>
+    <input type="radio" name="email-frequency" value="weekly" />
+    <span class="text-sm text-gray-700">Weekly summary</span>
   </label>
 </fieldset>
 ```
 
-**Correct (selectable cards give each option visual weight and descriptions):**
-```html
-<fieldset class="grid gap-3 sm:grid-cols-3">
-  <label class="cursor-pointer rounded-lg border-2 border-transparent bg-white p-4 shadow-sm ring-1 ring-gray-200 has-[:checked]:border-blue-600 has-[:checked]:ring-blue-600">
-    <input type="radio" name="plan" value="basic" class="sr-only" />
-    <span class="text-sm font-semibold text-gray-900">Basic</span>
-    <p class="mt-1 text-2xl font-bold text-gray-900">$9<span class="text-sm font-normal text-gray-500">/mo</span></p>
-    <p class="mt-2 text-xs text-gray-500">For individuals getting started</p>
-  </label>
-  <!-- repeat pattern for Pro, Enterprise -->
-</fieldset>
-```
+**Use cards only when all are true:** The choice is prominent (e.g., plan/pricing), there are 2-5 options, and each option needs meaningful explanatory text.
 
-**When to use cards:** The choice is prominent (pricing, plan selection), there are 2-5 options, and each option benefits from a description.
+**Keep standard radios for everything else:** settings pages, long option lists (6+), dense mobile forms, and any context where speed/scannability matters.
 
-**When to keep standard radios:** Long option lists (6+), settings pages, mobile forms with limited space, or any context where compact layout matters more than visual emphasis.
+**If unsure:** choose standard radios.
 
 Reference: Refactoring UI — "Finishing Touches"

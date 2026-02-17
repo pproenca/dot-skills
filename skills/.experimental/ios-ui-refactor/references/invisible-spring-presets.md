@@ -7,7 +7,9 @@ tags: invisible, motion, spring-presets, rams-5, edson-product, design-system
 
 ## Use .smooth for Routine, .snappy for Interactive, .bouncy for Delight
 
-Rams' unobtrusiveness demands that motion not draw attention to itself. Three presets mapped to intent (.smooth/.snappy/.bouncy) create a motion language that becomes invisible through consistency. Edson's product-as-marketing: when every transition uses the right preset, the entire app feels crafted — without any single animation being noticeable.
+Open Apple Fitness after closing a ring and the checkmark bounces with a little flourish — it is celebrating with you. Now open Apple Health and tap between tabs: the transition is calm, almost invisible, because Health is a reference tool, not a coach. Both apps ship from the same company, yet their motion feels different because each draws from a small palette of exactly three springs. `.smooth` for routine movement, `.snappy` for things you tap, `.bouncy` for moments worth celebrating. Three presets are enough to build an entire motion language — one that becomes invisible through consistency the way a typeface disappears when every paragraph uses the same family. Rams called it unobtrusiveness: when every transition picks from the same short vocabulary, no single animation calls attention to itself, and the whole app feels crafted at once.
+
+> **See also:** [invisible-spring-physics](./invisible-spring-physics.md) for why springs model real inertia, and [invisible-no-easing](./invisible-no-easing.md) for why linear and easeInOut curves should be replaced by these presets.
 
 **Incorrect (bouncy spring applied to every transition):**
 
@@ -85,5 +87,7 @@ struct SettingsView: View {
 | `.smooth` | No bounce, calm | Tab switches, sheet presentations, layout changes, most UI |
 | `.snappy` | Small bounce, responsive | Toggles, buttons, drag-and-drop, interactive controls |
 | `.bouncy` | Larger bounce, playful | Success confirmations, celebrations, onboarding highlights |
+
+**When NOT to apply:** Branded hero animations or game-like interactions where custom spring parameters (mass, stiffness, damping) are intentionally tuned to create a specific motion personality that the three presets cannot express.
 
 **Reference:** WWDC 2023 "Animate with springs" — Apple introduced these three presets specifically to replace ad-hoc `Spring()` parameters with a shared motion vocabulary.

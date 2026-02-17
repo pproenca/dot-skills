@@ -7,7 +7,7 @@ tags: thorough, vibrancy, hierarchy, rams-8, rams-2, materials
 
 ## Match Vibrancy Level to Content Importance
 
-Rams' thoroughness means every detail serves the user. Vibrancy levels (.primary, .secondary, .tertiary) exist to create hierarchy over materials — using .primary for everything is leaving a system-provided tool unused. Rams' #2: the product is more useful when the hierarchy is visible without the user deciphering uniform text.
+A now-playing card where every label is the same visual weight over a material blur — track name, artist, album all rendered in `.primary` — is a card where nothing stands out. The user reads everything instead of scanning, because the hierarchy that should guide the eye from title to detail to metadata simply does not exist. Vibrancy levels (`.primary`, `.secondary`, `.tertiary`) are the tool the platform gives you to create that hierarchy over translucent surfaces. Using `.primary` for everything is like setting every word in a sentence to bold: technically readable, but the emphasis — and with it the meaning — is gone.
 
 **Incorrect (uniform vibrancy — no content hierarchy over material):**
 
@@ -76,5 +76,7 @@ struct NowPlayingCard: View {
 - `.quaternary` — decorative elements, separator lines, placeholder icons. Near-invisible by design.
 
 **Alternative:** For tinted labels over materials (e.g., a status badge), use `.foregroundStyle(.blue)` directly — SwiftUI automatically applies the correct vibrancy treatment when the view sits inside a material background.
+
+**When NOT to apply:** Content over solid, opaque backgrounds where vibrancy provides no visual benefit -- use standard `.foregroundStyle(.primary/.secondary/.tertiary)` without material, as vibrancy levels only produce meaningful hierarchy differences over translucent surfaces.
 
 Reference: [Materials - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/materials), [Typography - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/typography)

@@ -7,7 +7,7 @@ tags: system, padding, margins, edson-systems, rams-8, consistency
 
 ## Use Consistent Padding Across All Screens
 
-Edson's systems thinking demands that product and context are one — screens that use different padding values are contextually disconnected. Rams insisted nothing be left to chance. Named layout constants (screenMargin, sectionSpacing, contentPadding) make the spatial system explicit.
+Navigating between three screens with different margins feels like walking through rooms with different ceiling heights — each one is fine alone, but together they feel unplanned. The profile has 20pt insets, settings has 16pt, activity has 24pt; the content subtly shifts on every transition, and the app feels like it was built by three people who never spoke to each other. Named layout constants (screenMargin, sectionSpacing, contentPadding) turn that collection of rooms into one coherent building where every screen shares the same spatial rhythm.
 
 **Incorrect (padding values chosen per-screen by different developers):**
 
@@ -107,6 +107,6 @@ struct ProfileView: View {
 // 5. Confirm section gaps are uniform (sectionSpacing) across all screens
 ```
 
-**When NOT to enforce:** Full-bleed content (images, maps, media players) intentionally breaks screen margins. `List` and `Form` provide their own system-managed insets — do not override them with manual padding.
+**When NOT to apply:** Full-bleed content (images, maps, media players) intentionally breaks screen margins. `List` and `Form` provide their own system-managed insets -- do not override them with manual padding.
 
 Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)

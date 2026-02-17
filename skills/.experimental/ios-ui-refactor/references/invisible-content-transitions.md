@@ -7,7 +7,7 @@ tags: invisible, motion, text, rams-5, edson-product, contentTransition
 
 ## Use contentTransition for Changing Text and Numbers
 
-Rams demanded that products serve as neutral tools — the transition should never overshadow the content change. contentTransition animates the change itself (individual digits rolling, text morphing) rather than wrapping the entire view in an opacity effect. Edson's product quality principle: the polish is in the details the user barely notices.
+Watch a score change in Apple Fitness: each digit rolls independently, the way the numbers on an airport departure board click over one column at a time. You register the new value almost subconsciously because the motion tells you what changed and by how much. Now picture the same score snapping instantly from 42 to 43 — no transition, just a different number where the old one was. The jarring swap forces you to re-read the label to confirm what happened. The departure-board trick works because it animates the content itself, not a wrapper around it. No opacity fade, no scale bounce on the entire view — just the digits that actually changed, rolling into place. Rams called this neutrality: the transition should never overshadow the content it serves. The polish lives in the details users barely notice, and `.contentTransition(.numericText)` is exactly that kind of detail.
 
 **Incorrect (opacity crossfade or no animation on number change):**
 
@@ -77,6 +77,6 @@ Label("Status", systemImage: isActive ? "checkmark.circle" : "circle")
     .animation(.smooth, value: isActive)
 ```
 
-**When NOT to use:** Do not apply `.numericText` to rapidly updating values (60fps sensor data, timers updating every millisecond). For high-frequency updates, use `.monospacedDigit()` without animation to prevent animation queue buildup.
+**When NOT to apply:** Rapidly updating values (60fps sensor data, timers updating every millisecond) where `.numericText` would cause animation queue buildup. For high-frequency updates, use `.monospacedDigit()` without animation instead.
 
 **Reference:** WWDC 2023 "Animate with springs" demonstrates `contentTransition(.numericText)` as the recommended approach for animating dynamic numeric content in SwiftUI.

@@ -7,7 +7,7 @@ tags: thorough, typography, weight, rams-8, rams-2, accessibility
 
 ## Avoid Light Font Weights for Body Text
 
-Rams' thoroughness extends to every detail of legibility. Thin font weights at body size produce strokes as thin as 0.5-1 pixel — invisible in sunlight, unreadable for anyone over 50. Rams' #2: if the text cannot be read, the product fails at being useful. The designer chose aesthetics over utility, which Rams would reject.
+Thin font weights at body size look refined on a designer's retina monitor in a dim office, but they produce strokes as thin as half a pixel — strokes that vanish in sunlight and become invisible to anyone over 50. The aesthetic that reads as "elegant" on the design file reads as "where did the text go?" on a bus in daylight. Choosing a weight that cannot be read in real conditions is choosing decoration over craft. If the text disappears outside the controlled environment where it was designed, the typography has failed at its only job.
 
 **Incorrect (light/thin weights on body and content text):**
 
@@ -81,5 +81,7 @@ Text("2,847")
 ```
 
 **Quick rule of thumb:** if the text is smaller than `.title` (28pt), use `.regular` weight or heavier. Reserve `.light`, `.thin`, and `.ultraLight` for text that would still be legible even if its stroke width were halved.
+
+**When NOT to apply:** Large display text (40pt+) used as a hero element where thin/ultraLight strokes remain clearly visible, and decorative numerals in dashboard headers where the oversized type compensates for the reduced stroke weight.
 
 Reference: [Apple HIG — Accessibility](https://developer.apple.com/design/human-interface-guidelines/accessibility), [WCAG 2.1 — 1.4.3 Contrast (Minimum)](https://www.w3.org/WAI/WCAG21/Understanding/contrast-minimum.html)

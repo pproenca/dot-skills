@@ -7,7 +7,7 @@ tags: thorough, safe-area, layout, rams-8, rams-2, dynamic-island
 
 ## Always Respect Safe Areas
 
-Rams' #8: nothing must be arbitrary. Calling `.ignoresSafeArea()` without understanding what it disables is arbitrary — it is a guess that happens to clip content behind hardware. Rams' #2: a button hidden behind the home indicator is not useful. Thoroughness means understanding that backgrounds extend to edges, but content stays within safe areas.
+The button behind the home indicator that you can see but cannot tap — like a door handle placed behind a wall. You know it is there, you can read the label, but your finger lands on the system gesture zone instead of the button every single time. Calling `.ignoresSafeArea()` without understanding what it disables is how this happens: the background correctly bleeds to the screen edges, but the interactive content goes with it, sliding behind hardware that the user cannot override. Backgrounds extend to edges; content stays within safe areas. That distinction is the difference between a polished full-bleed layout and a broken one.
 
 **Incorrect (ignoresSafeArea hides text and buttons behind hardware):**
 
@@ -126,6 +126,6 @@ struct ChatView: View {
 // Full-screen media     | Yes (video only)  | .ignoresSafeArea() with controls overlay
 ```
 
-**When NOT to enforce:** Full-screen video playback, camera viewfinders, and immersive AR experiences legitimately ignore all safe areas. In those cases, overlay interactive controls (play/pause, close) within the safe area using a separate layer.
+**When NOT to apply:** Full-screen video playback, camera viewfinders, and immersive AR experiences legitimately ignore all safe areas. In those cases, overlay interactive controls (play/pause, close) within the safe area using a separate layer.
 
 Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)

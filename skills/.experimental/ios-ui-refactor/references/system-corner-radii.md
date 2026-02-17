@@ -7,7 +7,7 @@ tags: system, corner-radius, edson-systems, rams-8, visual-coherence
 
 ## Standardize Corner Radii Per Component Type
 
-Edson taught that design is systems thinking — product and context are one. When one card uses 8pt radius and another uses 14pt, the context is fragmented. Rams' thoroughness requires a system: three radius tiers (small, medium, large), each assigned to component types, enforced globally.
+Cards with different corner radii on the same screen produce a visual dissonance like furniture from different eras in the same room — a mid-century table next to a baroque chair next to a modernist lamp. Each piece is fine in isolation, but together they announce that nobody curated this space. When one card rounds at 8pt and its neighbor at 14pt, the eye registers the mismatch before the mind can explain it. Three radius tiers (small, medium, large), each assigned to a component type and enforced globally, are the curatorial decision that makes the whole screen feel like one collection.
 
 **Incorrect (ad-hoc radii that vary by screen):**
 
@@ -121,6 +121,6 @@ struct DashboardView: View {
 // Example: card with 12pt radius and 8pt padding → inner element uses 4pt radius.
 ```
 
-**When NOT to enforce:** Capsule shapes (`.capsule`) for pill buttons and search bars are intentionally distinct and do not need to match the radius scale. System controls like `Toggle` and `Picker` use their own radii.
+**When NOT to apply:** Capsule shapes (`.capsule`) for pill buttons and search bars are intentionally distinct and do not need to match the radius scale. System controls like `Toggle` and `Picker` use their own radii.
 
 Reference: [Layout - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/layout)

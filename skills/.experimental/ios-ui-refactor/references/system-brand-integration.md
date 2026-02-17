@@ -1,13 +1,13 @@
 ---
 title: Map Brand Palette onto iOS Semantic Color Roles
 impact: CRITICAL
-impactDescription: brand colors applied outside their semantic role confuse 100% of users — blue used for both links and informational text increases mis-taps by 20-30%
+impactDescription: brand colors applied outside their semantic role erode learned platform conventions — blue used for both links and informational text leads to frequent mis-taps and hesitation
 tags: system, color, brand, edson-systems, rams-8, platform-convention
 ---
 
 ## Map Brand Palette onto iOS Semantic Color Roles
 
-Edson's systems thinking means understanding that your product exists within the larger context of iOS. Brand colors are an overlay on the iOS semantic system, not a replacement. Rams' thoroughness requires mapping every brand color to a role — accent for interactive, red for destructive, green for success — so the brand speaks through the platform's language, not against it.
+A user sees brand blue on a "Delete Account" button and hesitates. Is this destructive or just branded? They have spent years learning that red means danger on iOS, and now your brand has overwritten that instinct with its own palette. The platform already has a semantic color language — red for destructive, green for success, the accent tint for interactive — and your users are fluent in it before they ever open your app. Brand colors are an overlay on that language, not a replacement for it. Map your palette onto the platform's roles so the brand speaks through the system's grammar, not against it.
 
 **Incorrect (brand colors overwrite iOS semantic meanings):**
 
@@ -100,5 +100,7 @@ struct MyApp: App {
 | Yellow/Orange (keep system) | Warnings, attention needed | `.orange` or `.yellow` for caution |
 
 **The litmus test:** Remove all brand colors and replace them with system defaults. If the app's meaning and hierarchy break, the brand colors were carrying semantic weight they should not own. If the app still makes sense, brand colors were correctly layered on top.
+
+**When NOT to apply:** Apps where the brand IS the product experience (e.g., a streaming service whose red is universally recognized as the primary action color), and the brand color has already been adopted by users as a semantic signal through years of consistent use.
 
 Reference: [Color - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/color), [WWDC21 — Bring accessibility to charts in your app](https://developer.apple.com/videos/play/wwdc2021/10122/)

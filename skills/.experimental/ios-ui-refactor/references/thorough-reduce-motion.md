@@ -7,7 +7,7 @@ tags: thorough, motion, accessibility, rams-8, rams-2, reduce-motion
 
 ## Always Provide Reduce Motion Fallback
 
-Rams' #8 demanded nothing be left to chance. A user with a vestibular disorder enabling Reduce Motion is not a chance occurrence — it is a certainty. Rams' #2 insisted products be useful to all users, not just the majority. Missing a motion fallback means the product fails to be useful for 10-15% of your audience.
+Imagine being on a boat with mild seasickness, and every screen in the app bounces, slides, and zooms. That is what 10-15% of users with vestibular disorders experience when animations play without a Reduce Motion check. The nausea is real, the disorientation is immediate, and the only relief is closing the app entirely. This is not an edge case to handle later — it is a certainty in any user base of meaningful size. A missing motion fallback does not just break a guideline; it makes the product physically unpleasant for one in every seven or eight people who open it.
 
 **Incorrect (custom animations with no Reduce Motion check):**
 
@@ -87,5 +87,7 @@ extension Animation {
 ```
 
 **What to reduce, not remove:** Replace spatial movement (slides, bounces, zooms) with opacity crossfades. Keep opacity transitions short (under 150ms). Never remove the state change entirely; the user still needs to see that something happened.
+
+**When NOT to apply:** Opacity-only crossfades that are already the minimal fallback, and system-provided animations (NavigationStack push/pop, sheet presentation) that automatically respect the Reduce Motion setting without developer intervention.
 
 **Reference:** Apple HIG "Motion — Accessibility"; WWDC 2023 "Animate with springs" — Apple states that spring animations should still respect Reduce Motion by falling back to crossfade or instant transitions.

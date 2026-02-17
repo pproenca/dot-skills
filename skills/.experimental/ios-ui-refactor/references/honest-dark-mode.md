@@ -7,7 +7,7 @@ tags: honest, dark-mode, color, rams-6, segall-brutal, appearance
 
 ## Define Light and Dark Variants for Every Custom Color
 
-Rams' honesty principle means the interface works as advertised in every context. A custom color without a dark variant is dishonest — it promises to work everywhere but fails at nightfall. A brand teal that looks refined on a white background in the designer's preview becomes illegible against dark gray at 10 PM, or blinds the user with a bright rectangle in a dark interface. Segall's Think Brutal: test in both appearances or admit you shipped a broken product. An honest interface defines every custom color in the asset catalog with explicit "Any Appearance" and "Dark" variants — never relying on a single value that looks acceptable on a Retina display in a lit office but renders invisible in bed.
+It is 11 PM, you are in bed, and you switch to dark mode to save your eyes. The app goes dark — except for one banner that stays brand teal on white, a searing rectangle that flares across your retina like a flashlight in a dark room. The designer never opened this screen after sunset. A single-variant custom color is a broken promise: it claims to work everywhere but was only ever tested in one lighting condition. Every custom color needs a light version and a dark version, defined explicitly in the asset catalog — "Any Appearance" and "Dark" — because an interface that blinds you at nightfall is not a styling oversight, it is a craft failure. The honest approach is to treat both appearances as first-class from the start, never relying on a single value that looked fine on a Retina display in a lit office.
 
 **Incorrect (single-value custom color used in both appearances):**
 
@@ -84,5 +84,7 @@ extension Color {
 2. Run the app in both appearances and screenshot every screen side by side
 3. Check Increase Contrast accessibility setting — asset catalogs support "High Contrast" variants too
 4. Use `UITraitCollection.performAsCurrent` in unit tests to validate both variants exist
+
+**When NOT to apply:** Apps that intentionally use a fixed dark or light theme as a core brand identity (e.g., a cinema or astronomy app locked to dark mode), where the content context makes a single appearance the correct choice.
 
 Reference: [Dark Mode - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/dark-mode), [WWDC19 — Implementing Dark Mode on iOS](https://developer.apple.com/videos/play/wwdc2019/214/)

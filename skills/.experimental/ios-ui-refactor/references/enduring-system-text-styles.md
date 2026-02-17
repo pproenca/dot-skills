@@ -1,13 +1,13 @@
 ---
 title: Use Apple Text Styles, Never Fixed Font Sizes
 impact: CRITICAL
-impactDescription: enables Dynamic Type for 25-30% of iOS users who change default text size, ensures consistent type scale across all screens
+impactDescription: enables Dynamic Type for roughly a quarter of iOS users who change their default text size, ensures consistent type scale across all screens
 tags: enduring, dynamic-type, accessibility, rams-7, edson-conviction, text-styles
 ---
 
 ## Use Apple Text Styles, Never Fixed Font Sizes
 
-Rams warned that fashionable design becomes antiquated. Hard-coded font sizes are the typographic equivalent of a trend — they lock your app to one moment's aesthetic while Apple's type system evolves with every OS release. Edson's Design With Conviction means committing to Apple's semantic text styles because they will never be outdated — they are the platform's voice.
+Hard-coded font sizes are a snapshot of one moment's aesthetic — they lock your app to today while Apple's type system evolves underneath. When iOS 19 adjusts Dynamic Type curves, apps using `.body` evolve with the platform; apps using `.system(size: 16)` stay frozen. It is the difference between a living typeface that breathes with the OS and a number chiseled into stone. Semantic text styles are not a convenience wrapper — they are a pact with the platform that your typography will age as gracefully as the system itself.
 
 **Incorrect (fixed point sizes that bypass Dynamic Type):**
 

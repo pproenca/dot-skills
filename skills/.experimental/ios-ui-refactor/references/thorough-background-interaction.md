@@ -7,7 +7,7 @@ tags: thorough, sheets, detents, rams-8, rams-2, interaction
 
 ## Enable Background Interaction for Peek-Style Sheets
 
-Rams' thoroughness extends to interaction design. A small-detent sheet that dims and blocks the map behind it has not been thought through — the sheet was designed to peek, but the implementation forces a full modal. Rams' #2: the product is useful when users can interact with the map while browsing results, as Apple Maps demonstrates.
+The frustration of a peek-style sheet over a map that dims and blocks the map underneath — you can see the pins through the dimming but cannot tap them. The sheet was designed to peek, to let you browse results while the map stays alive beneath, but the default implementation forces a full modal that kills the spatial context the sheet was supposed to preserve. You have to dismiss the sheet, tap the pin, then reopen the sheet — a three-step workaround for what should be simultaneous interaction. Enabling background interaction up through the appropriate detent restores the peek pattern that the design intended.
 
 **Incorrect (sheet dims and blocks background even at small detent):**
 
@@ -77,6 +77,6 @@ struct SearchResultsSheet: View {
 - `.enabled(upThrough: .medium)` — background interactive at `.fraction(0.25)` and `.medium`. Dims only at `.large`.
 - `.enabled` (no parameter) — background always interactive, even at `.large`. Use sparingly; at large detent the user may accidentally interact with hidden content.
 
-**When NOT to use:** Confirmation sheets, payment flows, or any modal action where background interaction would cause data loss or confusion. If the sheet requires a decision before proceeding, the background should remain dimmed and non-interactive.
+**When NOT to apply:** Confirmation sheets, payment flows, or any modal action where background interaction would cause data loss or confusion. If the sheet requires a decision before proceeding, the background should remain dimmed and non-interactive.
 
 Reference: [Sheets - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/sheets), [presentationBackgroundInteraction - SwiftUI](https://developer.apple.com/documentation/swiftui/view/presentationbackgroundinteraction(_:))

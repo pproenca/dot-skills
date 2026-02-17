@@ -7,7 +7,7 @@ tags: invisible, motion, sf-symbols, rams-5, edson-product, symbolEffect
 
 ## Use Built-In symbolEffect, Not Manual Symbol Animation
 
-Rams' unobtrusive principle means the system handles complexity so the user doesn't see it. symbolEffect is Apple's built-in animation system for SF Symbols — it handles Reduce Motion, Dynamic Type, and platform timing invisibly. Manually animating symbols forces the mechanism into view. Edson's product-as-marketing: let the system's craft speak for itself.
+Tap a heart icon that has been manually animated: the bounce is a little too slow, the scale overshoots awkwardly, it ignores Reduce Motion, and the timing was somebody's guess on a Friday afternoon. It feels handmade in the worst sense — like a cabinet whose drawers stick. Now tap a heart that uses `.symbolEffect(.bounce)`: the bounce lands with exactly the right weight, respects every accessibility setting, and matches the rhythm of every other symbol in the system. The difference is not subtle. One feels like the developer is performing; the other feels like the system itself responding to your touch. Rams called this unobtrusiveness — the best mechanism is the one you never see. `symbolEffect` hides enormous complexity (Dynamic Type scaling, Reduce Motion fallbacks, cross-platform timing) behind a single modifier, so the craft is invisible and the interaction feels effortless.
 
 **Incorrect (manual scale and opacity animation on SF Symbols):**
 
@@ -91,5 +91,7 @@ struct DownloadIndicator: View {
 | `.variableColor` | Progress indication (Wi-Fi, signal strength) |
 | `.replace` | Transitioning between two different symbols |
 | `.breathe` | Ambient, passive attention (iOS 18+) |
+
+**When NOT to apply:** Custom icon sets that are not SF Symbols, or branded illustrations where the animation must match a specific motion language that `symbolEffect` presets cannot reproduce.
 
 **Reference:** WWDC 2023 "Animate symbols in your app"; Apple HIG "SF Symbols" — symbol effects are the canonical way to animate SF Symbols and are designed to work across all Apple platforms.

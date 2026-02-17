@@ -3,7 +3,7 @@
   "organization": "Refactoring UI + Apple Design Philosophy",
   "technology": "Tailwind CSS",
   "date": "February 2026",
-  "abstract": "Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, informed by the design philosophy of Creative Selection (Ken Kocienda) and Design Like Apple (John Edson). Contains 62 rules across 12 categories, organized into three meta-layers: Empathy (understand the user's task and emotional state), Craft (mechanical transforms for hierarchy, spacing, typography, color, depth, and polish), and Taste (judgment, iteration, conviction, and knowing when to break rules). Each rule includes incorrect vs. correct Tailwind HTML examples, taste checkpoints for developing design judgment, and 'When NOT to use' guidance for context-dependent decisions. Uses Tailwind CSS v4 syntax (v3 notes provided where syntax differs).",
+  "abstract": "Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, informed by the design philosophy of Creative Selection (Ken Kocienda) and Design Like Apple (John Edson). Contains 62 rules across 12 categories, organized into three meta-layers: Empathy (understand the user's task and emotional state), Craft (mechanical transforms for hierarchy, spacing, typography, color, depth, and polish with a simplification-first gate), and Taste (judgment, iteration, conviction, and knowing when to break rules). Each rule includes incorrect vs. correct Tailwind HTML examples, taste checkpoints for developing design judgment, and 'When NOT to use' guidance for context-dependent decisions. Uses Tailwind CSS v4 syntax (v3 notes provided where syntax differs).",
   "references": [
     "https://refactoringui.com/",
     "https://tailwindcss.com/docs",

@@ -7,7 +7,7 @@ tags: system, color, naming, edson-systems, rams-8, design-tokens
 
 ## Name Custom Colors by Role, Not Hue
 
-Edson's systems thinking demands that colors participate in a coherent system, not as isolated hex values. "darkBlue" is a description, not a role. Rams' thoroughness requires that every naming decision be intentional — "textPrimary" describes function, survives a rebrand, and teaches new developers the system through reading the code.
+Naming a color "darkBlue" is a description — it tells you what the color looks like but nothing about what it does. Naming it "textPrimary" is a craft decision that teaches the system's language to every developer who reads the code. One name says "this is a shade"; the other says "this is the most important text on screen." When the brand palette changes next quarter, every "darkBlue" reference becomes a lie, while every "textPrimary" reference still means exactly what it says. Role-based naming turns the color system into a shared vocabulary that survives rebrands, onboards new teammates through code alone, and makes the relationship between every color intentional rather than incidental.
 
 **Incorrect (colors named by hue in asset catalog and code):**
 
@@ -83,5 +83,7 @@ struct OrderCard: View {
 - Asset catalog color sets still hold the actual hex values — renaming changes nothing in the catalog, only in code
 - Dark mode variants are defined per role, not per hue, so "backgroundElevated" resolves to the right value in both appearances
 - New team members read `foregroundStyle(.textSecondary)` and understand intent without checking a design spec
+
+**When NOT to apply:** Illustration and artwork assets where the color IS the content (e.g., brand logo colors, photography tints), and rapid prototyping phases where semantic naming overhead slows iteration before the design language has stabilized.
 
 Reference: [Color - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/color), [WWDC23 — Design with SwiftUI](https://developer.apple.com/videos/play/wwdc2023/10115/)

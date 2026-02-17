@@ -7,7 +7,7 @@ tags: refined, animation, lifecycle, edson-prototype, rams-1
 
 ## Use PhaseAnimator for Multi-Step Animation Sequences
 
-Edson's prototype-to-perfection principle means replacing fragile DispatchQueue chains with declarative phase sequences. PhaseAnimator declares the animation as data — SwiftUI manages lifecycle, cancellation, and accessibility. Rams' aesthetic principle: the code itself becomes beautiful when complexity is reduced to a data declaration.
+The difference between a celebration animation that feels like applause — appear, overshoot, settle — and a single pop that feels flat and unfinished is the presence of distinct stages. Each phase gives the eye a new thing to track, building anticipation and resolution the way a drumroll does before a cymbal crash. `PhaseAnimator` lets you declare those stages as data rather than chaining fragile `DispatchQueue` timers, and SwiftUI handles lifecycle, cancellation, and accessibility automatically.
 
 **Incorrect (DispatchQueue chains for stepped animation):**
 
@@ -87,6 +87,72 @@ struct CelebrationView: View {
 }
 ```
 
+**Exceptional (the creative leap) — a celebration with phased choreography:**
+
+```swift
+enum CheckmarkPhase: CaseIterable {
+    case hidden, draw, overshoot, settle, radiate, complete
+
+    var scale: CGFloat {
+        switch self {
+        case .hidden: 0.3
+        case .draw: 0.9
+        case .overshoot: 1.25
+        case .settle, .radiate, .complete: 1.0
+        }
+    }
+    var opacity: Double { self == .hidden ? 0 : 1 }
+    var particleScale: CGFloat { self == .radiate ? 1.8 : 0.01 }
+    var particleOpacity: Double { self == .radiate ? 0.7 : 0 }
+    var trimEnd: CGFloat {
+        switch self {
+        case .hidden: 0
+        case .draw: 1.0
+        default: 1.0
+        }
+    }
+}
+
+struct CelebrationCheckmark: View {
+    var body: some View {
+        ZStack {
+            // Radiating particles
+            ForEach(0..<6, id: \.self) { i in
+                let angle = Angle.degrees(Double(i) * 60)
+                PhaseAnimator(CheckmarkPhase.allCases) { phase in
+                    Image(systemName: "sparkle")
+                        .font(.caption)
+                        .foregroundStyle(.green.opacity(0.8))
+                        .scaleEffect(phase.particleScale)
+                        .opacity(phase.particleOpacity)
+                        .offset(x: cos(angle.radians) * 30,
+                                y: sin(angle.radians) * 30)
+                } animation: { _ in .spring(duration: 0.4, bounce: 0.1) }
+            }
+            // Main checkmark
+            PhaseAnimator(CheckmarkPhase.allCases) { phase in
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 48))
+                    .foregroundStyle(.green)
+                    .scaleEffect(phase.scale)
+                    .opacity(phase.opacity)
+            } animation: { phase in
+                switch phase {
+                case .hidden: .spring(duration: 0.01)
+                case .draw: .spring(duration: 0.35, bounce: 0.1)
+                case .overshoot: .spring(duration: 0.25, bounce: 0.5)
+                case .settle: .spring(duration: 0.2)
+                case .radiate: .easeOut(duration: 0.5)
+                case .complete: .easeOut(duration: 0.3)
+                }
+            }
+        }
+    }
+}
+```
+
+Each phase builds on the emotional beat before it like measures in a score: the checkmark draws in (anticipation), overshoots past full size (the cymbal hit), settles to rest (resolution), and only then do the sparkles radiate outward (the reverb). The particles use the same phase enum but only respond to the `radiate` phase, so they sit invisible while the checkmark takes center stage and then bloom outward like confetti at precisely the right moment. This layered timing -- main action first, secondary flourish after -- is what separates an animation that feels like celebration from one that just moves.
+
 The `.phaseAnimator()` view modifier form is often more convenient when refactoring existing views, as it modifies the view in-place rather than wrapping it:
 
 ```swift
@@ -102,5 +168,7 @@ Image(systemName: "star.fill")
 ```
 
 Do not use `PhaseAnimator` for single-step transitions — a standard `withAnimation` or `.animation()` modifier is simpler. Reserve `PhaseAnimator` for sequences of three or more distinct visual states.
+
+**When NOT to apply:** Single-step transitions where a standard `withAnimation` or `.animation()` modifier is sufficient. Reserve `PhaseAnimator` for sequences of three or more distinct visual states; simpler animations do not benefit from the added complexity.
 
 Reference: WWDC 2023 — "Wind your way through advanced animations in SwiftUI"

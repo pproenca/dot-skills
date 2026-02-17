@@ -1,13 +1,13 @@
 ---
 title: Each Semantic Color Serves Exactly One Purpose
 impact: CRITICAL
-impactDescription: reusing the same color for links, badges, selection highlights, and decorative accents strips color of meaning — users cannot distinguish tappable from informational, increasing cognitive load and error rates by 15-25%
+impactDescription: reusing the same color for links, badges, selection highlights, and decorative accents strips color of meaning — users cannot distinguish tappable from informational, measurably increasing cognitive load and error rates
 tags: less, color, tokens, rams-10, segall-minimal, cognitive-load
 ---
 
 ## Each Semantic Color Serves Exactly One Purpose
 
-Rams' honesty principle intersects with "less, but better" here — when one color serves four purposes, it serves none. Color is a language, and each word must have one clear definition. Segall's simplicity demands that each element has one clear meaning. When the same blue means "tappable link," "informational badge," "selected row," and "decorative accent," users learn that blue means nothing. A principal designer audits every use of a shared color and splits it into distinct tokens so that the interface teaches users what each color means through consistency.
+Color is a language, and like any language, a word that means four things means nothing. When the same blue appears as a tappable link, an informational badge, a selected-row highlight, and a decorative accent, users unconsciously learn that blue is unreliable — they cannot trust it to signal interactivity, so they start tapping everything or nothing. The interface becomes a guessing game. The fix is not adding more colors but giving each color one job and holding it accountable. When blue means "tappable" and only "tappable," users learn the vocabulary in minutes and navigate with confidence. When a green dot always means "active," users stop wondering and start trusting. Each color earns meaning through consistency the way a well-designed icon earns recognition — by never lying.
 
 **Incorrect (one blue color serves four unrelated purposes):**
 
@@ -128,5 +128,7 @@ struct InboxRow: View {
 | Success | `statusSuccess` | Green — reserved for confirmed positive outcomes |
 
 **The audit method:** Search the codebase for every use of `.blue`, `Color.blue`, or the app's accent color. List every use case. If the same color appears in more than one purpose category from the table above, split it into separate tokens. The total number of distinct color tokens should increase, but each token's meaning becomes unambiguous.
+
+**When NOT to apply:** Data visualization contexts where a single hue with varying brightness encodes a continuous range (e.g., a heatmap), and the reuse of one color across multiple "purposes" is the intentional encoding strategy.
 
 Reference: [Color - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/color), [WWDC23 — Design with SwiftUI](https://developer.apple.com/videos/play/wwdc2023/10115/)

@@ -1,13 +1,13 @@
 ---
 title: Remove Controls That Do Not Serve the Core Task
 impact: HIGH
-impactDescription: every additional button, toggle, or menu option increases decision time by 150ms (Hick's Law) — removing 3 unnecessary controls from a screen reduces time-to-action by 20-30%
+impactDescription: every additional visible control is a question the user must answer before they can act — reducing control count from 12 to 5 transforms overwhelm into clarity
 tags: less, controls, rams-10, segall-minimal, hicks-law
 ---
 
 ## Remove Controls That Do Not Serve the Core Task
 
-Rams #10: "Back to purity, back to simplicity." Segall's revelation that Jobs cut Apple's product line from 350 to 10 is the defining example of "less, but better." The same ruthless reduction applies to controls on screen. Every button, toggle, slider, and menu item is a question the user must answer. When a music player screen shows 12 controls simultaneously — play, pause, skip, shuffle, repeat, speed, AirPlay, queue, lyrics, sleep timer, equalizer, share — the user must parse all 12 before they can find the one they need. If a control is used by fewer than 20% of users, it belongs in Settings or behind a menu, not on the primary screen.
+Every button on a screen is a question the user must answer before they can act. A music player with 12 simultaneously visible controls — play, pause, skip, shuffle, repeat, speed, AirPlay, queue, lyrics, sleep timer, equalizer, share — feels like an exam, not an experience. The user came to press play, but first they must visually parse all 12 options, decide which ones are irrelevant, and locate the one they need. That friction is invisible to the developer who knows where everything is, but crushing to the user who just wants to hear a song. Jobs cut Apple's product line from 350 to 10 — the same ruthless reduction applies to controls on screen. If a control is used by fewer than 20% of users, it belongs behind a menu, not on the primary surface. The goal is not fewer features — it is fewer *visible* decisions.
 
 **Incorrect (12 controls visible simultaneously — overwhelming):**
 

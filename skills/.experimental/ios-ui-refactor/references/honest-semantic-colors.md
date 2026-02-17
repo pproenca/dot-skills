@@ -7,7 +7,7 @@ tags: honest, color, semantic, rams-6, segall-brutal, dark-mode
 
 ## Use Semantic Colors, Never Hard-Coded Black or White
 
-Rams insisted that design must not make a product appear more capable than it really is — it must not manipulate the consumer with promises that cannot be kept. `Color.black` in dark mode is a lie: the interface claims to show text but renders invisible content. It promises readability in every context but delivers blindness at nightfall. Segall's Think Brutal demands honesty about what colors do, not what they look like on your monitor: black is not "dark text," it is a literal absence of light that never adapts. A semantic color like `.primary` tells the truth — it says "this is important text" and SwiftUI translates that role into the appropriate color for every appearance, accessibility setting, and contrast mode.
+`Color.black` in dark mode is a lie: the interface claims to show text but renders invisible content — black glyphs on a near-black background, swallowed whole. It promises readability in every context but delivers blindness at nightfall. The problem is not the color itself but the false certainty it carries: black is not "dark text," it is a literal absence of light that never adapts, never defers, never asks the system what the user actually needs. A semantic color like `.primary` tells the truth instead — it says "this is important text" and lets SwiftUI translate that role into the right color for every appearance, accessibility setting, and contrast mode. The craft difference is between a value that looks correct on your monitor and a role that remains correct everywhere the interface travels.
 
 **Incorrect (hard-coded color values that ignore appearance):**
 
@@ -72,6 +72,6 @@ struct SettingsRow: View {
 - Light gray background → `Color(.secondarySystemBackground)` (grouped table style)
 - `Color(.separator)` for dividers instead of `Color.gray.opacity(0.3)`
 
-**When NOT to use semantic colors:** Decorative illustrations, brand logos, and photography where the exact color is part of the content itself. Even then, test in both appearances.
+**When NOT to apply:** Decorative illustrations, brand logos, and photography where the exact color is part of the content itself. Even then, test in both appearances.
 
 Reference: [Color - Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/color), [UI Element Colors - UIKit](https://developer.apple.com/documentation/uikit/uicolor/ui_element_colors)

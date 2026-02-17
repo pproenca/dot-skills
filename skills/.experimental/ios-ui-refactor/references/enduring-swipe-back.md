@@ -7,7 +7,7 @@ tags: enduring, swipe-back, navigation, rams-7, edson-conviction, gesture
 
 ## Never Break the System Back-Swipe Gesture
 
-Rams designed objects that lasted decades because they respected how people use them. The left-edge swipe to go back is one of iOS's most enduring interaction patterns — it will outlast any custom gesture you replace it with. Edson's Design With Conviction means committing to platform gestures, not fighting them.
+The left-edge swipe to go back is muscle memory for hundreds of millions of iPhone users — breaking it feels like someone moved the light switch in your own home. The disorientation is immediate and the trust damage is lasting. This gesture will outlast any custom interaction you replace it with, because it is wired into the muscle memory of everyone who has ever used an iPhone. Respecting it is not a constraint — it is a commitment to the spatial language your users already speak fluently.
 
 **Incorrect (custom drag gesture conflicts with system back swipe):**
 
@@ -104,5 +104,7 @@ struct DetailView: View {
     }
 }
 ```
+
+**When NOT to apply:** Full-screen immersive experiences (games, camera, drawing canvases) where the entire screen is a continuous interaction surface and a back button or close gesture is more appropriate than an edge swipe.
 
 **Reference:** [Apple HIG — Navigation](https://developer.apple.com/design/human-interface-guidelines/navigation) — "Always provide a clear path back. People usually know how they got to the current screen and expect to be able to go back."

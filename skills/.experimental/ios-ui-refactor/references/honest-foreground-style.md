@@ -7,7 +7,7 @@ tags: honest, api, foreground-style, rams-6, segall-brutal
 
 ## Use foregroundStyle Over foregroundColor
 
-Rams' honesty extends to the API itself — `foregroundColor` claims to accept styling but only handles `Color`. It is a lie of omission: the name promises general-purpose foreground styling but delivers a narrow type constraint that silently rejects gradients, materials, and hierarchical styles. `foregroundStyle` is honest about its capabilities: it accepts any `ShapeStyle` — `Color`, `HierarchicalShapeStyle`, `LinearGradient`, `Material` — and integrates with SwiftUI's hierarchical rendering system. Segall's Think Brutal: use the API that does what it says, not the one with a familiar name. Since iOS 15, `foregroundStyle` has been the preferred API; in iOS 17+ codebases there is no reason to reach for the deprecated, limited alternative.
+Good craft shows in the names of things. `foregroundColor` says "I style your foreground" but only accepts a `Color` — try handing it a gradient and it refuses. The name overpromises and the type system under-delivers, a small dishonesty that compounds across every view in your codebase. `foregroundStyle` is the honest tool: it says what it does, and it accepts what it promises. Pass it a `Color`, a `LinearGradient`, a `Material`, a `HierarchicalShapeStyle` — it handles them all because its contract matches its capability. This is the craft distinction between an API you fight and one that fits your hand. Since iOS 15, `foregroundStyle` has been the preferred API; in iOS 17+ codebases there is no reason to reach for the deprecated, limited alternative.
 
 **Incorrect (foregroundColor limiting style options):**
 

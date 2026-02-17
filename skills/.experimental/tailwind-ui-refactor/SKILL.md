@@ -1,6 +1,6 @@
 ---
 name: tailwind-ui-refactor
-description: Refactoring UI design patterns for Tailwind CSS applications, informed by Apple's design philosophy. This skill should be used when writing, reviewing, or refactoring HTML with Tailwind utility classes to improve visual hierarchy, spacing, typography, color, depth, and polish. Triggers on tasks involving UI cleanup, design review, Tailwind refactoring, component styling, visual improvements, or when the user wants UI that feels considered and crafted rather than generic.
+description: Refactoring UI design patterns for Tailwind CSS applications, informed by Apple's design philosophy, with a simplification-first bias. This skill should be used when writing, reviewing, or refactoring HTML with Tailwind utility classes to improve visual hierarchy, spacing, typography, color, depth, and polish while avoiding unnecessary boxes, wrappers, and decorative surfaces. Triggers on tasks involving UI cleanup, design review, Tailwind refactoring, component styling, visual improvements, or when the user wants UI that feels considered and crafted rather than generic.
 ---
 
 # Refactoring UI Tailwind CSS Best Practices
@@ -10,6 +10,14 @@ Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Stev
 **Core philosophy:** Rules produce competent UI. Taste produces remarkable UI. This skill teaches both: the mechanical transforms that fix common problems (Craft), the user understanding that prevents wrong problems from being solved (Empathy), and the judgment to know when rules don't apply (Taste).
 
 **Important: Empathy first, craft second, taste always.** Before applying any visual rule, understand the user's task and emotional state. Then apply craft rules with care. Then step back and ask: does this feel right? A component that follows every rule but feels generic is worse than one that breaks a rule with conviction.
+
+**Simplicity bias (non-negotiable):** When in doubt, remove instead of add. Prefer fewer wrappers, fewer visual surfaces, and fewer decorative treatments.
+
+**Mandatory simplification gate (run before Depth, Borders, or Polish rules):**
+- Remove at least one unnecessary wrapper or surface before adding new styling.
+- Use typography and spacing first; add border, shadow, ring, or extra background only if it improves comprehension or interaction feedback.
+- Keep one primary surface per logical region; avoid nested card-in-card patterns.
+- If two treatments communicate the same thing, keep the lighter one.
 
 ## When to Apply
 
@@ -55,7 +63,7 @@ After applying craft rules, step back: generate alternatives, evaluate tradeoffs
 
 | Priority | Category | Impact | Prefix |
 |----------|----------|--------|--------|
-| 11 | Polish & Delight | MEDIUM | `polish-` |
+| 11 | Polish & Delight | LOW | `polish-` |
 | 12 | Taste & Judgment | CRITICAL | `taste-` |
 
 ## Quick Reference
@@ -132,7 +140,7 @@ After applying craft rules, step back: generate alternatives, evaluate tradeoffs
 - [`sep-fewer-borders`](references/sep-fewer-borders.md) - Use fewer borders — replace with spacing, shadows, or background color
 - [`sep-background-color-separation`](references/sep-background-color-separation.md) - Use background color differences to separate sections
 - [`sep-table-spacing-not-lines`](references/sep-table-spacing-not-lines.md) - Use spacing instead of lines in simple tables
-- [`sep-card-radio-buttons`](references/sep-card-radio-buttons.md) - Upgrade radio buttons to selectable cards for key choices
+- [`sep-card-radio-buttons`](references/sep-card-radio-buttons.md) - Keep standard radios by default; only use card-style radios for high-stakes choices with supporting descriptions
 
 ### 10. Images & Content (LOW-MEDIUM)
 
@@ -141,9 +149,9 @@ After applying craft rules, step back: generate alternatives, evaluate tradeoffs
 - [`img-dont-scale-up-icons`](references/img-dont-scale-up-icons.md) - Avoid scaling up icons designed for small sizes
 - [`img-empty-states`](references/img-empty-states.md) - Design meaningful empty states with clear CTAs
 
-### 11. Polish & Delight (MEDIUM)
+### 11. Polish & Delight (LOW)
 
-- [`polish-accent-borders`](references/polish-accent-borders.md) - Add accent borders to highlight important elements
+- [`polish-accent-borders`](references/polish-accent-borders.md) - Use accent borders sparingly, only when simpler hierarchy signals are insufficient
 - [`polish-custom-bullets`](references/polish-custom-bullets.md) - Replace default bullets with icons or checkmarks
 - [`polish-border-radius-personality`](references/polish-border-radius-personality.md) - Choose your border radius with conviction and apply it everywhere
 - [`polish-gradient-close-hues`](references/polish-gradient-close-hues.md) - Use gradients with hues within 30 degrees of each other
@@ -159,6 +167,14 @@ After applying craft rules, step back: generate alternatives, evaluate tradeoffs
 - [`taste-know-when-done`](references/taste-know-when-done.md) - Stop when nothing more can be removed — not when everything has been added
 
 ## How to Use
+
+Use this order of operations:
+
+1. Run Design Intent rules first, especially `intent-remove-before-decorating` and `intent-simplify-over-decorate`.
+2. Establish hierarchy, spacing, and typography before adding visual containers.
+3. Add separation/depth only where users need faster scanning or clearer interaction feedback.
+4. Apply polish rules last and sparingly; skip them if the UI already feels clear and coherent.
+5. Stop when no additional class or wrapper improves task clarity.
 
 Read individual reference files for detailed explanations and code examples:
 
