@@ -45,7 +45,7 @@ final class TripListViewModel {
 }
 ```
 
-**Correct (domain struct + @Model entity + mapping — Clean Architecture layers):**
+**Correct (domain struct + @Model entity + mapping — modular Domain/Data layers):**
 
 ```swift
 // Domain/Models/Trip.swift — pure Swift, zero imports

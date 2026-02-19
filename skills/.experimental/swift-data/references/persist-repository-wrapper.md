@@ -7,7 +7,7 @@ tags: persist, repository, protocol, clean-architecture, data-layer, testability
 
 ## Wrap SwiftData Behind Repository Protocols
 
-Define repository protocols in the Domain layer describing WHAT data operations are available. Place SwiftData implementations (using `ModelContext`, `FetchDescriptor`, `@ModelActor`) in the Data layer. ViewModels and use cases depend only on the protocol — never on SwiftData types. This ensures persistence logic is swappable, testable with mocks, and invisible to the presentation layer.
+Define repository protocols in the Domain layer describing WHAT data operations are available. Place SwiftData implementations (using `ModelContext`, `FetchDescriptor`, `@ModelActor`) in the Data layer. ViewModels depend only on the protocol — never on SwiftData types. This ensures persistence logic is swappable, testable with mocks, and invisible to the presentation layer.
 
 **Incorrect (ViewModel directly uses SwiftData types — coupled to persistence framework):**
 
@@ -154,7 +154,7 @@ extension EnvironmentValues {
 - Single-screen apps with trivial persistence needs
 
 **Benefits:**
-- ViewModels and use cases are testable without SwiftData or simulators
+- ViewModels are testable without SwiftData or simulators
 - Data source is swappable (SwiftData, CoreData, network-only) without touching presentation code
 - Domain layer has zero framework imports
 - Mock repositories enable fast, deterministic unit tests

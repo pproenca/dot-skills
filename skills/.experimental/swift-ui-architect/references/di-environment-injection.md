@@ -7,7 +7,7 @@ tags: di, environment, environment-key, injection, entry-macro
 
 ## Inject Dependencies via @Environment With Custom EnvironmentKey
 
-SwiftUI's `@Environment` is the native dependency injection mechanism. Define custom `EnvironmentKey` types for services (repositories, use cases, coordinators) and inject them at the app root. Views read dependencies with `@Environment(\.userRepository)` — no constructor parameter needed. Use the `@Entry` macro (Xcode 16+) to eliminate the boilerplate of defining a key and extension separately.
+SwiftUI's `@Environment` is the native dependency injection mechanism. Define custom `EnvironmentKey` types for services (repositories, coordinators, error routing) and inject them at the app root. Views read dependencies with `@Environment(\.userRepository)` — no constructor parameter needed. Use the `@Entry` macro (Xcode 16+) to eliminate the boilerplate of defining a key and extension separately.
 
 **Incorrect (passing repository through 4 levels of view init parameters):**
 

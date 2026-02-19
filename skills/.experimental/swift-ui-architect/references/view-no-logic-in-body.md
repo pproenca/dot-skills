@@ -7,7 +7,7 @@ tags: view, business-logic, separation, viewmodel, clean-architecture
 
 ## Zero Business Logic in View Body
 
-The view body is a hot path — it runs every time SwiftUI re-evaluates the view. Business logic (filtering, sorting, formatting, validation) in body runs repeatedly and violates Clean Architecture's separation. ALL business logic belongs in the ViewModel or UseCase. The view body should contain ONLY layout declarations and property references.
+The view body is a hot path — it runs every time SwiftUI re-evaluates the view. Business logic (filtering, sorting, formatting, validation) in body runs repeatedly and violates modular layer separation. ALL business logic belongs in the ViewModel or Domain model rules. The view body should contain ONLY layout declarations and property references.
 
 **Incorrect (business logic in body — re-executes on every render, untestable):**
 

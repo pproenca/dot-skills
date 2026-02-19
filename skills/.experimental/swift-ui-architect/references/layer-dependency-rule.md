@@ -7,7 +7,7 @@ tags: layer, dependency-rule, domain, clean-architecture, imports
 
 ## Domain Layer Has Zero Framework Imports
 
-The Domain layer contains business logic, use cases, and model definitions. It MUST NOT import SwiftUI, UIKit, CoreData, SwiftData, or any third-party framework. `import Foundation` is acceptable for standard types (`Date`, `URL`, `UUID`, `Decimal`, `Data`, `Codable`) but NEVER for networking (`URLSession`) or persistence. This ensures domain logic is testable without simulators, portable across platforms, and independent of Apple's framework changes.
+The Domain layer contains domain models, repository/coordinator protocols, and error types. It MUST NOT import SwiftUI, UIKit, CoreData, SwiftData, or any third-party framework. `import Foundation` is acceptable for standard types (`Date`, `URL`, `UUID`, `Decimal`, `Data`, `Codable`) but NEVER for networking (`URLSession`) or persistence. This ensures domain logic is testable without simulators, portable across platforms, and independent of Apple's framework changes.
 
 **Incorrect (domain layer importing frameworks — coupled, non-portable, requires simulator to test):**
 

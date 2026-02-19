@@ -1,58 +1,21 @@
 ---
-title: Extract Use Cases as Protocols with Single Execute Method
+title: Remove Use-Case/Interactor Layers That Add Ceremony
 impact: HIGH
-impactDescription: enables independent testing of business logic — each use case testable in isolation
-tags: layer, usecase, protocol, clean-architecture, testing
+impactDescription: cuts indirection and keeps refactors aligned with modular MVVM-C
+tags: layer, architecture, repository, refactor, testing
 ---
 
-## Extract Use Cases as Protocols with Single Execute Method
+## Remove Use-Case/Interactor Layers That Add Ceremony
 
-Business logic buried in ViewModels or services creates god objects that are hard to test and reuse. Extract each distinct operation into a Use Case protocol with a single `execute` method. ViewModels compose multiple use cases. Each use case is independently testable with a mock repository.
+When refactoring toward the clinic architecture, collapse single-purpose use-case wrappers into repository-backed ViewModel logic. Keep protocol boundaries at repository/coordinator/error-routing interfaces in Domain.
 
-**Incorrect (ViewModel contains all business logic — god object, hard to test):**
-
-```swift
-@Observable
-class OrderViewModel {
-    var orders: [Order] = []
-    var filteredOrders: [Order] = []
-
-    func loadOrders() async {
-        let url = URL(string: "https://api.example.com/orders")!
-        let (data, _) = try! await URLSession.shared.data(from: url)
-        orders = try! JSONDecoder().decode([Order].self, from: data)
-    }
-
-    func cancelOrder(_ order: Order) async {
-        var request = URLRequest(url: URL(string: "https://api.example.com/orders/\(order.id)/cancel")!)
-        request.httpMethod = "POST"
-        _ = try? await URLSession.shared.data(for: request)
-        orders.removeAll { $0.id == order.id }
-    }
-
-    func filterOrders(by status: OrderStatus) {
-        filteredOrders = orders.filter { $0.status == status }
-    }
-}
-```
-
-**Correct (use cases as protocols — composable, independently testable):**
+**Incorrect (one-line use-case wrappers):**
 
 ```swift
-// Domain layer — each use case is a protocol
 protocol FetchOrdersUseCase {
     func execute() async throws -> [Order]
 }
 
-protocol CancelOrderUseCase {
-    func execute(orderId: String) async throws
-}
-
-protocol FilterOrdersUseCase {
-    func execute(orders: [Order], status: OrderStatus) -> [Order]
-}
-
-// Implementations depend on repository protocols
 final class FetchOrdersUseCaseImpl: FetchOrdersUseCase {
     private let repository: OrderRepository
 
@@ -64,40 +27,39 @@ final class FetchOrdersUseCaseImpl: FetchOrdersUseCase {
         try await repository.fetchAll()
     }
 }
+```
 
-// ViewModel composes use cases — thin orchestration layer
+**Correct (ViewModel uses repository protocol directly):**
+
+```swift
+protocol OrderRepository: Sendable {
+    func fetchAll() async throws -> [Order]
+    func cancel(orderID: String) async throws
+}
+
 @Observable
-class OrderViewModel {
+final class OrderViewModel {
+    private let repository: any OrderRepository
+
     var orders: [Order] = []
-    var filteredOrders: [Order] = []
 
-    private let fetchOrders: FetchOrdersUseCase
-    private let cancelOrder: CancelOrderUseCase
-    private let filterOrders: FilterOrdersUseCase
-
-    init(
-        fetchOrders: FetchOrdersUseCase,
-        cancelOrder: CancelOrderUseCase,
-        filterOrders: FilterOrdersUseCase
-    ) {
-        self.fetchOrders = fetchOrders
-        self.cancelOrder = cancelOrder
-        self.filterOrders = filterOrders
+    init(repository: any OrderRepository) {
+        self.repository = repository
     }
 
     func load() async {
-        orders = (try? await fetchOrders.execute()) ?? []
+        orders = (try? await repository.fetchAll()) ?? []
     }
 
     func cancel(_ order: Order) async {
-        try? await cancelOrder.execute(orderId: order.id)
-        orders.removeAll { $0.id == order.id }
-    }
-
-    func filter(by status: OrderStatus) {
-        filteredOrders = filterOrders.execute(orders: orders, status: status)
+        do {
+            try await repository.cancel(orderID: order.id)
+            orders.removeAll { $0.id == order.id }
+        } catch {
+            // Route through ErrorRouting / AppError policy.
+        }
     }
 }
 ```
 
-Reference: [Clean Architecture for SwiftUI](https://nalexn.github.io/clean-architecture-swiftui/)
+Only keep a dedicated use-case abstraction when the same cross-feature workflow is reused in multiple modules.

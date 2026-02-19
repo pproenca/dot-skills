@@ -1,13 +1,13 @@
 ---
-title: Extract Business Logic into ViewModel and Use Cases
+title: Extract Business Logic into Domain Models and ViewModels
 impact: HIGH
 impactDescription: enables unit testing of business logic without UI framework dependency
 tags: arch, viewmodel, usecase, separation, clean-architecture
 ---
 
-## Extract Business Logic into ViewModel and Use Cases
+## Extract Business Logic into Domain Models and ViewModels
 
-Business logic embedded in the view body — validation, formatting, network calls, data transformation — cannot be unit tested without launching the UI. Extract logic into an `@Observable` ViewModel that delegates to domain Use Cases. The view becomes a thin rendering layer, the ViewModel exposes display-ready state, and Use Cases contain reusable business rules testable with plain XCTest.
+Business logic embedded in the view body — validation, formatting, network calls, data transformation — cannot be unit tested without launching the UI. Extract logic into an `@Observable` ViewModel that delegates to repository protocols and Domain models. The view becomes a thin rendering layer, the ViewModel exposes display-ready state, and domain logic remains reusable and testable with plain XCTest.
 
 **Incorrect (business logic inline in view body, untestable):**
 
@@ -40,7 +40,7 @@ struct OrderSummaryView: View {
 }
 ```
 
-**Correct (ViewModel + Use Case — testable, clean layer separation):**
+**Correct (ViewModel + repository protocol — testable, clean layer separation):**
 
 ```swift
 // Domain layer — pure Swift, zero framework imports

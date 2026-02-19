@@ -38,7 +38,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 7. SwiftUI State Flow (state)
 
 **Impact:** MEDIUM-HIGH
-**Description:** @Observable ViewModels, @Bindable, @State, and @Environment coordinate data flow through the view hierarchy following Clean MVVM + Repository architecture. All data access routes through ViewModels backed by repository protocols. Business logic lives in domain value types and use cases, not in views or ViewModels.
+**Description:** @Observable ViewModels, @Bindable, @State, and @Environment coordinate data flow through the view hierarchy following modular MVVM-C repository architecture. All data access routes through ViewModels backed by repository protocols. Business logic lives in domain value types and repository-backed flows, not in views.
 
 ## 8. Schema & Migration (schema)
 

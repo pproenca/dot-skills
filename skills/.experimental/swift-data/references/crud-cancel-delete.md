@@ -7,7 +7,7 @@ tags: crud, cancel, delete, modal, data-integrity, architecture
 
 ## Avoid Orphaned Records by Persisting Only on Save
 
-In Clean Architecture, the creation form works with a domain struct in memory. Persistence only happens when the user confirms via the ViewModel and repository. Cancellation discards the in-memory struct — no cleanup needed. This eliminates the orphaned-record problem that arises when inserting entities before the form is complete.
+In the modular MVVM-C architecture, the creation form works with a domain struct in memory. Persistence only happens when the user confirms via the ViewModel and repository. Cancellation discards the in-memory struct — no cleanup needed. This eliminates the orphaned-record problem that arises when inserting entities before the form is complete.
 
 **Incorrect (insert-before-present pattern — orphaned records on cancel):**
 

@@ -7,7 +7,7 @@ tags: state, architecture, viewmodel, observable, clean-mvvm, repository
 
 ## Route All Data Access Through @Observable ViewModels
 
-Views never access `ModelContext`, `@Query`, or repositories directly. All data flows through `@Observable` ViewModels, which delegate to use cases or repository protocols. ViewModels expose display-ready domain structs, not `@Model` entities. This enforces Clean Architecture layer boundaries, enables unit testing without SwiftUI, and keeps views as pure layout templates.
+Views never access `ModelContext`, `@Query`, or repositories directly. All data flows through `@Observable` ViewModels, which delegate directly to repository protocols. ViewModels expose display-ready Domain structs, not `@Model` entities. This enforces modular MVVM-C boundaries, enables unit testing without SwiftUI, and keeps views as pure layout templates.
 
 **Incorrect (view accesses SwiftData directly — coupled to persistence, untestable):**
 

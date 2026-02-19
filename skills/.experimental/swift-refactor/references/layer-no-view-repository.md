@@ -1,80 +1,61 @@
 ---
 title: Remove Direct Repository Access from Views
 impact: HIGH
-impactDescription: 100% view testability without mocking data layer — views receive only display-ready state
-tags: layer, view, repository, boundary, clean-architecture
+impactDescription: makes views testable as pure rendering templates
+tags: layer, view, repository, boundary, modular-mvvm-c
 ---
 
 ## Remove Direct Repository Access from Views
 
-Views that call repositories or services directly mix presentation with data access — the view body contains network calls, error handling, and data transformation. Route all data access through the ViewModel: the view reads display-ready state, the ViewModel orchestrates use cases, and use cases call repositories.
+Views should not read repositories directly. Route data access through `@Observable` ViewModels so refactors can preserve feature boundaries and swap Data implementations without touching UI code.
 
-**Incorrect (view calls repository directly — mixed concerns):**
+**Incorrect (view calls repository):**
 
 ```swift
 struct BookmarkListView: View {
     @Environment(\.bookmarkRepository) private var repository
     @State private var bookmarks: [Bookmark] = []
-    @State private var isLoading = false
-    @State private var error: Error?
 
     var body: some View {
         List(bookmarks) { bookmark in
             Text(bookmark.title)
         }
         .task {
-            isLoading = true
-            do {
-                bookmarks = try await repository.fetchAll()
-            } catch {
-                self.error = error
-            }
-            isLoading = false
+            bookmarks = (try? await repository.fetchAll()) ?? []
         }
     }
 }
 ```
 
-**Correct (view reads ViewModel, ViewModel uses use cases):**
+**Correct (view reads ViewModel, ViewModel calls repository):**
 
 ```swift
+protocol BookmarkRepository: Sendable {
+    func fetchAll() async throws -> [Bookmark]
+}
+
 @Observable
-class BookmarkListViewModel {
+final class BookmarkListViewModel {
+    private let repository: any BookmarkRepository
     var bookmarks: [Bookmark] = []
-    var isLoading: Bool = false
-    var errorMessage: String?
 
-    private let fetchBookmarks: FetchBookmarksUseCase
-
-    init(fetchBookmarks: FetchBookmarksUseCase) {
-        self.fetchBookmarks = fetchBookmarks
+    init(repository: any BookmarkRepository) {
+        self.repository = repository
     }
 
     func load() async {
-        isLoading = true
-        defer { isLoading = false }
-        do {
-            bookmarks = try await fetchBookmarks.execute()
-        } catch {
-            errorMessage = error.localizedDescription
-        }
+        bookmarks = (try? await repository.fetchAll()) ?? []
     }
 }
 
 struct BookmarkListView: View {
     @State var viewModel: BookmarkListViewModel
-    // View only reads display-ready state — no repository access
 
     var body: some View {
         List(viewModel.bookmarks) { bookmark in
             Text(bookmark.title)
         }
-        .overlay {
-            if viewModel.isLoading { ProgressView() }
-        }
         .task { await viewModel.load() }
     }
 }
 ```
-
-Reference: [Managing model data in your app](https://developer.apple.com/documentation/swiftui/managing-model-data-in-your-app)

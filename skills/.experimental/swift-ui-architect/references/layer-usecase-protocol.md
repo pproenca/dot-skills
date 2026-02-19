@@ -1,126 +1,78 @@
 ---
-title: Every Use Case Is a Protocol With a Single Execute Method
+title: Do Not Add a Dedicated Use-Case Layer
 impact: HIGH
-impactDescription: protocol boundary enables testing and enforces single responsibility
-tags: layer, usecase, protocol, single-responsibility, interactor
+impactDescription: removes boilerplate and keeps feature flow aligned with modular MVVM-C
+tags: layer, architecture, repository, viewmodel, modular-mvvm-c
 ---
 
-## Every Use Case Is a Protocol With a Single Execute Method
+## Do Not Add a Dedicated Use-Case Layer
 
-Each use case represents one specific business operation. Define it as a protocol with a single async `execute()` method. The concrete implementation lives in the Domain layer but depends only on repository protocols. ViewModels call use cases — never repositories directly. This enforces single responsibility and makes every business operation independently testable.
+In the clinic architecture, ViewModels call Domain repository protocols directly. Avoid adding a separate use-case/interactor layer unless a cross-feature workflow is truly shared and reused. The default flow is: `View -> ViewModel -> Repository protocol`.
 
-**Incorrect (ViewModel calling repositories directly, multi-method use case — violates SRP):**
-
-```swift
-// Multi-purpose "service" with many methods — unclear responsibility
-// Not a protocol — cannot be mocked for testing
-class UserService {
-    private let apiClient: APIClient
-    private let database: Database
-
-    // 5 different operations in one class — violates single responsibility
-    func fetchUsers() async throws -> [User] { /* ... */ }
-    func fetchUser(id: String) async throws -> User { /* ... */ }
-    func updateUser(_ user: User) async throws { /* ... */ }
-    func deleteUser(id: String) async throws { /* ... */ }
-    func searchUsers(query: String) async throws -> [User] { /* ... */ }
-}
-
-// ViewModel directly calling repository — bypasses business logic layer
-@Observable
-final class UserListViewModel {
-    private let userRepository: RemoteUserRepository  // Concrete type, not protocol
-
-    var users: [User] = []
-
-    func loadUsers() async {
-        // Direct repository call — no place for business rules
-        // What about filtering? Sorting? Caching logic? Pagination?
-        users = try? await userRepository.fetchAll()
-    }
-}
-```
-
-**Correct (single-method protocol per use case — testable, single responsibility):**
+**Incorrect (extra layer with no reuse):**
 
 ```swift
-// Domain/UseCases/FetchUsersUseCase.swift
-
-// One protocol = one business operation
-protocol FetchUsersUseCase: Sendable {
+protocol FetchUsersUseCase {
     func execute() async throws -> [User]
 }
 
-// Implementation depends only on repository protocols
 final class FetchUsersUseCaseImpl: FetchUsersUseCase {
-    private let userRepository: UserRepository  // Protocol, not concrete type
-
-    init(userRepository: UserRepository) {
-        self.userRepository = userRepository
-    }
-
-    func execute() async throws -> [User] {
-        let users = try await userRepository.fetchAll()
-        // Business rules applied here — not in view or repository
-        return users
-            .filter { $0.isActive }
-            .sorted { $0.name.localizedCompare($1.name) == .orderedAscending }
-    }
-}
-
-// Domain/UseCases/SearchUsersUseCase.swift
-
-// Separate use case for search — different business rules
-protocol SearchUsersUseCase: Sendable {
-    func execute(query: String) async throws -> [User]
-}
-
-final class SearchUsersUseCaseImpl: SearchUsersUseCase {
     private let userRepository: UserRepository
 
     init(userRepository: UserRepository) {
         self.userRepository = userRepository
     }
 
-    func execute(query: String) async throws -> [User] {
-        guard query.count >= 2 else { return [] }  // Business rule: min query length
-        return try await userRepository.search(query: query)
+    func execute() async throws -> [User] {
+        try await userRepository.fetchAll()
     }
 }
 
-// ViewModel calls use cases — never repositories
 @Observable
 final class UserListViewModel {
     private let fetchUsersUseCase: FetchUsersUseCase
-    private let searchUsersUseCase: SearchUsersUseCase
-
     var users: [User] = []
 
-    init(
-        fetchUsersUseCase: FetchUsersUseCase,
-        searchUsersUseCase: SearchUsersUseCase
-    ) {
+    init(fetchUsersUseCase: FetchUsersUseCase) {
         self.fetchUsersUseCase = fetchUsersUseCase
-        self.searchUsersUseCase = searchUsersUseCase
     }
 
     func loadUsers() async {
         users = (try? await fetchUsersUseCase.execute()) ?? []
     }
+}
+```
 
-    func search(query: String) async {
-        users = (try? await searchUsersUseCase.execute(query: query)) ?? []
-    }
+**Correct (ViewModel calls repository protocol directly):**
+
+```swift
+protocol UserRepository: Sendable {
+    func fetchAll() async throws -> [User]
+    func delete(id: UUID) async throws
 }
 
-// Testing — mock use case, no real repository needed
-struct MockFetchUsersUseCase: FetchUsersUseCase {
-    var stubbedResult: [User] = []
+@Observable
+final class UserListViewModel {
+    private let userRepository: any UserRepository
+    var users: [User] = []
 
-    func execute() async throws -> [User] {
-        stubbedResult
+    init(userRepository: any UserRepository) {
+        self.userRepository = userRepository
+    }
+
+    func loadUsers() async {
+        users = (try? await userRepository.fetchAll()) ?? []
+    }
+
+    func delete(_ id: UUID) async {
+        do {
+            try await userRepository.delete(id: id)
+            users.removeAll { $0.id == id }
+        } catch {
+            // Route through ErrorRouting at feature level.
+        }
     }
 }
 ```
 
-Reference: [Clean Architecture for SwiftUI](https://nalexn.github.io/clean-architecture-swiftui/)
+Keep complex domain rules in Domain models and repository implementations, not in a default use-case layer.

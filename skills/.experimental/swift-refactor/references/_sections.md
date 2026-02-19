@@ -33,7 +33,7 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 ## 6. Layer Architecture (layer)
 
 **Impact:** HIGH
-**Description:** Clean Architecture boundaries (Domain/Data/Presentation) with strict inward-only dependency rules ensure the app remains testable, maintainable, and modular as it scales.
+**Description:** Modular MVVM-C boundaries (App/Feature/Domain/Data) with strict dependency rules ensure the app remains testable, maintainable, and modular as it scales.
 
 ## 7. Architecture Patterns (arch)
 

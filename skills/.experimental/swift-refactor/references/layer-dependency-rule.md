@@ -7,7 +7,7 @@ tags: layer, dependency-rule, domain, clean-architecture, imports
 
 ## Extract Domain Layer with Zero Framework Imports
 
-Business logic scattered across views and services that import SwiftUI, CoreData, or networking frameworks cannot be tested without a simulator. Extract a Domain layer containing use cases, models, and repository protocols with zero framework imports. `import Foundation` is acceptable for standard types (`Date`, `URL`, `UUID`, `Decimal`) but NEVER for networking or persistence.
+Business logic scattered across views and services that import SwiftUI, CoreData, or networking frameworks cannot be tested without a simulator. Extract a Domain layer containing models, repository/coordinator/error protocols with zero framework imports. `import Foundation` is acceptable for standard types (`Date`, `URL`, `UUID`, `Decimal`) but NEVER for networking or persistence.
 
 **Incorrect (domain logic coupled to frameworks — requires simulator to test):**
 

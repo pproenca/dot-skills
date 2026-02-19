@@ -7,7 +7,7 @@ tags: arch, protocol, dependency-injection, viewmodel, clean-architecture
 
 ## Extract Protocol Dependencies through ViewModel Layer
 
-Views that call concrete services or protocol dependencies directly violate Clean Architecture's layer boundaries — the view layer reaches into the data layer. Extract protocol interfaces and route them through an `@Observable` ViewModel. The ViewModel calls Use Cases, Use Cases call Repository protocols, and the view only reads display-ready state. This makes views, ViewModels, and Use Cases independently testable.
+Views that call concrete services or protocol dependencies directly violate modular layer boundaries — the view layer reaches into the data layer. Extract protocol interfaces and route them through an `@Observable` ViewModel. The ViewModel calls Repository protocols directly, and the view only reads display-ready state. This makes views and ViewModels independently testable.
 
 **Incorrect (view directly uses a service protocol — breaks layer boundary):**
 
