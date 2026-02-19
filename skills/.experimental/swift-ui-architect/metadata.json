@@ -1,9 +1,9 @@
 {
   "version": "0.1.0",
-  "organization": "Airbnb Engineering / Apple / raywenderlich",
-  "technology": "SwiftUI (iOS 17+)",
+  "organization": "Airbnb Engineering / OLX / Apple",
+  "technology": "SwiftUI (iOS 26 / Swift 6.2)",
   "date": "February 2026",
-  "abstract": "Opinionated SwiftUI architecture enforcement for iOS 17+ apps. Contains 43 rules across 8 categories: View Identity & Diffing (CRITICAL), State Architecture (CRITICAL), View Composition (HIGH), Navigation & Coordination (HIGH), Layer Architecture (HIGH), Dependency Injection (MEDIUM-HIGH), List & Collection Performance (MEDIUM), and Async & Data Flow (MEDIUM). Mandates Clean MVVM + Coordinator pattern with @Observable, @Equatable macro, NavigationStack routing, and strict Clean Architecture layer boundaries. Each rule includes incorrect vs. correct Swift code examples with quantified impact metrics.",
+  "abstract": "Opinionated SwiftUI architecture enforcement for iOS 26 / Swift 6.2 apps. Contains 43 rules across 8 categories: View Identity & Diffing (CRITICAL), State Architecture (CRITICAL), View Composition (HIGH), Navigation & Coordination (HIGH), Layer Architecture (HIGH), Dependency Injection (MEDIUM-HIGH), List & Collection Performance (MEDIUM), and Async & Data Flow (MEDIUM). Mandates modular MVVM-C with App-target composition root + route shells, @Observable state, Domain repository/coordinator/error protocols, Data-owned I/O, and strict feature-module dependency boundaries.",
   "references": [
     "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/",
     "https://medium.com/airbnb-engineering/unlocking-swiftui-at-airbnb-ea58f50cde49",

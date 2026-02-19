@@ -3,7 +3,7 @@
   "organization": "Airbnb Engineering / Apple HIG",
   "technology": "iOS Design System (SwiftUI, iOS 17+)",
   "date": "February 2026",
-  "abstract": "Airbnb-aligned design system engineering for SwiftUI iOS 17+ apps. Contains 50 rules across 8 categories: Token Architecture (CRITICAL), Color System Engineering (CRITICAL), Typography Scale (HIGH), Spacing & Sizing (HIGH), Component Style Library (CRITICAL), Asset Management (MEDIUM-HIGH), Theme & Brand Infrastructure (MEDIUM), and Consistency & Governance (HIGH). Mandates @Equatable on every view, @Observable state, Airbnb DLS-style protocols for component styling, and automated governance via SwiftLint and SPM package boundaries. Each rule includes incorrect vs. correct Swift code examples with quantified impact metrics.",
+  "abstract": "Airbnb-aligned design system engineering for SwiftUI iOS 17+ apps. Contains 50 rules across 8 categories: Token Architecture (CRITICAL), Color System Engineering (CRITICAL), Typography Scale (HIGH), Spacing & Sizing (HIGH), Component Style Library (CRITICAL), Asset Management (MEDIUM-HIGH), Theme & Brand Infrastructure (MEDIUM), and Consistency & Governance (HIGH). Mandates @Equatable on every view, @Observable state, DLS-style protocols for component styling, and automated governance via SwiftLint and SPM package boundaries, aligned with modular MVVM-C feature boundaries.",
   "references": [
     "https://medium.com/airbnb-engineering/unlocking-swiftui-at-airbnb-ea58f50cde49",
     "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/",

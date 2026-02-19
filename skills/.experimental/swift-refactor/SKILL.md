@@ -1,34 +1,27 @@
 ---
 name: swift-refactor
-description: Swift and SwiftUI refactoring patterns aligned with Airbnb's Clean MVVM + Coordinator architecture for iOS 17+. Enforces @Observable ViewModels, @Equatable diffing, NavigationStack coordinators, Clean Architecture layers, and modern SwiftUI APIs. This skill should be used when refactoring Swift/SwiftUI code, migrating deprecated APIs, restructuring state management, decomposing views, modernizing navigation, improving architecture, or strengthening type safety.
+description: Swift and SwiftUI refactoring patterns aligned with the iOS 26 / Swift 6.2 modular MVVM-C architecture (Airbnb + OLX SPM layout). Enforces @Observable ViewModels/coordinators, App-target dependency container + route shells, Domain repository/coordinator/error-routing protocols, and Data-owned I/O with sync/retry boundaries. Use when refactoring existing SwiftUI code into the new modular architecture.
 ---
 
-# Airbnb Swift/SwiftUI Best Practices
+# Swift/SwiftUI Refactor (Modular MVVM-C)
 
-Comprehensive refactoring guide for migrating Swift/SwiftUI code to the Airbnb Clean MVVM + Coordinator architecture. Contains 60 rules across 12 categories covering view diffing, API modernization, state architecture, view composition, navigation coordinators, layer architecture, dependency injection, list performance, async patterns, and type safety.
+Comprehensive refactoring guide for migrating Swift/SwiftUI code to modular MVVM-C with local SPM package boundaries and App-target composition root wiring.
 
 ## Mandated Architecture Stack
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Presentation Layer (SwiftUI Views)                 │
-│  ├── Views: @Equatable, decomposed, max 10 nodes    │
-│  ├── ViewModels: @Observable classes via @State      │
-│  └── Coordinators: NavigationStack + enum routes     │
-├─────────────────────────────────────────────────────┤
-│  Domain Layer (Pure Swift)                          │
-│  ├── Use Cases / Interactors (stateless, protocol)  │
-│  ├── Domain Models (value types, Equatable)         │
-│  └── Repository Protocols (abstractions only)       │
-├─────────────────────────────────────────────────────┤
-│  Data Layer (Implementation)                        │
-│  ├── Repository Implementations                     │
-│  ├── Network Services                               │
-│  └── Persistence (SwiftData / CoreData)             │
-└─────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│ App target: DependencyContainer, Coordinators, Route Shells   │
+├───────────────────────────────────────────────────────────────┤
+│ Feature modules: View + ViewModel (Domain + DesignSystem deps)│
+├───────────────────────────────────────────────────────────────┤
+│ Data package: repositories, remote/local stores, sync, retry  │
+├───────────────────────────────────────────────────────────────┤
+│ Domain package: models, repository/coordinator/error protocols │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-**Dependency Rule**: Arrows point inward only. Views -> Domain <- Data. Domain has zero framework imports.
+**Dependency Rule**: Feature modules never import `Data` and never import sibling features.
 
 ## When to Apply
 
@@ -37,18 +30,19 @@ Reference these guidelines when:
 - Restructuring state management to use @Observable ViewModels
 - Adding @Equatable diffing to views for performance
 - Decomposing large views into 10-node maximum bodies
-- Refactoring navigation to coordinator pattern with enum routes
-- Extracting Clean Architecture layers (Domain, Data, Presentation)
-- Setting up dependency injection via @Environment
+- Refactoring navigation to coordinator + route shell pattern
+- Refactoring to Domain/Data/Feature/App package boundaries
+- Setting up dependency injection through `DependencyContainer`
 - Improving list/collection scroll performance
-- Replacing manual Task management with .task modifier
+- Replacing manual Task management with `.task(id:)` and cancellable loading
 
-## Non-Negotiable Constraints (iOS 17+)
+## Non-Negotiable Constraints (iOS 26 / Swift 6.2)
 
-- `@Observable` everywhere, `ObservableObject` / `@Published` never
-- `NavigationStack` + coordinator pattern, `NavigationLink(destination:)` never
+- `@Observable` ViewModels/coordinators, `ObservableObject` / `@Published` never
+- `NavigationStack` is owned by App-target route shells and coordinators
 - `@Equatable` macro on every view, `AnyView` never
-- Domain layer has zero SwiftUI/UIKit imports
+- Domain defines repository/coordinator/error-routing protocols; no framework-coupled I/O
+- No dedicated use-case/interactor layer; ViewModels call repository protocols directly
 - Views never access repositories directly
 
 ## Rule Categories by Priority
@@ -117,7 +111,7 @@ Reference these guidelines when:
 ### 6. Layer Architecture (HIGH)
 
 - [`layer-dependency-rule`](references/layer-dependency-rule.md) - Extract domain layer with zero framework imports
-- [`layer-usecase-protocol`](references/layer-usecase-protocol.md) - Extract use cases as protocols with single execute
+- [`layer-usecase-protocol`](references/layer-usecase-protocol.md) - Remove use-case/interactor layer; keep orchestration in ViewModel + repository protocols
 - [`layer-repository-protocol`](references/layer-repository-protocol.md) - Repository protocols in Domain, implementations in Data
 - [`layer-no-view-repository`](references/layer-no-view-repository.md) - Remove direct repository access from views
 - [`layer-viewmodel-boundary`](references/layer-viewmodel-boundary.md) - Refactor ViewModels to expose display-ready state only
@@ -128,7 +122,7 @@ Reference these guidelines when:
 - [`arch-protocol-dependencies`](references/arch-protocol-dependencies.md) - Extract protocol dependencies through ViewModel layer
 - [`arch-environment-key-injection`](references/arch-environment-key-injection.md) - Use Environment keys for service injection
 - [`arch-feature-module-extraction`](references/arch-feature-module-extraction.md) - Extract features into independent modules
-- [`arch-model-view-separation`](references/arch-model-view-separation.md) - Extract business logic into ViewModel and Use Cases
+- [`arch-model-view-separation`](references/arch-model-view-separation.md) - Extract business logic into Domain models and repository-backed ViewModels
 
 ### 8. Dependency Injection (MEDIUM-HIGH)
 

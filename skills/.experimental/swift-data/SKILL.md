@@ -1,37 +1,28 @@
 ---
 name: swift-data
-description: SwiftData persistence, data modeling, and Clean Architecture integration for iOS 17+ apps. This skill should be used when writing, reviewing, or refactoring SwiftData models, persistence logic, CRUD operations, relationships, API-to-SwiftData sync, offline-first architecture, or SwiftUI state integration with SwiftData. Enforces Clean MVVM + Repository pattern aligned with swift-ui-architect. Triggers on tasks involving @Model, ModelContainer, ModelContext, @ModelActor, FetchDescriptor, SwiftData relationships, data persistence, network sync, or schema migration.
+description: SwiftData persistence, data modeling, and modular MVVM-C data-layer integration for iOS 26 / Swift 6.2 apps. Use when writing, reviewing, or refactoring @Model entities, repository implementations, stale-while-revalidate reads, optimistic queued writes, sync/retry behavior, and SwiftUI state integration that keeps SwiftData types in Data only.
 ---
 
-# SwiftData Best Practices — Clean Architecture
+# SwiftData Best Practices — Modular MVVM-C Data Layer
 
-Comprehensive data modeling, persistence, state management, sync architecture, and error handling guide for Swift and SwiftUI applications using SwiftData, aligned with Clean MVVM + Repository architecture (see swift-ui-architect). Contains 60 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation.
+Comprehensive data modeling, persistence, sync architecture, and error handling guide for SwiftData aligned with the clinic modular MVVM-C stack.
 
 ## Architecture Alignment
 
-This skill enforces the same Clean Architecture mandated by the swift-ui-architect skill:
+This skill enforces the same modular architecture mandated by `swift-ui-architect`:
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Presentation Layer (SwiftUI Views + ViewModels)    │
-│  ├── Views: @Equatable, pure layout templates       │
-│  ├── ViewModels: @Observable, expose domain structs │
-│  └── No @Query, no ModelContext, no @Model types    │
-├─────────────────────────────────────────────────────┤
-│  Domain Layer (Pure Swift)                          │
-│  ├── Domain Models (structs, Equatable, Sendable)   │
-│  ├── Repository Protocols (abstractions only)       │
-│  └── Use Cases / Validators (stateless)             │
-├─────────────────────────────────────────────────────┤
-│  Data Layer (SwiftData Implementation)              │
-│  ├── @Model Entities (TripEntity, FriendEntity)     │
-│  ├── Repository Implementations (SwiftData)         │
-│  ├── @ModelActor Sync Services                      │
-│  └── Entity ↔ Domain Mapping                        │
-└─────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│ Feature modules: View + ViewModel, no SwiftData imports       │
+├───────────────────────────────────────────────────────────────┤
+│ Domain: models + repository/coordinator/error protocols        │
+├───────────────────────────────────────────────────────────────┤
+│ Data: @Model entities, SwiftData stores, repository impls,     │
+│ remote clients, retry executor, sync queue, conflict handling  │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-**Key principle:** SwiftData types (`@Model`, `ModelContext`, `@Query`, `FetchDescriptor`) live exclusively in the Data layer. Views and ViewModels never import SwiftData.
+**Key principle:** SwiftData types (`@Model`, `ModelContext`, `@Query`, `FetchDescriptor`) live in Data-only implementation code. Feature Views/ViewModels work with Domain types and protocol dependencies.
 
 ## When to Apply
 
@@ -39,12 +30,12 @@ Reference these guidelines when:
 - Defining @Model entity classes and mapping them to domain structs
 - Setting up ModelContainer and ModelContext in the Data layer
 - Implementing repository protocols backed by SwiftData
-- Writing FetchDescriptor queries in repository implementations
-- Implementing create, update, and delete operations through ViewModels
+- Writing stale-while-revalidate repository reads (`AsyncStream`)
+- Implementing optimistic writes plus queued sync operations
 - Configuring entity relationships (one-to-many, inverse)
-- Fetching from APIs and persisting to SwiftData via sync services
+- Fetching from APIs and persisting to SwiftData via sync coordinators
 - Handling save failures, corrupt stores, and migration errors
-- Coordinating SwiftUI state through @Observable ViewModels
+- Routing AppError traits to centralized error UI infrastructure
 - Building preview infrastructure with sample data
 - Planning schema migrations for app updates
 
@@ -52,14 +43,14 @@ Reference these guidelines when:
 
 Use this workflow when designing or refactoring a SwiftData-backed feature:
 
-1. Domain design: define domain structs (`Trip`, `Friend`) with validation logic (see `model-domain-mapping`, `state-business-logic-placement`)
+1. Domain design: define domain structs (`Trip`, `Friend`) with validation/computed rules (see `model-domain-mapping`, `state-business-logic-placement`)
 2. Entity design: define `@Model` entity classes with mapping methods (see `model-*`, `model-domain-mapping`)
 3. Repository protocol: define in Domain layer, implement with SwiftData in Data layer (see `persist-repository-wrapper`)
 4. Container wiring: configure `ModelContainer` once at the app boundary with error recovery (see `persist-container-setup`, `persist-container-error-recovery`)
 5. Dependency injection: inject repository protocols via @Environment (see `state-dependency-injection`)
-6. ViewModel: create @Observable ViewModel that delegates to repository (see `state-query-vs-viewmodel`)
+6. ViewModel: create @Observable ViewModel that delegates directly to repository protocols (see `state-query-vs-viewmodel`)
 7. CRUD flows: route all insert/delete/update through ViewModel -> Repository (see `crud-*`)
-8. Sync architecture: inject sync services as protocols, ViewModel coordinates (see `sync-*`)
+8. Sync architecture: queue writes, execute via sync coordinator with retry policy (see `sync-*`)
 9. Relationships: model to-many relationships as arrays; define delete rules (see `rel-*`)
 10. Previews: create in-memory containers and sample data for fast iteration (see `preview-*`)
 11. Schema evolution: plan migrations with versioned schemas (see `schema-*`)
@@ -94,7 +85,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 
 ### 1. Data Modeling (CRITICAL)
 
-- [`model-domain-mapping`](references/model-domain-mapping.md) - Map @Model entities to domain structs (Clean Architecture bridge)
+- [`model-domain-mapping`](references/model-domain-mapping.md) - Map @Model entities to domain structs across Domain/Data boundaries
 - [`model-custom-types`](references/model-custom-types.md) - Use custom types over parallel arrays
 - [`model-class-for-persistence`](references/model-class-for-persistence.md) - Use classes for SwiftData entity types
 - [`model-identifiable`](references/model-identifiable.md) - Conform entities to Identifiable with UUID
@@ -106,7 +97,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 
 ### 2. Persistence Setup (CRITICAL)
 
-- [`persist-repository-wrapper`](references/persist-repository-wrapper.md) - Wrap SwiftData behind repository protocols (Clean Architecture bridge)
+- [`persist-repository-wrapper`](references/persist-repository-wrapper.md) - Wrap SwiftData behind Domain repository protocols
 - [`persist-model-macro`](references/persist-model-macro.md) - Apply @Model macro to all persistent types
 - [`persist-container-setup`](references/persist-container-setup.md) - Configure ModelContainer at the App level
 - [`persist-container-error-recovery`](references/persist-container-error-recovery.md) - Handle ModelContainer creation failure with store recovery
@@ -158,7 +149,7 @@ Use this workflow when designing or refactoring a SwiftData-backed feature:
 ### 7. SwiftUI State Flow (MEDIUM-HIGH)
 
 - [`state-query-vs-viewmodel`](references/state-query-vs-viewmodel.md) - Route all data access through @Observable ViewModels
-- [`state-business-logic-placement`](references/state-business-logic-placement.md) - Place business logic in domain value types and use cases
+- [`state-business-logic-placement`](references/state-business-logic-placement.md) - Place business logic in domain value types and repository-backed ViewModels
 - [`state-dependency-injection`](references/state-dependency-injection.md) - Inject repository protocols via @Environment
 - [`state-bindable`](references/state-bindable.md) - Use @Bindable for two-way model binding
 - [`state-local-state`](references/state-local-state.md) - Use @State for view-local transient data

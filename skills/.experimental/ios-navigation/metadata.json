@@ -3,7 +3,7 @@
   "organization": "Airbnb Engineering",
   "technology": "iOS Navigation (SwiftUI)",
   "date": "February 2026",
-  "abstract": "Opinionated navigation architecture and transition guide for SwiftUI iOS 17+ apps, aligned with Airbnb's Clean MVVM + Coordinator architecture. Contains 54 rules across 8 categories enforcing @Equatable views, @Observable-only state, coordinator-owned navigation and modals, zoom transitions, and zero legacy APIs. Each rule includes incorrect vs. correct examples with quantified impact metrics.",
+  "abstract": "Opinionated navigation architecture and transition guide for SwiftUI iOS 26 / Swift 6.2 apps, aligned with modular MVVM-C. Contains 54 rules across 8 categories enforcing @Equatable views, @Observable state, App-target coordinator + route-shell navigation, coordinator-owned modal state, zoom transitions, and zero legacy APIs. Each rule includes incorrect vs. correct examples with quantified impact metrics.",
   "references": [
     "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/",
     "https://developer.apple.com/videos/play/wwdc2022/10054/",

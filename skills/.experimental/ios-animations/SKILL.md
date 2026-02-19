@@ -17,6 +17,7 @@ This skill is designed to work alongside `swift-ui-architect` and `ios-design-sy
 - Design system tokens: `Spacing.xs/sm/md/lg`, `Radius.sm/md/lg` — zero hardcoded layout numbers
 - Motion tokens: `Motion.standard/responsive/playful` — zero scattered spring literals
 - Semantic colors: `.backgroundSurface`, `.accentPrimary` — no raw Color literals in views
+- Feature animations remain presentation-only; data/network concerns stay in Data package
 
 ## Scope & Relationship to Sibling Skills
 
@@ -24,7 +25,7 @@ This skill is the **motion layer** — it teaches how to BUILD fluid, performant
 
 | Sibling Skill | Its Focus | This Skill's Focus |
 |---------------|-----------|-------------------|
-| `swift-ui-architect` | **Architecture** (MVVM, Coordinator, layers) | **Animation architecture** (motion tokens, spring selection, orchestration) |
+| `swift-ui-architect` | **Architecture** (modular MVVM-C, route shells, protocol boundaries) | **Animation architecture** (motion tokens, spring selection, orchestration) |
 | `ios-design-system` | **Design system infrastructure** (tokens, styles, governance) | **Motion tokens and animated component patterns** |
 | `ios-hig` | **HIG compliance** patterns | **Motion-specific HIG** (reduce motion, spatial continuity) |
 

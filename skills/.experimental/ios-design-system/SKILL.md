@@ -11,7 +11,8 @@ Opinionated, strict design system engineering for SwiftUI iOS 17+ apps. Contains
 
 This skill is designed to work alongside `swift-ui-architect`. All code examples follow the same non-negotiable constraints:
 
-- `@Observable` everywhere, `ObservableObject` / `@Published` never
+- Feature modules depend on `Domain` + `DesignSystem`; no direct `Data` dependency
+- `@Observable` for mutable UI state, `ObservableObject` / `@Published` never
 - `@Equatable` macro on every view
 - Style protocols as the primary component styling API (Airbnb DLS pattern)
 - Asset catalog as the source of truth for color values
@@ -23,7 +24,7 @@ This skill is the **infrastructure layer** — it teaches how to BUILD the desig
 
 | Sibling Skill | Its Focus | This Skill's Focus |
 |---------------|-----------|-------------------|
-| `swift-ui-architect` | **Architecture** (MVVM, Coordinator, layers) | **Design system infrastructure** (tokens, styles, governance) |
+| `swift-ui-architect` | **Architecture** (modular MVVM-C, route shells, protocol boundaries) | **Design system infrastructure** (tokens, styles, governance) |
 | `ios-design` | **Using** design primitives (semantic colors, typography) | **Engineering** the token system that provides those primitives |
 | `ios-ui-refactor` | **Auditing/fixing** visual quality issues | **Preventing** those issues via governance and automation |
 | `ios-hig` | **HIG compliance** patterns | **Asset and component infrastructure** that makes compliance easy |

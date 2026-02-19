@@ -1,51 +1,49 @@
 ---
 name: swift-ui-architect
-description: Opinionated SwiftUI architecture enforcement for iOS 17+ apps using Clean MVVM + Coordinator pattern. Enforces Airbnb's @Equatable diffing, @Observable state, NavigationStack coordinators, and Clean Architecture layer boundaries. This skill should be used when writing, reviewing, or refactoring SwiftUI code. Triggers on tasks involving SwiftUI views, ViewModels, navigation, state management, dependency injection, or iOS app architecture.
+description: Opinionated SwiftUI architecture enforcement for iOS 26 / Swift 6.2 apps using modular MVVM-C (Airbnb) plus local SPM package boundaries (OLX). Enforces App-target composition root + route shells, @Observable ViewModels/coordinators, Domain repository/coordinator/error-routing protocols, Data-owned I/O, stale-while-revalidate reads, and optimistic queued sync. Use when writing, reviewing, or refactoring SwiftUI architecture, feature modules, navigation, dependency wiring, or repository boundaries.
 ---
 
-# Airbnb SwiftUI Best Practices
+# SwiftUI Modular MVVM-C Architecture
 
-Opinionated, strict architectural enforcement for SwiftUI iOS apps. Contains 43 rules across 8 categories, derived from Airbnb Engineering, Apple WWDC sessions, Clean Architecture patterns, and Advanced iOS App Architecture (raywenderlich). This skill mandates a single, non-negotiable architecture stack.
+Opinionated architecture enforcement for SwiftUI clinic-style apps. This skill aligns to the iOS 26 / Swift 6.2 clinic architecture: modular MVVM-C in local SPM packages, concrete coordinators and route shells in the App target, pure Domain protocols, and Data as the only I/O layer.
 
 ## Mandated Architecture Stack
 
 ```
-┌─────────────────────────────────────────────────────┐
-│  Presentation Layer (SwiftUI Views)                 │
-│  ├── Views: @Equatable, decomposed, minimal bodies  │
-│  ├── ViewModels: @Observable classes via @State      │
-│  └── Coordinators: NavigationStack + enum routes     │
-├─────────────────────────────────────────────────────┤
-│  Domain Layer (Pure Swift)                          │
-│  ├── Use Cases / Interactors (stateless, protocol)  │
-│  ├── Domain Models (value types, Equatable)         │
-│  └── Repository Protocols (abstractions only)       │
-├─────────────────────────────────────────────────────┤
-│  Data Layer (Implementation)                        │
-│  ├── Repository Implementations                     │
-│  ├── Network Services                               │
-│  └── Persistence (SwiftData / CoreData)             │
-└─────────────────────────────────────────────────────┘
+┌───────────────────────────────────────────────────────────────┐
+│ App target: DependencyContainer, Coordinators, Route Shells   │
+├───────────────┬───────────────┬───────────────┬──────────────┤
+│ Feature* SPM  │ Feature* SPM  │ Feature* SPM  │ Feature* SPM │
+│ View + VM     │ View + VM     │ View + VM     │ View + VM    │
+├───────────────────────────────────────────────────────────────┤
+│ Data SPM: repository impls, remote/local, retry, sync queue   │
+├───────────────────────────────────────────────────────────────┤
+│ Domain SPM: models, repository protocols, coordinator protocols│
+│ and ErrorRouting/AppError                                      │
+├───────────────────────────────────────────────────────────────┤
+│ Shared SPMs: DesignSystem, SharedKit                           │
+└───────────────────────────────────────────────────────────────┘
 ```
 
-**Dependency Rule**: Arrows point inward only. Views -> Domain <- Data. Domain has zero framework imports.
+**Dependency Rule**: Feature modules import `Domain` + `DesignSystem` only. Features never import `Data` or other features. App target is the only convergence point.
 
 ## When to Apply
 
 Reference these guidelines when:
-- Writing any new SwiftUI view, ViewModel, or coordinator
-- Creating or modifying navigation flows
-- Adding data fetching, state management, or dependency injection
-- Reviewing code for architecture compliance or performance
-- Refactoring existing SwiftUI code toward this architecture
+- Building or refactoring feature modules under local SPM packages
+- Wiring coordinators, route shells, and dependency container factories
+- Defining Domain protocols for repositories, coordinators, and error routing
+- Enforcing Data-only ownership of networking, persistence, and sync
+- Reviewing stale-while-revalidate reads and optimistic queued writes
 
-## Non-Negotiable Constraints (iOS 17+)
+## Non-Negotiable Constraints (iOS 26 / Swift 6.2)
 
-- `@Observable` everywhere, `ObservableObject` / `@Published` never
-- `NavigationStack` + coordinator pattern, `NavigationLink(destination:)` never
-- `@Equatable` macro on every view, `AnyView` never
-- Domain layer has zero SwiftUI/UIKit imports
-- Views never access repositories directly
+- `@Observable` for ViewModels/coordinators, `ObservableObject` / `@Published` never
+- No dedicated use-case/interactor layer: ViewModels call Domain repository protocols directly
+- Coordinator protocols live in Domain; concrete coordinators own `NavigationPath` in App target
+- Route shells live in App target and own `.navigationDestination` mapping
+- `AppError` + `ErrorRouting` drive presentation policy; ViewModels do not hardcode global error UI
+- SwiftData / URLSession / retry / sync queue logic stays in Data package only
 
 ## Rule Categories by Priority
 
@@ -101,17 +99,17 @@ Reference these guidelines when:
 ### 5. Layer Architecture (HIGH)
 
 - [`layer-dependency-rule`](references/layer-dependency-rule.md) - Domain layer has zero framework imports
-- [`layer-usecase-protocol`](references/layer-usecase-protocol.md) - Every use case is a protocol with a single execute method
+- [`layer-usecase-protocol`](references/layer-usecase-protocol.md) - Do not add a use-case layer; keep orchestration in ViewModel + repository protocols
 - [`layer-repository-protocol`](references/layer-repository-protocol.md) - Repository protocols in Domain, implementations in Data
 - [`layer-model-value-types`](references/layer-model-value-types.md) - Domain models are structs, never classes
-- [`layer-no-view-repository`](references/layer-no-view-repository.md) - Views never access repositories directly
+- [`layer-no-view-repository`](references/layer-no-view-repository.md) - Views never access repositories directly; ViewModel calls repository protocols
 - [`layer-viewmodel-boundary`](references/layer-viewmodel-boundary.md) - ViewModels expose display-ready state only
 
 ### 6. Dependency Injection (MEDIUM-HIGH)
 
-- [`di-environment-injection`](references/di-environment-injection.md) - Inject via @Environment with custom EnvironmentKey
+- [`di-environment-injection`](references/di-environment-injection.md) - Inject container-managed protocol dependencies via @Environment
 - [`di-protocol-abstraction`](references/di-protocol-abstraction.md) - All injected dependencies are protocol types
-- [`di-container-composition`](references/di-container-composition.md) - Compose dependency container at app root
+- [`di-container-composition`](references/di-container-composition.md) - Compose `DependencyContainer` in App target and expose VM factories
 - [`di-mock-testing`](references/di-mock-testing.md) - Every protocol dependency has a mock for testing
 
 ### 7. List & Collection Performance (MEDIUM)
@@ -123,7 +121,7 @@ Reference these guidelines when:
 
 ### 8. Async & Data Flow (MEDIUM)
 
-- [`data-task-modifier`](references/data-task-modifier.md) - Use .task {} for async data loading
+- [`data-task-modifier`](references/data-task-modifier.md) - Use `.task(id:)` as the primary feature data-loading trigger
 - [`data-async-init`](references/data-async-init.md) - Never perform async work in init
 - [`data-error-loadable`](references/data-error-loadable.md) - Model loading states as enum, not booleans
 - [`data-combine-avoid`](references/data-combine-avoid.md) - Prefer async/await over Combine for new code

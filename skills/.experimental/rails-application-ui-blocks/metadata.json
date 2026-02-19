@@ -1,0 +1,14 @@
+{
+  "version": "1.0.0",
+  "organization": "Community",
+  "technology": "Ruby on Rails + Tailwind CSS",
+  "date": "February 2026",
+  "abstract": "Compose and refactor Rails backend UI using premium blocks from templates/application-ui. Provides a canonical catalog with normalized IDs (ui.<domain>.<collection>.<variant>), a selection playbook for new-page and refactor workflows, and a catalog build script so block discovery stays current while preserving accessibility and Turbo/Stimulus behavior.",
+  "references": [
+    "https://tailwindcss.com/plus/ui-blocks/application-ui",
+    "https://tailwindcss.com/docs",
+    "https://guides.rubyonrails.org/layouts_and_rendering.html",
+    "https://turbo.hotwired.dev/handbook/introduction",
+    "https://stimulus.hotwired.dev/"
+  ]
+}

@@ -1,19 +1,19 @@
 ---
 name: ios-navigation
-description: Opinionated SwiftUI navigation enforcement for iOS 17+ apps using Airbnb's Clean MVVM + Coordinator architecture. Enforces @Equatable views, @Observable-only state, coordinator-owned NavigationStack and modals, zoom transitions, and strict anti-patterns. This skill should be used when designing navigation hierarchies, implementing screen transitions, choosing between sheet and push, orchestrating multi-step flows, building coordinator patterns with @Observable/@Environment/@Bindable, or reviewing navigation code for anti-patterns and Airbnb architecture compliance.
+description: Opinionated SwiftUI navigation enforcement for iOS 26 / Swift 6.2 modular MVVM-C apps. Enforces Domain coordinator protocols, App-target concrete coordinators + route shells, NavigationPath-owned NavigationStack, coordinator-owned modal state, and deep-link/state-restoration readiness. Use when designing or refactoring navigation flows under the clinic architecture.
 ---
 
-# Airbnb iOS Navigation Best Practices
+# iOS Navigation (Modular MVVM-C)
 
-Opinionated, strict navigation enforcement for SwiftUI iOS 17+ apps. Contains 54 rules across 8 categories derived from Airbnb Engineering, Apple WWDC sessions, and Clean Architecture patterns. Mandates @Equatable views, @Observable-only state, coordinator-owned navigation, and zero legacy APIs.
+Opinionated navigation enforcement for SwiftUI apps using the clinic modular architecture. Focus on coordinator + route shell wiring, feature isolation, and resilient push/sheet/deep-link flows.
 
-## Non-Negotiable Constraints (iOS 17+)
+## Non-Negotiable Constraints (iOS 26 / Swift 6.2)
 
 - `@Equatable` macro on every navigation view, `AnyView` never
 - `@Observable` everywhere, `ObservableObject` / `@Published` never
-- Coordinator-owned `NavigationStack` + enum routes, `NavigationLink(destination:)` never
+- App-target coordinators own `NavigationPath`; route shells own `.navigationDestination` mappings
 - Coordinator-owned modal state, inline `@State` booleans for sheets never
-- Domain layer has zero SwiftUI/UIKit imports
+- Domain layer defines coordinator protocols; concrete coordinators stay out of feature modules
 
 ## When to Apply
 
@@ -23,7 +23,7 @@ Reference these guidelines when:
 - Implementing hero animations, zoom transitions, or gesture-driven dismissals
 - Building multi-step flows (onboarding, checkout, registration)
 - Using @Observable with @Environment and @Bindable for shared navigation state
-- Reviewing code for navigation anti-patterns and Airbnb architecture compliance
+- Reviewing code for navigation anti-patterns and modular architecture compliance
 - Adding deep linking, state restoration, or tab persistence
 - Ensuring VoiceOver and reduce motion support for navigation
 

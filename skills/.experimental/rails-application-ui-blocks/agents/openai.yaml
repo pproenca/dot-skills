@@ -1,0 +1,4 @@
+interface:
+  display_name: "Rails Application UI Blocks"
+  short_description: "Compose and refactor Rails UI using premium application-ui blocks"
+  default_prompt: "Select and adapt premium blocks from templates/application-ui for this Rails UI task."
