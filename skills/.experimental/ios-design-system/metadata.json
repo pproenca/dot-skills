@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "organization": "Airbnb Engineering / Apple HIG",
-  "technology": "iOS Design System (SwiftUI, iOS 17+)",
+  "technology": "iOS Design System (SwiftUI, iOS 26 / Swift 6.2)",
   "date": "February 2026",
-  "abstract": "Airbnb-aligned design system engineering for SwiftUI iOS 17+ apps. Contains 50 rules across 8 categories: Token Architecture (CRITICAL), Color System Engineering (CRITICAL), Typography Scale (HIGH), Spacing & Sizing (HIGH), Component Style Library (CRITICAL), Asset Management (MEDIUM-HIGH), Theme & Brand Infrastructure (MEDIUM), and Consistency & Governance (HIGH). Mandates @Equatable on every view, @Observable state, DLS-style protocols for component styling, and automated governance via SwiftLint and SPM package boundaries, aligned with modular MVVM-C feature boundaries.",
+  "abstract": "Airbnb-aligned design system engineering for SwiftUI iOS 26 / Swift 6.2 apps. Contains 50 rules across 8 categories: Token Architecture (CRITICAL), Color System Engineering (CRITICAL), Typography Scale (HIGH), Spacing & Sizing (HIGH), Component Style Library (CRITICAL), Asset Management (MEDIUM-HIGH), Theme & Brand Infrastructure (MEDIUM), and Consistency & Governance (HIGH). Mandates @Equatable on every view, @Observable state, DLS-style protocols for component styling, and automated governance via SwiftLint and SPM package boundaries, aligned with modular MVVM-C feature boundaries. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "https://medium.com/airbnb-engineering/unlocking-swiftui-at-airbnb-ea58f50cde49",
     "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/",

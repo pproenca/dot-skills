@@ -7,7 +7,9 @@ tags: data, combine, async-await, concurrency, modern
 
 ## Prefer async/await Over Combine for New Code
 
-With iOS 17+ and Swift 5.9+, `async`/`await` with structured concurrency replaces most Combine use cases. `async`/`await` provides linear code flow (easier to read and debug), built-in cancellation via `Task` and `.task {}`, and proper error propagation with `try`/`catch`. Reserve Combine only for reactive streams where you need operators like `debounce`, `throttle`, or `combineLatest`.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+With iOS 26 / Swift 6.2 and Swift 5.9+, `async`/`await` with structured concurrency replaces most Combine use cases. `async`/`await` provides linear code flow (easier to read and debug), built-in cancellation via `Task` and `.task {}`, and proper error propagation with `try`/`catch`. Reserve Combine only for reactive streams where you need operators like `debounce`, `throttle`, or `combineLatest`.
 
 **Incorrect (Combine for simple fetch-and-display — unnecessary complexity):**
 

@@ -7,6 +7,8 @@ tags: arch, observable, environment, bindable, dependency-injection
 
 ## Use @Environment with @Observable and @Bindable for Shared State
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@Observable` objects are injected with `.environment(object)` and read with `@Environment(Type.self)`. This replaces the legacy `.environmentObject(object)` / `@EnvironmentObject` pattern. To get `Binding` access to an `@Observable` object's properties (e.g., for `NavigationStack(path:)`), re-declare it as `@Bindable var` inside the `body` property. Using `@EnvironmentObject` with an `@Observable` class does not work — it requires `ObservableObject` conformance.
 
 **Incorrect (@EnvironmentObject with @Observable — does not compile):**

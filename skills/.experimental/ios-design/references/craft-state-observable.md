@@ -7,7 +7,9 @@ tags: craft, observable, model, kocienda-craft, state, performance
 
 ## Use @Observable for Model Classes
 
-Kocienda's craft demands using the best tool available, not the one you're used to. `@Observable` (iOS 17+) replaces `ObservableObject` with a fundamentally better observation model: property-level tracking. With `ObservableObject`, changing any `@Published` property re-evaluates every view that observes the object. With `@Observable`, only views that read the specific changed property re-evaluate. This is the kind of invisible craftsmanship that users feel in responsiveness without ever knowing why.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+Kocienda's craft demands using the best tool available, not the one you're used to. `@Observable` (iOS 26 / Swift 6.2) replaces `ObservableObject` with a fundamentally better observation model: property-level tracking. With `ObservableObject`, changing any `@Published` property re-evaluates every view that observes the object. With `@Observable`, only views that read the specific changed property re-evaluate. This is the kind of invisible craftsmanship that users feel in responsiveness without ever knowing why.
 
 **Incorrect (ObservableObject — all subscribers re-render on any change):**
 

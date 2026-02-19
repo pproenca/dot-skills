@@ -7,6 +7,8 @@ tags: flow, pop-to-root, navigation-path, programmatic
 
 ## Implement Pop-to-Root by Clearing NavigationPath
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 With NavigationStack and a bound path, pop-to-root is simply setting `path = NavigationPath()` or removing all elements. The old UIKit hacks of walking the responder chain, posting NotificationCenter broadcasts, or reaching into UINavigationController internals are fragile, break across OS updates, and couple your views to UIKit implementation details that SwiftUI is designed to abstract away.
 
 **Incorrect (NotificationCenter or UIKit responder chain hacks):**

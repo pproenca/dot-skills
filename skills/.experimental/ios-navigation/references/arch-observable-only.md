@@ -7,7 +7,9 @@ tags: arch, observable, state, ios17, migration
 
 ## Use @Observable Only — Never ObservableObject or @Published
 
-`@Observable` (iOS 17+) tracks which properties each view reads in its body and only triggers re-render when THOSE specific properties change. `ObservableObject` with `@Published` triggers re-render for ANY property change on the object — even unrelated ones. In navigation coordinators this is catastrophic: changing `presentedSheet` re-renders every view observing the coordinator, even those only reading `path`.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+`@Observable` (iOS 26 / Swift 6.2) tracks which properties each view reads in its body and only triggers re-render when THOSE specific properties change. `ObservableObject` with `@Published` triggers re-render for ANY property change on the object — even unrelated ones. In navigation coordinators this is catastrophic: changing `presentedSheet` re-renders every view observing the coordinator, even those only reading `path`.
 
 **Incorrect (ObservableObject coordinator — all views re-render on any change):**
 

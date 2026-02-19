@@ -7,6 +7,8 @@ tags: query, background, refresh, staleness, model-actor, notification
 
 ## Force View Refresh After Background Context Inserts
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@Query` automatically updates when mutations happen on the same `ModelContext` (typically `mainContext`). However, inserts from a `@ModelActor` background context do not reliably trigger `@Query` updates — this is a known framework limitation. Deletes sync correctly, but inserts and updates from background actors leave the UI stale until the next autosave merge.
 
 **Incorrect (UI stays stale after background import):**

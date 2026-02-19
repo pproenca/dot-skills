@@ -9,7 +9,7 @@ tags: perf, equatable, diffing, re-renders, optimization, macro
 
 When a view contains ANY non-Equatable property (closures, reference types), SwiftUI's reflection-based diffing fails silently and conservatively re-evaluates `body` on every parent invalidation. The `@Equatable` macro generates `Equatable` conformance for all stored properties, excluding those marked `@SkipEquatable`. Build fails if a non-Equatable property is added without `@SkipEquatable` — acting as a compile-time performance linter.
 
-**iOS 17+ note:** With `@Observable`, SwiftUI tracks property access at the individual property level — only views that read a changed property are invalidated. `@Equatable` still prevents unnecessary body re-evaluations when views receive **closures**, **non-Observable data**, or **non-Equatable properties** that SwiftUI cannot diff automatically.
+**iOS 26 / Swift 6.2 note:** With `@Observable`, SwiftUI tracks property access at the individual property level — only views that read a changed property are invalidated. `@Equatable` still prevents unnecessary body re-evaluations when views receive **closures**, **non-Observable data**, or **non-Equatable properties** that SwiftUI cannot diff automatically.
 
 **Incorrect (no @Equatable — closure makes entire view non-diffable):**
 

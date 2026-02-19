@@ -7,6 +7,8 @@ tags: persist, model-container, app-setup, swiftdata
 
 ## Configure ModelContainer at the App Level
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 The `ModelContainer` must be attached to the top-level `App` or `WindowGroup` using the `.modelContainer(for:)` modifier. Without it, `@Query` returns empty results and `context.insert()` has nowhere to save — the app compiles and runs but silently loses all data.
 
 **Incorrect (no model container — data never persists):**

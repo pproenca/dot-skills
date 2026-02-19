@@ -7,6 +7,8 @@ tags: nav, navigation-stack, hierarchy, drill-down, push
 
 ## Use NavigationStack for Hierarchical Navigation
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 NavigationStack (iOS 16+) replaces NavigationView for drill-down navigation. It supports programmatic navigation via NavigationPath, type-safe destinations, and deep linking. NavigationView is deprecated.
 
 **Incorrect (deprecated NavigationView):**

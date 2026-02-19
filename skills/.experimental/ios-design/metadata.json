@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "organization": "Apple HIG + Kocienda · Edson",
-  "technology": "SwiftUI iOS 17+",
+  "technology": "SwiftUI iOS 26 / Swift 6.2",
   "date": "February 2026",
-  "abstract": "SwiftUI implementation patterns for building Apple-quality iOS interfaces, grounded in two foundational design texts: Ken Kocienda's Creative Selection (empathy for the user, craft in coding, taste in choosing the best solution, and the demo culture of iterative refinement) and John Edson's Design Like Apple (systems thinking, the product is the marketing, design out loud, and design with conviction). Contains 62 rules across 8 principle-based categories: Empathy in Every Pixel (CRITICAL), The Visual System (CRITICAL), Craft: State as Foundation (CRITICAL), Creative Composition (HIGH), Taste: The Right Choice (HIGH), Navigation as Conversation (HIGH), Design Out Loud: Layout (HIGH), and The Product Speaks (MEDIUM). Each rule identifies a specific anti-pattern, grounds the fix in a named principle, and provides the correct iOS 17+ SwiftUI implementation.",
+  "abstract": "SwiftUI implementation patterns for building Apple-quality iOS interfaces, grounded in two foundational design texts: Ken Kocienda's Creative Selection (empathy for the user, craft in coding, taste in choosing the best solution, and the demo culture of iterative refinement) and John Edson's Design Like Apple (systems thinking, the product is the marketing, design out loud, and design with conviction). Contains 62 rules across 8 principle-based categories: Empathy in Every Pixel (CRITICAL), The Visual System (CRITICAL), Craft: State as Foundation (CRITICAL), Creative Composition (HIGH), Taste: The Right Choice (HIGH), Navigation as Conversation (HIGH), Design Out Loud: Layout (HIGH), and The Product Speaks (MEDIUM). Each rule identifies a specific anti-pattern, grounds the fix in a named principle, and provides the correct iOS 26 / Swift 6.2 SwiftUI implementation. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "Creative Selection: Inside Apple's Design Process During the Golden Age of Steve Jobs — Ken Kocienda (St. Martin's Press, 2018)",
     "Design Like Apple: Seven Principles For Creating Insanely Great Products, Services, and Experiences — John Edson (Wiley, 2012)",

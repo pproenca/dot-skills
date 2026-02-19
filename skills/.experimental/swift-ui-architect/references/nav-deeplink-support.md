@@ -7,6 +7,8 @@ tags: nav, deeplink, universal-links, url, coordinator
 
 ## Coordinators Must Support URL-Based Deep Linking
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Every coordinator must implement a method to resolve a URL into a Route. This enables push notification handling, universal links, Spotlight integration, and inter-feature navigation. The app-level coordinator dispatches URLs to feature coordinators, which push the appropriate route onto their NavigationStack.
 
 **Incorrect (deep link handling in SceneDelegate with manual view creation — fragile, duplicated):**

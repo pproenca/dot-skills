@@ -7,6 +7,8 @@ tags: arch, swiftui, deep-linking, universal-links, navigation-path, url-handlin
 
 ## Handle Deep Links by Appending to NavigationPath
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Deep links from universal links, push notifications, Spotlight, and widgets must resolve to the same navigation state as manual user navigation. Converting incoming URLs to route enum values and appending them to NavigationPath ensures consistent behavior regardless of entry point. Manually toggling booleans or presenting views imperatively creates parallel navigation paths that bypass the stack, break the back button, and cannot be serialized for state restoration.
 
 **Incorrect (boolean flags and imperative view presentation for deep links):**

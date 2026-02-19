@@ -7,6 +7,8 @@ tags: persist, model-context, environment, swiftdata, data-layer
 
 ## Access ModelContext via @Environment (Data Layer)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Within the Data layer, always access the `ModelContext` through the container you set up at the app level. Creating your own context without proper configuration leads to data saving to a separate store that the rest of your app never reads.
 
 **Architecture note:** In modular MVVM-C, `ModelContext` is a Data-layer concern. It belongs in repository implementations, not in feature views or ViewModels. Views access data through `@Observable` ViewModels backed by repository protocols. See [`persist-repository-wrapper`](persist-repository-wrapper.md) for the repository pattern and [`state-dependency-injection`](state-dependency-injection.md) for injecting repositories via `@Environment`.

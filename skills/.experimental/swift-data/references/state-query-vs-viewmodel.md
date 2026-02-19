@@ -7,6 +7,8 @@ tags: state, architecture, viewmodel, observable, clean-mvvm, repository
 
 ## Route All Data Access Through @Observable ViewModels
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Views never access `ModelContext`, `@Query`, or repositories directly. All data flows through `@Observable` ViewModels, which delegate directly to repository protocols. ViewModels expose display-ready Domain structs, not `@Model` entities. This enforces modular MVVM-C boundaries, enables unit testing without SwiftUI, and keeps views as pure layout templates.
 
 **Incorrect (view accesses SwiftData directly — coupled to persistence, untestable):**

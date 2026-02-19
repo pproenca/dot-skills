@@ -7,6 +7,8 @@ tags: arch, swiftui, navigation-destination, registration, stack
 
 ## Register navigationDestination at Stack Root
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 When `.navigationDestination(for:)` modifiers are scattered across child views, SwiftUI may encounter duplicate registrations for the same type, or fail to find a registration that has not yet appeared in the view hierarchy. This causes silent navigation failures, crashes, or race conditions where the destination resolves differently depending on which child rendered first. Registering all destinations once at the NavigationStack root guarantees deterministic resolution and makes the navigation contract explicit.
 
 **Incorrect (destination registrations scattered across child views):**

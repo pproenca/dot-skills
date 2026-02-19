@@ -7,6 +7,8 @@ tags: inter, list, swipe-actions, gestures, contextual-menu, delete
 
 ## Add Swipe Actions for Contextual Operations
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Swipe actions are the standard iOS pattern for row-level operations like delete, archive, and favorite. Embedding dedicated buttons directly inside each row clutters the visible layout and deviates from platform conventions users already know. The `.swipeActions` modifier keeps the row clean while making destructive and common actions discoverable through the familiar swipe gesture.
 
 **Incorrect (custom swipe gesture or visible buttons):**

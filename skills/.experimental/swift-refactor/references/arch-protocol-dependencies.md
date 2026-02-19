@@ -7,6 +7,8 @@ tags: arch, protocol, dependency-injection, viewmodel, clean-architecture
 
 ## Extract Protocol Dependencies through ViewModel Layer
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Views that call concrete services or protocol dependencies directly violate modular layer boundaries — the view layer reaches into the data layer. Extract protocol interfaces and route them through an `@Observable` ViewModel. The ViewModel calls Repository protocols directly, and the view only reads display-ready state. This makes views and ViewModels independently testable.
 
 **Incorrect (view directly uses a service protocol — breaks layer boundary):**

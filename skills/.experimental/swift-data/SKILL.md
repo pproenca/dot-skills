@@ -1,6 +1,6 @@
 ---
 name: swift-data
-description: SwiftData persistence, data modeling, and modular MVVM-C data-layer integration for iOS 26 / Swift 6.2 apps. Use when writing, reviewing, or refactoring @Model entities, repository implementations, stale-while-revalidate reads, optimistic queued writes, sync/retry behavior, and SwiftUI state integration that keeps SwiftData types in Data only.
+description: SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps. Use when writing, reviewing, or refactoring @Model entities, repository implementations, stale-while-revalidate reads, optimistic queued writes, sync/retry behavior, and SwiftUI integration that keeps SwiftData types inside Data-only boundaries.
 ---
 
 # SwiftData Best Practices — Modular MVVM-C Data Layer
@@ -23,6 +23,18 @@ This skill enforces the same modular architecture mandated by `swift-ui-architec
 ```
 
 **Key principle:** SwiftData types (`@Model`, `ModelContext`, `@Query`, `FetchDescriptor`) live in Data-only implementation code. Feature Views/ViewModels work with Domain types and protocol dependencies.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

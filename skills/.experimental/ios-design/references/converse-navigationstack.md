@@ -7,6 +7,8 @@ tags: converse, navigation, stack, kocienda-demo, edson-conversation, ios16
 
 ## Use NavigationStack for Programmatic, Type-Safe Navigation
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Edson's conversation principle means navigation should be a clear dialogue between user and app. `NavigationStack` (iOS 16+) makes this conversation programmatic — the app can say "let me take you to this specific place" through path manipulation, and the user can say "take me back" through the system back gesture. Kocienda's demo culture demanded interfaces that could be navigated to any state instantly for a demo — programmatic navigation enables exactly that.
 
 **Incorrect (deprecated NavigationView with limited control):**

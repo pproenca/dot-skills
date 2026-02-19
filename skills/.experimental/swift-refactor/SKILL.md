@@ -1,6 +1,6 @@
 ---
 name: swift-refactor
-description: Swift and SwiftUI refactoring patterns aligned with the iOS 26 / Swift 6.2 modular MVVM-C architecture (Airbnb + OLX SPM layout). Enforces @Observable ViewModels/coordinators, App-target dependency container + route shells, Domain repository/coordinator/error-routing protocols, and Data-owned I/O with sync/retry boundaries. Use when refactoring existing SwiftUI code into the new modular architecture.
+description: Swift and SwiftUI refactoring patterns aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture (Airbnb + OLX SPM layout). Enforces @Observable ViewModels/coordinators, App-target `DependencyContainer` + route shells, Domain repository/coordinator/error-routing protocols, and Data-owned I/O with stale-while-revalidate plus optimistic queued sync boundaries. Use when refactoring existing SwiftUI code into the clinic architecture.
 ---
 
 # Swift/SwiftUI Refactor (Modular MVVM-C)
@@ -22,6 +22,18 @@ Comprehensive refactoring guide for migrating Swift/SwiftUI code to modular MVVM
 ```
 
 **Dependency Rule**: Feature modules never import `Data` and never import sibling features.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

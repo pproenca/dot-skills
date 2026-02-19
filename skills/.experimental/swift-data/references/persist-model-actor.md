@@ -7,6 +7,8 @@ tags: persist, model-actor, concurrency, background, sendable
 
 ## Use @ModelActor for Background SwiftData Work
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `PersistentModel` and `ModelContext` are not `Sendable` — passing them across actor boundaries causes data races and crashes. For background work (imports, batch updates, sync), use the `@ModelActor` macro to create an actor with its own `ModelContext` isolated from the main actor.
 
 **Incorrect (sharing model context across actors — data race):**

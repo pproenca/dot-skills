@@ -1,9 +1,9 @@
 {
   "version": "1.0.2",
   "organization": "Apple",
-  "technology": "Swift 6 / SwiftUI (iOS 17+)",
+  "technology": "Swift 6.2 / SwiftUI (iOS 26)",
   "date": "2026-02",
-  "abstract": "Performance optimization and modern concurrency patterns for Swift and SwiftUI. Contains 19 rules across 3 categories covering Swift 6 strict concurrency migration, async/await patterns, render performance with view decomposition and lazy containers, and animation performance. Targets iOS 17+ with @Observable and structured concurrency.",
+  "abstract": "Performance optimization and modern concurrency patterns for Swift and SwiftUI. Contains 19 rules across 3 categories covering Swift 6 strict concurrency migration, async/await patterns, render performance with view decomposition and lazy containers, and animation performance. Targets iOS 26 / Swift 6.2 with @Observable and structured concurrency. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "https://developer.apple.com/documentation/Xcode/understanding-and-improving-swiftui-performance",
     "https://developer.apple.com/videos/play/wwdc2023/10149/",

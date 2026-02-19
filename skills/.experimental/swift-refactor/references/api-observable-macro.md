@@ -7,7 +7,9 @@ tags: api, observable, observation, viewmodel, migration
 
 ## Migrate ObservableObject to @Observable Macro
 
-`ObservableObject` uses push-based notification: any `@Published` change triggers re-renders in every observing view, even those that don't read the changed property. The `@Observable` macro (iOS 17+) uses pull-based tracking, where SwiftUI observes only the specific properties each view accesses. Every ViewModel MUST be an `@Observable` class held via `@State` in its owning view.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+`ObservableObject` uses push-based notification: any `@Published` change triggers re-renders in every observing view, even those that don't read the changed property. The `@Observable` macro (iOS 26 / Swift 6.2) uses pull-based tracking, where SwiftUI observes only the specific properties each view accesses. Every ViewModel MUST be an `@Observable` class held via `@State` in its owning view.
 
 **Incorrect (push-based notification re-renders all observers):**
 

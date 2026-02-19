@@ -1,11 +1,11 @@
 ---
 name: ios-design-system
-description: Airbnb-aligned iOS design system engineering for SwiftUI (iOS 17+) — token architecture, color system engineering, typography scales, spacing tokens, component style libraries with DLS-style protocols, asset management, theming, and governance. Enforces @Equatable on all views, @Observable state, and Airbnb Swift Style Guide naming conventions. This skill should be used when building, organizing, or maintaining a design system for an iOS app, refactoring ad-hoc styles into tokens, creating reusable component styles (ButtonStyle, LabelStyle, custom DLS protocols), structuring asset catalogs, or preventing style drift and duplication.
+description: Clinic-architecture-aligned iOS design system engineering for SwiftUI (iOS 26 / Swift 6.2) covering token architecture, color/typography/spacing systems, component style libraries, asset governance, and theming. Enforces @Equatable on views and keeps design-system usage compatible with Feature-to-Domain+DesignSystem boundaries. Use when building or refactoring DesignSystem infrastructure for the clinic modular MVVM-C stack.
 ---
 
 # Airbnb iOS Design System Best Practices
 
-Opinionated, strict design system engineering for SwiftUI iOS 17+ apps. Contains 50 rules across 8 categories, prioritized by impact. Derived from Airbnb's Design Language System (DLS), Airbnb Swift Style Guide, Apple Human Interface Guidelines, and WWDC sessions. Mandates @Equatable on every view, @Observable for state, and style protocols as the primary component API.
+Opinionated, strict design system engineering for SwiftUI iOS 26 / Swift 6.2 apps. Contains 50 rules across 8 categories, prioritized by impact. Derived from Airbnb's Design Language System (DLS), Airbnb Swift Style Guide, Apple Human Interface Guidelines, and WWDC sessions. Mandates @Equatable on every view, @Observable for state, and style protocols as the primary component API.
 
 ## Mandated Architecture Alignment
 
@@ -28,6 +28,18 @@ This skill is the **infrastructure layer** — it teaches how to BUILD the desig
 | `ios-design` | **Using** design primitives (semantic colors, typography) | **Engineering** the token system that provides those primitives |
 | `ios-ui-refactor` | **Auditing/fixing** visual quality issues | **Preventing** those issues via governance and automation |
 | `ios-hig` | **HIG compliance** patterns | **Asset and component infrastructure** that makes compliance easy |
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

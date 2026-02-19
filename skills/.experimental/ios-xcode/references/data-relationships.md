@@ -7,6 +7,8 @@ tags: data, swiftdata, relationships, one-to-many, many-to-many
 
 ## Define Model Relationships with Properties
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 SwiftData creates relationships automatically when model properties reference other model types. Use array properties for one-to-many relationships and single properties for one-to-one.
 
 **Incorrect (manual ID references):**

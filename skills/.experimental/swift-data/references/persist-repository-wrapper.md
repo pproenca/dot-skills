@@ -7,6 +7,8 @@ tags: persist, repository, protocol, clean-architecture, data-layer, testability
 
 ## Wrap SwiftData Behind Repository Protocols
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Define repository protocols in the Domain layer describing WHAT data operations are available. Place SwiftData implementations (using `ModelContext`, `FetchDescriptor`, `@ModelActor`) in the Data layer. ViewModels depend only on the protocol — never on SwiftData types. This ensures persistence logic is swappable, testable with mocks, and invisible to the presentation layer.
 
 **Incorrect (ViewModel directly uses SwiftData types — coupled to persistence framework):**

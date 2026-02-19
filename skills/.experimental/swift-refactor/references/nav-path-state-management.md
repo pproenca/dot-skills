@@ -7,6 +7,8 @@ tags: nav, navigationpath, programmatic, state-restoration, deep-linking
 
 ## Use NavigationPath for Programmatic Navigation
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Managing navigation with individual `@State` booleans does not compose: each new screen requires another boolean, you cannot pop to the root in one call, you cannot encode a deep link as a sequence of destinations, and you cannot persist and restore the navigation stack across app launches. `NavigationPath` replaces all of those booleans with a single type-erased stack that supports `append`, `removeLast`, and `Codable` serialization for state restoration.
 
 **Incorrect (boolean flags for each navigation destination):**

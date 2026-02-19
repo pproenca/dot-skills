@@ -7,6 +7,8 @@ tags: crud, insert, model-context, persistence, data-layer
 
 ## Insert Models via ModelContext in Repository Implementations
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Creating an entity instance with `FriendEntity(name: "x")` only allocates it in memory. You must call `context.insert()` to register it with SwiftData for persistence. This operation belongs in repository implementations (Data layer), not in views or ViewModels.
 
 **Incorrect (view inserts directly into ModelContext — bypasses architecture layers):**

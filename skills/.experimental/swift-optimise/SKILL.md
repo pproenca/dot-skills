@@ -1,11 +1,23 @@
 ---
 name: swift-optimise
-description: Swift 6 and SwiftUI performance optimization, modern concurrency patterns, and animation performance. Covers async/await migration, Sendable/actor isolation, Swift 6 strict concurrency, view decomposition, render performance, Canvas/TimelineView, and fluid animations. This skill should be used when optimizing Swift/SwiftUI performance, migrating to Swift 6 concurrency, implementing async/await patterns, improving scroll performance, profiling render issues with Instruments, or building performant animations.
+description: Swift 6.2 and SwiftUI performance optimization for iOS 26 clinic architecture codebases. Covers async/await concurrency patterns, Sendable/actor isolation, view/render performance, and animation performance while preserving modular MVVM-C boundaries across App, Feature, Domain, and Data layers. Use when profiling or optimizing Swift/SwiftUI behavior in clinic modules.
 ---
 
 # Apple Swift/SwiftUI Performance Optimization Best Practices
 
-Comprehensive guide for Swift and SwiftUI performance optimization. Contains 19 rules across 3 categories covering modern concurrency, render performance, and animation performance. Targets iOS 17+ with @Observable and Swift 6 strict concurrency.
+Comprehensive guide for Swift and SwiftUI performance optimization. Contains 19 rules across 3 categories covering modern concurrency, render performance, and animation performance. Targets iOS 26 / Swift 6.2 with @Observable and Swift 6 strict concurrency.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

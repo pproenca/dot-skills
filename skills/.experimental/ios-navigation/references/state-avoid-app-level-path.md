@@ -7,6 +7,8 @@ tags: state, app-level, scene, multi-window, navigation-path
 
 ## Avoid Defining NavigationPath at App Level
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Defining `NavigationPath` in the `@main App` struct means all scenes (windows) share the same navigation stack. On iPad with Stage Manager or Split View, navigating in one window changes navigation in all windows. Each `Scene` should own its own navigation path via `@SceneStorage` or `@State` inside the scene's root view. This enables proper multi-window support and correct state restoration per window.
 
 **Incorrect (NavigationPath defined at App level — shared across all windows):**

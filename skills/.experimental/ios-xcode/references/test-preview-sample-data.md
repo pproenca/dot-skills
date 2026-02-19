@@ -7,6 +7,8 @@ tags: test, preview, sample-data, layout, visual-testing
 
 ## Use Preview with Sample Data for Visual Testing
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Previews with empty or minimal data hide real-world layout problems like text truncation, long names overflowing, and empty states never being tested. Using realistic sample data in your previews catches these visual issues during development without launching the full app on a simulator.
 
 **Incorrect (preview with minimal data hides layout issues):**

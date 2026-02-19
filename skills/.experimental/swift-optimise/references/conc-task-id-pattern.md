@@ -7,6 +7,8 @@ tags: conc, task, reactive, cancellation, data-loading
 
 ## Use .task(id:) for Reactive Data Loading
 
+In iOS 26 / Swift 6.2 clinic architecture modules, prefer this pattern for feature View -> ViewModel loading triggers so stale tasks are cancelled before repository calls fan out into Data sync paths.
+
 Using `.onChange` with a manually created `Task` requires the developer to track and cancel the previous task before starting a new one. If cancellation is forgotten, multiple tasks run concurrently for stale values, wasting resources and risking out-of-order results. The `.task(id:)` modifier handles this automatically -- SwiftUI cancels the running task and launches a fresh one whenever the observed value changes.
 
 **Incorrect (manual task lifecycle with no automatic cancellation):**

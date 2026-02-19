@@ -7,6 +7,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ## 1. Token Architecture (token)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 **Impact:** CRITICAL
 **Description:** The foundation layer — how to define, organize, and layer design tokens (raw → semantic → component) determines whether the entire system stays consistent or drifts into ad-hoc chaos.
 

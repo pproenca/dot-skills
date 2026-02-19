@@ -7,6 +7,8 @@ tags: nav, coordinator, destination, navigationstack, routing
 
 ## Refactor Navigation to Coordinator Pattern
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Scattered `.navigationDestination(for:)` modifiers across child views cause duplicate registrations and unpredictable routing. Refactor to a coordinator pattern: an `@Observable` class that owns the `NavigationPath` and all routing decisions. Views request navigation by calling coordinator methods — they never create destinations inline. This centralizes flow logic, enables deep linking, and makes navigation testable.
 
 **Incorrect (destinations scattered across child views — no coordinator):**

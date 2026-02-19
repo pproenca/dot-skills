@@ -1,11 +1,23 @@
 ---
 name: ios-testing
-description: iOS testing best practices for Swift and SwiftUI applications at principal engineer level. This skill should be used when writing, reviewing, or refactoring test code for iOS apps. Triggers on tasks involving unit tests, UI tests, XCTest, Swift Testing, mocking, snapshot testing, test architecture, dependency injection for testability, async testing, or CI test infrastructure.
+description: Testing practices for iOS 26 / Swift 6.2 clinic modular MVVM-C applications. Covers unit/UI/snapshot testing, protocol-based mocks, async actor isolation, and dependency-injected test architecture aligned with Domain protocols, App-target composition, and Data-owned I/O boundaries. Use when writing, reviewing, or refactoring tests for ios-* and swift-* clinic modules.
 ---
 
 # iOS Testing Best Practices
 
 Comprehensive testing guide for iOS and Swift applications, written at principal engineer level. Contains 44 rules across 8 categories, prioritized by impact to guide test architecture decisions, test authoring patterns, and CI infrastructure.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

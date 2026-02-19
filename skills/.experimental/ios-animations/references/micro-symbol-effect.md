@@ -7,7 +7,7 @@ tags: micro, symbolEffect, sfSymbols, animation, iconography
 
 ## Use symbolEffect for SF Symbol Animations
 
-SF Symbols have a built-in animation system that ships with iOS 17. The `.symbolEffect` modifier provides bounce, pulse, variable color, scale, appear, disappear, and replace effects — all purpose-built for icon animation. These effects respect reduce motion preferences automatically, animate along the symbol's layer structure (so a Wi-Fi icon animates bar by bar), and produce frame-perfect results. Building custom SF Symbol animations manually with opacity, scale, and rotation is fragile — it ignores layer semantics, breaks on symbol updates, and requires manual accessibility handling.
+SF Symbols have a built-in animation system that ships with iOS 26. The `.symbolEffect` modifier provides bounce, pulse, variable color, scale, appear, disappear, and replace effects — all purpose-built for icon animation. These effects respect reduce motion preferences automatically, animate along the symbol's layer structure (so a Wi-Fi icon animates bar by bar), and produce frame-perfect results. Building custom SF Symbol animations manually with opacity, scale, and rotation is fragile — it ignores layer semantics, breaks on symbol updates, and requires manual accessibility handling.
 
 **Incorrect (manually toggling between two symbols with opacity transition):**
 

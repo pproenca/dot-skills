@@ -7,6 +7,8 @@ tags: async, main-actor, isolation, concurrency, safety
 
 ## Test MainActor-Isolated Code on MainActor
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Calling a `@MainActor`-isolated method from a non-isolated test context triggers a runtime assertion or data race. Annotating the test function with `@MainActor` ensures the test body executes on the main actor, matching the isolation context of the code under test.
 
 **Incorrect (test runs off the main actor — runtime crash):**

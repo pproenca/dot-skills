@@ -7,6 +7,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ## 1. Navigation Architecture (arch)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 **Impact:** CRITICAL
 **Description:** NavigationStack, NavigationSplitView, value-based links, destination registration, and coordinator patterns are the foundation of every navigation flow. Wrong architecture makes fluid transitions, deep linking, and state restoration impossible.
 

@@ -7,6 +7,8 @@ tags: crud, delete, indexset, ondelete, list, data-layer
 
 ## Delete via Repository with IndexSet from onDelete Modifier
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 SwiftUI's `.onDelete` modifier provides the standard swipe-to-delete gesture for list rows. It passes an `IndexSet` mapping to the `ForEach` data source. The view delegates the delete operation to the ViewModel, which calls the repository. The repository handles `ModelContext.delete()` in the Data layer.
 
 **Incorrect (view deletes from ModelContext directly — persistence logic in presentation):**

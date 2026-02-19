@@ -7,6 +7,8 @@ tags: api, environment, observable, dependency-injection, migration
 
 ## Replace @EnvironmentObject with @Environment
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 @EnvironmentObject provides no compile-time guarantee that the object was injected. If a parent view forgets to call .environmentObject(), the app crashes at runtime with a vague error. With @Observable classes, you can inject via .environment() and access via @Environment, which surfaces missing dependencies as compile-time errors. This eliminates an entire category of runtime crashes in production.
 
 **Incorrect (runtime crash if injection is missing):**

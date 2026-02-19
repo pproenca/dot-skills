@@ -1,6 +1,6 @@
 ---
 name: ios-design
-description: SwiftUI implementation patterns for building Apple-quality iOS interfaces, grounded in Ken Kocienda's Creative Selection (empathy, craft, taste, demo culture) and John Edson's Design Like Apple (systems thinking, the product is the marketing, design with conviction). This skill should be used when writing, building, or implementing new SwiftUI views, screens, state management, navigation flows, layout, component selection, accessibility, or animation polish from scratch.
+description: SwiftUI interface implementation patterns aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture, grounded in Creative Selection and Design Like Apple principles. Use when building new SwiftUI views/screens while respecting Domain/Data boundaries, App-target route-shell navigation, and production-grade accessibility/interaction standards.
 ---
 
 # Apple SwiftUI iOS Design Best Practices
@@ -10,11 +10,23 @@ A builder's guide for implementing Apple-quality iOS interfaces in SwiftUI, grou
 - **Ken Kocienda** — *Creative Selection* (empathy for the user, craft in coding, taste in choosing the best solution, demo culture of iterative refinement)
 - **John Edson** — *Design Like Apple* (systems thinking, the product is the marketing, design out loud, design with conviction)
 
-Contains 62 rules across 8 principle-based categories. Each rule identifies a specific anti-pattern, grounds the fix in a named principle, and provides the correct iOS 17+ SwiftUI implementation.
+Contains 62 rules across 8 principle-based categories. Each rule identifies a specific anti-pattern, grounds the fix in a named principle, and provides the correct iOS 26 / Swift 6.2 SwiftUI implementation.
 
 ## Scope & Relationship to Sibling Skills
 
 This skill is the **building and implementation guide** — it teaches how to construct new SwiftUI interfaces from scratch using Apple-quality patterns. When loaded alongside `ios-ui-refactor` (reviewing/refactoring existing UI), this skill covers the greenfield implementation that `ios-ui-refactor` later audits. Use this skill for building new screens; use the sibling for evaluating and improving existing ones.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

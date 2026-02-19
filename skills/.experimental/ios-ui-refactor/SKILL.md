@@ -1,9 +1,9 @@
 ---
 name: ios-ui-refactor
-description: Principal-level iOS UI review and refactoring patterns for SwiftUI, grounded in Dieter Rams' Ten Principles for Good Design, Ken Segall's Insanely Simple, and John Edson's Design Like Apple. This skill should be used when reviewing, auditing, or refactoring existing SwiftUI views, screens, transitions, animations, or color usage to reach Apple-quality design standards while preserving the app's brand identity.
+description: Principal-level SwiftUI UI review and refactoring patterns for iOS 26 / Swift 6.2 clinic-architecture apps, grounded in Rams, Segall, and Edson principles. Use when auditing or improving existing SwiftUI screens, transitions, animations, and visual systems while preserving brand identity and respecting clinic Domain/Data/App boundaries.
 ---
 
-# Apple HIG SwiftUI iOS 17+ Best Practices
+# Apple HIG SwiftUI iOS 26 / Swift 6.2 Best Practices
 
 A principal designer's lens for evaluating and refactoring SwiftUI interfaces to Apple-quality standards, grounded in Rams, Segall, and Edson. Contains 51 rules across 8 categories, each grounded in specific principles from three foundational design texts:
 
@@ -17,6 +17,18 @@ Categories are ordered by a visual review process: start with what to remove, th
 
 This skill is the **refactoring and review lens** — it evaluates existing UI and identifies visual anti-patterns to fix. When loaded alongside `ios-design` (building new UI), `ios-hig` (HIG compliance), or `swift-refactor` (code-level refactoring), this skill supersedes overlapping rules with more detailed "incorrect -> correct" transformations and "When NOT to apply" guidance. Use this skill for auditing and improving existing screens; use the siblings for greenfield implementation.
 
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
+
 ## When to Apply
 
 Reference these guidelines when:
@@ -27,7 +39,7 @@ Reference these guidelines when:
 - Ensuring animations and materials are invisible, not decorative (Rams #5)
 - Verifying spacing, radii, and colors form a coherent system (Edson "Systems Thinking")
 - Confirming edge cases — reduce motion, touch targets, safe areas — are handled (Rams #8)
-- Adopting iOS 17-18 APIs that refine previously impossible interactions (Edson "Design Out Loud")
+- Adopting iOS 26 / Swift 6.2 APIs that refine previously impossible interactions (Edson "Design Out Loud")
 
 ## Rule Categories by Priority
 

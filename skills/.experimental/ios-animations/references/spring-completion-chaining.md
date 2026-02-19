@@ -7,7 +7,7 @@ tags: spring, completion, chaining, withAnimation, sequence
 
 ## Use withAnimation Completion for Chained Sequences
 
-iOS 17 introduced a completion handler on `withAnimation` that fires when the animation reaches a specified criterion. This replaces the fragile pattern of guessing animation duration and chaining with `DispatchQueue.main.asyncAfter(deadline:)`. Springs have no fixed duration — they settle asymptotically — so hardcoded delays either fire too early (cutting off the animation) or too late (adding unnecessary dead time). The completion handler fires at exactly the right moment.
+iOS 26 introduced a completion handler on `withAnimation` that fires when the animation reaches a specified criterion. This replaces the fragile pattern of guessing animation duration and chaining with `DispatchQueue.main.asyncAfter(deadline:)`. Springs have no fixed duration — they settle asymptotically — so hardcoded delays either fire too early (cutting off the animation) or too late (adding unnecessary dead time). The completion handler fires at exactly the right moment.
 
 **Incorrect (DispatchQueue timing hack breaks on variable-duration springs):**
 
@@ -172,7 +172,7 @@ struct StatusBanner: View {
 }
 ```
 
-**Completion criteria options (iOS 17+):**
+**Completion criteria options (iOS 26 / Swift 6.2):**
 
 ```swift
 // .logicallyComplete (default): fires when the animation is

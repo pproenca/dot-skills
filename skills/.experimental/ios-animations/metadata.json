@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "organization": "dot-skills",
-  "technology": "iOS SwiftUI Animations",
+  "technology": "iOS 26 / Swift 6.2 SwiftUI Animations",
   "date": "February 2026",
-  "abstract": "Airbnb-aligned animation craft guide for SwiftUI iOS 17+ apps, designed for AI agents and LLMs. Contains 50 rules across 8 categories, prioritized by impact. Enforces @Equatable on all animated views, motion tokens for spring/timing values, and design system tokens for layout. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics. Coherent with ios-design-system and modular MVVM-C swift-ui-architect sibling skills.",
+  "abstract": "Airbnb-aligned animation craft guide for SwiftUI iOS 26 / Swift 6.2 apps, designed for AI agents and LLMs. Contains 50 rules across 8 categories, prioritized by impact. Enforces @Equatable on all animated views, motion tokens for spring/timing values, and design system tokens for layout. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics. Coherent with ios-design-system and modular MVVM-C swift-ui-architect sibling skills. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "https://developer.apple.com/documentation/swiftui/animation",
     "https://developer.apple.com/documentation/swiftui/spring",

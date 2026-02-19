@@ -7,7 +7,9 @@ tags: state, observable, viewmodel, observation, ios17
 
 ## Use @Observable Classes for All ViewModels
 
-`@Observable` (iOS 17+) automatically tracks which properties each view reads in its body and only triggers re-render when THOSE specific properties change. `ObservableObject` with `@Published` triggers re-render for ANY property change on the object — even unrelated ones. Every ViewModel MUST be an `@Observable` class held via `@State` in its owning view.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+`@Observable` (iOS 26 / Swift 6.2) automatically tracks which properties each view reads in its body and only triggers re-render when THOSE specific properties change. `ObservableObject` with `@Published` triggers re-render for ANY property change on the object — even unrelated ones. Every ViewModel MUST be an `@Observable` class held via `@State` in its owning view.
 
 **Incorrect (ObservableObject with @Published — all views re-render on any change):**
 

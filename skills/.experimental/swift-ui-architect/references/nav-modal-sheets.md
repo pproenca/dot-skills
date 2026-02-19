@@ -7,6 +7,8 @@ tags: nav, modal, sheet, fullscreen-cover, coordinator
 
 ## Present Modals Via Coordinator, Not Inline
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Modal presentations (`sheet`, `fullScreenCover`, `alert`, `confirmationDialog`) must be driven by coordinator-owned state, not inline view state. The coordinator exposes observable modal state, and the root NavigationStack view binds `.sheet` to it. This keeps modal logic testable and allows coordinators to present modals from anywhere in the flow.
 
 **Incorrect (inline modal state — untestable, scattered, cannot be triggered externally):**

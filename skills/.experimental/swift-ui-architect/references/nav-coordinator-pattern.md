@@ -7,6 +7,8 @@ tags: nav, coordinator, navigation-stack, feature, routing
 
 ## Every Feature Has a Coordinator Owning NavigationStack
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Each feature module has a Coordinator (`@Observable` class) that owns a `NavigationPath` and manages all routing decisions. The coordinator is the ONLY object that can push/pop/present views. Views request navigation by calling coordinator methods — they never create NavigationLinks with destinations. This centralizes flow logic, enables deep linking, and makes navigation testable.
 
 **Incorrect (navigation logic scattered across views — untestable, no deep linking):**

@@ -1,9 +1,9 @@
 {
   "version": "1.0.2",
   "organization": "iOS Design Principles",
-  "technology": "Xcode Storyboard & Interface Builder",
+  "technology": "Xcode Storyboard & Interface Builder (Legacy Interop in iOS 26 / Swift 6.2)",
   "date": "February 2026",
-  "abstract": "Comprehensive UI design and architecture guide for Xcode Storyboard and Interface Builder, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (storyboard architecture, Auto Layout constraints) to incremental (debugging and inspection). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "abstract": "Legacy interoperability guide for maintaining and migrating existing Xcode Storyboard / Interface Builder surfaces inside iOS 26 / Swift 6.2 clinic architecture projects. Use for storyboard maintenance, XML merge conflict resolution, and migration planning toward SwiftUI route-shell based features. Not intended for new SwiftUI clinic feature development.",
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines",
     "https://developer.apple.com/library/archive/documentation/UserExperience/Conceptual/AutolayoutPG/",

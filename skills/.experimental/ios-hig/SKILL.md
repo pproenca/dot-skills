@@ -1,11 +1,23 @@
 ---
 name: ios-hig
-description: Apple Human Interface Guidelines for iOS. Covers navigation (tab bars, NavigationStack, toolbars), interaction design (touch targets, gestures, haptics), accessibility (VoiceOver, Dynamic Type, color contrast), user feedback (loading, errors, empty states), UX patterns (onboarding, permissions, modality, confirmation dialogs), and visual design (dark mode, SF Symbols, layout margins). This skill should be used when designing iOS user experiences, implementing HIG-compliant interactions, ensuring accessibility compliance, building navigation hierarchies, or reviewing apps for Apple design guideline compliance.
+description: Apple Human Interface Guidelines for iOS 26 / Swift 6.2 clinic-architecture apps. Covers navigation, interaction design, accessibility, feedback states, UX patterns, and visual design for SwiftUI implementations that follow App-target coordinators/route shells and Domain/Data boundaries. Use when designing or reviewing HIG-compliant experiences in the clinic modular MVVM-C stack.
 ---
 
 # Apple iOS HIG Best Practices
 
 Comprehensive guide for Apple Human Interface Guidelines compliance in iOS apps built with SwiftUI. Contains 34 rules across 6 categories covering navigation, interaction design, accessibility, user feedback, UX patterns, and visual design.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

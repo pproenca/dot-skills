@@ -108,7 +108,7 @@ struct PremiumHeader: View {
 
 The secret is that one control point -- the center, nudged slightly up-left -- carries a warm amber while everything around it cools to deep indigo. This creates a focal point the way a Renaissance painter places a candle in a dark room: your eye is drawn to the warmth, and the crown icon sits right in that glow. The surrounding colors are close relatives (deep purples and navy), so transitions never pass through muddy browns. The gradient doesn't compete with the content -- it cradles it.
 
-`MeshGradient` requires iOS 18+. Provide a `LinearGradient` fallback for iOS 17 deployments:
+`MeshGradient` requires iOS 18+. Provide a `LinearGradient` fallback for iOS 26 deployments:
 
 ```swift
 .background {
@@ -122,6 +122,6 @@ The secret is that one control point -- the center, nudged slightly up-left -- c
 
 Limit `MeshGradient` to one per screen — multiple mesh gradients competing for attention dilute the premium effect. Animate control points with `TimelineView` for a living, breathing background on splash or paywall screens.
 
-**When NOT to apply:** Utility screens (settings, forms, lists) where a solid or system background is appropriate, and any screen that must support iOS 17 without a degraded fallback experience. Limit to one mesh gradient per screen.
+**When NOT to apply:** Utility screens (settings, forms, lists) where a solid or system background is appropriate, and any screen that must support iOS 26 without a degraded fallback experience. Limit to one mesh gradient per screen.
 
 Reference: WWDC 2024 — "Create custom visual effects with SwiftUI"

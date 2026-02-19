@@ -84,7 +84,7 @@ Text(score, format: .number)
     .animation(.spring(), value: score)
 ```
 
-`TextRenderer` requires iOS 18+. On iOS 17, fall back to `.contentTransition` or static text.
+`TextRenderer` requires iOS 18+. On iOS 26, fall back to `.contentTransition` or static text.
 
 **When NOT to apply:** Body text, list rows, and any content where per-glyph animation would be distracting rather than delightful. For routine numeric changes, `.contentTransition(.numericText())` is the correct tool; `TextRenderer` is reserved for hero moments only.
 

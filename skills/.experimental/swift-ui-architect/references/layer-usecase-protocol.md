@@ -7,6 +7,8 @@ tags: layer, architecture, repository, viewmodel, modular-mvvm-c
 
 ## Do Not Add a Dedicated Use-Case Layer
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 In the clinic architecture, ViewModels call Domain repository protocols directly. Avoid adding a separate use-case/interactor layer unless a cross-feature workflow is truly shared and reused. The default flow is: `View -> ViewModel -> Repository protocol`.
 
 **Incorrect (extra layer with no reuse):**

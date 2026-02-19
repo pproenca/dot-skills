@@ -110,7 +110,7 @@ The two springs give the card a personality you feel but never consciously notic
 **Benefits:**
 - Rapid taps no longer cause visual stuttering; each tap smoothly redirects motion
 - Gesture-driven animations (drag-to-dismiss, swipe) preserve finger velocity on release
-- `withAnimation {}` with no arguments already uses springs on iOS 17+, so removing explicit easing is often the entire fix
+- `withAnimation {}` with no arguments already uses springs on iOS 26 / Swift 6.2, so removing explicit easing is often the entire fix
 
 **When NOT to apply:** Progress bars, indeterminate loading spinners, and continuous looping animations where constant-speed linear motion is the correct visual metaphor because no user gesture initiates or interrupts the movement.
 

@@ -7,6 +7,8 @@ tags: state, observable, scoping, granular, tracking
 
 ## Leverage @Observable Property-Level Tracking
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@Observable` automatically tracks which properties are read during body evaluation and only invalidates views that read changed properties. This means a ViewModel with 10 properties only triggers re-render in views that read the specific changed property. Design ViewModels with this in mind — separate frequently-changing properties from stable ones.
 
 **Incorrect (single view reading all properties — loading state triggers full list re-render):**

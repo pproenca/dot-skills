@@ -7,6 +7,8 @@ tags: arch, swiftui, routing, hashable, codable, type-safety
 
 ## Define Routes as Hashable Enums
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 A single Hashable + Codable enum for all routes provides compile-time safety for every navigation path in the app. The compiler enforces exhaustive switch handling so adding a new screen cannot be forgotten. Codable conformance enables NavigationPath serialization for state restoration and process termination recovery. Centralizing routes also makes deep linking a simple URL-to-enum mapping instead of scattered conditional logic.
 
 **Incorrect (untyped string-based or boolean-based navigation):**

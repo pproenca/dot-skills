@@ -7,6 +7,8 @@ tags: mock, fake, integration, persistence, in-memory
 
 ## Use In-Memory Fakes for Integration Tests
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Integration tests that spin up a real CoreData or SwiftData stack write to disk, require teardown, and run 5-20x slower than in-memory alternatives. An in-memory fake repository implements the same protocol as the production store, enabling full CRUD integration tests without file system dependencies or cross-test contamination.
 
 **Incorrect (real persistence stack is slow and leaks between tests):**

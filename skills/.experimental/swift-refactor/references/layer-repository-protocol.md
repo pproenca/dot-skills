@@ -7,6 +7,8 @@ tags: layer, repository, protocol, domain, data-layer
 
 ## Extract Repository Protocols in Domain, Implementations in Data
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 When ViewModels or views directly call network or database APIs, the domain layer becomes coupled to specific frameworks. Extract a Repository protocol in the Domain layer defining WHAT data operations are needed. Place the concrete implementation in the Data layer, where it handles HOW to fetch/store. This lets you swap between API, database, cache, or mock implementations without changing any business logic.
 
 **Incorrect (use case directly calls URLSession — coupled to networking framework):**

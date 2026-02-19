@@ -7,6 +7,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ## 1. Data Modeling (model)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 **Impact:** CRITICAL
 **Description:** @Model entity design and entity-to-domain struct mapping are the foundation. Wrong model definitions cascade into broken persistence, faulty queries, and corrupt relationships. Entity classes live in the Data layer; domain structs (Equatable, Sendable) live in the Domain layer.
 

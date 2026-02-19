@@ -7,6 +7,8 @@ tags: query, property-wrapper, swiftui, swiftdata, data-layer
 
 ## Use @Query for Declarative Data Fetching (Data Layer)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@Query` fetches SwiftData entities and automatically updates the view when underlying data changes — no `onAppear`, `NotificationCenter`, or manual refresh logic needed. Manual fetching with `context.fetch()` in views misses updates, requires extra state management, and inevitably produces stale UI states.
 
 **Architecture note:** In modular MVVM-C architecture, `@Query` and `FetchDescriptor` are Data layer implementation details — they belong in repository implementations, not in views or ViewModels. Views read data from `@Observable` ViewModels, which read from repository protocols. See [`state-query-vs-viewmodel`](state-query-vs-viewmodel.md) for the recommended architecture and [`persist-repository-wrapper`](persist-repository-wrapper.md) for the repository pattern.

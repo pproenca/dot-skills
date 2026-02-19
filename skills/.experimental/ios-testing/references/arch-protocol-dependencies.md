@@ -7,6 +7,8 @@ tags: arch, dependency-injection, protocols, testability
 
 ## Depend on Protocols, Not Concrete Types
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Concrete dependencies make it impossible to substitute test doubles, forcing tests to hit real networks, databases, and services. Protocol-based dependencies let each component be tested in complete isolation with deterministic behavior.
 
 **Incorrect (every test hits the real network):**

@@ -9,7 +9,7 @@ tags: orch, phaseAnimator, sequence, multi-step, declarative
 
 Multi-step animation sequences — appear, scale up, settle, then pulse — are common in onboarding flows, success states, and attention-drawing UI. The imperative approach chains `DispatchQueue.main.asyncAfter` calls, each updating a `@State` property at a calculated delay. This creates fragile, hard-to-maintain code: timing values are scattered across closures, cancellation requires manual bookkeeping, and adding or reordering steps means recalculating every subsequent delay.
 
-`PhaseAnimator` (iOS 17+) replaces all of this with a declarative phase list. You define an enum conforming to `CaseIterable` where each case provides the visual properties for that phase. SwiftUI steps through phases sequentially, applying the specified animation between each pair. The result is a multi-step sequence in ~10 lines that is cancellable, restartable, and automatically respects reduce-motion preferences.
+`PhaseAnimator` (iOS 26 / Swift 6.2) replaces all of this with a declarative phase list. You define an enum conforming to `CaseIterable` where each case provides the visual properties for that phase. SwiftUI steps through phases sequentially, applying the specified animation between each pair. The result is a multi-step sequence in ~10 lines that is cancellable, restartable, and automatically respects reduce-motion preferences.
 
 **Incorrect (chained DispatchQueue.main.asyncAfter — fragile timing):**
 

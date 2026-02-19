@@ -1,11 +1,11 @@
 ---
 name: ios-animations
-description: Airbnb-aligned iOS animation craft guidelines for SwiftUI (iOS 17+) — motion tokens, spring physics, gesture continuity, spatial transitions, micro-interactions, keyframe orchestration, and accessibility. Enforces @Equatable on all animated views, @Observable for complex animation state, and design system tokens (Spacing, Radius, Motion). This skill should be used when writing, reviewing, or refactoring SwiftUI animation code to achieve fluid, native-feeling motion. Triggers on tasks involving SwiftUI animations, transitions, gesture-driven motion, spring parameters, matchedGeometryEffect, PhaseAnimator, KeyframeAnimator, haptic feedback, or any motion design work in iOS apps.
+description: Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2) covering motion tokens, spring physics, gesture continuity, spatial transitions, micro-interactions, and accessibility. Enforces @Equatable on animated views and keeps animation state aligned with Domain/Data feature boundaries. Use when writing, reviewing, or refactoring SwiftUI animation code under the clinic modular MVVM-C architecture.
 ---
 
 # dot-skills — Airbnb iOS SwiftUI Animations Best Practices
 
-Opinionated, strict animation craft guide for SwiftUI iOS 17+ apps. Contains 50 rules across 8 categories, prioritized by impact. Derived from Airbnb Engineering motion patterns, Apple WWDC sessions, and Apple Human Interface Guidelines. Mandates @Equatable on every animated view, motion tokens for all spring/timing values, and design system tokens for layout.
+Opinionated, strict animation craft guide for SwiftUI iOS 26 / Swift 6.2 apps. Contains 50 rules across 8 categories, prioritized by impact. Derived from Airbnb Engineering motion patterns, Apple WWDC sessions, and Apple Human Interface Guidelines. Mandates @Equatable on every animated view, motion tokens for all spring/timing values, and design system tokens for layout.
 
 ## Mandated Architecture Alignment
 
@@ -30,6 +30,18 @@ This skill is the **motion layer** — it teaches how to BUILD fluid, performant
 | `ios-hig` | **HIG compliance** patterns | **Motion-specific HIG** (reduce motion, spatial continuity) |
 
 **Out of scope:** Designer-authored vector animations (use [Lottie](https://github.com/airbnb/lottie-ios) for After Effects exports). Complex UIKit transition controllers (see Airbnb's [declarative transition framework](https://medium.com/airbnb-engineering/motion-engineering-at-scale-5ffabfc878)). This skill covers programmatic SwiftUI animations only.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

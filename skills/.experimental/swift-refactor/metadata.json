@@ -1,9 +1,9 @@
 {
   "version": "2.0.0",
   "date": "2026-02-16",
-  "technology": "Swift/SwiftUI",
+  "technology": "Swift/SwiftUI (iOS 26 / Swift 6.2)",
   "organization": "Airbnb",
-  "abstract": "Refactoring patterns aligned with the iOS 26 / Swift 6.2 modular MVVM-C architecture. Covers @Observable migration, @Equatable diffing, App-target coordinator + route-shell navigation, Domain/Data/Feature package boundaries, and modern SwiftUI APIs.",
+  "abstract": "Refactoring patterns aligned with the iOS 26 / Swift 6.2 modular MVVM-C architecture. Covers @Observable migration, @Equatable diffing, App-target coordinator + route-shell navigation, Domain/Data/Feature package boundaries, and modern SwiftUI APIs. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "https://airbnb.tech/uncategorized/understanding-and-improving-swiftui-performance/",
     "https://developer.apple.com/wwdc23/10149",

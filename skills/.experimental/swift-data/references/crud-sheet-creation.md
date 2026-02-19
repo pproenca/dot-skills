@@ -7,6 +7,8 @@ tags: crud, sheet, modal, creation, ux, viewmodel
 
 ## Use Sheets for Focused Data Creation via ViewModel
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Present new item creation in a sheet rather than pushing a navigation view. Sheets keep users focused on the creation task and provide a clear Save/Cancel flow. The ViewModel manages creation state and delegates persistence to the repository. Combined with `.interactiveDismissDisabled()`, sheets prevent accidental dismissal.
 
 **Incorrect (view creates and inserts entity directly — persistence logic in presentation):**

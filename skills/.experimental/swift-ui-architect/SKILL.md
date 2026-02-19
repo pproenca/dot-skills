@@ -1,6 +1,6 @@
 ---
 name: swift-ui-architect
-description: Opinionated SwiftUI architecture enforcement for iOS 26 / Swift 6.2 apps using modular MVVM-C (Airbnb) plus local SPM package boundaries (OLX). Enforces App-target composition root + route shells, @Observable ViewModels/coordinators, Domain repository/coordinator/error-routing protocols, Data-owned I/O, stale-while-revalidate reads, and optimistic queued sync. Use when writing, reviewing, or refactoring SwiftUI architecture, feature modules, navigation, dependency wiring, or repository boundaries.
+description: Opinionated SwiftUI architecture enforcement for iOS 26 / Swift 6.2 clinic modular MVVM-C apps using local SPM package boundaries. Enforces App-target `DependencyContainer` + route shells, @Observable ViewModels/coordinators, Domain repository/coordinator/error-routing protocols, Data-owned I/O, stale-while-revalidate reads, and optimistic queued sync. Use when writing, reviewing, or refactoring SwiftUI architecture, navigation, dependency wiring, or repository boundaries.
 ---
 
 # SwiftUI Modular MVVM-C Architecture
@@ -26,6 +26,18 @@ Opinionated architecture enforcement for SwiftUI clinic-style apps. This skill a
 ```
 
 **Dependency Rule**: Feature modules import `Domain` + `DesignSystem` only. Features never import `Data` or other features. App target is the only convergence point.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

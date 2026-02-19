@@ -7,6 +7,8 @@ tags: state, dependency-injection, testing, environment, protocol, architecture
 
 ## Inject Repository Protocols via @Environment
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Services and repositories should be injected as protocol types via SwiftUI's `@Environment`, not as concrete SwiftData types (`ModelContainer`, `ModelContext`). Define custom `EnvironmentKey` types for each repository protocol and inject implementations at the app root. This keeps views and ViewModels decoupled from persistence frameworks and enables mock injection for testing.
 
 **Incorrect (injecting concrete ModelContainer — coupled to SwiftData, hard to test):**

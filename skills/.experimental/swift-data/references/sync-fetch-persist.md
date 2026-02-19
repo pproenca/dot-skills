@@ -7,6 +7,8 @@ tags: sync, api, fetch, persist, service, dto, networking, architecture
 
 ## Use Injected Sync Services to Fetch and Persist API Data
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Network sync services should be injected as protocol dependencies, not instantiated in views. The ViewModel delegates sync operations to the service, which handles networking and persistence in the Data layer. The sync service uses `@ModelActor` for background SwiftData work and maps DTOs to entities. Views never see network or persistence code.
 
 **Incorrect (view creates service and calls sync directly — persistence logic in presentation):**

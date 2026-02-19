@@ -7,7 +7,7 @@ tags: orch, keyframeAnimator, timeline, precise, choreography
 
 ## Use KeyframeAnimator for Timeline-Precise Motion
 
-When you need millisecond-precise control over animation timing — a branded loading animation where scale peaks at exactly 200ms while rotation starts at 150ms, or a logo reveal where opacity and position follow different timing curves — `PhaseAnimator` falls short because it sequences phases linearly and does not let properties follow independent timelines. `KeyframeAnimator` (iOS 17+) solves this by giving each animatable property its own timeline track with explicit timestamps and interpolation curves.
+When you need millisecond-precise control over animation timing — a branded loading animation where scale peaks at exactly 200ms while rotation starts at 150ms, or a logo reveal where opacity and position follow different timing curves — `PhaseAnimator` falls short because it sequences phases linearly and does not let properties follow independent timelines. `KeyframeAnimator` (iOS 26 / Swift 6.2) solves this by giving each animatable property its own timeline track with explicit timestamps and interpolation curves.
 
 Think of `KeyframeAnimator` like a video editing timeline: each property (scale, rotation, offset) has its own track, and you place keyframes at specific times on each track independently. Between keyframes, SwiftUI interpolates using the curve you specify — `.linear`, `.spring`, or `.cubic` (for bezier control).
 

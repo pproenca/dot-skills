@@ -7,7 +7,9 @@ tags: state, published, observable-object, deprecated, migration
 
 ## Never Use @Published or ObservableObject
 
-With iOS 17+ as the minimum target, `@Published` and `ObservableObject` are strictly prohibited. `@Published` notifies ALL subscribing views when ANY property changes, regardless of which properties each view actually reads. This causes O(N) unnecessary re-renders where N is the number of observing views. `@Observable` tracks property access at the view level, reducing this to O(1).
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+With iOS 26 / Swift 6.2 as the minimum target, `@Published` and `ObservableObject` are strictly prohibited. `@Published` notifies ALL subscribing views when ANY property changes, regardless of which properties each view actually reads. This causes O(N) unnecessary re-renders where N is the number of observing views. `@Observable` tracks property access at the view level, reducing this to O(1).
 
 **Incorrect (ObservableObject with @Published — O(N) re-renders):**
 

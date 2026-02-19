@@ -7,6 +7,8 @@ tags: arch, swiftui, navigation-path, type-erasure, state-management, codable
 
 ## Use NavigationPath for Heterogeneous Type-Erased Navigation
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 NavigationPath is a type-erased container that can hold any Hashable values, making it suitable when a single NavigationStack must handle pushes from multiple unrelated data types. However, when all destinations share a common route enum, a typed array `[Route]` provides compile-time safety, direct subscript access, and straightforward Codable persistence without the indirection of NavigationPath's CodableRepresentation. Choose NavigationPath for heterogeneous stacks across module boundaries; choose a typed array when routes are centralized in a single enum.
 
 **Incorrect (separate @State booleans simulating a navigation stack):**

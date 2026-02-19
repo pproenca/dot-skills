@@ -1,11 +1,23 @@
 ---
 name: ios-chaos-monkey
-description: iOS crash-hunter skill that finds and fixes gnarly concurrency, memory, and I/O bugs using TDD. Every rule shows dangerous code, a failing test that proves the crash, and the fix that makes it pass. Complements ios-testing, swift-optimise, and other ios-*/swift-* skills. Triggers on tasks involving data races, retain cycles, deadlocks, async/await pitfalls, file corruption, thread safety, or crash debugging in Swift/iOS apps.
+description: Crash-hunter skill for iOS 26 / Swift 6.2 clinic-architecture codebases that finds and fixes concurrency, memory, and I/O bugs using TDD. Covers data races, actor isolation, retain cycles, SwiftData context misuse, and sync-related failures in Domain/Data/App boundaries. Use when debugging crashes or hard-to-reproduce failures in ios-* and swift-* clinic modules.
 ---
 
 # iOS Chaos Monkey — Crash-Hunter Best Practices
 
 Adversarial crash-hunting guide for iOS and Swift applications. Contains 47 rules across 8 categories, prioritized by crash severity. Every rule follows TDD: dangerous code first, a failing test that proves the bug, then the fix that makes the test pass.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

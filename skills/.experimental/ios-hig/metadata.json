@@ -1,9 +1,9 @@
 {
   "version": "1.1.2",
   "organization": "Apple iOS HIG Best Practices",
-  "technology": "iOS (SwiftUI)",
+  "technology": "iOS 26 / Swift 6.2 (SwiftUI)",
   "date": "February 2026",
-  "abstract": "Comprehensive Apple Human Interface Guidelines compliance guide for iOS apps built with SwiftUI, designed for AI agents and LLMs. Contains rules across categories covering navigation, interaction design, accessibility, user feedback, and UX patterns. Each rule includes detailed explanations with incorrect vs. correct SwiftUI implementations, quantified impact metrics, and references to official Apple HIG documentation. Covers iOS 17+ patterns including NavigationStack, ContentUnavailableView, sensoryFeedback, confirmationDialog, and ViewThatFits.",
+  "abstract": "Comprehensive Apple Human Interface Guidelines compliance guide for iOS apps built with SwiftUI, designed for AI agents and LLMs. Contains rules across categories covering navigation, interaction design, accessibility, user feedback, and UX patterns. Each rule includes detailed explanations with incorrect vs. correct SwiftUI implementations, quantified impact metrics, and references to official Apple HIG documentation. Covers iOS 26 / Swift 6.2 patterns including NavigationStack, ContentUnavailableView, sensoryFeedback, confirmationDialog, and ViewThatFits. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines/",
     "https://developer.apple.com/design/human-interface-guidelines/accessibility",

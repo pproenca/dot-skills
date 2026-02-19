@@ -7,6 +7,8 @@ tags: nav, navigationlink, coordinator, value, deep-linking
 
 ## Replace Destination-Based NavigationLink with Coordinator Route
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Destination-based NavigationLinks embed the destination view directly, tightly coupling trigger to presentation. Value-based links emit a Hashable value, but the destination should be resolved at the coordinator's NavigationStack root — not on the child view. Views request navigation through the coordinator; the coordinator maps routes to views in a single location.
 
 **Incorrect (destination view coupled directly to the link):**

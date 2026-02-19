@@ -7,6 +7,8 @@ tags: style, equatable, diffing, performance, airbnb
 
 ## Apply @Equatable to Every Design System View
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Design system components appear hundreds of times in a typical app — a `CardView` in a feed, a `Badge` in every list row. If these views are not diffable, SwiftUI's reflection-based diffing fails silently and re-evaluates every body on every parent state change. Airbnb mandates `@Equatable` on every view. For design system components that are instantiated most frequently, this is the single highest-impact performance optimization.
 
 **Incorrect (no @Equatable — design system views force full re-evaluation):**

@@ -7,6 +7,8 @@ tags: layer, view, repository, boundary, viewmodel
 
 ## Views Never Access Repositories Directly
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Views access data through ViewModels. ViewModels call Domain repository protocols. Views must not call `ModelContext`, `@Query`, repositories, or network clients directly.
 
 **Incorrect (view contains data access):**

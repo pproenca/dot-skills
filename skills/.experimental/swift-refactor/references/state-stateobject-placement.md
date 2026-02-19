@@ -7,7 +7,9 @@ tags: state, stateobject, observable, migration, ios17
 
 ## Migrate @StateObject to @State with @Observable
 
-`@StateObject` belongs to the `ObservableObject` protocol, which broadcasts ALL property changes to ALL subscribing views. With `@Observable` (iOS 17+), `@State` replaces `@StateObject` for ViewModel ownership, and `@Environment` replaces `@EnvironmentObject` for injection. The ownership semantics are identical — `@State` creates and retains the instance across view rebuilds — but observation is now property-level instead of whole-object.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+`@StateObject` belongs to the `ObservableObject` protocol, which broadcasts ALL property changes to ALL subscribing views. With `@Observable` (iOS 26 / Swift 6.2), `@State` replaces `@StateObject` for ViewModel ownership, and `@Environment` replaces `@EnvironmentObject` for injection. The ownership semantics are identical — `@State` creates and retains the instance across view rebuilds — but observation is now property-level instead of whole-object.
 
 **Incorrect (@StateObject + @EnvironmentObject — legacy ObservableObject pattern):**
 

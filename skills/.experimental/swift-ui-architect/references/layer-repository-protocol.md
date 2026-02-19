@@ -7,6 +7,8 @@ tags: layer, repository, protocol, data-layer, dependency-inversion
 
 ## Repository Protocols in Domain, Implementations in Data Layer
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Repository protocols are defined in the Domain layer — they describe WHAT data operations are available without specifying HOW they're performed. Concrete implementations (networking, CoreData, SwiftData, UserDefaults) live in the Data layer. This inversion means the Domain never depends on the Data layer, data sources can be swapped without touching business logic, and testing uses mock repositories.
 
 **Incorrect (repository class in Domain importing networking — domain depends on data layer):**

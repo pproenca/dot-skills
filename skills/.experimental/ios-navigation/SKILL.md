@@ -1,6 +1,6 @@
 ---
 name: ios-navigation
-description: Opinionated SwiftUI navigation enforcement for iOS 26 / Swift 6.2 modular MVVM-C apps. Enforces Domain coordinator protocols, App-target concrete coordinators + route shells, NavigationPath-owned NavigationStack, coordinator-owned modal state, and deep-link/state-restoration readiness. Use when designing or refactoring navigation flows under the clinic architecture.
+description: Opinionated SwiftUI navigation enforcement for iOS 26 / Swift 6.2 clinic modular MVVM-C apps. Enforces Domain coordinator protocols, App-target `DependencyContainer` + concrete coordinators + route shells, `NavigationPath` ownership, coordinator-owned modal state, deep-link/state-restoration readiness, and stale-while-revalidate/optimistic queued flow compatibility. Use when designing or refactoring clinic navigation flows.
 ---
 
 # iOS Navigation (Modular MVVM-C)
@@ -14,6 +14,18 @@ Opinionated navigation enforcement for SwiftUI apps using the clinic modular arc
 - App-target coordinators own `NavigationPath`; route shells own `.navigationDestination` mappings
 - Coordinator-owned modal state, inline `@State` booleans for sheets never
 - Domain layer defines coordinator protocols; concrete coordinators stay out of feature modules
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 
@@ -48,7 +60,7 @@ Reference these guidelines when:
 - [`arch-navigation-stack`](references/arch-navigation-stack.md) - Use NavigationStack over deprecated NavigationView
 - [`arch-value-based-links`](references/arch-value-based-links.md) - Use value-based NavigationLink over destination closures
 - [`arch-destination-registration`](references/arch-destination-registration.md) - Register navigationDestination at stack root
-- [`arch-destination-item`](references/arch-destination-item.md) - Use navigationDestination(item:) for optional-based navigation (iOS 17+)
+- [`arch-destination-item`](references/arch-destination-item.md) - Use navigationDestination(item:) for optional-based navigation (iOS 26 / Swift 6.2)
 - [`arch-route-enum`](references/arch-route-enum.md) - Define routes as Hashable enums
 - [`arch-split-view`](references/arch-split-view.md) - Use NavigationSplitView for multi-column layouts
 - [`arch-coordinator`](references/arch-coordinator.md) - Extract navigation logic into Observable coordinator
@@ -74,7 +86,7 @@ Reference these guidelines when:
 
 - [`anim-zoom-transition`](references/anim-zoom-transition.md) - Use zoom navigation transition for hero animations (iOS 18+)
 - [`anim-matched-geometry-same-view`](references/anim-matched-geometry-same-view.md) - Use matchedGeometryEffect only within same view hierarchy
-- [`anim-spring-config`](references/anim-spring-config.md) - Use modern spring animation syntax (iOS 17+)
+- [`anim-spring-config`](references/anim-spring-config.md) - Use modern spring animation syntax (iOS 26 / Swift 6.2)
 - [`anim-gesture-driven`](references/anim-gesture-driven.md) - Use interactive spring animations for gesture-driven transitions
 - [`anim-transition-source-styling`](references/anim-transition-source-styling.md) - Style transition sources with shape and background
 - [`anim-reduce-motion-transitions`](references/anim-reduce-motion-transitions.md) - Respect reduce motion for all navigation animations

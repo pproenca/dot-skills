@@ -1,11 +1,25 @@
 ---
 name: ios-storyboard
-description: iOS Storyboard and Interface Builder best practices for Xcode UI design. This skill should be used when writing, reviewing, or building iOS user interfaces using Xcode Storyboards. Triggers on tasks involving Auto Layout constraints, segues, size classes, UIStackView, Interface Builder, storyboard architecture, accessibility in IB, and storyboard version control.
+description: Legacy interoperability skill for Storyboard and Interface Builder maintenance in iOS 26 / Swift 6.2 clinic codebases. Use only for migration or maintenance of existing storyboard screens; not for new SwiftUI clinic feature development. Triggers on Auto Layout, segues, size classes, IB accessibility, storyboard merge conflicts, and storyboard-to-SwiftUI migration tasks.
 ---
 
 # iOS Storyboard Best Practices
 
+Legacy interoperability guidance for storyboard-heavy code that still exists in clinic projects. Not for new SwiftUI clinic feature development.
+
 Comprehensive UI design and architecture guide for Xcode Storyboard and Interface Builder, focused on building maintainable, adaptive, and accessible iOS interfaces. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

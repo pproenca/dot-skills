@@ -7,6 +7,8 @@ tags: ux, undo, redo, recovery
 
 ## Support Undo for Destructive Actions
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Provide undo capability for destructive or significant actions. This gives users confidence to explore without fear of permanent mistakes.
 
 **Incorrect (no recovery from mistakes):**

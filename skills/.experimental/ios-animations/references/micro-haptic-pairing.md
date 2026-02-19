@@ -7,7 +7,7 @@ tags: micro, haptic, sensoryFeedback, pairing, feedback
 
 ## Pair Every Visual State Change with Haptic Feedback
 
-Every meaningful state change deserves a haptic. When a toggle flips, a button confirms, or a deletion completes, the user's finger is already on the screen — a haptic tap at that exact moment makes the UI feel like a physical mechanism instead of pixels behind glass. iOS 17 introduced `.sensoryFeedback`, which is the declarative SwiftUI way to trigger haptics in response to state changes. It ties directly to a value's change, ensuring the haptic fires at the same frame as the visual transition.
+Every meaningful state change deserves a haptic. When a toggle flips, a button confirms, or a deletion completes, the user's finger is already on the screen — a haptic tap at that exact moment makes the UI feel like a physical mechanism instead of pixels behind glass. iOS 26 introduced `.sensoryFeedback`, which is the declarative SwiftUI way to trigger haptics in response to state changes. It ties directly to a value's change, ensuring the haptic fires at the same frame as the visual transition.
 
 **Incorrect (toggle animates but produces no haptic — feels hollow):**
 

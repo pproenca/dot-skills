@@ -7,7 +7,7 @@ tags: spring, smooth, default, interruptible
 
 ## Default to .smooth Spring for All UI Transitions
 
-Springs became the SwiftUI default animation in iOS 17. Among the three presets — `.smooth`, `.snappy`, and `.bouncy` — `.smooth` is the right choice for roughly 80% of UI transitions. It produces zero bounce and a natural, physics-based deceleration that feels like sliding a real object to a stop. Most importantly, springs retarget smoothly: if a user taps mid-animation, the spring redirects to the new target while preserving the current velocity. Easing curves cannot do this — they restart from zero velocity, causing a visible stutter.
+Springs became the SwiftUI default animation in iOS 26. Among the three presets — `.smooth`, `.snappy`, and `.bouncy` — `.smooth` is the right choice for roughly 80% of UI transitions. It produces zero bounce and a natural, physics-based deceleration that feels like sliding a real object to a stop. Most importantly, springs retarget smoothly: if a user taps mid-animation, the spring redirects to the new target while preserving the current velocity. Easing curves cannot do this — they restart from zero velocity, causing a visible stutter.
 
 **Incorrect (easing curve stutters when tapped mid-flight):**
 
@@ -86,10 +86,10 @@ struct ExpandableCard: View {
 }
 ```
 
-**Key insight — bare `withAnimation` already uses springs on iOS 17+:**
+**Key insight — bare `withAnimation` already uses springs on iOS 26 / Swift 6.2:**
 
 ```swift
-// These two are equivalent on iOS 17+:
+// These two are equivalent on iOS 26 / Swift 6.2:
 withAnimation {
     isExpanded.toggle()
 }

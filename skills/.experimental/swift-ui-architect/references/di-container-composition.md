@@ -7,6 +7,8 @@ tags: di, container, composition-root, app-root, lifecycle
 
 ## Compose Dependency Container at App Root
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 All live dependencies are created and composed at the `App` struct level (`@main`). This is the "composition root" — the single place where concrete implementations are wired together. Feature modules only know about protocols. This pattern makes the dependency graph explicit, prevents hidden singletons, and ensures proper lifecycle management through SwiftUI's state system.
 
 **Incorrect (ViewModels creating their own dependencies — hidden composition, duplicated instances):**

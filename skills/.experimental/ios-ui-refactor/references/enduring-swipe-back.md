@@ -7,6 +7,8 @@ tags: enduring, swipe-back, navigation, rams-7, edson-conviction, gesture
 
 ## Never Break the System Back-Swipe Gesture
 
+For iOS 26 / Swift 6.2 clinic architecture flows, this rule applies to coordinator-driven `NavigationStack` routes and Route Shell wiring exactly as it does to local feature screens.
+
 The left-edge swipe to go back is muscle memory for hundreds of millions of iPhone users — breaking it feels like someone moved the light switch in your own home. The disorientation is immediate and the trust damage is lasting. This gesture will outlast any custom interaction you replace it with, because it is wired into the muscle memory of everyone who has ever used an iPhone. Respecting it is not a constraint — it is a commitment to the spatial language your users already speak fluently.
 
 **Incorrect (custom drag gesture conflicts with system back swipe):**

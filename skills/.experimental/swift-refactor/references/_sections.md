@@ -7,6 +7,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ## 1. View Identity & Diffing (diff)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 **Impact:** CRITICAL
 **Description:** Non-diffable view properties cause full-tree re-evaluation on every state change. Airbnb measured a 15% reduction in scroll hitches after enforcing @Equatable and proper diffing — this is the single highest-impact SwiftUI optimization.
 

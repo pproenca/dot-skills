@@ -1,11 +1,23 @@
 ---
 name: ios-xcode
-description: Xcode project setup, SwiftData persistence, testing, debugging, profiling, and app distribution for iOS development. This skill should be used when setting up Xcode projects, working with SwiftData models and queries, writing Swift tests, debugging with breakpoints, profiling with Instruments, distributing via TestFlight, or building for visionOS and ML features.
+description: Xcode setup and tooling guidance for iOS 26 / Swift 6.2 clinic modular MVVM-C projects covering project configuration, SwiftData container wiring, testing, debugging, profiling, and distribution workflows. Use when configuring App-target infrastructure or day-to-day tooling around clinic architecture modules.
 ---
 
 # iOS Xcode & Tooling Best Practices
 
 Comprehensive guide for Xcode project configuration, SwiftData persistence, testing, debugging, profiling, and app distribution. Contains 19 rules across 6 categories.
+
+
+## Clinic Architecture Contract (iOS 26 / Swift 6.2)
+
+All guidance in this skill assumes the clinic modular MVVM-C architecture:
+
+- Feature modules import `Domain` + `DesignSystem` only (never `Data`, never sibling features)
+- App target is the convergence point and owns `DependencyContainer`, concrete coordinators, and Route Shell wiring
+- `Domain` stays pure Swift and defines models plus repository, `*Coordinating`, `ErrorRouting`, and `AppError` contracts
+- `Data` owns SwiftData/network/sync/retry/background I/O and implements Domain protocols
+- Read/write flow defaults to stale-while-revalidate reads and optimistic queued writes
+- ViewModels call repository protocols directly (no default use-case/interactor layer)
 
 ## When to Apply
 

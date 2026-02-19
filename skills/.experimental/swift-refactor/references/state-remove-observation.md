@@ -7,7 +7,9 @@ tags: state, observed-object, observable, migration, over-observation
 
 ## Migrate @ObservedObject to @Observable Property-Level Tracking
 
-With `ObservableObject`, marking a dependency as `@ObservedObject` subscribes the view to every `@Published` change — even properties it never reads. With `@Observable` (iOS 17+), SwiftUI automatically tracks which properties each view accesses and only re-renders when those specific properties change. Replace `@ObservedObject` with a plain property and let `@Observable` handle targeted tracking.
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
+With `ObservableObject`, marking a dependency as `@ObservedObject` subscribes the view to every `@Published` change — even properties it never reads. With `@Observable` (iOS 26 / Swift 6.2), SwiftUI automatically tracks which properties each view accesses and only re-renders when those specific properties change. Replace `@ObservedObject` with a plain property and let `@Observable` handle targeted tracking.
 
 **Incorrect (@ObservedObject re-renders on every @Published change):**
 

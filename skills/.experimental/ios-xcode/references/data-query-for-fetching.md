@@ -7,6 +7,8 @@ tags: data, swiftdata, query, fetching, reactive, swiftui
 
 ## Use @Query to Fetch SwiftData Models
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@Query` fetches SwiftData models and automatically updates your view when data changes. It's the primary way to display persisted data in SwiftUI. Add sorting and filtering with predicates.
 
 **Incorrect (manual fetching):**

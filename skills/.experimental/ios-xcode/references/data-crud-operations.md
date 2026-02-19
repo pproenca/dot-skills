@@ -7,6 +7,8 @@ tags: data, swiftdata, crud, insert, delete, modelcontext
 
 ## Perform CRUD with modelContext
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Use the model context from `@Environment(\.modelContext)` to insert and delete SwiftData models. Updates happen automatically when you modify model properties. SwiftData saves changes automatically.
 
 **Incorrect (manual save calls or wrong patterns):**

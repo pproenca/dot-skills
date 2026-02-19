@@ -7,6 +7,8 @@ tags: arch, swiftui, coordinator, observable, testing, separation-of-concerns
 
 ## Extract Navigation Logic into Observable Coordinator
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Every feature MUST have a coordinator. When navigation state is scattered across views with @State properties, it becomes impossible to unit test navigation flows, handle deep links centrally, or coordinate complex multi-step transitions like authentication gates or onboarding flows. An @Observable coordinator centralizes all navigation state (stack path, presented sheets, full-screen covers, alerts) into a single testable object. Views become pure renderers of coordinator state, and navigation logic can be verified without UI tests.
 
 **Incorrect (navigation state scattered across multiple views):**

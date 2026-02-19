@@ -7,7 +7,7 @@ tags: anim, spring, animation, motion, physics
 
 ## Use Spring Animations as Default
 
-Spring animations are the iOS system default. They simulate physical motion with natural deceleration, making UI feel responsive rather than mechanical. Since iOS 17, `withAnimation` uses spring by default, and the API has been simplified with static presets.
+Spring animations are the iOS system default. They simulate physical motion with natural deceleration, making UI feel responsive rather than mechanical. Since iOS 26, `withAnimation` uses spring by default, and the API has been simplified with static presets.
 
 **Incorrect (mechanical easing):**
 
@@ -31,7 +31,7 @@ struct ExpandableCard: View {
 }
 ```
 
-**Correct (spring physics — iOS 17+):**
+**Correct (spring physics — iOS 26 / Swift 6.2):**
 
 ```swift
 struct ExpandableCard: View {
@@ -53,7 +53,7 @@ struct ExpandableCard: View {
 }
 ```
 
-**iOS 17+ spring presets (static properties):**
+**iOS 26 / Swift 6.2 spring presets (static properties):**
 
 ```swift
 .spring        // Default, balanced
@@ -61,7 +61,7 @@ struct ExpandableCard: View {
 .snappy        // Quick, minimal bounce
 .bouncy        // Playful, noticeable bounce
 
-// Custom spring (iOS 17+ API: duration/bounce)
+// Custom spring (iOS 26 / Swift 6.2 API: duration/bounce)
 .spring(duration: 0.3, bounce: 0.2)
 // duration: perceptual duration of the animation
 // bounce: 0 = no bounce, 0.5 = moderate, negative = overdamped
@@ -70,7 +70,7 @@ struct ExpandableCard: View {
 **Legacy spring API (iOS 16 and earlier):**
 
 ```swift
-// Use response/dampingFraction for deployment targets < iOS 17
+// Use response/dampingFraction for deployment targets < iOS 26
 .spring(response: 0.3, dampingFraction: 0.6)
 // response: duration-like (lower = faster)
 // dampingFraction: 0 = infinite bounce, 1 = no bounce

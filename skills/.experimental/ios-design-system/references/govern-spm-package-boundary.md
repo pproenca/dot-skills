@@ -7,6 +7,8 @@ tags: govern, spm, package, boundary, module
 
 ## Isolate the Design System as a Local SPM Package
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 A `DesignSystem/` directory inside the app target works until someone in a feature module writes `Color("backgroundPrimary")` directly instead of using the typed `.backgroundPrimary` extension. A local SPM package makes the design system a real module boundary: feature code must `import DesignSystem` to access tokens, and the package's internal types are invisible to consumers. This is the build-system enforcement that directory conventions cannot provide.
 
 **Incorrect (design system as a directory — no module boundary):**

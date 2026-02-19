@@ -7,6 +7,8 @@ tags: query, fetch-descriptor, non-swiftui, background
 
 ## Use FetchDescriptor Outside SwiftUI Views
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@Query` only works inside SwiftUI views. For background tasks, services, or unit tests, use `FetchDescriptor` with `context.fetch()`. It supports the same predicates and sort descriptors, giving you full query power outside the view layer.
 
 **Incorrect (using @Query in a non-view class):**

@@ -7,6 +7,8 @@ tags: state, scene-storage, persistence, multi-window
 
 ## Use SceneStorage for Per-Scene Navigation Persistence
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `@SceneStorage` persists values per scene (window) and is managed by the system. Each iPad Split View window or Stage Manager window gets independent navigation state that survives app termination. Never use `@AppStorage` for navigation state — it writes to `UserDefaults`, which is shared across all scenes, causing every window to jump to the same destination when one navigates.
 
 **Incorrect (@AppStorage for navigation — shared across all windows):**

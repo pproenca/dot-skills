@@ -7,6 +7,8 @@ tags: data, swiftdata, modelcontainer, app, configuration
 
 ## Configure modelContainer in App Entry Point
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Add the `.modelContainer(for:)` modifier to your app's main scene to enable SwiftData. This creates the database and makes the model context available throughout your view hierarchy.
 
 **Incorrect (no container setup):**

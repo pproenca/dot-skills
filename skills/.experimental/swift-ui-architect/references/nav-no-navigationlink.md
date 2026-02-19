@@ -7,6 +7,8 @@ tags: nav, navigation-link, navigation-destination, lazy, routing
 
 ## Never Use NavigationLink(destination:) — Use navigationDestination(for:)
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 `NavigationLink(destination:)` is the legacy API that eagerly initializes the destination view and hardcodes the navigation target into the view itself. Use `NavigationLink(value:)` with `.navigationDestination(for:)` which lazily creates the destination and lets the coordinator control the mapping from route to view.
 
 **Incorrect (NavigationLink(destination:) — eager init, hardcoded destination, no coordinator):**

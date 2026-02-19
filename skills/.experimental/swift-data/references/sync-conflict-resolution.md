@@ -7,6 +7,8 @@ tags: sync, conflict, resolution, timestamp, merge, networking
 
 ## Implement Conflict Resolution for Bidirectional Sync
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 When an app supports both local edits and server-side updates, conflicts arise if the same record is modified in both places before syncing. Without a conflict resolution strategy, the last write silently overwrites the other — losing user data. Add a `lastModified` timestamp to every synced model and compare timestamps during merge.
 
 **Incorrect (last write wins silently — local edits lost):**

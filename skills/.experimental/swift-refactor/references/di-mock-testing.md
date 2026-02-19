@@ -7,6 +7,8 @@ tags: di, mock, testing, protocol, isolation
 
 ## Add Mock Implementation for Every Protocol Dependency
 
+**Clinic architecture alignment (iOS 26 / Swift 6.2):** Keep Feature modules on `Domain` + `DesignSystem` only; keep App-target `DependencyContainer`, route shells, and concrete coordinators as the integration point; keep `Data` as the only owner of SwiftData/network/sync I/O.
+
 Protocol dependencies without mock implementations cannot be tested in isolation. For every repository or use case protocol, create a corresponding mock that captures method calls and returns stubbed data. This enables testing ViewModel logic, use case composition, and error handling without real network calls, databases, or simulators.
 
 **Incorrect (no mocks — ViewModel untestable without real API):**

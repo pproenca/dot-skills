@@ -1,9 +1,9 @@
 {
   "version": "0.1.0",
   "organization": "iOS Chaos Monkey",
-  "technology": "iOS / Swift",
+  "technology": "iOS 26 / Swift 6.2",
   "date": "February 2026",
-  "abstract": "Adversarial crash-hunting guide for iOS and Swift applications, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by crash severity from critical (data races, memory corruption) to incremental (Objective-C interop traps). Every rule follows TDD: dangerous code, a failing test that proves the crash, and the fix that makes the test pass. Complements ios-testing, swift-optimise, and other ios-*/swift-* skills.",
+  "abstract": "Adversarial crash-hunting guide for iOS and Swift applications, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by crash severity from critical (data races, memory corruption) to incremental (Objective-C interop traps). Every rule follows TDD: dangerous code, a failing test that proves the crash, and the fix that makes the test pass. Complements ios-testing, swift-optimise, and other ios-*/swift-* skills. Aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture.",
   "references": [
     "https://developer.apple.com/documentation/swift/adoptingswift6",
     "https://www.swift.org/migration/documentation/swift-6-concurrency-migration-guide/commonproblems/",
