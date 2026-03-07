@@ -39,6 +39,21 @@ test_case() {
   fi
 }
 
+test_to_prompt_cdata_safety() {
+  local fixture="$FIXTURES/cdata-terminator"
+  local output
+
+  output=$("$SKILLS_REF" to-prompt "$fixture")
+
+  if printf '%s' "$output" | grep -Fq ']]><injected'; then
+    echo -e "${RED}✗ CDATA terminator is safely split in to-prompt output${NC}"
+    FAIL=$((FAIL + 1))
+  else
+    echo -e "${GREEN}✓${NC} CDATA terminator is safely split in to-prompt output"
+    PASS=$((PASS + 1))
+  fi
+}
+
 echo ""
 echo -e "${BOLD}Running skills-ref tests${NC}"
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
@@ -59,6 +74,9 @@ test_case "Too long SKILL.md fails" "fail" "$FIXTURES/too-long-skill"
 
 # Test reference consistency
 test_case "Missing reference files fails" "fail" "$FIXTURES/missing-references"
+
+# Test to-prompt XML safety
+test_to_prompt_cdata_safety
 
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
