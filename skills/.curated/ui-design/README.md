@@ -23,16 +23,18 @@ ui-ux-frontend-design/
 ├── AGENTS.md          # Full compiled guide
 ├── metadata.json      # Version and references
 ├── README.md          # This file
-└── rules/
-    ├── _sections.md   # Category definitions
-    ├── access-*.md    # Accessibility rules (7)
-    ├── cwv-*.md       # Core Web Vitals rules (6)
-    ├── layout-*.md    # Layout rules (6)
-    ├── resp-*.md      # Responsive design rules (5)
-    ├── typo-*.md      # Typography rules (5)
-    ├── color-*.md     # Color rules (4)
-    ├── form-*.md      # Form rules (5)
-    └── anim-*.md      # Animation rules (4)
+├── references/
+│   ├── _sections.md   # Category definitions
+│   ├── access-*.md    # Accessibility rules (7)
+│   ├── cwv-*.md       # Core Web Vitals rules (6)
+│   ├── layout-*.md    # Layout rules (6)
+│   ├── resp-*.md      # Responsive design rules (5)
+│   ├── typo-*.md      # Typography rules (5)
+│   ├── color-*.md     # Color rules (4)
+│   ├── form-*.md      # Form rules (5)
+│   └── anim-*.md      # Animation rules (4)
+└── assets/templates/
+    └── _template.md   # Rule template
 ```
 
 ## Getting Started
@@ -41,7 +43,7 @@ ui-ux-frontend-design/
 # Install dependencies (from repo root)
 pnpm install
 
-# Build AGENTS.md from rules
+# Build AGENTS.md from references
 pnpm build
 
 # Validate skill structure
@@ -50,8 +52,8 @@ pnpm validate
 
 ## Creating a New Rule
 
-1. Choose the appropriate category from `rules/_sections.md`
-2. Create a new file: `rules/{prefix}-{description}.md`
+1. Choose the appropriate category from `references/_sections.md`
+2. Create a new file: `references/{prefix}-{description}.md`
 3. Use the template structure (see below)
 4. Run `pnpm build` to regenerate AGENTS.md
 5. Run `pnpm validate` to check for errors
@@ -102,7 +104,7 @@ Reference: [Link](url)
 
 Rules follow the pattern: `{prefix}-{description}.md`
 
-- `prefix`: Category identifier (3-8 chars) from _sections.md
+- `prefix`: Category identifier (3-8 chars) from `references/_sections.md`
 - `description`: Kebab-case description of the rule
 
 Examples:
