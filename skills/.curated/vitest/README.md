@@ -27,17 +27,18 @@ vitest/
 ├── AGENTS.md             # Compiled comprehensive guide
 ├── metadata.json         # Version and references
 ├── README.md             # This file
-└── rules/
-    ├── _sections.md      # Category definitions
-    ├── _template.md      # Rule template
-    ├── async-*.md        # Async pattern rules
-    ├── setup-*.md        # Setup and isolation rules
-    ├── mock-*.md         # Mocking pattern rules
-    ├── perf-*.md         # Performance rules
-    ├── snap-*.md         # Snapshot rules
-    ├── env-*.md          # Environment rules
-    ├── assert-*.md       # Assertion rules
-    └── org-*.md          # Organization rules
+├── references/
+│   ├── _sections.md      # Category definitions
+│   ├── async-*.md        # Async pattern rules
+│   ├── setup-*.md        # Setup and isolation rules
+│   ├── mock-*.md         # Mocking pattern rules
+│   ├── perf-*.md         # Performance rules
+│   ├── snap-*.md         # Snapshot rules
+│   ├── env-*.md          # Environment rules
+│   ├── assert-*.md       # Assertion rules
+│   └── org-*.md          # Organization rules
+└── assets/templates/
+    └── _template.md      # Rule template
 ```
 
 ## Usage
@@ -48,7 +49,7 @@ Reference `SKILL.md` for quick navigation or `AGENTS.md` for the complete compil
 
 ### For Humans
 
-Browse individual rule files in the `rules/` directory for detailed explanations and code examples.
+Browse individual rule files in the `references/` directory for detailed explanations and code examples.
 
 ## Key Patterns
 
