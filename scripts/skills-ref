@@ -424,6 +424,9 @@ cmd_to_prompt() {
       // Get content after frontmatter
       const afterFrontmatter = content.replace(/^---[\\s\\S]*?---\\n/, '').trim();
 
+      // Split CDATA terminators to prevent XML injection
+      const safeCdata = afterFrontmatter.replace(/]]>/g, ']]]]><![CDATA[>');
+
       // Escape XML special chars in description
       const escapeXml = (s) => s
         .replace(/&/g, '&amp;')
@@ -434,7 +437,7 @@ cmd_to_prompt() {
       console.log('  <skill name=\"' + escapeXml(name) + '\">');
       console.log('    <description>' + escapeXml(description) + '</description>');
       console.log('    <content><![CDATA[');
-      console.log(afterFrontmatter);
+      console.log(safeCdata);
       console.log(']]></content>');
       console.log('  </skill>');
     " "$skill_md"
