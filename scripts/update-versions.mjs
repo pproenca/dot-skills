@@ -11,7 +11,7 @@
  * Usage: node scripts/update-versions.mjs [--dry-run]
  */
 
-import { execSync } from "node:child_process";
+import { execFileSync } from "node:child_process";
 import { readFileSync, writeFileSync, existsSync, readdirSync } from "node:fs";
 import { join, basename } from "node:path";
 
@@ -35,8 +35,9 @@ function getSkillDirs() {
 function getGitLog(skillDir) {
   const rel = skillDir.replace(ROOT + "/", "");
   try {
-    const out = execSync(
-      `git log --oneline --reverse --format="%s" -- "${rel}"`,
+    const out = execFileSync(
+      "git",
+      ["log", "--oneline", "--reverse", "--format=%s", "--", rel],
       { cwd: ROOT, encoding: "utf-8" }
     );
     return out
