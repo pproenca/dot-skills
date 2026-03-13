@@ -1,0 +1,15 @@
+{
+  "name": "dev-rfc",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "bun run scripts/generate_review.ts",
+    "test": "bun test"
+  },
+  "dependencies": {
+    "open": "^10.1.0"
+  },
+  "devDependencies": {
+    "@types/bun": "^1.2.0"
+  }
+}

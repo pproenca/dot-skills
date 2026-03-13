@@ -9,6 +9,22 @@
 <script>if (typeof marked === 'undefined') document.write('<script src="/assets/marked.min.js"><\/script>')</script>
 <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
 <script>if (typeof mermaid === 'undefined') document.write('<script src="/assets/mermaid.min.js"><\/script>')</script>
+<script type="module">
+import { codeToHtml } from 'https://esm.sh/shiki@3/bundle/web';
+window.__shikiHighlight = async function(el) {
+  const blocks = el.querySelectorAll('pre code[class*="language-"]');
+  for (const block of blocks) {
+    const lang = (block.className.match(/language-(\w+)/) || [])[1] || 'text';
+    try {
+      const html = await codeToHtml(block.textContent, { lang, theme: 'github-light' });
+      const wrapper = block.closest('pre');
+      if (wrapper) {
+        wrapper.outerHTML = html;
+      }
+    } catch { /* unsupported lang, keep original */ }
+  }
+};
+</script>
 <style>
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
@@ -975,8 +991,10 @@ document.addEventListener('DOMContentLoaded', () => {
         </div>`;
     }
 
+    const sectionSlug = slugify(sec.heading);
+    div.dataset.sectionId = sectionSlug;
     div.innerHTML = `
-      <div class="section-content" data-section-index="${i}">
+      <div class="section-content" data-section-index="${i}" data-section-id="${sectionSlug}">
         <div class="section-header"><h2>${sec.heading}</h2></div>
         ${sec.html}
       </div>
@@ -1017,6 +1035,11 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
   mermaid.run();
+
+  // Syntax highlighting via Shiki
+  if (window.__shikiHighlight) {
+    window.__shikiHighlight(document.getElementById('sections-container'));
+  }
 
   // Auto-save debounce on overall feedback textarea
   document.getElementById('overall-feedback').addEventListener('input', () => {
@@ -1098,9 +1121,11 @@ function gatherFeedback(status) {
         sectionName = document.querySelector(`[data-section-id="${c.sectionId}"] h2`)?.textContent.trim()
           || document.querySelector(`.section[data-section-id="${c.sectionId}"] .section-content h2`)?.textContent.trim()
           || c.sectionId;
-      } else {
+      } else if (c.sectionIndex >= 0) {
         sectionName = document.querySelectorAll('.section')[c.sectionIndex]
-          ?.querySelector('.section-content h2')?.textContent.trim() || `Section ${c.sectionIndex}`;
+          ?.querySelector('.section-content h2')?.textContent.trim() || `Section ${c.sectionIndex + 1}`;
+      } else {
+        sectionName = 'Unknown Section';
       }
       return { section: sectionName, selected_text: c.selectedText, comment: c.comment };
     }),
@@ -1205,7 +1230,8 @@ function handleTextSelection(e) {
 
   btn.addEventListener('click', (ev) => {
     ev.stopPropagation();
-    const sectionIndex = parseInt(sectionContent.dataset.sectionIndex, 10);
+    const rawIndex = parseInt(sectionContent.dataset.sectionIndex, 10);
+    const sectionIndex = isNaN(rawIndex) ? -1 : rawIndex;
     const sectionId = sectionContent.dataset.sectionId || null;
     openCommentPopover(sectionContent, savedRange, savedText, sectionIndex, sectionId);
     removeCommentBtn();
@@ -1349,10 +1375,11 @@ function closeAllPopovers() {
 
 function updateCommentBadges() {
   document.querySelectorAll('.section').forEach(section => {
-    const sectionIndex = parseInt(section.dataset.index, 10);
+    const rawIndex = parseInt(section.dataset.index, 10);
+    const sectionIndex = isNaN(rawIndex) ? -1 : rawIndex;
     const sectionId = section.dataset.sectionId || null;
     const count = inlineComments.filter(c =>
-      (sectionId && c.sectionId === sectionId) || (!sectionId && c.sectionIndex === sectionIndex)
+      (sectionId && c.sectionId === sectionId) || (!sectionId && sectionIndex >= 0 && c.sectionIndex === sectionIndex)
     ).length;
     const header = section.querySelector('.section-header');
     if (!header) return;
@@ -1377,6 +1404,14 @@ function updateCommentBadges() {
 }
 
 // --- Utility ---
+
+function slugify(heading) {
+  let s = heading.toLowerCase().trim();
+  s = s.replace(/[^a-z0-9\s-]/g, '');
+  s = s.replace(/[\s]+/g, '-');
+  s = s.replace(/-+/g, '-');
+  return s.replace(/^-|-$/g, '');
+}
 
 function escapeHtml(str) {
   const div = document.createElement('div');
@@ -1691,6 +1726,11 @@ function fillSectionContent(sectionEl, data) {
     mermaid.run();
   }
 
+  // Syntax highlighting via Shiki for live sections
+  if (window.__shikiHighlight) {
+    window.__shikiHighlight(content);
+  }
+
   updateLiveProgressFromDOM();
 }
 
@@ -1729,6 +1769,55 @@ function finalizeRFC() {
   msgEl.textContent = 'All sections have been approved. Return to your Claude Code session — Claude will assemble the final document.';
   document.getElementById('done-overlay').classList.add('visible');
 }
+
+// --- Keyboard Shortcuts ---
+document.addEventListener('keydown', (e) => {
+  // Escape: close any open popover or comment button
+  if (e.key === 'Escape') {
+    closeAllPopovers();
+    removeCommentBtn();
+    // Close the done overlay if visible
+    const overlay = document.getElementById('done-overlay');
+    if (overlay && overlay.classList.contains('visible')) {
+      overlay.classList.remove('visible');
+    }
+    return;
+  }
+
+  // Cmd/Ctrl+Enter: submit feedback (batch mode) or approve current live section
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    // If a comment popover is open and focused, submit the comment
+    const popover = document.querySelector('.comment-popover');
+    if (popover) {
+      const saveBtn = popover.querySelector('.comment-save-btn');
+      if (saveBtn) {
+        e.preventDefault();
+        saveBtn.click();
+        return;
+      }
+    }
+
+    // If typing in a textarea, don't trigger global submit
+    if (e.target.tagName === 'TEXTAREA' && !e.target.closest('.comment-popover')) {
+      // In live mode, find the parent section and submit
+      if (LIVE_MODE) {
+        const reviewBar = e.target.closest('.live-review-bar');
+        if (reviewBar) {
+          e.preventDefault();
+          const approveBtn = reviewBar.querySelector('.live-approve-btn');
+          if (approveBtn) approveBtn.click();
+          return;
+        }
+      }
+    }
+
+    // In batch mode, submit feedback
+    if (!LIVE_MODE) {
+      e.preventDefault();
+      submitFeedback('needs_revision');
+    }
+  }
+});
 </script>
 </body>
 </html>

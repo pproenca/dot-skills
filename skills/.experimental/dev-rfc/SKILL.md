@@ -130,14 +130,14 @@ The diagram is the centerpiece. A reader should understand the overall system fl
 
 After writing the RFC, offer to open a review UI in the user's browser. The review UI runs a local server that auto-saves feedback, supports multiple revision rounds, and lets the user explicitly approve the document.
 
-> **Path resolution:** In the commands below, `$SKILL_PATH` refers to the absolute path of this SKILL.md file. Resolve it as the directory containing this file (e.g., if SKILL.md is at `/path/to/dev-rfc/SKILL.md`, then `$(dirname "$SKILL_PATH")` is `/path/to/dev-rfc`). **Requires Python 3.10+.**
+> **Path resolution:** In the commands below, `$SKILL_PATH` refers to the absolute path of this SKILL.md file. Resolve it as the directory containing this file (e.g., if SKILL.md is at `/path/to/dev-rfc/SKILL.md`, then `$(dirname "$SKILL_PATH")` is `/path/to/dev-rfc`). **Requires Bun (or Node 22+ with `--experimental-strip-types`).**
 
 ### First Round
 
 1. Save the RFC to its target file path.
 2. Start the review server:
    ```bash
-   python3 "$(dirname "$SKILL_PATH")/scripts/generate_review.py" <doc-path> --title "<project name>"
+   bun run "$(dirname "$SKILL_PATH")/scripts/generate_review.ts" <doc-path> --title "<project name>"
    ```
    This starts an HTTP server on `localhost:3118` and opens the browser. Feedback auto-saves to `<doc-dir>/.rfc-review/feedback.json` as the user types (800ms debounce). The server also serves the latest version of the markdown on each refresh.
 3. Tell the user: *"I've opened the RFC review in your browser at http://localhost:3118. Add feedback to any section, highlight text for inline comments, then click **Submit Feedback** (for revisions) or **Approve** (if it looks good). Your feedback auto-saves as you type."*
@@ -166,7 +166,7 @@ Empty feedback for a section means no concerns — skip it. Don't make changes w
 After revising the RFC, start the next review round with the previous feedback visible as read-only context:
 
 ```bash
-python3 "$(dirname "$SKILL_PATH")/scripts/generate_review.py" <doc-path> --title "<project name>" \
+bun run "$(dirname "$SKILL_PATH")/scripts/generate_review.ts" <doc-path> --title "<project name>" \
   --previous-feedback <doc-dir>/.rfc-review/feedback-history/feedback-round-N.json \
   --iteration N+1
 ```
@@ -186,7 +186,7 @@ Stop iterating when any of these happen:
 
 If the server can't start (port conflict, environment issue), fall back to static mode:
 ```bash
-python3 "$(dirname "$SKILL_PATH")/scripts/generate_review.py" <doc-path> --title "<project name>" --static
+bun run "$(dirname "$SKILL_PATH")/scripts/generate_review.ts" <doc-path> --title "<project name>" --static
 ```
 This opens a standalone HTML file. Feedback downloads as `feedback.json` to `~/Downloads` on submit. Ask the user where the file landed.
 
@@ -207,7 +207,7 @@ Instead of writing the entire RFC and then reviewing, use **live authoring mode*
 1. Plan the section headings for the RFC based on the template and project scope.
 2. Start the server in live mode:
    ```bash
-   python3 "$(dirname "$SKILL_PATH")/scripts/generate_review.py" --live --title "<project name>" \
+   bun run "$(dirname "$SKILL_PATH")/scripts/generate_review.ts" --live --title "<project name>" \
      --sections '["Abstract","Motivation","Goals and Non-Goals","Detailed Design","Approaches","Service SLAs","Rollout Plan"]'
    ```
    This opens the browser showing a skeleton with all planned sections as pending cards.
