@@ -1,0 +1,1734 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RFC Review: __DOC_TITLE__</title>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&family=Lora:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked@15/marked.min.js"></script>
+<script>if (typeof marked === 'undefined') document.write('<script src="/assets/marked.min.js"><\/script>')</script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>if (typeof mermaid === 'undefined') document.write('<script src="/assets/mermaid.min.js"><\/script>')</script>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: 'Lora', Georgia, serif;
+    background: #faf9f5;
+    color: #141413;
+    line-height: 1.6;
+    padding-bottom: 0;
+  }
+  .header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: #141413;
+    color: #faf9f5;
+    padding: 1rem 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  }
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .header h1 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+  .iteration-badge {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    background: #d97757;
+    color: #fff;
+    padding: 2px 10px;
+    border-radius: 12px;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .progress {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #87867f;
+  }
+  .progress .count {
+    color: #d97757;
+    font-weight: 600;
+  }
+  .save-status {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    color: #87867f;
+    min-width: 60px;
+    text-align: right;
+  }
+  @keyframes saveFlash {
+    0% { color: #d97757; }
+    100% { color: #87867f; }
+  }
+  .save-status.flash {
+    animation: saveFlash 2s ease forwards;
+  }
+  .container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+  }
+  /* --- Section cards with staggered entrance --- */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: none; }
+  }
+  .section {
+    margin-bottom: 2rem;
+    border: 1px solid #e8e6dc;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .section.has-feedback {
+    border-left: 3px solid #d97757;
+  }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  .comment-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #d97757;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.65rem;
+    font-weight: 600;
+    min-width: 18px;
+    height: 18px;
+    padding: 0 5px;
+    border-radius: 9px;
+    line-height: 1;
+    vertical-align: middle;
+  }
+  .section-content {
+    padding: 1.5rem 2rem;
+    position: relative;
+  }
+  .section-content h2 { font-family: 'Poppins', sans-serif; font-size: 1.25rem; margin-bottom: 0.75rem; }
+  .section-content h3 { font-family: 'Poppins', sans-serif; font-size: 1.05rem; margin: 1rem 0 0.5rem; }
+  .section-content p { margin-bottom: 0.75rem; }
+  .section-content ul, .section-content ol { margin: 0.5rem 0 0.75rem 1.5rem; }
+  .section-content li { margin-bottom: 0.25rem; }
+  .section-content code {
+    background: #f0eee4;
+    padding: 0.15em 0.4em;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  .section-content pre {
+    background: #141413;
+    color: #faf9f5;
+    padding: 1rem;
+    border-radius: 4px;
+    overflow-x: auto;
+    margin: 0.75rem 0;
+  }
+  .section-content pre code {
+    background: none;
+    padding: 0;
+    color: inherit;
+  }
+  .section-content table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 0.75rem 0;
+    font-size: 0.9rem;
+  }
+  .section-content th, .section-content td {
+    border: 1px solid #e8e6dc;
+    padding: 0.5rem 0.75rem;
+    text-align: left;
+  }
+  .section-content th {
+    background: #141413;
+    color: #faf9f5;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 500;
+    font-size: 0.8rem;
+    letter-spacing: 0.03em;
+  }
+  .section-content blockquote {
+    border-left: 3px solid #d97757;
+    padding: 0.5rem 1rem;
+    margin: 0.75rem 0;
+    background: #f0eee4;
+    color: #87867f;
+  }
+  mark.commented {
+    background: rgba(217,119,87,0.25);
+    border-bottom: 2px solid #d97757;
+    cursor: pointer;
+    padding: 0 1px;
+    border-radius: 2px;
+    transition: background 0.15s;
+  }
+  mark.commented:hover {
+    background: rgba(217,119,87,0.4);
+  }
+  /* --- Floating comment button (fade-in) --- */
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  .comment-btn {
+    position: absolute;
+    z-index: 50;
+    background: #d97757;
+    color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 4px;
+    padding: 4px 10px;
+    cursor: pointer;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background 0.15s;
+    white-space: nowrap;
+    animation: fadeIn 0.15s ease;
+  }
+  .comment-btn:hover { background: #b8603f; }
+  /* --- Comment popover (scale+fade entrance) --- */
+  @keyframes popoverIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+    to { opacity: 1; transform: none; }
+  }
+  .comment-popover {
+    position: absolute;
+    z-index: 60;
+    background: #fff;
+    border: 1px solid #e8e6dc;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+    padding: 0.75rem;
+    width: 300px;
+    font-family: 'Lora', Georgia, serif;
+    animation: popoverIn 0.15s ease;
+  }
+  .comment-popover textarea {
+    width: 100%;
+    min-height: 60px;
+    padding: 0.5rem;
+    border: 1px solid #e8e6dc;
+    border-radius: 4px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.85rem;
+    line-height: 1.4;
+    resize: vertical;
+    background: #faf9f5;
+    color: #141413;
+  }
+  .comment-popover textarea:focus {
+    outline: none;
+    border-color: #d97757;
+    box-shadow: 0 0 0 2px rgba(217,119,87,0.15);
+  }
+  .comment-popover .popover-selected-text {
+    font-size: 0.75rem;
+    color: #87867f;
+    margin-bottom: 0.5rem;
+    padding: 0.3rem 0.5rem;
+    background: #f0eee4;
+    border-radius: 3px;
+    max-height: 3em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-style: italic;
+  }
+  .comment-popover .popover-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    justify-content: flex-end;
+  }
+  .comment-popover .popover-actions button {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .comment-popover .popover-save {
+    background: #d97757;
+    color: #fff;
+  }
+  .comment-popover .popover-save:hover { background: #b8603f; }
+  .comment-popover .popover-cancel {
+    background: #e8e6dc;
+    color: #141413;
+  }
+  .comment-popover .popover-cancel:hover { background: #d4d2c8; }
+  .comment-popover .popover-delete {
+    background: #B00020;
+    color: #fff;
+    margin-right: auto;
+  }
+  .comment-popover .popover-delete:hover { background: #800017; }
+  .mermaid {
+    text-align: center;
+    margin: 1rem 0;
+    overflow-x: auto;
+  }
+  /* --- Feedback toggle with chevron --- */
+  .feedback-toggle {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    border-top: 1px solid #e8e6dc;
+    background: #faf9f5;
+    cursor: pointer;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #87867f;
+    user-select: none;
+    transition: color 0.2s;
+  }
+  .feedback-toggle:hover { color: #d97757; }
+  .feedback-toggle .chevron {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid #87867f;
+    border-bottom: 2px solid #87867f;
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease, border-color 0.2s;
+    flex-shrink: 0;
+  }
+  .feedback-toggle.open .chevron {
+    transform: rotate(45deg);
+  }
+  .feedback-toggle:hover .chevron {
+    border-color: #d97757;
+  }
+  .section.has-feedback .feedback-toggle .chevron { border-color: #d97757; }
+  /* --- Feedback area with animated expand/collapse --- */
+  .feedback-area {
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    padding: 0 2rem;
+    background: #faf9f5;
+    transition: max-height 0.3s ease, opacity 0.25s ease, padding-bottom 0.3s ease;
+  }
+  .feedback-area.open {
+    max-height: 300px;
+    opacity: 1;
+    padding: 0 2rem 1.5rem;
+  }
+  .feedback-area textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 0.75rem;
+    border: 1px solid #e8e6dc;
+    border-radius: 4px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    resize: vertical;
+    background: #fff;
+    color: #141413;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .feedback-area textarea:focus {
+    outline: none;
+    border-color: #d97757;
+    box-shadow: 0 0 0 3px rgba(217,119,87,0.15);
+  }
+  /* --- Previous feedback shared label (deduplicated) --- */
+  .prev-label {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: #87867f;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+  /* --- Previous feedback (read-only) --- */
+  .previous-feedback {
+    margin: 0 2rem 0.75rem;
+    padding: 0.75rem 1rem;
+    background: #f5ede7;
+    border-left: 3px solid #d97757;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    color: #87867f;
+  }
+  .previous-feedback-text {
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  .previous-inline-comments {
+    margin: 0 2rem 0.5rem;
+    padding: 0.5rem 1rem;
+    background: #f5ede7;
+    border-left: 3px solid #d97757;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.8rem;
+    color: #87867f;
+  }
+  .previous-inline-comments .pic-item {
+    margin-bottom: 0.4rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 1px solid #e8e6dc;
+  }
+  .previous-inline-comments .pic-item:last-child {
+    margin-bottom: 0;
+    padding-bottom: 0;
+    border-bottom: none;
+  }
+  .previous-inline-comments .pic-selected {
+    font-style: italic;
+    color: #87867f;
+  }
+  .previous-inline-comments .pic-comment {
+    margin-top: 0.15rem;
+  }
+  .previous-overall {
+    margin-bottom: 1rem;
+    padding: 0.75rem 1rem;
+    background: #f5ede7;
+    border-left: 3px solid #d97757;
+    border-radius: 0 4px 4px 0;
+    font-size: 0.85rem;
+    color: #87867f;
+  }
+  .previous-overall .previous-feedback-text {
+    white-space: pre-wrap;
+    line-height: 1.5;
+  }
+  /* --- Overall section --- */
+  .overall-section {
+    margin: 2rem 0;
+    padding: 2rem;
+    border: 1px solid #e8e6dc;
+    border-radius: 6px;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+    opacity: 0;
+    animation: fadeUp 0.4s ease forwards;
+  }
+  .overall-section h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    color: #141413;
+  }
+  .overall-section textarea {
+    width: 100%;
+    min-height: 120px;
+    padding: 0.75rem;
+    border: 1px solid #e8e6dc;
+    border-radius: 4px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.9rem;
+    line-height: 1.5;
+    resize: vertical;
+    background: #faf9f5;
+    color: #141413;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .overall-section textarea:focus {
+    outline: none;
+    border-color: #d97757;
+    box-shadow: 0 0 0 3px rgba(217,119,87,0.15);
+  }
+  /* --- Sticky submit bar --- */
+  .submit-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 90;
+    background: #141413;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 0.75rem 2rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+  }
+  .submit-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.65rem 2.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #d97757;
+    color: #faf9f5;
+    transition: background 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .submit-btn:hover { background: #b8603f; }
+  .approve-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.65rem 2.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #788c5d;
+    color: #faf9f5;
+    transition: background 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .approve-btn:hover { background: #657a4c; }
+  /* --- Done overlay with backdrop fade + card entrance --- */
+  .done-overlay {
+    display: flex;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    background: rgba(20,20,19,0.6);
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  .done-overlay.visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  .done-card {
+    background: #fff;
+    border-radius: 10px;
+    padding: 2.5rem 3rem;
+    max-width: 420px;
+    text-align: center;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.2);
+    transform: translateY(20px) scale(0.95);
+    opacity: 0;
+    transition: transform 0.25s ease 0.05s, opacity 0.25s ease 0.05s;
+  }
+  .done-overlay.visible .done-card {
+    transform: none;
+    opacity: 1;
+  }
+  .done-card h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.3rem;
+    margin-bottom: 0.75rem;
+    color: #141413;
+  }
+  .done-card p {
+    font-size: 0.95rem;
+    color: #87867f;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
+  .done-card button {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 600;
+    padding: 0.6rem 2rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #d97757;
+    color: #fff;
+    transition: background 0.15s;
+  }
+  .done-card button:hover { background: #b8603f; }
+  /* --- Focus-visible for accessibility --- */
+  button:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(217,119,87,0.3);
+  }
+  textarea:focus-visible {
+    outline: none;
+    border-color: #d97757;
+    box-shadow: 0 0 0 3px rgba(217,119,87,0.15);
+  }
+  /* --- Responsive header --- */
+  @media (max-width: 640px) {
+    .header {
+      flex-direction: column;
+      gap: 0.5rem;
+      padding: 0.75rem 1rem;
+    }
+    .header-left, .header-right {
+      width: 100%;
+      justify-content: center;
+    }
+    .header h1 {
+      font-size: 0.95rem;
+    }
+    .progress {
+      font-size: 0.7rem;
+    }
+  }
+  /* ============================================
+     LIVE MODE STYLES
+     ============================================ */
+  .live-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .live-progress-bar {
+    width: 120px;
+    height: 6px;
+    background: #333;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+  .live-progress-fill {
+    height: 100%;
+    background: #788c5d;
+    border-radius: 3px;
+    transition: width 0.4s ease;
+    width: 0%;
+  }
+  .live-progress-text {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.75rem;
+    color: #87867f;
+    white-space: nowrap;
+  }
+  /* Section states */
+  .section.live-pending {
+    border: 1px dashed #d4d2c8;
+    background: #faf9f5;
+    opacity: 1;
+  }
+  .section.live-pending .live-pending-placeholder {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.85rem;
+    color: #b0afa8;
+    font-style: italic;
+    padding: 0.75rem 0;
+  }
+  @keyframes livePulse {
+    0%, 100% { border-color: #d97757; }
+    50% { border-color: #f0b89a; }
+  }
+  .section.live-review {
+    border: 2px solid #d97757;
+    animation: livePulse 2s ease-in-out infinite;
+    opacity: 1;
+  }
+  .section.live-approved {
+    border-left: 3px solid #788c5d;
+    border-color: #788c5d;
+    opacity: 1;
+  }
+  .section.live-changes-requested,
+  .section.live-changes_requested {
+    border-left: 3px solid #d97757;
+    opacity: 1;
+  }
+  .live-approved-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: #f0f5e8;
+    border-bottom: 1px solid #e8e6dc;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #788c5d;
+    font-weight: 600;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.15s;
+  }
+  .live-approved-indicator:hover { background: #e5edda; }
+  .live-approved-indicator .chevron {
+    display: inline-block;
+    width: 6px;
+    height: 6px;
+    border-right: 2px solid #788c5d;
+    border-bottom: 2px solid #788c5d;
+    transform: rotate(-45deg);
+    transition: transform 0.2s ease;
+    flex-shrink: 0;
+  }
+  .section.live-approved.expanded .live-approved-indicator .chevron {
+    transform: rotate(45deg);
+  }
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  .live-revising-indicator {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.75rem 2rem;
+    background: #fef3ee;
+    border-top: 1px solid #e8e6dc;
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    color: #d97757;
+  }
+  .live-spinner {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #d97757;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+  }
+  /* Per-section review bar (GitHub PR review model) */
+  .live-review-bar {
+    padding: 0.75rem 2rem;
+    border-top: 1px solid #e8e6dc;
+    background: #fdf8f5;
+  }
+  .live-review-summary {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #d97757;
+    margin-bottom: 0.5rem;
+    display: none;
+  }
+  .live-review-summary.has-comments { display: block; }
+  .live-review-note {
+    width: 100%;
+    padding: 0.6rem 0.75rem;
+    border: 1px solid #e8e6dc;
+    border-radius: 4px;
+    font-family: 'Lora', Georgia, serif;
+    font-size: 0.85rem;
+    line-height: 1.5;
+    resize: vertical;
+    background: #fff;
+    color: #141413;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .live-review-note:focus {
+    outline: none;
+    border-color: #d97757;
+    box-shadow: 0 0 0 2px rgba(217,119,87,0.15);
+  }
+  .live-review-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+    justify-content: flex-end;
+  }
+  .live-approve-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #788c5d;
+    color: #fff;
+    transition: background 0.15s;
+  }
+  .live-approve-btn:hover { background: #657a4c; }
+  .live-changes-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.8rem;
+    font-weight: 600;
+    padding: 6px 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    background: #d97757;
+    color: #fff;
+    transition: background 0.15s;
+  }
+  .live-changes-btn:hover { background: #b8603f; }
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+  .live-review-bar.needs-input {
+    animation: shake 0.4s ease;
+  }
+  .live-review-bar.needs-input .live-review-note {
+    border-color: #d97757;
+    box-shadow: 0 0 0 2px rgba(217,119,87,0.25);
+  }
+  .live-user-feedback {
+    padding: 0.75rem 2rem;
+    background: #fef3ee;
+    font-size: 0.85rem;
+    color: #87867f;
+    border-top: 1px solid #e8e6dc;
+  }
+  .live-user-feedback .feedback-text {
+    white-space: pre-wrap;
+    line-height: 1.5;
+    margin-top: 0.25rem;
+  }
+  .live-finalize-bar {
+    position: sticky;
+    bottom: 0;
+    z-index: 90;
+    background: #141413;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 0.75rem 2rem;
+    display: none;
+    justify-content: center;
+    gap: 1rem;
+    box-shadow: 0 -2px 12px rgba(0,0,0,0.2);
+  }
+  .live-finalize-btn {
+    font-family: 'Poppins', sans-serif;
+    font-size: 0.875rem;
+    font-weight: 600;
+    padding: 0.65rem 2.5rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: #788c5d;
+    color: #faf9f5;
+    transition: background 0.2s, opacity 0.2s;
+    letter-spacing: 0.02em;
+  }
+  .live-finalize-btn:hover { background: #657a4c; }
+  .live-finalize-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+</style>
+</head>
+<body>
+<div class="header">
+  <div class="header-left">
+    <h1>RFC Review: <span id="doc-title">__DOC_TITLE__</span></h1>
+    <span class="iteration-badge" id="iteration-badge" style="display:none;"></span>
+  </div>
+  <div class="header-right">
+    <div class="live-progress" id="live-progress" style="display:none;">
+      <div class="live-progress-bar"><div class="live-progress-fill" id="live-progress-fill"></div></div>
+      <span class="live-progress-text" id="live-progress-text">0 of 0 sections</span>
+    </div>
+    <span class="save-status" id="save-status"></span>
+    <div class="progress" id="batch-progress"><span class="count" id="feedback-count">0</span> of <span id="section-count">0</span> sections have feedback</div>
+  </div>
+</div>
+<div class="container">
+  <div id="sections"></div>
+  <div class="overall-section" id="overall-section">
+    <h2>Overall Feedback</h2>
+    <div id="previous-overall-container"></div>
+    <textarea id="overall-feedback" placeholder="General thoughts on the RFC..."></textarea>
+  </div>
+</div>
+<div class="submit-bar" id="submit-bar">
+  <button class="submit-btn" onclick="submitFeedback('needs_revision')">Submit Feedback</button>
+  <button class="approve-btn" onclick="submitFeedback('approved')">Approve</button>
+</div>
+<div class="live-finalize-bar" id="live-finalize-bar">
+  <button class="live-finalize-btn" id="live-finalize-btn" disabled onclick="finalizeRFC()">Finalize RFC</button>
+</div>
+
+<!-- Done overlay -->
+<div class="done-overlay" id="done-overlay">
+  <div class="done-card">
+    <h2 id="done-title">Feedback Submitted</h2>
+    <p id="done-message">Your feedback has been saved. Return to your Claude Code session — Claude will read your feedback and revise the document.</p>
+    <button onclick="closeDoneDialog()">OK</button>
+  </div>
+</div>
+
+<script>
+const MARKDOWN_CONTENT = __MARKDOWN_CONTENT__;
+const PREVIOUS_FEEDBACK = __PREVIOUS_FEEDBACK__;
+const ITERATION = __ITERATION__;
+const SERVER_MODE = __SERVER_MODE__;
+const LIVE_MODE = __LIVE_MODE__;
+
+// Inline comments store: [{ sectionIndex, selectedText, comment, id }]
+const inlineComments = [];
+let commentIdCounter = 0;
+let saveTimeout = null;
+let serverAvailable = SERVER_MODE;
+
+// Strip YAML frontmatter (--- ... ---) before rendering
+function stripFrontmatter(md) {
+  return md.replace(/^\s*---[\s\S]*?---\s*\n?/, '');
+}
+
+// Strip leading markdown heading (## Title) — used in live mode where heading is already in the card header
+function stripLeadingHeading(md) {
+  return md.replace(/^\s*#{1,6}\s+[^\n]*\n*/, '');
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Show iteration badge if round > 1
+  if (ITERATION > 1) {
+    const badge = document.getElementById('iteration-badge');
+    badge.textContent = `Round ${ITERATION}`;
+    badge.style.display = '';
+  }
+
+  // --- LIVE MODE ---
+  if (LIVE_MODE) {
+    initLiveMode();
+    return;
+  }
+
+  // --- BATCH MODE (unchanged) ---
+  const html = marked.parse(stripFrontmatter(MARKDOWN_CONTENT));
+  const tmp = document.createElement('div');
+  tmp.innerHTML = html;
+
+  // Detect which heading level to split on: prefer H2, fall back to H1
+  const h2s = tmp.querySelectorAll('h2');
+  const h1s = tmp.querySelectorAll('h1');
+  const splitTag = h2s.length > 0 ? 'H2' : (h1s.length > 0 ? 'H1' : 'H2');
+
+  const sections = [];
+  let current = null;
+
+  for (const node of Array.from(tmp.childNodes)) {
+    if (node.nodeType === 1 && node.tagName === splitTag) {
+      if (current) sections.push(current);
+      current = { heading: node.textContent.trim(), html: '' };
+    } else if (current) {
+      current.html += node.outerHTML || node.textContent;
+    } else {
+      if (!current) {
+        current = { heading: 'Introduction', html: '' };
+      }
+      current.html += node.outerHTML || node.textContent;
+    }
+  }
+  if (current) sections.push(current);
+
+  const container = document.getElementById('sections');
+  document.getElementById('section-count').textContent = sections.length;
+
+  // Build a lookup from previous feedback by heading
+  const prevByHeading = {};
+  const prevInlineBySection = {};
+  if (PREVIOUS_FEEDBACK && PREVIOUS_FEEDBACK.sections) {
+    PREVIOUS_FEEDBACK.sections.forEach(s => {
+      if (s.feedback) prevByHeading[s.heading] = s.feedback;
+    });
+  }
+  if (PREVIOUS_FEEDBACK && PREVIOUS_FEEDBACK.inline_comments) {
+    PREVIOUS_FEEDBACK.inline_comments.forEach(c => {
+      if (!prevInlineBySection[c.section]) prevInlineBySection[c.section] = [];
+      prevInlineBySection[c.section].push(c);
+    });
+  }
+
+  sections.forEach((sec, i) => {
+    const div = document.createElement('div');
+    div.className = 'section';
+    div.dataset.index = i;
+    div.style.animationDelay = `${i * 60}ms`;
+
+    // Build previous feedback HTML for this section
+    let prevFeedbackHtml = '';
+    if (prevByHeading[sec.heading]) {
+      prevFeedbackHtml = `
+        <div class="previous-feedback">
+          <div class="prev-label">Previous Round Feedback</div>
+          <div class="previous-feedback-text">${escapeHtml(prevByHeading[sec.heading])}</div>
+        </div>`;
+    }
+
+    // Build previous inline comments for this section
+    let prevInlineHtml = '';
+    if (prevInlineBySection[sec.heading] && prevInlineBySection[sec.heading].length > 0) {
+      const items = prevInlineBySection[sec.heading].map(c =>
+        `<div class="pic-item">
+          <div class="pic-selected">"${escapeHtml(c.selected_text.length > 80 ? c.selected_text.slice(0, 80) + '...' : c.selected_text)}"</div>
+          <div class="pic-comment">${escapeHtml(c.comment)}</div>
+        </div>`
+      ).join('');
+      prevInlineHtml = `
+        <div class="previous-inline-comments">
+          <div class="prev-label">Previous Inline Comments</div>
+          ${items}
+        </div>`;
+    }
+
+    div.innerHTML = `
+      <div class="section-content" data-section-index="${i}">
+        <div class="section-header"><h2>${sec.heading}</h2></div>
+        ${sec.html}
+      </div>
+      ${prevFeedbackHtml}
+      ${prevInlineHtml}
+      <div class="feedback-toggle" onclick="toggleFeedback(this)">
+        <span class="chevron"></span> Add Feedback
+      </div>
+      <div class="feedback-area">
+        <textarea data-section="${i}" placeholder="Your feedback on this section..." oninput="onFeedbackInput()"></textarea>
+      </div>`;
+    container.appendChild(div);
+  });
+
+  // Set stagger delay on overall section (appears after all section cards)
+  const overallSection = document.querySelector('.overall-section');
+  if (overallSection) {
+    overallSection.style.animationDelay = `${sections.length * 60}ms`;
+  }
+
+  // Show previous overall feedback if present
+  if (PREVIOUS_FEEDBACK && PREVIOUS_FEEDBACK.overall_feedback) {
+    const prevOverallContainer = document.getElementById('previous-overall-container');
+    prevOverallContainer.innerHTML = `
+      <div class="previous-overall">
+        <div class="prev-label">Previous Round Overall Feedback</div>
+        <div class="previous-feedback-text">${escapeHtml(PREVIOUS_FEEDBACK.overall_feedback)}</div>
+      </div>`;
+  }
+
+  // Post-process mermaid code blocks into diagram containers
+  document.querySelectorAll('pre code.language-mermaid').forEach(block => {
+    const pre = block.parentElement;
+    const div = document.createElement('div');
+    div.className = 'mermaid';
+    div.textContent = block.textContent;
+    pre.replaceWith(div);
+  });
+  mermaid.initialize({ startOnLoad: false, theme: 'neutral' });
+  mermaid.run();
+
+  // Auto-save debounce on overall feedback textarea
+  document.getElementById('overall-feedback').addEventListener('input', () => {
+    onFeedbackInput();
+  });
+
+  // Listen for text selection inside section-content areas
+  document.addEventListener('mouseup', handleTextSelection);
+  // Close comment button when clicking elsewhere
+  document.addEventListener('mousedown', (e) => {
+    if (!e.target.classList.contains('comment-btn')) {
+      removeCommentBtn();
+    }
+  });
+});
+
+// --- Auto-save ---
+
+function onFeedbackInput() {
+  updateProgress();
+  if (!serverAvailable) return;
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => autoSave(), 800);
+}
+
+function triggerAutoSave() {
+  if (!serverAvailable) return;
+  clearTimeout(saveTimeout);
+  saveTimeout = setTimeout(() => autoSave(), 800);
+}
+
+function autoSave() {
+  if (!serverAvailable) return;
+  // Live mode persists state via session.json on the server — skip batch feedback.json saves
+  if (LIVE_MODE) return;
+  const data = gatherFeedback('draft');
+  const payload = JSON.stringify(data, null, 2);
+  const statusEl = document.getElementById('save-status');
+  statusEl.textContent = 'Saving...';
+  statusEl.classList.remove('flash');
+
+  fetch('/api/feedback', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: payload,
+  })
+  .then(r => {
+    if (r.ok) {
+      statusEl.textContent = '\u2713 Saved';
+      statusEl.classList.remove('flash');
+      void statusEl.offsetWidth;
+      statusEl.classList.add('flash');
+      setTimeout(() => { if (statusEl.textContent === '\u2713 Saved') statusEl.textContent = ''; }, 2000);
+    } else {
+      statusEl.textContent = 'Save failed';
+      serverAvailable = false;
+    }
+  })
+  .catch(() => {
+    statusEl.textContent = '';
+    serverAvailable = false;
+  });
+}
+
+// --- Gather feedback into JSON ---
+
+function gatherFeedback(status) {
+  const sectionEls = document.querySelectorAll('.section');
+  const sections = Array.from(sectionEls).map(el => ({
+    heading: el.querySelector('.section-content h2').textContent.trim(),
+    feedback: (el.querySelector('.feedback-area textarea')?.value || '').trim()
+  }));
+  return {
+    iteration: ITERATION,
+    sections,
+    inline_comments: inlineComments.map(c => {
+      let sectionName;
+      if (c.sectionId) {
+        sectionName = document.querySelector(`[data-section-id="${c.sectionId}"] h2`)?.textContent.trim()
+          || document.querySelector(`.section[data-section-id="${c.sectionId}"] .section-content h2`)?.textContent.trim()
+          || c.sectionId;
+      } else {
+        sectionName = document.querySelectorAll('.section')[c.sectionIndex]
+          ?.querySelector('.section-content h2')?.textContent.trim() || `Section ${c.sectionIndex}`;
+      }
+      return { section: sectionName, selected_text: c.selectedText, comment: c.comment };
+    }),
+    overall_feedback: document.getElementById('overall-feedback').value.trim(),
+    status: status,
+    timestamp: new Date().toISOString()
+  };
+}
+
+// --- Submit / Approve ---
+
+function submitFeedback(status) {
+  const result = gatherFeedback(status);
+  const payload = JSON.stringify(result, null, 2);
+
+  if (serverAvailable) {
+    // Server mode: POST to server, then show overlay
+    fetch('/api/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: payload,
+    })
+    .then(r => {
+      if (!r.ok) throw new Error('Save failed');
+      showDoneDialog(status);
+    })
+    .catch(() => {
+      // Server failed — fall back to Blob download
+      downloadBlob(payload);
+      showDoneDialog(status);
+    });
+  } else {
+    // Static mode: download as file
+    downloadBlob(payload);
+    showDoneDialog(status);
+  }
+}
+
+function downloadBlob(payload) {
+  const blob = new Blob([payload], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'feedback.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+function showDoneDialog(status) {
+  const titleEl = document.getElementById('done-title');
+  const msgEl = document.getElementById('done-message');
+  if (status === 'approved') {
+    titleEl.textContent = 'Document Approved';
+    msgEl.textContent = 'You approved the RFC. Return to your Claude Code session — Claude will see your approval.';
+  } else {
+    titleEl.textContent = 'Feedback Submitted';
+    msgEl.textContent = 'Your feedback has been saved. Return to your Claude Code session — Claude will read your feedback and revise the document.';
+  }
+  document.getElementById('done-overlay').classList.add('visible');
+}
+
+function closeDoneDialog() {
+  document.getElementById('done-overlay').classList.remove('visible');
+}
+
+// --- Floating "Comment" button on text selection ---
+
+function handleTextSelection(e) {
+  // Don't interfere with comment button or popover interactions
+  if (e.target.closest('.comment-btn') || e.target.closest('.comment-popover')) return;
+
+  const sel = window.getSelection();
+  if (!sel || sel.isCollapsed || !sel.toString().trim()) return;
+
+  const range = sel.getRangeAt(0);
+  const sectionContent = range.commonAncestorContainer.nodeType === 1
+    ? range.commonAncestorContainer.closest('.section-content')
+    : range.commonAncestorContainer.parentElement?.closest('.section-content');
+
+  if (!sectionContent) return;
+
+  // Don't show comment button if selection is inside a popover
+  if (range.commonAncestorContainer.nodeType === 1
+    ? range.commonAncestorContainer.closest('.comment-popover')
+    : range.commonAncestorContainer.parentElement?.closest('.comment-popover')) {
+    return;
+  }
+
+  removeCommentBtn();
+
+  // Save selection state eagerly — mousedown on the button will collapse the live selection
+  const savedText = sel.toString().trim();
+  const savedRange = range.cloneRange();
+
+  const rect = range.getBoundingClientRect();
+  const contentRect = sectionContent.getBoundingClientRect();
+
+  const btn = document.createElement('button');
+  btn.className = 'comment-btn';
+  btn.textContent = 'Comment';
+  btn.style.top = (rect.bottom - contentRect.top + 4) + 'px';
+  btn.style.left = (rect.left - contentRect.left + rect.width / 2 - 30) + 'px';
+
+  btn.addEventListener('click', (ev) => {
+    ev.stopPropagation();
+    const sectionIndex = parseInt(sectionContent.dataset.sectionIndex, 10);
+    const sectionId = sectionContent.dataset.sectionId || null;
+    openCommentPopover(sectionContent, savedRange, savedText, sectionIndex, sectionId);
+    removeCommentBtn();
+  });
+
+  sectionContent.appendChild(btn);
+}
+
+function removeCommentBtn() {
+  document.querySelectorAll('.comment-btn').forEach(b => b.remove());
+}
+
+// --- Comment Popover (new comment) ---
+
+function openCommentPopover(sectionContent, range, selectedText, sectionIndex, sectionIdOrComment, existingComment) {
+  // Handle backward-compatible call signature: old callers pass existingComment as 5th arg
+  let sectionId = null;
+  if (typeof sectionIdOrComment === 'string' || sectionIdOrComment === null) {
+    sectionId = sectionIdOrComment;
+  } else if (typeof sectionIdOrComment === 'object' && sectionIdOrComment !== null) {
+    existingComment = sectionIdOrComment;
+    sectionId = sectionContent.dataset.sectionId || null;
+  }
+  closeAllPopovers();
+
+  const rect = range.getBoundingClientRect();
+  const contentRect = sectionContent.getBoundingClientRect();
+
+  const popover = document.createElement('div');
+  popover.className = 'comment-popover';
+  popover.style.top = (rect.bottom - contentRect.top + 8) + 'px';
+
+  // Position horizontally, clamping to stay within section
+  let leftPos = rect.left - contentRect.left;
+  leftPos = Math.max(0, Math.min(leftPos, contentRect.width - 310));
+  popover.style.left = leftPos + 'px';
+
+  const truncated = selectedText.length > 80 ? selectedText.slice(0, 80) + '...' : selectedText;
+
+  popover.innerHTML = `
+    <div class="popover-selected-text">"${escapeHtml(truncated)}"</div>
+    <textarea placeholder="Add your comment...">${existingComment ? escapeHtml(existingComment.comment) : ''}</textarea>
+    <div class="popover-actions">
+      ${existingComment ? '<button class="popover-delete">Delete</button>' : ''}
+      <button class="popover-cancel">Cancel</button>
+      <button class="popover-save">Save</button>
+    </div>
+  `;
+
+  sectionContent.appendChild(popover);
+
+  const textarea = popover.querySelector('textarea');
+  textarea.focus();
+
+  // Prevent popover clicks from triggering mousedown handler
+  popover.addEventListener('mousedown', (e) => e.stopPropagation());
+
+  popover.querySelector('.popover-cancel').addEventListener('click', () => {
+    closeAllPopovers();
+  });
+
+  popover.querySelector('.popover-save').addEventListener('click', () => {
+    const commentText = textarea.value.trim();
+    if (!commentText) { closeAllPopovers(); return; }
+
+    if (existingComment) {
+      existingComment.comment = commentText;
+    } else {
+      const id = ++commentIdCounter;
+      // Wrap selected text in a <mark>
+      try {
+        const mark = document.createElement('mark');
+        mark.className = 'commented';
+        mark.dataset.commentId = id;
+        range.surroundContents(mark);
+        mark.addEventListener('click', () => openExistingCommentPopover(mark));
+      } catch (e) {
+        // surroundContents fails if selection spans multiple elements;
+        // fall back to inserting marks around the range contents
+        const fragment = range.extractContents();
+        const mark = document.createElement('mark');
+        mark.className = 'commented';
+        mark.dataset.commentId = id;
+        mark.appendChild(fragment);
+        range.insertNode(mark);
+        mark.addEventListener('click', () => openExistingCommentPopover(mark));
+      }
+
+      inlineComments.push({
+        id,
+        sectionIndex,
+        sectionId: sectionId || sectionContent.dataset.sectionId || null,
+        selectedText,
+        comment: commentText
+      });
+    }
+
+    closeAllPopovers();
+    window.getSelection().removeAllRanges();
+    updateCommentBadges();
+    triggerAutoSave();
+  });
+
+  if (existingComment) {
+    popover.querySelector('.popover-delete').addEventListener('click', () => {
+      // Remove highlight
+      const mark = sectionContent.querySelector(`mark[data-comment-id="${existingComment.id}"]`);
+      if (mark) {
+        const parent = mark.parentNode;
+        while (mark.firstChild) parent.insertBefore(mark.firstChild, mark);
+        parent.removeChild(mark);
+        parent.normalize();
+      }
+      // Remove from array
+      const idx = inlineComments.findIndex(c => c.id === existingComment.id);
+      if (idx !== -1) inlineComments.splice(idx, 1);
+      closeAllPopovers();
+      updateCommentBadges();
+      triggerAutoSave();
+    });
+  }
+}
+
+function openExistingCommentPopover(mark) {
+  const commentId = parseInt(mark.dataset.commentId, 10);
+  const comment = inlineComments.find(c => c.id === commentId);
+  if (!comment) return;
+
+  const sectionContent = mark.closest('.section-content');
+  const range = document.createRange();
+  range.selectNodeContents(mark);
+
+  openCommentPopover(sectionContent, range, comment.selectedText, comment.sectionIndex, comment.sectionId || null, comment);
+}
+
+function closeAllPopovers() {
+  document.querySelectorAll('.comment-popover').forEach(p => p.remove());
+}
+
+// --- Comment badges on section headers ---
+
+function updateCommentBadges() {
+  document.querySelectorAll('.section').forEach(section => {
+    const sectionIndex = parseInt(section.dataset.index, 10);
+    const sectionId = section.dataset.sectionId || null;
+    const count = inlineComments.filter(c =>
+      (sectionId && c.sectionId === sectionId) || (!sectionId && c.sectionIndex === sectionIndex)
+    ).length;
+    const header = section.querySelector('.section-header');
+    if (!header) return;
+    let badge = header.querySelector('.comment-badge');
+
+    if (count > 0) {
+      if (!badge) {
+        badge = document.createElement('span');
+        badge.className = 'comment-badge';
+        header.appendChild(badge);
+      }
+      badge.textContent = count;
+    } else if (badge) {
+      badge.remove();
+    }
+
+    // Update review bar summary in live mode
+    if (LIVE_MODE && sectionId) {
+      updateLiveReviewSummary(sectionId);
+    }
+  });
+}
+
+// --- Utility ---
+
+function escapeHtml(str) {
+  const div = document.createElement('div');
+  div.textContent = str;
+  return div.innerHTML;
+}
+
+function toggleFeedback(el) {
+  const area = el.nextElementSibling;
+  area.classList.toggle('open');
+  el.classList.toggle('open');
+  if (area.classList.contains('open')) {
+    area.querySelector('textarea').focus();
+  }
+}
+
+function updateProgress() {
+  const textareas = document.querySelectorAll('.feedback-area textarea');
+  let count = 0;
+  textareas.forEach(ta => {
+    const section = ta.closest('.section');
+    if (ta.value.trim()) {
+      count++;
+      section.classList.add('has-feedback');
+    } else {
+      section.classList.remove('has-feedback');
+    }
+  });
+  document.getElementById('feedback-count').textContent = count;
+}
+
+// ============================================
+// LIVE MODE
+// ============================================
+
+async function initLiveMode() {
+  // Hide batch-mode UI
+  document.getElementById('overall-section').style.display = 'none';
+  document.getElementById('submit-bar').style.display = 'none';
+  document.getElementById('batch-progress').style.display = 'none';
+
+  // Show live-mode UI
+  document.getElementById('live-progress').style.display = 'flex';
+  document.getElementById('live-finalize-bar').style.display = 'flex';
+
+  // Fetch current session state
+  let session;
+  try {
+    const resp = await fetch('/api/session');
+    session = await resp.json();
+  } catch (e) {
+    console.error('Failed to fetch session:', e);
+    return;
+  }
+
+  // Render skeleton cards for all sections
+  const container = document.getElementById('sections');
+  container.innerHTML = '';
+
+  const entries = Object.entries(session.sections);
+  entries.sort((a, b) => a[1].order - b[1].order);
+
+  for (const [id, sec] of entries) {
+    const card = createLiveSectionCard(id, sec.heading, sec.order, sec.status, sec.markdown);
+    container.appendChild(card);
+  }
+
+  updateLiveProgress(session);
+
+  // Connect SSE for real-time updates
+  connectSSE();
+
+  // Enable text selection for inline comments in live mode too
+  document.addEventListener('mouseup', handleTextSelection);
+  document.addEventListener('mousedown', (e) => {
+    if (!e.target.classList.contains('comment-btn')) {
+      removeCommentBtn();
+    }
+  });
+}
+
+function createLiveSectionCard(id, heading, order, status, markdown) {
+  const div = document.createElement('div');
+  div.className = `section live-${status}`;
+  div.dataset.sectionId = id;
+  div.dataset.order = order;
+  div.style.animationDelay = `${(order - 1) * 60}ms`;
+
+  if (status === 'pending' || !markdown) {
+    div.innerHTML = `
+      <div class="section-content" data-section-id="${id}">
+        <div class="section-header"><h2>${escapeHtml(heading)}</h2></div>
+        <div class="live-pending-placeholder">Waiting for agent to write this section...</div>
+      </div>`;
+  } else {
+    const rendered = marked.parse(stripLeadingHeading(stripFrontmatter(markdown)));
+    div.innerHTML = `
+      <div class="section-content" data-section-id="${id}">
+        <div class="section-header"><h2>${escapeHtml(heading)}</h2></div>
+        <div class="live-section-body">${rendered}</div>
+      </div>`;
+  }
+
+  if (status === 'review') {
+    addLiveActionButtons(div, id);
+  } else if (status === 'approved') {
+    addApprovedIndicator(div, id, heading);
+  } else if (status === 'changes_requested') {
+    addRevisingIndicator(div);
+  }
+
+  return div;
+}
+
+function addLiveActionButtons(sectionEl, sectionId) {
+  // Remove any existing action/feedback elements
+  sectionEl.querySelectorAll('.live-review-bar, .live-approved-indicator, .live-revising-indicator').forEach(el => el.remove());
+
+  const bar = document.createElement('div');
+  bar.className = 'live-review-bar';
+  bar.id = `live-review-bar-${sectionId}`;
+  bar.innerHTML = `
+    <div class="live-review-summary" id="live-review-summary-${sectionId}"></div>
+    <textarea class="live-review-note" rows="2" placeholder="Additional notes (optional)..."></textarea>
+    <div class="live-review-actions">
+      <button class="live-approve-btn" onclick="submitLiveFeedback('${sectionId}', 'approve')">Approve</button>
+      <button class="live-changes-btn" onclick="submitLiveFeedback('${sectionId}', 'request_changes')">Request Changes</button>
+    </div>
+  `;
+  sectionEl.appendChild(bar);
+
+  // Initialize comment count
+  updateLiveReviewSummary(sectionId);
+}
+
+function addApprovedIndicator(sectionEl, sectionId, heading) {
+  const content = sectionEl.querySelector('.section-content');
+  if (content) content.style.display = 'none';
+
+  const indicator = document.createElement('div');
+  indicator.className = 'live-approved-indicator';
+  const headingText = heading || sectionEl.querySelector('h2')?.textContent || sectionId;
+  indicator.innerHTML = `<span class="chevron"></span> <span>${escapeHtml(headingText)}</span> — Approved`;
+  indicator.addEventListener('click', () => {
+    sectionEl.classList.toggle('expanded');
+    if (content) content.style.display = sectionEl.classList.contains('expanded') ? '' : 'none';
+  });
+  sectionEl.insertBefore(indicator, sectionEl.firstChild);
+}
+
+function addRevisingIndicator(sectionEl) {
+  const indicator = document.createElement('div');
+  indicator.className = 'live-revising-indicator';
+  indicator.innerHTML = `<div class="live-spinner"></div> Agent is revising this section...`;
+  sectionEl.appendChild(indicator);
+}
+
+function updateLiveReviewSummary(sectionId) {
+  const summary = document.getElementById(`live-review-summary-${sectionId}`);
+  if (!summary) return;
+  const count = inlineComments.filter(c => c.sectionId === sectionId).length;
+  if (count > 0) {
+    summary.textContent = `${count} inline comment${count !== 1 ? 's' : ''}`;
+    summary.classList.add('has-comments');
+  } else {
+    summary.textContent = '';
+    summary.classList.remove('has-comments');
+  }
+}
+
+async function submitLiveFeedback(sectionId, action) {
+  // Gather inline comments for this section
+  const sectionComments = inlineComments
+    .filter(c => c.sectionId === sectionId)
+    .map(c => ({ selected_text: c.selectedText, comment: c.comment }));
+
+  const bar = document.getElementById(`live-review-bar-${sectionId}`);
+  const feedbackText = bar?.querySelector('.live-review-note')?.value?.trim() || '';
+
+  // For request_changes: need at least inline comments or textarea text
+  if (action === 'request_changes' && sectionComments.length === 0 && !feedbackText) {
+    if (bar) {
+      bar.classList.remove('needs-input');
+      // Force reflow to restart animation
+      void bar.offsetWidth;
+      bar.classList.add('needs-input');
+      bar.querySelector('.live-review-note')?.focus();
+      // Remove class after animation completes
+      setTimeout(() => bar.classList.remove('needs-input'), 400);
+    }
+    return;
+  }
+
+  try {
+    const resp = await fetch('/api/section/feedback', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        section: sectionId,
+        action: action,
+        text: feedbackText,
+        inline_comments: sectionComments
+      })
+    });
+    if (resp.ok) {
+      // Optimistic UI update (SSE will also arrive)
+      updateSectionStatus(sectionId, action === 'approve' ? 'approved' : 'changes_requested', feedbackText);
+    }
+  } catch (e) {
+    console.error('Failed to submit feedback:', e);
+  }
+}
+
+function updateSectionStatus(sectionId, status, feedbackText) {
+  const sectionEl = document.querySelector(`.section[data-section-id="${sectionId}"]`);
+  if (!sectionEl) return;
+
+  // Reset classes
+  sectionEl.className = 'section';
+  sectionEl.classList.add(`live-${status}`);
+
+  // Remove old interactive elements
+  sectionEl.querySelectorAll('.live-review-bar, .live-approved-indicator, .live-revising-indicator, .live-user-feedback').forEach(el => el.remove());
+
+  const heading = sectionEl.querySelector('.section-content h2')?.textContent || sectionId;
+
+  if (status === 'approved') {
+    addApprovedIndicator(sectionEl, sectionId, heading);
+  } else if (status === 'changes_requested') {
+    if (feedbackText) {
+      const fb = document.createElement('div');
+      fb.className = 'live-user-feedback';
+      fb.innerHTML = `<div class="prev-label">Your Feedback</div><div class="feedback-text">${escapeHtml(feedbackText)}</div>`;
+      sectionEl.appendChild(fb);
+    }
+    addRevisingIndicator(sectionEl);
+  }
+
+  updateLiveProgressFromDOM();
+}
+
+function connectSSE() {
+  const evtSource = new EventSource('/events');
+
+  evtSource.addEventListener('section-added', (e) => {
+    const data = JSON.parse(e.data);
+    const existing = document.querySelector(`.section[data-section-id="${data.id}"]`);
+    if (existing) {
+      fillSectionContent(existing, data);
+    }
+  });
+
+  evtSource.addEventListener('section-updated', (e) => {
+    const data = JSON.parse(e.data);
+    const existing = document.querySelector(`.section[data-section-id="${data.id}"]`);
+    if (existing) {
+      fillSectionContent(existing, data);
+    }
+  });
+
+  evtSource.addEventListener('section-status', (e) => {
+    const data = JSON.parse(e.data);
+    // Only update if not already handled by optimistic update
+    const sectionEl = document.querySelector(`.section[data-section-id="${data.id}"]`);
+    if (sectionEl && !sectionEl.classList.contains(`live-${data.status}`)) {
+      updateSectionStatus(data.id, data.status, data.feedback?.text || '');
+    }
+  });
+
+  evtSource.addEventListener('ping', () => { /* keep-alive */ });
+
+  evtSource.onerror = () => {
+    // EventSource auto-reconnects; on reconnect the server replays current state
+  };
+}
+
+function fillSectionContent(sectionEl, data) {
+  // Reset classes
+  sectionEl.className = 'section';
+  sectionEl.classList.add(`live-${data.status}`);
+
+  // Remove old interactive elements
+  sectionEl.querySelectorAll('.live-review-bar, .live-approved-indicator, .live-revising-indicator, .live-user-feedback').forEach(el => el.remove());
+
+  // Render content (strip leading heading — already shown in card header)
+  const rendered = marked.parse(stripLeadingHeading(data.markdown || ''));
+  const content = sectionEl.querySelector('.section-content');
+  content.style.display = '';
+  content.innerHTML = `
+    <div class="section-header"><h2>${escapeHtml(data.heading)}</h2></div>
+    <div class="live-section-body">${rendered}</div>
+  `;
+
+  // Add action buttons if in review state
+  if (data.status === 'review') {
+    addLiveActionButtons(sectionEl, data.id);
+  }
+
+  // Scroll into view
+  sectionEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+  // Process mermaid diagrams
+  const mermaidBlocks = content.querySelectorAll('pre code.language-mermaid');
+  if (mermaidBlocks.length > 0) {
+    mermaidBlocks.forEach(block => {
+      const pre = block.parentElement;
+      const div = document.createElement('div');
+      div.className = 'mermaid';
+      div.textContent = block.textContent;
+      pre.replaceWith(div);
+    });
+    mermaid.run();
+  }
+
+  updateLiveProgressFromDOM();
+}
+
+function updateLiveProgress(session) {
+  const sections = Object.values(session.sections);
+  const total = sections.length;
+  const approved = sections.filter(s => s.status === 'approved').length;
+
+  const fill = document.getElementById('live-progress-fill');
+  const text = document.getElementById('live-progress-text');
+  if (fill) fill.style.width = total > 0 ? `${(approved / total) * 100}%` : '0%';
+  if (text) text.textContent = `${approved} of ${total} sections approved`;
+
+  const btn = document.getElementById('live-finalize-btn');
+  if (btn) btn.disabled = approved < total;
+}
+
+function updateLiveProgressFromDOM() {
+  const all = document.querySelectorAll('.section[data-section-id]');
+  const total = all.length;
+  const approved = document.querySelectorAll('.section.live-approved').length;
+
+  const fill = document.getElementById('live-progress-fill');
+  const text = document.getElementById('live-progress-text');
+  if (fill) fill.style.width = total > 0 ? `${(approved / total) * 100}%` : '0%';
+  if (text) text.textContent = `${approved} of ${total} sections approved`;
+
+  const btn = document.getElementById('live-finalize-btn');
+  if (btn) btn.disabled = approved < total;
+}
+
+function finalizeRFC() {
+  const titleEl = document.getElementById('done-title');
+  const msgEl = document.getElementById('done-message');
+  titleEl.textContent = 'RFC Finalized';
+  msgEl.textContent = 'All sections have been approved. Return to your Claude Code session — Claude will assemble the final document.';
+  document.getElementById('done-overlay').classList.add('visible');
+}
+</script>
+</body>
+</html>
