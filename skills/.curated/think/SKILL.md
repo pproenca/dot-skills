@@ -144,6 +144,16 @@ Before presenting your proposal, attack it:
 - Under what conditions would this advice be actively harmful?
 - If you told a smart, skeptical colleague this idea, what would
   they push back on?
+- **Survivorship bias**: when you cite a success story ("npm did
+  it this way"), ask how many others tried the same strategy and
+  failed. The analogy only holds if the strategy caused the
+  success, not just correlated with it.
+- **Opportunity cost**: what are you NOT doing by pursuing this?
+  Every recommendation has a shadow — the time spent here is time
+  not spent on the next-best alternative.
+- **Reversibility**: is this decision easily reversible? If yes,
+  bias toward trying it fast. If no, require higher confidence
+  before recommending it.
 
 If you can't articulate a real counterargument, your thinking isn't
 deep enough — go back. If you can, and the proposal survives,
