@@ -189,7 +189,26 @@ Each level shows more detail. Today is always marked in RED across
 all levels. The zoom feels like temporal cartography — zooming into
 time the same way you zoom into a map.
 
-### 15. Per-Entity Gradient Identity (Weather + Contacts)
+### 16. Semantic Color Per Domain (Health)
+Health's 13 categories each have a dedicated color (Activity=orange,
+Heart=pink, Sleep=purple, Nutrition=green, etc.). The color persists
+everywhere: category icon, list row, detail view labels, chart accents.
+This is a DOMAIN COLOR SYSTEM — color encodes content category, not brand.
+Different from Fitness (one accent) or Weather (gradient-as-identity).
+
+### 17. Data + Education Inline (Health)
+Health embeds educational content ("About Steps" + Mayo Clinic attribution)
+directly below data charts. Every metric has its own "About" section.
+The app teaches while it tracks. Design lesson: if users might not fully
+understand the data, educate inline — not in help overlays.
+
+### 18. Metric Detail Template (Health)
+Every Health metric follows: period selector (D/W/M/6M/Y) → summary card
+(hero number) → interactive chart (bar/line/scatter varies by data type)
+→ educational content → related apps. The chart is ~40% of the screen —
+it IS the content, not supplementary.
+
+### 19. Per-Entity Gradient Identity (Weather + Contacts)
 Every entity in a collection can have its own visual identity derived
 from its DATA, not assigned arbitrarily:
 - Weather cities: gradient from current weather conditions
@@ -239,3 +258,12 @@ Screens: 7 captured (real iPhone 16 Pro Max via WDA)
 - 07: Current time indicator (red now-line, haptic interaction catalog)
 - 08: Long-press event creation (pre-filled time from press position)
 - 09: Full creation form (Event/Reminder segmented, grouped sections)
+
+### Apple Health (com.apple.Health)
+Screens: 5 captured (real iPhone 16 Pro Max via WDA)
+- 01: Welcome onboarding (hero illustration, icon constellation)
+- 02: Privacy screen (heart-lock icon, full-page privacy commitment)
+- 05: Browse categories (13 categories, semantic colors per domain)
+- 06: Editorial content (Cycle Tracking — magazine-style article cards with custom artwork)
+- 07: Activity category (time-sectioned cards, sparkline previews, Move ring inline)
+- 08: Steps detail (D/W/M/6M/Y period selector, bar chart, educational "About" + Mayo Clinic)
