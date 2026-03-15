@@ -208,7 +208,26 @@ Every Health metric follows: period selector (D/W/M/6M/Y) → summary card
 → educational content → related apps. The chart is ~40% of the screen —
 it IS the content, not supplementary.
 
-### 19. Per-Entity Gradient Identity (Weather + Contacts)
+### 20. Annotation Layer Pattern (Photos Markup)
+Markup treats annotations as a transparent OVERLAY on immutable content.
+The photo is never modified — ink, shapes, and text are a separate layer
+composited on save. Tools: 11 drawing pens (scrollable strip), + menu
+for Text/Shape/Signature/Loupe. PencilKit provides this for free in SwiftUI.
+
+Pattern for any app needing image annotation:
+```
+Layer 0: Base image (body diagram, floor plan, photo)
+Layer 1: Annotation overlay (PencilKit canvas)
+Layer 2: Tool controls (floating, auto-hide capable)
+```
+
+### 21. Dense Grid to Full-Screen (Photos)
+Library grid: 4 columns, ~2pt gaps, edge-to-edge (no horizontal padding).
+This is the densest layout in any Apple app. Detail viewer: full-screen
+with auto-hiding floating controls. The content IS the screen — chrome
+is temporary and toggled by tapping.
+
+### 22. Per-Entity Gradient Identity (Weather + Contacts)
 Every entity in a collection can have its own visual identity derived
 from its DATA, not assigned arbitrarily:
 - Weather cities: gradient from current weather conditions
@@ -267,3 +286,11 @@ Screens: 5 captured (real iPhone 16 Pro Max via WDA)
 - 06: Editorial content (Cycle Tracking — magazine-style article cards with custom artwork)
 - 07: Activity category (time-sectioned cards, sparkline previews, Move ring inline)
 - 08: Steps detail (D/W/M/6M/Y period selector, bar chart, educational "About" + Mayo Clinic)
+
+### Apple Photos (com.apple.mobileslideshow)
+Screens: 5 captured (real iPhone 16 Pro Max via WDA)
+- 01: Library grid (4-column dense thumbnails, edge-to-edge, 4,932 items)
+- 02: Photo detail viewer (full-screen, auto-hide floating controls, thumbnail strip)
+- 03: Edit mode (Adjust/Filters/Crop/Clean Up tabs, adjustment dial with haptics)
+- 05: Markup mode (11 drawing tools in scrollable strip, color picker, PencilKit)
+- 06: Markup insert menu (Text, Shape, Signature, Loupe — the annotation toolkit)
