@@ -66,8 +66,12 @@ these. Not in any single one.
 
 ### 3. Find the Intersection (4D Chess)
 
-This is the core move. Look for the spot where multiple concepts
-collide to create something greater than the sum of its parts.
+This is the core move and the skill's reason for existing. Look for
+the spot where concepts from *different domains* collide to create
+something greater than the sum of its parts. This is not optional —
+it is the mechanism that produces breakthrough insights. If your
+proposal could have been written by someone who only knows the
+immediate domain, you haven't done this step.
 
 4D chess means: don't just see the current board. See what each move
 enables three turns from now. A good suggestion solves the immediate
@@ -150,9 +154,14 @@ acknowledge their risks more than ones that pretend to be airtight.
 
 Present only what earned its place. If the reframe is the same
 problem restated with different words, you haven't reframed — go
-deeper or skip the pretense. If the cross-domain analogy is
-decorative rather than illuminating, cut it. Every section should
-make the user think "I wouldn't have seen that."
+deeper or skip the pretense. Every section should make the user
+think "I wouldn't have seen that."
+
+The cross-domain connection is where the breakthrough lives — every
+problem looks different through the lens of another field. If you
+haven't found one, you haven't mapped the landscape deeply enough.
+Go back to step 2. The analogy should change the answer, not just
+decorate it.
 
 The building blocks (use the ones that matter, drop the ones that
 don't):
