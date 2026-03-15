@@ -25,6 +25,35 @@ correct SwiftUI that looks generic because it was never grounded in
 a real person's needs. This skill changes the order of operations:
 think like a designer first, then write code.
 
+## Phase 0: The 0.5-Second Test (ORIENT before everything)
+
+Before designing anything, answer ONE question:
+
+> **What does the user SEE in the first half-second — before they
+> read a single word?**
+
+This is not about content. It's about the SHAPE of the screen.
+Close your eyes and picture it. What dominates?
+
+- A **ring** at 40% of screen height? → Fitness dashboard
+- A **gradient card** with bold white text? → Music/travel/content
+- A **large number** floating in space? → Finance/health metric
+- A **grid of thumbnails**? → Photo/recipe/shopping collection
+- A **clean form** with generous space? → Settings/profile
+
+If your answer is "a List with rows of text" → STOP. That's a
+spreadsheet, not an app. Go back and find the visual shape.
+
+Write the 0.5-second answer as the FIRST line of the experience
+brief:
+
+```swift
+// 0.5s: Four warm gradient cards stacked on black — a cookbook
+```
+
+This single sentence anchors every decision that follows. If the
+code you write doesn't produce that shape, something went wrong.
+
 ## Phase 1: Design Thinking (Before You Touch SwiftUI)
 
 Before writing a single line of code, answer these questions. Write
@@ -422,6 +451,21 @@ Techniques for this:
   dark cards, colored action buttons (red minus, green plus), and
   the same avatar hero. Edit mode should never degrade to a generic
   form — it maintains the visual language of the view mode.
+
+## Reference: Apple Design DNA
+
+When making specific design decisions, read `references/apple-design-dna.md`
+in this skill's directory. It contains patterns extracted by systematically
+crawling Apple Fitness and Apple Contacts in the iOS simulator — real
+accessibility trees, real measurements, real design analysis per screen.
+
+Key sections to consult:
+- **Dashboard vs Utility mode** — when to use dark cards vs light lists
+- **Universal measurements** — card radius (16pt), padding (18pt), gap (10pt)
+- **Onboarding templates** — feature-list vs hero-illustration patterns
+- **Button hierarchy** — filled primary, outline secondary, position-based destructive
+- **Glass-on-gradient** — the Contacts poster technique for premium detail views
+- **Empty states** — show visualization skeletons, not "no data" messages
 
 ## The Mindset
 
