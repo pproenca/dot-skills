@@ -94,6 +94,9 @@ After you have your first idea, deliberately set it aside and ask:
 - What would someone from a different field suggest?
 - What if the opposite of my first instinct were correct?
 - What's the version of this that's 10x simpler?
+- What if you didn't have to solve this at all? Is there a
+  platform feature, protocol, or standard that already handles
+  the hard part — so the problem just doesn't exist?
 
 Then compare all candidates honestly. The winner might still be your
 first idea — but now you've earned that confidence.
@@ -104,10 +107,24 @@ The smartest solutions are usually simple — but simple in a way that
 required deep understanding to arrive at. They make complexity
 dissolve rather than managing it.
 
+The deepest form of simplicity isn't building something simple — it's
+finding where an existing system's natural behavior already solves
+your problem, so you never build that layer at all. Don't abstract
+over things the platform already handles. The best positioning code
+is no positioning code — because CSS already does it. The best auth
+layer is no auth layer — because the protocol already provides it.
+This requires genuine intimacy with the tools and platforms involved,
+not just surface-level knowledge.
+
+Sometimes this means patience. The right primitive might not exist
+yet. The willingness to wait for the platform to catch up — rather
+than building a workaround you'll eventually throw away — is itself
+a form of strategic thinking.
+
 Signs you've found it:
 - It feels obvious in hindsight
-- It eliminates problems rather than solving them
-- It requires less code, less infrastructure, fewer moving parts
+- It eliminates entire categories of complexity, not just lines
+- You didn't build the hard thing — you found where it already exists
 - People's first reaction is "why didn't we think of that?"
 
 Signs you haven't:
