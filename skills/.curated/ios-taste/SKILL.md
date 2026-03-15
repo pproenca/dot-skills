@@ -153,51 +153,43 @@ thing on screen should be *physically large*, not just bold.
 
 ### 2. Color Is Math, Not Vibes
 
-NEVER pick colors individually. Color harmony is a solved problem —
-derive your entire palette from ONE seed hue using HSB math. This is
-what every professional design system does (Material Design, Apple
-HIG). The formula:
+NEVER pick colors by hand. Color harmony is a solved mathematical
+problem. This skill bundles a palette generator that computes every
+color from a single seed hue — analogous harmony, WCAG contrast
+validated, light and dark mode variants.
 
-```swift
-// ONE seed hue per app (0...1). Everything derives from this.
-let seed: Double = 0.05  // e.g. warm terracotta for cooking
+**Before writing any view code, run the palette generator:**
 
-// Core palette — analogous harmony (within ±30° of seed)
-let primary   = Color(hue: seed, saturation: 0.70, brightness: 0.85)
-let secondary = Color(hue: seed + 0.08, saturation: 0.50, brightness: 0.80)
-let accent    = Color(hue: seed + 0.50, saturation: 0.65, brightness: 0.85)
-
-// Light mode cards: LOW saturation, HIGH brightness
-let cardLight = Color(hue: seed, saturation: 0.08, brightness: 0.96)
-
-// Dark mode cards: LOW brightness — colors glow on black
-let cardDark  = Color(hue: seed, saturation: 0.15, brightness: 0.15)
-
-// Collections: vary items WITHIN the analogous range
-func itemColor(index: Int, count: Int) -> Color {
-    let h = seed + (Double(index) / Double(count)) * 0.16 - 0.08
-    return Color(hue: h, saturation: 0.55, brightness: 0.82)
-}
+```bash
+python scripts/generate_palette.py \
+  --seed <hue-degrees> \
+  --mode both \
+  --items <collection-count> \
+  --app "App Name"
 ```
 
-Rules that never break:
-- **One seed hue per app.** A cooking app = warm (seed ~0.05). A
-  finance app = blue (seed ~0.6). A fitness app = green (seed ~0.35).
-- **Collections use analogous variations**, not random hues. A recipe
-  grid should feel like one family (terracotta, amber, rust, clay) —
-  not a rainbow.
-- **Light mode: desaturate.** Saturation 0.08–0.15 for backgrounds,
-  0.40–0.60 for accents. Let content pop, not containers.
-- **Dark mode: saturate.** Saturation 0.60–0.90 for accents on black.
-  Neon on black always works. Pastels on black look washed out.
-- **Contrast is non-negotiable.** White text needs background
-  brightness ≤ 0.55. Dark text needs brightness ≥ 0.45. If text
-  is hard to read, the color fails regardless of how pretty it is.
+Seed hue guide:
+- 0–30° = warm (cooking, social, dating)
+- 30–60° = golden (finance, productivity)
+- 60–150° = green (health, fitness, nature)
+- 150–210° = cyan/teal (tech, communication)
+- 210–270° = blue (trust, business, weather)
+- 270–330° = purple (creative, music, luxury)
+- 330–360° = pink/red (energy, food)
 
-Never use `Color.red`, `Color.green`, `Color.blue` directly as
-palette colors — they're semantic system colors for status. Build
-your palette from `Color(hue:saturation:brightness:)` so every
-color is mathematically related to the seed.
+Include the generated `enum Palette { ... }` at the top of your
+Swift file and use ONLY those colors. The palette is computed —
+every color is mathematically related to the seed, contrast ratios
+are pre-validated, and light/dark mode variants are included.
+
+Rules that never break:
+- **One seed hue per app.** Everything derives from it.
+- **Collections use analogous variations** (the `--items` flag),
+  not random hues. They sit together because they're ±30° of seed.
+- **Never use `Color.red`, `.green`, `.blue`** as palette colors —
+  those are semantic system colors for status indicators.
+- **Use `Palette.primary`, `Palette.cardBackground`, etc.** — not
+  ad-hoc `Color(hue:)` calls scattered through the view code.
 
 ### 3. Show Data, Don't List It
 
