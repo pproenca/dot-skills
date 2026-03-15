@@ -104,8 +104,8 @@ def generate_palette(seed_deg: int, mode: str, item_count: int, app_name: str) -
         ph, ps, pb = adjust_for_contrast(seed, 0.75, 0.85, True)
         lines.append(color_line("primary", ph, ps, pb, f"brand — {hex_from_hsb(ph, ps, pb)}"))
 
-        # Secondary: shifted +30°, slightly desaturated
-        sh, ss, sb = adjust_for_contrast(seed + 0.083, 0.55, 0.80, True)
+        # Secondary: shifted +45°, notably different saturation/brightness
+        sh, ss, sb = adjust_for_contrast(seed + 0.125, 0.45, 0.70, True)
         lines.append(color_line("secondary", sh, ss, sb, f"supporting — {hex_from_hsb(sh, ss, sb)}"))
 
         # Accent: complementary (180°), used sparingly
@@ -166,28 +166,44 @@ def generate_palette(seed_deg: int, mode: str, item_count: int, app_name: str) -
     # --- Collection item colors ---
     if item_count > 0:
         lines.append("")
-        lines.append(f"    // MARK: - Collection ({item_count} items, analogous spread)")
+        lines.append(f"    // MARK: - Collection ({item_count} items)")
         lines.append("")
 
-        # Spread items across ±30° of the seed hue (analogous range)
-        spread = 0.167  # 60° total spread
+        # Adaptive spread: wider hue range for more items, but vary
+        # saturation and brightness too for perceptual separation.
+        # Hue spread scales with item count (60° base, up to 120° for 20 items)
+        base_spread = 0.167  # 60°
+        hue_spread = min(base_spread + (item_count - 1) * 0.005, 0.333)  # cap at 120°
+
         for i in range(item_count):
             t = float(i) / max(1, item_count - 1) if item_count > 1 else 0.5
-            item_hue = seed + (t * spread) - (spread / 2)
+            item_hue = seed + (t * hue_spread) - (hue_spread / 2)
+
+            # Cycle saturation and brightness across 3 tiers for perceptual distance.
+            # Large brightness gaps (0.55 → 0.80 → 0.68) create strong ΔL* in Lab space,
+            # which dominates perceptual distance more than hue or saturation.
+            tier = i % 3
+            if tier == 0:
+                sat_dark, bri_dark = 0.70, 0.55
+                sat_light, bri_light = 0.45, 0.82
+            elif tier == 1:
+                sat_dark, bri_dark = 0.40, 0.78
+                sat_light, bri_light = 0.20, 0.95
+            else:
+                sat_dark, bri_dark = 0.55, 0.68
+                sat_light, bri_light = 0.35, 0.88
 
             if mode in ("dark", "both"):
-                # Dark: saturated, moderate brightness
-                ih, is_, ib = adjust_for_contrast(item_hue, 0.60, 0.75, True)
+                ih, is_, ib = adjust_for_contrast(item_hue, sat_dark, bri_dark, True)
                 lines.append(color_line(f"item{i}", ih, is_, ib,
                     f"{hex_from_hsb(ih, is_, ib)}"))
 
             if mode in ("light", "both") and mode == "both":
-                # Light: desaturated, high brightness, dark text
-                ih, is_, ib = adjust_for_contrast(item_hue, 0.35, 0.88, False)
+                ih, is_, ib = adjust_for_contrast(item_hue, sat_light, bri_light, False)
                 lines.append(color_line(f"lightItem{i}", ih, is_, ib,
                     f"{hex_from_hsb(ih, is_, ib)}"))
             elif mode == "light":
-                ih, is_, ib = adjust_for_contrast(item_hue, 0.35, 0.88, False)
+                ih, is_, ib = adjust_for_contrast(item_hue, sat_light, bri_light, False)
                 lines.append(color_line(f"item{i}", ih, is_, ib,
                     f"{hex_from_hsb(ih, is_, ib)}"))
 
@@ -220,8 +236,13 @@ def main():
 
     if not 0 <= args.seed <= 360:
         parser.error("Seed must be 0-360")
+    if args.items > 12:
+        import sys
+        print(f"Warning: {args.items} items requested. Perceptual distinguishability "
+              f"degrades above 12 items in an analogous palette. Consider using "
+              f"12 or fewer, or grouping items by category.", file=sys.stderr)
 
-    print(generate_palette(args.seed, args.mode, args.items, args.app))
+    print(generate_palette(args.seed, args.mode, min(args.items, 20), args.app))
 
 
 if __name__ == "__main__":
