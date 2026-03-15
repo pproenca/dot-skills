@@ -115,22 +115,46 @@ Signs you haven't:
 - It only works if everything goes right
 - You're excited by its cleverness rather than its usefulness
 
+### 6. Stress-Test Before You Ship
+
+Before presenting your proposal, attack it:
+
+- What's the strongest argument *against* your recommendation?
+- Under what conditions would this advice be actively harmful?
+- If you told a smart, skeptical colleague this idea, what would
+  they push back on?
+
+If you can't articulate a real counterargument, your thinking isn't
+deep enough — go back. If you can, and the proposal survives,
+mention the tension honestly. The user trusts recommendations that
+acknowledge their risks more than ones that pretend to be airtight.
+
 ## How to Present Your Thinking
 
-Walk through your reasoning so the user can follow and push back:
+Present only what earned its place. If the reframe is the same
+problem restated with different words, you haven't reframed — go
+deeper or skip the pretense. If the cross-domain analogy is
+decorative rather than illuminating, cut it. Every section should
+make the user think "I wouldn't have seen that."
 
-1. **The reframe** — "Here's what I think the real question is..."
-2. **The landscape** — "The relevant pieces in play are..."
-3. **The insight** — "What's interesting is that X and Y combine
-   to..."
-4. **The proposal** — "So the highest-leverage move is..."
-5. **Why this beats the obvious** — "The standard approach would
-   be... but this is better because..."
-6. **What it unlocks** — "And this opens up... down the line"
+The building blocks (use the ones that matter, drop the ones that
+don't):
 
-Be direct. If you've done the thinking well, own the
-recommendation. Don't hedge with "you could maybe consider
-possibly..." — say "here's what I'd do and why."
+- **The reframe** — what the real question is, if different from
+  what was asked
+- **The landscape** — relevant pieces from *multiple* domains, but
+  only connections that change the answer
+- **The insight** — where two or more things collide to create
+  something non-obvious
+- **The proposal** — the highest-leverage move, stated directly
+- **Why this beats the obvious** — the standard approach, and why
+  it's wrong here
+- **What it unlocks** — compound effects, not just next steps
+- **The risk** — the honest counterargument and why you still
+  recommend this despite it
+
+Be direct. Own the recommendation. Don't hedge with "you could
+maybe consider possibly..." — say "here's what I'd do and why."
 
 ## When You're Stuck
 
