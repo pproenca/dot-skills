@@ -151,25 +151,53 @@ thing on screen should be *physically large*, not just bold.
   sea of black or white is more powerful than the same number
   crammed into a dense list. Space communicates importance.
 
-### 2. Color as Identity System
+### 2. Color Is Math, Not Vibes
 
-Color is not decoration. Every color in the palette should MEAN
-something. Study how Apple Fitness uses color:
-- Electric green = primary action, brand identity
-- Hot pink/red = Move ring, destructive actions, urgency
-- Cyan = metrics, data values
-- White = primary text on dark backgrounds
+NEVER pick colors individually. Color harmony is a solved problem —
+derive your entire palette from ONE seed hue using HSB math. This is
+what every professional design system does (Material Design, Apple
+HIG). The formula:
 
-Build a semantic color vocabulary for the app's domain:
-- **1 brand color** that appears on CTAs and key accents
-- **1-2 data colors** for metrics and visualizations
-- **System semantic colors** (`.secondary`, `.tertiary`) for
-  everything that isn't the brand or data
+```swift
+// ONE seed hue per app (0...1). Everything derives from this.
+let seed: Double = 0.05  // e.g. warm terracotta for cooking
 
-Dark mode is not just inverting light mode. Pure black (`Color.black`
-or `Color(.systemBackground)` in dark) makes accent colors *glow*.
-Use `.ultraThinMaterial` and dark gray (`.secondary` fill) for card
-backgrounds that float on black. This creates depth without shadows.
+// Core palette — analogous harmony (within ±30° of seed)
+let primary   = Color(hue: seed, saturation: 0.70, brightness: 0.85)
+let secondary = Color(hue: seed + 0.08, saturation: 0.50, brightness: 0.80)
+let accent    = Color(hue: seed + 0.50, saturation: 0.65, brightness: 0.85)
+
+// Light mode cards: LOW saturation, HIGH brightness
+let cardLight = Color(hue: seed, saturation: 0.08, brightness: 0.96)
+
+// Dark mode cards: LOW brightness — colors glow on black
+let cardDark  = Color(hue: seed, saturation: 0.15, brightness: 0.15)
+
+// Collections: vary items WITHIN the analogous range
+func itemColor(index: Int, count: Int) -> Color {
+    let h = seed + (Double(index) / Double(count)) * 0.16 - 0.08
+    return Color(hue: h, saturation: 0.55, brightness: 0.82)
+}
+```
+
+Rules that never break:
+- **One seed hue per app.** A cooking app = warm (seed ~0.05). A
+  finance app = blue (seed ~0.6). A fitness app = green (seed ~0.35).
+- **Collections use analogous variations**, not random hues. A recipe
+  grid should feel like one family (terracotta, amber, rust, clay) —
+  not a rainbow.
+- **Light mode: desaturate.** Saturation 0.08–0.15 for backgrounds,
+  0.40–0.60 for accents. Let content pop, not containers.
+- **Dark mode: saturate.** Saturation 0.60–0.90 for accents on black.
+  Neon on black always works. Pastels on black look washed out.
+- **Contrast is non-negotiable.** White text needs background
+  brightness ≤ 0.55. Dark text needs brightness ≥ 0.45. If text
+  is hard to read, the color fails regardless of how pretty it is.
+
+Never use `Color.red`, `Color.green`, `Color.blue` directly as
+palette colors — they're semantic system colors for status. Build
+your palette from `Color(hue:saturation:brightness:)` so every
+color is mathematically related to the seed.
 
 ### 3. Show Data, Don't List It
 
