@@ -100,17 +100,19 @@ def generate_palette(seed_deg: int, mode: str, item_count: int, app_name: str) -
             lines.append("    // MARK: - Dark Mode")
             lines.append("")
 
-        # Primary: full saturation, moderate brightness
-        ph, ps, pb = adjust_for_contrast(seed, 0.75, 0.85, True)
-        lines.append(color_line("primary", ph, ps, pb, f"brand — {hex_from_hsb(ph, ps, pb)}"))
+        # Primary: brand identity (use for 30% — headers, icons, active states)
+        ph, ps, pb = adjust_for_contrast(seed, 0.70, 0.85, True)
+        lines.append(color_line("primary", ph, ps, pb, f"30% brand — {hex_from_hsb(ph, ps, pb)}"))
 
-        # Secondary: shifted +45°, notably different saturation/brightness
-        sh, ss, sb = adjust_for_contrast(seed + 0.125, 0.45, 0.70, True)
-        lines.append(color_line("secondary", sh, ss, sb, f"supporting — {hex_from_hsb(sh, ss, sb)}"))
+        # Secondary: muted echo of primary — SAME hue, lower saturation
+        # (use for 60% — backgrounds, large surfaces, cards)
+        sh, ss, sb = adjust_for_contrast(seed, 0.22, 0.65, True)
+        lines.append(color_line("secondary", sh, ss, sb, f"60% surfaces — {hex_from_hsb(sh, ss, sb)}"))
 
-        # Accent: complementary (180°), used sparingly
-        ah, as_, ab = adjust_for_contrast(seed + 0.5, 0.70, 0.85, True)
-        lines.append(color_line("accent", ah, as_, ab, f"complementary — {hex_from_hsb(ah, as_, ab)}"))
+        # Accent: split-complementary (+150°) — vibrant but not aggressive
+        # (use for 10% — CTAs, badges, highlights, interactive elements)
+        ah, as_, ab = adjust_for_contrast(seed + 0.417, 0.70, 0.85, True)
+        lines.append(color_line("accent", ah, as_, ab, f"10% accent — {hex_from_hsb(ah, as_, ab)}"))
 
         # Card background: very dark, slight hue tint
         lines.append(color_line("cardBackground", seed, 0.12, 0.14, "dark card"))
@@ -131,21 +133,20 @@ def generate_palette(seed_deg: int, mode: str, item_count: int, app_name: str) -
 
         prefix = "light" if mode == "both" else ""
 
-        # Primary: moderate saturation for light backgrounds
-        ph, ps, pb = seed, 0.65, 0.75
-        # Ensure dark text readable on white bg with this as accent
+        # Primary: brand identity for light mode
+        ph, ps, pb = seed, 0.65, 0.55  # darker in light mode for contrast
         name = f"{prefix}Primary" if prefix else "primary"
-        lines.append(color_line(name, ph, ps, pb, f"brand — {hex_from_hsb(ph, ps, pb)}"))
+        lines.append(color_line(name, ph, ps, pb, f"30% brand — {hex_from_hsb(ph, ps, pb)}"))
 
-        # Secondary
-        sh = seed + 0.083
+        # Secondary: muted primary — same hue, very low saturation
+        sh = seed
         name = f"{prefix}Secondary" if prefix else "secondary"
-        lines.append(color_line(name, sh, 0.45, 0.70, f"supporting — {hex_from_hsb(sh, 0.45, 0.70)}"))
+        lines.append(color_line(name, sh, 0.10, 0.90, f"60% surfaces — {hex_from_hsb(sh, 0.10, 0.90)}"))
 
-        # Accent
-        ah = seed + 0.5
+        # Accent: split-complementary (+150°)
+        ah = seed + 0.417
         name = f"{prefix}Accent" if prefix else "accent"
-        lines.append(color_line(name, ah, 0.55, 0.75, f"complementary — {hex_from_hsb(ah, 0.55, 0.75)}"))
+        lines.append(color_line(name, ah, 0.55, 0.60, f"10% accent — {hex_from_hsb(ah, 0.55, 0.60)}"))
 
         # Card background: very low saturation, high brightness
         name = f"{prefix}CardBackground" if prefix else "cardBackground"
