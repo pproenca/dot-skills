@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Graph Database Schema Design",
+  "date": "March 2026",
+  "abstract": "Comprehensive graph database data modeling guide designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact from critical (entity classification, relationship design) to incremental (scale and evolution). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct graph models using Cypher, and specific impact descriptions to guide schema design decisions. Focuses primarily on data modeling correctness — understanding the user's goal and translating it into the right graph structure — with performance as a secondary concern.",
+  "references": [
+    "https://neo4j.com/docs/getting-started/data-modeling/",
+    "https://neo4j.com/docs/getting-started/data-modeling/modeling-tips/",
+    "https://neo4j.com/docs/getting-started/data-modeling/modeling-designs/",
+    "https://neo4j.com/blog/graph-data-science/data-modeling-pitfalls/",
+    "https://memgraph.com/docs/data-modeling/best-practices",
+    "https://bigbear.ai/blog/property-graphs-is-it-a-node-a-relationship-or-a-property/",
+    "https://neo4j.com/graphacademy/training-gdm-40/03-graph-data-modeling-core-principles/",
+    "https://neo4j.com/docs/cypher-manual/current/syntax/naming/"
+  ]
+}
