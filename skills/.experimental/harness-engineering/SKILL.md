@@ -1,5 +1,5 @@
 ---
-name: harness
+name: harness-engineering
 description: >
   Set up or update the agent-first engineering harness for any repository.
   Implements the complete scaffolding that makes AI coding agents effective:
