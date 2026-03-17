@@ -1,0 +1,14 @@
+{
+  "version": "0.1.0",
+  "organization": "OpenAI / Harness Engineering",
+  "technology": "Agent-First Engineering",
+  "date": "March 2026",
+  "abstract": "Implements the agent-first engineering harness described in 'Harness Engineering: Leveraging Codex in an Agent-First World.' Sets up or updates the complete scaffolding that makes AI coding agents effective in any repository: knowledge maps (AGENTS.md as a concise TOC), structured documentation, vertical domain architecture with enforced layer boundaries, golden principles with agent-legible error messages, quality scoring, enforcement code generation, and process patterns for agent-driven development. Multi-turn skill that assesses a repo's agent readiness (Level 0-4 maturity model), proposes a tailored harness plan, and implements it incrementally.",
+  "references": [
+    "https://openai.com/index/harness-engineering/",
+    "https://cookbook.openai.com/articles/codex_exec_plans",
+    "https://matklad.github.io/2021/02/06/ARCHITECTURE.md.html",
+    "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
+    "https://ghuntley.com/loop/"
+  ]
+}
