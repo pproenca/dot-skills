@@ -1,18 +1,14 @@
 {
-  "version": "1.0.2",
-  "organization": "Rust Community",
+  "version": "1.0.0",
+  "organization": "Codex-RS Contributors",
   "technology": "Rust Testing",
-  "date": "January 2026",
-  "abstract": "Comprehensive testing guide for Rust applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (test organization, mocking patterns) to incremental (performance optimization). Each rule includes detailed explanations, production-realistic examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated test generation and refactoring.",
+  "date": "March 2026",
+  "abstract": "Comprehensive testing best practices guide for Rust codebases, designed for AI agents and LLMs. Contains 40 rules across 8 categories, prioritized by impact from critical (test architecture, assertions) to incremental (integration test patterns). Each rule includes detailed explanations, real-world examples from the codex-rs codebase comparing incorrect vs. correct test implementations, and specific impact metrics to guide automated test generation.",
   "references": [
+    "https://github.com/openai/codex",
     "https://doc.rust-lang.org/book/ch11-00-testing.html",
-    "https://doc.rust-lang.org/rust-by-example/testing.html",
-    "https://rust-cli.github.io/book/tutorial/testing.html",
-    "https://tokio.rs/tokio/topics/testing",
-    "https://docs.rs/mockall/latest/mockall/",
-    "https://docs.rs/proptest/latest/proptest/",
-    "https://docs.rs/assert_cmd",
-    "https://docs.rs/rstest",
-    "https://nexte.st/"
+    "https://crates.io/crates/insta",
+    "https://crates.io/crates/wiremock",
+    "https://crates.io/crates/pretty_assertions"
   ]
 }

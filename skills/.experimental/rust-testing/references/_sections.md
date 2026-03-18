@@ -5,42 +5,42 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 ---
 
-## 1. Test Organization (org)
+## 1. Test Architecture (arch)
 
 **Impact:** CRITICAL
-**Description:** Proper separation of unit and integration tests determines maintainability and test isolation. Poor organization creates test pollution, slow CI, and debugging nightmares.
+**Description:** Test file organization and structure determine maintainability. Sibling test files, proper imports, and isolation patterns prevent flaky tests and merge conflicts.
 
-## 2. Mocking and Test Doubles (mock)
+## 2. Assertions (assert)
 
 **Impact:** CRITICAL
-**Description:** Incorrect mocking leads to brittle tests that break on refactors. Trait-based design and proper mock boundaries enable testable, maintainable code.
+**Description:** Assertion quality determines how quickly failures are diagnosed. Whole-object comparison with pretty_assertions catches regressions that field-by-field checks miss.
 
-## 3. Async Testing (async)
-
-**Impact:** HIGH
-**Description:** Async test misconfiguration causes flaky tests, deadlocks, and resource leaks. Proper Tokio runtime setup and time control are essential for reliable async tests.
-
-## 4. Property-Based Testing (prop)
+## 3. Mock Servers (mock)
 
 **Impact:** HIGH
-**Description:** Manual test cases miss edge cases that cause production bugs. Property testing with proptest finds bugs that hand-written tests consistently miss.
+**Description:** HTTP mock patterns (wiremock, ResponseMock, SSE builders) enable reliable integration testing without network dependencies.
 
-## 5. Test Fixtures and Setup (fix)
+## 4. Test Data (data)
+
+**Impact:** HIGH
+**Description:** Builder patterns and factory functions for test data construction ensure consistency and reduce test maintenance burden.
+
+## 5. Event Testing (event)
+
+**Impact:** MEDIUM-HIGH
+**Description:** Event-driven test patterns (wait_for_event, submit/assert cycles) are essential for testing the async agent protocol.
+
+## 6. Determinism (det)
 
 **Impact:** MEDIUM
-**Description:** Manual setup and teardown causes code duplication and test pollution. Proper fixtures with rstest improve maintainability and test isolation.
+**Description:** Deterministic tests eliminate flaky failures. Fixed seeds, BTreeMap ordering, and environment isolation prevent intermittent CI breakages.
 
-## 6. Assertions and Error Testing (assert)
-
-**Impact:** MEDIUM
-**Description:** Weak assertions pass when they should fail. Strong assertions with proper error matching catch real bugs and provide clear failure messages.
-
-## 7. CI Integration (ci)
+## 7. Snapshot Testing (snap)
 
 **Impact:** MEDIUM
-**Description:** Improper CI configuration leads to slow pipelines, flaky tests, and missed bugs. Parallel execution and caching strategies keep feedback loops fast.
+**Description:** Insta snapshot tests capture UI rendering output and make visual changes reviewable in PRs.
 
-## 8. Test Performance (perf)
+## 8. Integration Tests (integ)
 
 **Impact:** LOW-MEDIUM
-**Description:** Slow tests discourage running them frequently. Compilation and execution optimizations keep feedback loops fast and developers productive.
+**Description:** Integration test infrastructure (core_test_support, Bazel-compatible paths, scoped execution) enables reliable end-to-end testing.
