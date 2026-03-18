@@ -106,6 +106,101 @@ domains:
 - `domains[]`: Each domain with its path, active layers, and consumed providers
 - `domains[].layers`: Only list layers that actually exist in the codebase
 
+## harness-spec.yml (v2 — domain-oriented)
+
+For repos with a harness tool that enforces architecture via graph analysis, the v2 spec
+format replaces the flat layer list with a **layer_model × domain** expansion. Declare the
+layer model once; each domain is 3-4 lines.
+
+```yaml
+version: 2
+
+layer_model:
+  order: [Types, Config, Repo, Service, Runtime, UI]
+  Types:
+    contains: [DataType, Extension]           # What node kinds belong here
+    extra_imports: [Foundation]                # Always-allowed imports
+  Config:
+    contains: [DependencyClient, DataType, Extension]
+    extra_imports: [Foundation, Providers, ComposableArchitecture, Dependencies]
+    forbidden_imports: [SwiftUI]              # Never allowed in this layer
+  Service:
+    contains: [Extension]
+    extra_imports: [Foundation]
+    skip_layers: [Repo]                       # Service skips Repo in the import chain
+    forbidden_imports: [SwiftUI, ComposableArchitecture]
+    forbidden_attributes: ["@State", "@Reducer"]
+  Runtime:
+    contains: [Reducer]
+    extra_imports: [Foundation, Providers, ComposableArchitecture, Dependencies, IssueReporting]
+    forbidden_imports: [SwiftUI]
+  UI:
+    contains: [View, ViewModifier, Preview]
+    extra_imports: [Foundation, SwiftUI, ComposableArchitecture]
+    skip_layers: [Repo, Service]              # UI only imports Runtime
+    forbidden_attributes: ["@Reducer"]
+
+cross_domain:
+  public_layers: [Types, Config]              # Other domains can only reach these
+  app_visible: [UI]                           # App targets can only import these + foundation
+
+domains:
+  billing:
+    path: Domains/Billing
+    prefix: Billing                           # Module names: BillingTypes, BillingConfig, etc.
+  auth:
+    path: Domains/Auth
+    prefix: Auth
+    extra_imports:                             # Per-layer domain-specific imports
+      Repo: [AuthenticationServices]
+      UI: [AuthenticationServices]
+  onboarding:
+    path: Domains/Onboarding
+    prefix: Onboarding
+    layers: [Types, Config, Service, UI]      # No Repo, no Runtime
+
+foundation:
+  packages:
+    providers:
+      classification: cross_cutting           # cross_cutting | shared | app | backend
+      path: "Providers/Sources/Providers/"
+      allowed_imports: [Foundation, Utils]
+      forbidden_imports: [SwiftUI]
+    types:
+      classification: shared
+      path: "Types/"
+  bridges: [Infra, Utils, DomainModels]       # Legacy modules being eliminated
+
+allows:                                       # Cross-domain exceptions with expiry
+  - from: Calendar
+    to: Appointments
+    layers: [Types, Config]
+    reason: "Calendar needs appointment time slots"
+    ticket: "PROJ-42"
+    expires: "2027-01-01"
+
+naming:
+  forbidden_prefixes:
+    Types: [Clinic]
+  directory_suggestions:
+    "Live": "Repo"
+```
+
+**Key fields:**
+- `layer_model.order`: Canonical layer sequence. The tool computes allowed_imports per domain.
+- `layer_model.<Layer>.skip_layers`: Layers this layer does NOT import (e.g., UI skips Repo+Service)
+- `domains.<key>.prefix`: Module naming prefix. `BillingTypes`, `BillingConfig`, etc.
+- `domains.<key>.layers`: Subset of `order`; omit for all layers
+- `domains.<key>.extra_imports`: Per-layer imports beyond the template (e.g., AuthenticationServices)
+- `domains.<key>.source_dir_style`: `"prefixed"` for `Sources/PrefixTypes/` instead of `Sources/Types/`
+- `cross_domain.public_layers`: Which layers of a domain are visible to other domains
+- `cross_domain.app_visible`: Which domain layers app targets can import
+- `foundation.packages.<key>.classification`: Determines how the module is classified in the graph
+- `allows[]`: Time-bounded cross-domain exceptions with reason, ticket, and expiry
+
+**Expansion**: The tool computes `allowed_imports` and `forbidden_imports` for each
+domain layer from the template. Adding a new domain = adding 3-4 lines of YAML.
+
 ## principles.yml
 
 Golden principles with rationale and enforcement guidance.

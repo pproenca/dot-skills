@@ -139,11 +139,11 @@ Types → Config → Repo → Service → Runtime → UI
 | Layer | Purpose | Typical contents |
 |-------|---------|-----------------|
 | Types | Data shapes and contracts | Interfaces, schemas, enums, constants |
-| Config | Configuration and environment | Env vars, feature flags, settings |
-| Repo | Data access | Database queries, API clients, cache access |
-| Service | Business logic | Core operations, validation, transformations |
-| Runtime | Orchestration and lifecycle | Server setup, workers, job queues, middleware |
-| UI | User-facing interface | Components, pages, routes, CLI output |
+| Config | Configuration and dependency interfaces | Env vars, feature flags, `@DependencyClient` protocols |
+| Repo | Data access | Database queries, API clients, cache, live implementations |
+| Service | Pure business logic | Domain operations, validation, transformations — NO framework dependencies |
+| Runtime | Orchestration and wiring | Framework integration (`@Reducer` in TCA, route handlers in Vapor, controllers in Express), dependency wiring, effect execution |
+| UI | User-facing interface | Components, pages, views — imports Runtime to get wired features |
 
 ### The Forward-Only Rule
 
@@ -197,16 +197,20 @@ domain/
 └── ui/             (templates, if applicable)
 ```
 
-**Swift:**
+**Swift (TCA):**
 ```
 Domain/
-├── Types/
-├── Config/
-├── Repository/
-├── Service/
-├── Runtime/
-└── Views/
+├── Types/          Data models, enums, constants
+├── Config/         @DependencyClient protocols, settings
+├── Repo/           Live implementations, SwiftData, network
+├── Service/        Pure business logic (NO @Reducer, NO ComposableArchitecture)
+├── Runtime/        @Reducer structs — orchestrate Config, Repo, Service into state
+└── UI/             SwiftUI Views — consume StoreOf<Feature> from Runtime
 ```
+
+Key insight for TCA apps: `@Reducer` lives in Runtime, NOT Service. A reducer wires
+dependencies (Config), calls data access (Repo via Config interfaces), and produces
+state for UI. That's orchestration. Service is for pure domain logic testable without TCA.
 
 **Go:**
 ```
