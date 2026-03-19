@@ -27,9 +27,9 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [restful-hateoas](skills/.curated/restful-hateoas) | RESTful API design guidelines following the Richardson Maturity Model through to Level 3.. |
 | [ruby-optimise](skills/.curated/ruby-optimise) | Ruby performance optimization guidelines |
 | [ruby-refactor](skills/.curated/ruby-refactor) | Ruby refactoring guidelines from community best practices |
+| [rust-implement](skills/.curated/rust-implement) | "Write production-grade Rust code using a multi-pass approach |
 | [rust-refactor](skills/.curated/rust-refactor) | Decision frameworks for Rust refactoring, simplification, module decomposition, and incremental.. |
 | [rust-write-tests](skills/.curated/rust-write-tests) | Skill for writing expert-level Rust tests |
-| [rust](skills/.curated/rust) | Write production-grade Rust code using a multi-pass approach: design types first, then.. |
 | [shadcn](skills/.curated/shadcn) | shadcn/ui component library best practices and patterns |
 | [skill-authoring](skills/.curated/skill-authoring) | Design and development best practices for Claude Code skills, MCP tools, and AI agent capabilities |
 | [tailwind](skills/.curated/tailwind) | Tailwind CSS v4 performance optimization and best practices guidelines |

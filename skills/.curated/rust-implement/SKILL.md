@@ -1,5 +1,5 @@
 ---
-name: rust
+name: rust-implement
 description: "Write production-grade Rust code using a multi-pass approach. Design types first, then implement, then simplify, then verify with automated lint. Use this skill whenever writing new Rust functions, structs, modules, or features. Triggers on Rust implementation, new Rust code, Rust functions, Rust modules, error handling in Rust, async Rust, or type design in Rust."
 ---
 

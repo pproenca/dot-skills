@@ -138,6 +138,74 @@ validate_description() {
   return $has_errors
 }
 
+# Validate YAML frontmatter is parseable by standard YAML parsers (gray-matter)
+# Catches unquoted strings with colons that break YAML parsing
+validate_yaml_safety() {
+  local file="$1"
+  local has_errors=0
+
+  node -e "
+    const fs = require('fs');
+    const content = fs.readFileSync(process.argv[1], 'utf8');
+    const match = content.match(/^---\n([\s\S]*?)\n---/);
+    if (!match) { process.exit(0); }
+
+    const yaml = match[1];
+    const lines = yaml.split('\n');
+    const issues = [];
+
+    lines.forEach((line, i) => {
+      if (line.trim().startsWith('#')) return;
+
+      // Check for unquoted values containing colons (YAML interprets as nested mapping)
+      const kvMatch = line.match(/^([a-zA-Z_-]+):\s+(.+)$/);
+      if (kvMatch) {
+        const value = kvMatch[2].trim();
+        // Value is unquoted and contains a colon followed by space — YAML will break
+        if (!value.startsWith('\"') && !value.startsWith(\"'\") && /:\s/.test(value)) {
+          issues.push('Line ' + (i+1) + ': value contains unquoted colon — wrap in quotes to prevent YAML parse errors: ' + kvMatch[1]);
+        }
+      }
+    });
+
+    if (issues.length > 0) {
+      issues.forEach(i => console.log('ERROR:' + i));
+      process.exit(1);
+    }
+  " "$file" 2>/dev/null
+
+  if [ $? -ne 0 ]; then
+    # Re-run to capture error messages
+    local issues
+    issues=$(node -e "
+      const fs = require('fs');
+      const content = fs.readFileSync(process.argv[1], 'utf8');
+      const match = content.match(/^---\n([\s\S]*?)\n---/);
+      if (!match) process.exit(0);
+      const yaml = match[1];
+      yaml.split('\n').forEach((line, i) => {
+        if (line.trim().startsWith('#')) return;
+        const kvMatch = line.match(/^([a-zA-Z_-]+):\s+(.+)$/);
+        if (kvMatch) {
+          const value = kvMatch[2].trim();
+          if (!value.startsWith('\"') && !value.startsWith(\"'\") && /:\s/.test(value)) {
+            console.log(kvMatch[1] + ': value contains unquoted colon — wrap in quotes');
+          }
+        }
+      });
+    " "$file" 2>/dev/null)
+
+    while IFS= read -r issue; do
+      fail "YAML safety: $issue"
+      has_errors=1
+    done <<< "$issues"
+  else
+    pass "YAML frontmatter is parser-safe"
+  fi
+
+  return $has_errors
+}
+
 # Validate SKILL.md line count
 validate_line_count() {
   local file="$1"
@@ -269,6 +337,7 @@ cmd_validate() {
   WARNINGS=0
 
   # Run all validations (continue even if some fail)
+  validate_yaml_safety "$skill_md" || true
   validate_name "$name" "$dir_name" || true
   validate_description "$description" || true
   validate_line_count "$skill_md" || true
