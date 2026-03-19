@@ -12,6 +12,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [debug](skills/.curated/debug) | Comprehensive debugging methodology for finding and fixing bugs |
 | [expo](skills/.curated/expo) | Expo React Native performance optimization guidelines |
 | [feature-arch](skills/.curated/feature-arch) | React feature-based architecture guidelines for scalable applications |
+| [ios-taste](skills/.curated/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
 | [msw](skills/.curated/msw) | MSW (Mock Service Worker) best practices for API mocking in tests |
 | [mui-base](skills/.curated/mui-base) | MUI Base UI style guidelines for building headless React component libraries |
 | [nextjs](skills/.curated/nextjs) | Next.js 16 App Router performance optimization guidelines |
@@ -26,15 +27,16 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [restful-hateoas](skills/.curated/restful-hateoas) | RESTful API design guidelines following the Richardson Maturity Model through to Level 3.. |
 | [ruby-optimise](skills/.curated/ruby-optimise) | Ruby performance optimization guidelines |
 | [ruby-refactor](skills/.curated/ruby-refactor) | Ruby refactoring guidelines from community best practices |
-| [rust-optimise](skills/.curated/rust-optimise) | Rust performance optimization covering memory allocation, ownership efficiency, data structure.. |
-| [rust-refactor](skills/.curated/rust-refactor) | Architectural refactoring guide for Rust applications covering type safety, ownership patterns,.. |
-| [rust](skills/.curated/rust) | Rust performance optimization guidelines |
+| [rust-implement](skills/.curated/rust-implement) | Write production-grade Rust code using a multi-pass approach: design types first, then.. |
+| [rust-refactor](skills/.curated/rust-refactor) | Decision frameworks for Rust refactoring, simplification, module decomposition, and incremental.. |
+| [rust-write-tests](skills/.curated/rust-write-tests) | Skill for writing expert-level Rust tests |
 | [shadcn](skills/.curated/shadcn) | shadcn/ui component library best practices and patterns |
 | [skill-authoring](skills/.curated/skill-authoring) | Design and development best practices for Claude Code skills, MCP tools, and AI agent capabilities |
 | [tailwind](skills/.curated/tailwind) | Tailwind CSS v4 performance optimization and best practices guidelines |
 | [tanstack-query](skills/.curated/tanstack-query) | TanStack Query v5 performance optimization for data fetching, caching, mutations, and query patterns |
 | [tdd](skills/.curated/tdd) | Test-Driven Development methodology and red-green-refactor workflow |
 | [terminal-ui](skills/.curated/terminal-ui) | Terminal User Interface (TUI) performance and UX guidelines for TypeScript applications using.. |
+| [think](skills/.curated/think) | Deep strategic thinking mode that finds the single highest-leverage, most innovative action by.. |
 | [typescript](skills/.curated/typescript) | This skill should be used when the user asks to "optimize TypeScript performance", "speed up tsc.. |
 | [ui-design](skills/.curated/ui-design) | UI/UX and frontend design best practices guidelines |
 | [vitest](skills/.curated/vitest) | Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots,.. |
@@ -46,6 +48,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 |-------|-------------|
 | [12-factor-app](skills/.experimental/12-factor-app) | The Twelve-Factor App methodology for building scalable, maintainable cloud-native applications |
 | [37signals-rails](skills/.experimental/37signals-rails) | 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the.. |
+| [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
 | [audio-voice-recovery](skills/.experimental/audio-voice-recovery) | Audio forensics and voice recovery guidelines for CSI-level audio analysis |
 | [chrome-extension-ui](skills/.experimental/chrome-extension-ui) | Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content.. |
@@ -54,23 +57,29 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [clean-code](skills/.experimental/clean-code) | Use when writing, reviewing, or refactoring code for maintainability and readability |
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
+| [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
+| [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |
 | [emilkowal-animations](skills/.experimental/emilkowal-animations) | Emil Kowalski's animation best practices for web interfaces |
+| [exec-plan](skills/.experimental/exec-plan) | Manage the lifecycle of ExecPlans — self-contained, living specifications for multi-step work |
 | [expo-react-native-coder](skills/.experimental/expo-react-native-coder) | Comprehensive Expo React Native feature development guide |
 | [expo-react-native-performance](skills/.experimental/expo-react-native-performance) | Expo React Native performance optimization guidelines |
 | [feature-spec](skills/.experimental/feature-spec) | Feature specification and planning guidelines for software engineers |
 | [framer-motion](skills/.experimental/framer-motion) | Framer Motion performance optimization guidelines |
+| [graph-schema](skills/.experimental/graph-schema) | Graph database schema design and data modeling expert |
+| [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
 | [ios-chaos-monkey](skills/.experimental/ios-chaos-monkey) | Crash-hunter skill for iOS 26 / Swift 6.2 clinic-architecture codebases that finds and fixes.. |
-| [ios-design-system](skills/.experimental/ios-design-system) | Clinic-architecture-aligned iOS design system engineering for SwiftUI (iOS 26 / Swift 6.2):.. |
+| [ios-design-system](skills/.experimental/ios-design-system) | Clinic-architecture-aligned iOS design system engineering for SwiftUI (iOS 26 / Swift 6.2).. |
 | [ios-design](skills/.experimental/ios-design) | SwiftUI interface implementation patterns aligned with the iOS 26 / Swift 6.2 clinic modular.. |
 | [ios-hig](skills/.experimental/ios-hig) | Apple Human Interface Guidelines for iOS 26 / Swift 6.2 clinic-architecture apps |
 | [ios-navigation](skills/.experimental/ios-navigation) | Opinionated SwiftUI navigation enforcement for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |
 | [ios-storyboard](skills/.experimental/ios-storyboard) | Legacy interoperability skill for Storyboard and Interface Builder maintenance in iOS 26 / Swift.. |
+| [ios-taste](skills/.experimental/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
 | [ios-testing](skills/.experimental/ios-testing) | Testing practices for iOS 26 / Swift 6.2 clinic modular MVVM-C applications |
 | [ios-ui-refactor](skills/.experimental/ios-ui-refactor) | Principal-level SwiftUI UI review and refactoring patterns for iOS 26 / Swift 6.2.. |
-| [ios-xcode](skills/.experimental/ios-xcode) | Xcode setup and tooling guidance for iOS 26 / Swift 6.2 clinic modular MVVM-C projects: project.. |
+| [ios-xcode](skills/.experimental/ios-xcode) | Xcode setup and tooling guidance for iOS 26 / Swift 6.2 clinic modular MVVM-C projects covering.. |
 | [js-google](skills/.experimental/js-google) | JavaScript style and best practices based on Google's official JavaScript Style Guide |
 | [jscodeshift](skills/.experimental/jscodeshift) | jscodeshift codemod development best practices from Facebook/Meta |
 | [knip-deadcode](skills/.experimental/knip-deadcode) | Knip dead code detection best practices for JavaScript and TypeScript projects |
@@ -87,10 +96,6 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [react-optimise](skills/.experimental/react-optimise) | Application-level React performance optimization covering React Compiler mastery, bundle.. |
 | [react-refactor](skills/.experimental/react-refactor) | Architectural refactoring guide for React applications covering component architecture, state.. |
 | [react-testing-library](skills/.experimental/react-testing-library) | React Testing Library best practices for writing maintainable, user-centric tests |
-| [rust-clap](skills/.experimental/rust-clap) | Rust Clap CLI argument parsing best practices |
-| [rust-cli-agent-style](skills/.experimental/rust-cli-agent-style) | Coding patterns extracted from OpenAI Codex Rust codebase - a production CLI/agent system with.. |
-| [rust-system-event-driven](skills/.experimental/rust-system-event-driven) | Rust event-driven system programming best practices for async runtimes, channels, sockets,.. |
-| [rust-testing](skills/.experimental/rust-testing) | Rust testing patterns for CLI applications, libraries, and frameworks |
 | [shell](skills/.experimental/shell) | Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts |
 | [swift-data](skills/.experimental/swift-data) | SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |
 | [swift-optimise](skills/.experimental/swift-optimise) | Swift 6.2 and SwiftUI performance optimization for iOS 26 clinic architecture codebases |
