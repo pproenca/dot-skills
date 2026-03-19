@@ -20,6 +20,8 @@ Ask yourself these questions before moving on:
 - Does every struct that will be serialized or compared use `BTreeMap`, not `HashMap` (Transformation 3)?
 - Do config structs derive `Default` (Transformation 6)?
 - Would a caller confuse the order of String parameters? Use newtypes.
+- Does any struct have 2+ `Option<T>` fields where only one combination is valid at a time? Convert to an enum (Transformation 8).
+- Does any function take 4+ parameters? Replace with an args struct (Transformation 9).
 
 **Do not proceed to Pass 2 until the types are right. Types are the architecture.**
 
@@ -34,6 +36,27 @@ Fill in the function bodies. As you write each function, apply these rules:
 - Use `Cow<str>` when a function sometimes borrows and sometimes allocates (Transformation 7).
 - Return named structs, not tuples, from any function with 2+ return values (Transformation 5).
 - Exhaustive match arms -- no `_ =>` wildcards (Transformation 4).
+
+### Thread-Through Plumbing
+
+When adding a new field that needs to reach execution sites, trace the full path and explicitly name every intermediate layer before writing code. For each hop, state the module and struct/function that carries the value. If you skip a layer, the field silently disappears at runtime.
+
+### Drop/Teardown Precision
+
+- Drop lock guards before any `.await` -- a held `MutexGuard` across an await blocks the executor.
+- Close stdin explicitly in `Drop` impls. Brief wait, then fallback kill.
+- Use `kill_on_drop(true)` for child processes that must not outlive their parent.
+- Order cleanup deterministically: clear listeners -> drain tasks -> drop resources.
+
+### Defensive Serialization
+
+- `BEGIN IMMEDIATE` not `BEGIN` for SQLite write transactions (prevents `SQLITE_BUSY_SNAPSHOT`).
+- Serialize lock acquisition rather than adding retries.
+- `ON CONFLICT DO NOTHING` over read-then-write for idempotent inserts.
+
+### Orphan Event Handling
+
+When events arrive for entities that no longer exist (dead agents, closed threads), handle explicitly. Never silently drop -- log a warning and clean up stale state. Panicking on an orphan event is always wrong.
 
 ### Ownership Decision Tree
 
@@ -54,7 +77,7 @@ Every `.clone()` is a decision point. Ask: "Is this clone necessary, or can I re
 | Application code (main, CLI, tests) | `anyhow::Result` + `.context()` | Rich error chains, no boilerplate |
 | Library code (crates consumed by others) | `thiserror` enums | Typed, matchable, callers can branch on variants |
 
-Error enum design: user-facing messages tell the user what to do, not what went wrong internally. `Box<T>` on large payloads prevents one variant from bloating all variants. Classify every variant explicitly in `is_retryable()` -- no wildcards.
+Error enum design: user-facing messages tell the user what to do, not what went wrong internally. `Box<T>` large payloads. Classify every variant explicitly in `is_retryable()` -- no wildcards.
 
 ### Async Decisions
 
@@ -80,6 +103,8 @@ Three diagnostic questions:
 1. **Is any parameter just forwarded through a call chain?** Remove it, use ambient access.
 2. **Is any field or function unused?** Delete it.
 3. **Is any abstraction unjustified?** (single-use helper, wrapper that adds nothing) Inline it.
+
+**"Rewrite, don't rewire" principle:** When the bug is in a function's internal logic, rewrite the body with explicit checks. Don't delegate to an existing API that happens to produce the correct result for now -- the explicit version is more auditable and survives upstream changes.
 
 If you added more code than the task strictly requires, something is wrong. Cut it.
 
@@ -108,13 +133,17 @@ Fix every ERROR. Review every WARNING. Then do the manual checklist:
 [ ] Return structs, not tuples, for multi-value returns
 [ ] Cow<str> where allocation is conditional
 [ ] serde attrs present: rename_all, default, deny_unknown_fields as needed
+[ ] No struct with 2+ Option<T> fields that should be an enum
+[ ] No function with 4+ parameters (use args struct)
+[ ] Lock guards dropped before any .await
+[ ] Events for dead/missing entities handled explicitly
 ```
 
 **Fix every violation before presenting the code.**
 
 ---
 
-## Quick Reference: The 7 Transformations
+## Quick Reference: The 9 Transformations
 
 Each transformation shows the exact delta between first-draft and production-grade.
 
@@ -124,59 +153,33 @@ BEFORE:
 ```rust
 let content = std::fs::read_to_string(path)?;
 let config: Config = toml::from_str(&content)?;
-let conn = db.connect(url).await?;
 ```
-
 AFTER:
 ```rust
 let content = std::fs::read_to_string(path)
     .context("failed to read config file")?;
 let config: Config = toml::from_str(&content)
     .context("failed to parse TOML config")?;
-let conn = db.connect(url).await
-    .context("failed to connect to database")?;
 ```
-
-The context string answers: "What was I trying to do when this failed?" Pattern: `"failed to [verb] [noun]"`. The upstream error already describes itself -- your job is to name the operation that broke.
+Pattern: `"failed to [verb] [noun]"`. The upstream error describes itself -- your job is to name the operation that broke.
 
 ### 2. Enums Over Booleans
-
 BEFORE:
 ```rust
 fn create_sandbox(network: bool, writable: bool) -> Sandbox {
-    open_connection(path, true, None, 0)
 ```
-
 AFTER:
 ```rust
 fn create_sandbox(network: NetworkMode, access: AccessLevel) -> Sandbox {
-    open_connection(path, /*writable*/ true, /*encoding*/ None, /*retries*/ 0)
 ```
-
-`foo(true, false)` at a callsite is meaningless. Replace with enums so the callsite reads `create_sandbox(NetworkMode::Restricted, AccessLevel::ReadOnly)`. When you cannot change the API, add `/*param_name*/` comments before opaque literals.
+`foo(true, false)` is meaningless. Replace with enums so callsites read `NetworkMode::Restricted, AccessLevel::ReadOnly`. When you cannot change the API, add `/*param_name*/` comments before opaque literals.
 
 ### 3. BTreeMap for Serialized or Compared Data
+BEFORE: `HashMap<String, Rule>` -- AFTER: `BTreeMap<String, Rule>`
 
-BEFORE:
-```rust
-use std::collections::HashMap;
-pub struct PolicyConfig {
-    pub rules: HashMap<String, Rule>,
-}
-```
-
-AFTER:
-```rust
-use std::collections::BTreeMap;
-pub struct PolicyConfig {
-    pub rules: BTreeMap<String, Rule>,
-}
-```
-
-HashMap iteration order is random. Diffs become noisy, snapshot tests flake, serialized output changes between runs. Use BTreeMap whenever the data is serialized, compared in tests, or shown to users.
+HashMap iteration order is random -- diffs become noisy, snapshot tests flake. Use BTreeMap whenever data is serialized, compared in tests, or shown to users.
 
 ### 4. Exhaustive Match Without Wildcards
-
 BEFORE:
 ```rust
 match decision {
@@ -184,7 +187,6 @@ match decision {
     _ => false,
 }
 ```
-
 AFTER:
 ```rust
 match decision {
@@ -194,42 +196,15 @@ match decision {
     PolicyDecision::Ask { .. } => false,
 }
 ```
-
-When someone adds `PolicyDecision::RateLimit` next month, the compiler flags every match that needs updating. Wildcards hide this.
+When a new variant is added, the compiler flags every match that needs updating. Wildcards hide this.
 
 ### 5. Return Structs Over Tuples
+BEFORE: `fn build_command() -> (Vec<String>, Vec<OwnedFd>)` -- caller writes `result.0`
+AFTER: `fn build_command() -> CommandOutput` -- caller writes `output.args`, `output.preserved_fds`
 
-BEFORE:
-```rust
-fn build_command() -> (Vec<String>, Vec<OwnedFd>) {
-    // caller writes result.0, result.1
-```
-
-AFTER:
-```rust
-struct CommandOutput {
-    args: Vec<String>,
-    preserved_fds: Vec<OwnedFd>,
-}
-fn build_command() -> CommandOutput {
-    // caller writes output.args, output.preserved_fds
-```
-
-`result.0` and `result.1` are meaningless at the callsite. Named fields are self-documenting.
+Named fields are self-documenting. Define a struct for any function returning 2+ values.
 
 ### 6. `Default` Derive on Config Structs
-
-BEFORE:
-```rust
-pub struct ServerConfig {
-    pub timeout_secs: u64,
-    pub max_retries: u32,
-    pub bind_addr: String,
-}
-// caller must specify every field
-```
-
-AFTER:
 ```rust
 #[derive(Default)]
 pub struct ServerConfig {
@@ -237,34 +212,76 @@ pub struct ServerConfig {
     pub max_retries: u32,
     pub bind_addr: String,
 }
-// caller uses struct update syntax
 let config = ServerConfig { timeout_secs: 30, ..Default::default() };
 ```
-
-Config structs without `Default` force callers to specify every field. Derive `Default` and let callers override only what matters. For non-zero defaults, implement `Default` manually.
+Derive `Default` so callers override only what matters. For non-zero defaults, implement `Default` manually.
 
 ### 7. `Cow<str>` for Conditional Ownership
-
 BEFORE:
 ```rust
 fn normalize_path(input: &str) -> String {
-    if needs_normalization(input) {
-        input.replace('\\', "/")   // allocates always
-    } else {
-        input.to_string()          // allocates even when unchanged
-    }
+    if needs_normalization(input) { input.replace('\\', "/") }
+    else { input.to_string() }  // allocates even when unchanged
+}
+```
+AFTER:
+```rust
+fn normalize_path(input: &str) -> Cow<'_, str> {
+    if needs_normalization(input) { Cow::Owned(input.replace('\\', "/")) }
+    else { Cow::Borrowed(input) }  // zero-cost when unchanged
+}
+```
+`Cow<str>` avoids the unconditional allocation when only some paths need to allocate.
+
+### 8. Enum-as-Disjoint-Union
+
+BEFORE:
+```rust
+struct Permissions {
+    profile_name: Option<String>,       // only for named profiles
+    sandbox_policy: Option<SandboxPolicy>, // only for legacy
+    file_paths: Option<Vec<PathBuf>>,   // only when sandbox_policy is set
 }
 ```
 
 AFTER:
 ```rust
-fn normalize_path(input: &str) -> Cow<'_, str> {
-    if needs_normalization(input) {
-        Cow::Owned(input.replace('\\', "/"))
-    } else {
-        Cow::Borrowed(input)       // zero-cost when unchanged
-    }
+enum Permissions {
+    Named { profile_name: String },
+    Legacy { sandbox_policy: SandboxPolicy, file_paths: Vec<PathBuf> },
 }
 ```
 
-When a function sometimes needs to allocate and sometimes can return a borrow, `Cow<str>` avoids the unconditional allocation.
+When a struct has `Option<T>` fields valid only in certain combinations, it permits invalid states at the type level. Convert to an enum where each variant carries only its relevant data. Diagnostic: if you see 2+ `Option<T>` fields with `is_some()`/`is_none()` guards, it should be an enum.
+
+### 9. Struct-for-Long-Parameter-Lists
+
+BEFORE:
+```rust
+fn spawn_process(
+    cmd: &str,
+    args: &[String],
+    env: &BTreeMap<String, String>,
+    cwd: &Path,
+    stdin_policy: StdinPolicy,
+    sandbox: SandboxPolicy,
+    timeout: Duration,
+) -> Result<Child> {
+```
+
+AFTER:
+```rust
+struct SpawnArgs<'a> {
+    cmd: &'a str,
+    args: &'a [String],
+    env: &'a BTreeMap<String, String>,
+    cwd: &'a Path,
+    stdin_policy: StdinPolicy,
+    sandbox: SandboxPolicy,
+    timeout: Duration,
+}
+
+fn spawn_process(args: &SpawnArgs<'_>) -> Result<Child> {
+```
+
+At 4+ parameters, callsites become hard to read and easy to misorder. An args struct names each field at the callsite and makes future parameter additions non-breaking.
