@@ -1,15 +1,122 @@
 ---
 name: rust-implement
-description: Write production-grade Rust with expert-level error handling, type design, ownership, async patterns, and migration discipline. Use this skill whenever writing new Rust functions, structs, modules, or refactoring existing Rust code. Triggers on Rust implementation tasks, new features, error handling, type design, async architecture, or any Rust code generation.
+description: Write production-grade Rust code using a multi-pass approach: design types first, then implement, then simplify, then verify with automated lint. Use this skill whenever writing new Rust functions, structs, modules, or features. Triggers on Rust implementation, new Rust code, Rust functions, Rust modules, error handling in Rust, async Rust, or type design in Rust.
 ---
 
 # Rust Implementation Discipline
 
-Apply these transformations, frameworks, and the final checklist to every piece of Rust you write. The transformations are the specific behavioral deltas that distinguish expert output. The frameworks are the decision trees for harder judgment calls. The checklist is the enforcement mechanism.
+Write code in passes. Experts don't produce perfect code in one shot -- they design, implement, review, and simplify. Follow this process for every module you write.
 
-## The 7 Transformations
+---
 
-Each transformation shows the exact delta between first-draft and production-grade. Apply all seven to every module you write.
+## Pass 1: Design Types and Signatures
+
+Before writing any implementation, write ONLY the type definitions and function signatures. No bodies. No logic.
+
+Ask yourself these questions before moving on:
+
+- Can any enum state represent an invalid combination? If yes, restructure so invalid states are unrepresentable.
+- Are all parameters self-documenting? Replace `bool` params with enums (Transformation 2).
+- Does every struct that will be serialized or compared use `BTreeMap`, not `HashMap` (Transformation 3)?
+- Do config structs derive `Default` (Transformation 6)?
+- Would a caller confuse the order of String parameters? Use newtypes.
+
+**Do not proceed to Pass 2 until the types are right. Types are the architecture.**
+
+---
+
+## Pass 2: Implement
+
+Fill in the function bodies. As you write each function, apply these rules:
+
+- Every `?` gets `.context("failed to [verb] [noun]")` -- no exceptions (Transformation 1).
+- For library code: use `thiserror` for error enums. For application code: use `anyhow`.
+- Use `Cow<str>` when a function sometimes borrows and sometimes allocates (Transformation 7).
+- Return named structs, not tuples, from any function with 2+ return values (Transformation 5).
+- Exhaustive match arms -- no `_ =>` wildcards (Transformation 4).
+
+### Ownership Decision Tree
+
+Walk this tree in order when you need shared access to data:
+
+1. **Can you pass a reference?** Use `&T`. Zero cost, zero complexity.
+2. **Might it be owned or borrowed?** Use `Cow<'_, str>`. Zero-cost when borrowed.
+3. **Multiple owners across sync boundaries?** Use `Arc<T>`. Prefer `Arc::clone(&x)` over `x.clone()`.
+4. **Multiple owners AND mutability?** Use `Arc<Mutex<T>>` or `Arc<RwLock<T>>`. Choose `RwLock` when reads vastly outnumber writes.
+5. **Fire-and-forget spawn?** Use `move` closure with owned data.
+
+Every `.clone()` is a decision point. Ask: "Is this clone necessary, or can I restructure to borrow?"
+
+### Error Philosophy
+
+| Context | Tool | Why |
+|---------|------|-----|
+| Application code (main, CLI, tests) | `anyhow::Result` + `.context()` | Rich error chains, no boilerplate |
+| Library code (crates consumed by others) | `thiserror` enums | Typed, matchable, callers can branch on variants |
+
+Error enum design: user-facing messages tell the user what to do, not what went wrong internally. `Box<T>` on large payloads prevents one variant from bloating all variants. Classify every variant explicitly in `is_retryable()` -- no wildcards.
+
+### Async Decisions
+
+**When to `Box::pin`:** When thin async wrappers inline large callee futures into their state machine, causing stack pressure. Wrap the inner call: `Box::pin(self.inner_method(args)).await`.
+
+| Need | Channel | Why |
+|------|---------|-----|
+| One response back | `oneshot` | Exactly one value, then done |
+| Stream of events | `mpsc` | Multiple producers, single consumer |
+| Latest value only | `watch` | Receivers always see the most recent value |
+| Broadcast to all | `broadcast` | Every receiver gets every message |
+
+Shutdown: use `CancellationToken` for hierarchical shutdown. Never rely on `Drop` for ordered async cleanup. Never hold a `MutexGuard` across an `.await` point.
+
+---
+
+## Pass 3: Simplify
+
+Review your code as if you're trying to REMOVE things, not add them.
+
+Three diagnostic questions:
+
+1. **Is any parameter just forwarded through a call chain?** Remove it, use ambient access.
+2. **Is any field or function unused?** Delete it.
+3. **Is any abstraction unjustified?** (single-use helper, wrapper that adds nothing) Inline it.
+
+If you added more code than the task strictly requires, something is wrong. Cut it.
+
+---
+
+## Pass 4: Verify
+
+Run the bundled lint script on your code:
+
+```bash
+bash ${SKILL_DIR}/scripts/lint.sh <your-file.rs>
+```
+
+Fix every ERROR. Review every WARNING. Then do the manual checklist:
+
+```
+[ ] Every ? has .context("failed to [verb] [noun]")
+[ ] No unwrap() outside #[cfg(test)]
+[ ] BTreeMap where output is serialized or compared
+[ ] No bool parameters -- use enums
+[ ] Match arms exhaustive -- no _ => wildcards
+[ ] Config structs derive Default
+[ ] No single-use helper functions -- inline if called once
+[ ] Module under 500 lines (excluding tests)
+[ ] No unnecessary .clone() -- prefer borrowing
+[ ] Return structs, not tuples, for multi-value returns
+[ ] Cow<str> where allocation is conditional
+[ ] serde attrs present: rename_all, default, deny_unknown_fields as needed
+```
+
+**Fix every violation before presenting the code.**
+
+---
+
+## Quick Reference: The 7 Transformations
+
+Each transformation shows the exact delta between first-draft and production-grade.
 
 ### 1. `.context()` on Every `?` Operator
 
@@ -31,13 +138,6 @@ let conn = db.connect(url).await
 ```
 
 The context string answers: "What was I trying to do when this failed?" Pattern: `"failed to [verb] [noun]"`. The upstream error already describes itself -- your job is to name the operation that broke.
-
-Bad context strings restate the error or say nothing:
-```rust
-.context("error")              // says nothing
-.context("TOML parse error")   // restates the error
-.context("something went wrong") // useless in a log
-```
 
 ### 2. Enums Over Booleans
 
@@ -73,7 +173,7 @@ pub struct PolicyConfig {
 }
 ```
 
-HashMap iteration order is random. Diffs become noisy, snapshot tests flake, serialized output changes between runs. Use BTreeMap whenever the data is serialized, compared in tests, or shown to users. HashMap is only correct when ordering never affects output.
+HashMap iteration order is random. Diffs become noisy, snapshot tests flake, serialized output changes between runs. Use BTreeMap whenever the data is serialized, compared in tests, or shown to users.
 
 ### 4. Exhaustive Match Without Wildcards
 
@@ -95,7 +195,7 @@ match decision {
 }
 ```
 
-When someone adds `PolicyDecision::RateLimit` next month, the compiler flags every match that needs updating. Wildcards hide this. Apply the same discipline to `is_retryable()`, `Display`, and any classification logic.
+When someone adds `PolicyDecision::RateLimit` next month, the compiler flags every match that needs updating. Wildcards hide this.
 
 ### 5. Return Structs Over Tuples
 
@@ -115,7 +215,7 @@ fn build_command() -> CommandOutput {
     // caller writes output.args, output.preserved_fds
 ```
 
-`result.0` and `result.1` are meaningless at the callsite. Named fields are self-documenting. Apply this the moment a function returns more than one value.
+`result.0` and `result.1` are meaningless at the callsite. Named fields are self-documenting.
 
 ### 6. `Default` Derive on Config Structs
 
@@ -141,7 +241,7 @@ pub struct ServerConfig {
 let config = ServerConfig { timeout_secs: 30, ..Default::default() };
 ```
 
-Config structs without `Default` force callers to specify every field, even the ones they do not care about. Derive `Default` and let callers override only what matters. For non-zero defaults, implement `Default` manually.
+Config structs without `Default` force callers to specify every field. Derive `Default` and let callers override only what matters. For non-zero defaults, implement `Default` manually.
 
 ### 7. `Cow<str>` for Conditional Ownership
 
@@ -167,98 +267,4 @@ fn normalize_path(input: &str) -> Cow<'_, str> {
 }
 ```
 
-When a function sometimes needs to allocate and sometimes can return a borrow, `Cow<str>` avoids the unconditional allocation. Walk the shared access tree: can you borrow? Use `&T`. Might it be owned or borrowed? Use `Cow<'_, str>`.
-
----
-
-## Decision Frameworks
-
-### Ownership Decision Tree
-
-Walk this tree in order when you need shared access to data:
-
-1. **Can you pass a reference?** Use `&T`. Zero cost, zero complexity.
-2. **Might it be owned or borrowed?** Use `Cow<'_, str>`. Zero-cost when borrowed, clones only when mutation is needed.
-3. **Multiple owners across sync boundaries?** Use `Arc<T>`. Prefer `Arc::clone(&x)` over `x.clone()` to signal shared-ownership intent.
-4. **Multiple owners AND mutability?** Use `Arc<Mutex<T>>` or `Arc<RwLock<T>>`. Choose `RwLock` when reads vastly outnumber writes.
-5. **Fire-and-forget spawn?** Use `move` closure with owned data. The spawned task must own everything it touches.
-
-**Clone audit:** Every `.clone()` is a decision point. Ask: "Is this clone necessary, or can I restructure to borrow?"
-
-**Forwarded parameters are a smell:** If a parameter exists only to be forwarded through a call chain, replace it with ambient access. If a parameter adds noise to every signature without providing caller-level control, it belongs in ambient state.
-
-### Error Philosophy
-
-| Context | Tool | Why |
-|---------|------|-----|
-| Application code (main, CLI, tests) | `anyhow::Result` + `.context()` | Rich error chains, no boilerplate |
-| Library code (crates consumed by others) | `thiserror` enums | Typed, matchable, callers can branch on variants |
-
-**Error enum design principles:**
-- User-facing messages tell the user what to do, not what went wrong internally
-- `#[cfg(target_os)]` on variants keeps the enum lean per platform
-- `Box<T>` on large payloads prevents one variant from bloating all variants
-- `#[error(transparent)]` delegates display to upstream types that already format well
-- Classify every variant explicitly in `is_retryable()` -- no wildcards, no defaults
-
-**The `.context()` discipline is non-negotiable.** Every `?` gets a `.context()`. No exceptions outside `#[cfg(test)]`.
-
-### Async Decisions
-
-**When to `Box::pin`:** When thin async wrapper functions inline large callee futures into their state machine, causing stack pressure. `async fn wrapper() { inner().await; }` stores the full `inner()` future inline. In a chain of wrappers, this compounds. Wrap the inner call: `Box::pin(self.inner_method(args)).await`.
-
-**Channel selection:**
-
-| Need | Channel | Why |
-|------|---------|-----|
-| One response back | `oneshot` | Exactly one value, then done |
-| Stream of events | `mpsc` | Multiple producers, single consumer |
-| Latest value only | `watch` | Receivers always see the most recent value |
-| Broadcast to all | `broadcast` | Every receiver gets every message |
-
-**Shutdown patterns:**
-- Use `CancellationToken` for hierarchical shutdown. A parent token cancels all children.
-- Never rely on `Drop` for ordered async cleanup. Use explicit shutdown methods in the correct sequence.
-- Use `let _ = tx.send()` in cleanup paths. The receiver may already be dropped. The `let _ =` documents that failure is expected.
-- Never hold a `MutexGuard` across an `.await` point.
-
-### Incremental Migration
-
-Large refactors fail when they change everything at once. The correct approach:
-
-1. **Create new types alongside old types.** Do not delete the old type.
-2. **Write `From<&OldType> for NewType` bridges** so existing code keeps working.
-3. **Migrate consumers one PR at a time.** Every intermediate commit compiles and passes tests.
-4. **Delete the old type only after every consumer has migrated.**
-
-**Stacked changes:** Each PR in the series is independently reviewable and deployable. Refactors are "structural, not behavioral" -- move code, tests, and docs together. No logic changes in the same commit as a structural move.
-
-**The simplification sequence after shipping:**
-1. Ship behind a feature flag
-2. Stabilize by promoting to stable
-3. Optimize hot paths
-4. Remove scaffolding -- drop the flag, remove comparison metrics, remove parameter threading
-5. Rename gated APIs to match their unconditional nature (`init_if_enabled` -> `init`)
-
----
-
-## Self-Review Checklist
-
-After writing code, verify line by line. Fix every violation before presenting the code.
-
-```
-[ ] Every ? has .context("failed to [verb] [noun]")
-[ ] No unwrap() outside #[cfg(test)]
-[ ] BTreeMap where output is serialized or compared
-[ ] No bool parameters -- use enums
-[ ] Match arms exhaustive -- no _ => wildcards
-[ ] Config structs derive Default
-[ ] No single-use helper functions -- inline if called once
-[ ] Module under 500 lines (excluding tests)
-[ ] No .clone() without justification -- prefer borrowing
-[ ] Return structs, not tuples, for multi-value returns
-[ ] Cow<str> where allocation is conditional
-[ ] Serde attrs present: rename_all, default, deny_unknown_fields as needed
-```
-
-This checklist is the enforcement mechanism. Passive context alone does not change behavior. Active verification does. Run it on every module, every time.
+When a function sometimes needs to allocate and sometimes can return a borrow, `Cow<str>` avoids the unconditional allocation.
