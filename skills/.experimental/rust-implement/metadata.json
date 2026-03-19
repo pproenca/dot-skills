@@ -1,0 +1,13 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "Rust Implementation",
+  "date": "March 2026",
+  "abstract": "Portable Rust implementation skill combining transformation examples, decision frameworks, and a mandatory self-review checklist. Teaches the specific behavioral changes that distinguish expert from competent Rust: .context() discipline, exhaustive matching, BTreeMap for determinism, enum-over-bool type design, and incremental migration patterns.",
+  "references": [
+    "https://doc.rust-lang.org/book/",
+    "https://rust-lang.github.io/api-guidelines/",
+    "https://docs.rs/anyhow/latest/anyhow/",
+    "https://docs.rs/thiserror/latest/thiserror/"
+  ]
+}

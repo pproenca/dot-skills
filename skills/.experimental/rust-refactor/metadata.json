@@ -1,0 +1,11 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "Rust Refactoring",
+  "date": "March 2026",
+  "abstract": "Portable Rust refactoring skill teaching simplification instinct, incremental migration, and module decomposition. Combines diagnostic questions, transformation examples, and a mandatory self-review checklist.",
+  "references": [
+    "https://doc.rust-lang.org/book/",
+    "https://rust-lang.github.io/api-guidelines/"
+  ]
+}
