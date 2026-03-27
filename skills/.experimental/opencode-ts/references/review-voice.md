@@ -27,11 +27,15 @@ The codebase enforces a strict naming convention. If you use `projectId` instead
 
 **Rule**: ID suffixes are always uppercase: `projectID`, `sessionID`, `messageID`. Never `projectId`, `sessionId`.
 
+**REJECT IF:** Any new or modified variable, field, parameter, or type uses camelCase ID suffix (`projectId`, `sessionId`, `messageId`) instead of uppercase (`projectID`, `sessionID`, `messageID`).
+
 ### kitlangton on PR #19150 -- naming local state
 
 > "We usually call this `state` (not `cache`)"
 
 **Rule**: Follow the codebase's existing vocabulary. If every service calls its internal store `state`, do not invent `cache`.
+
+**REJECT IF:** A new variable introduces a synonym for an established codebase term. Common violations: `cache` instead of `state`, `config` instead of `cfg` (for locals), `directory` instead of `dir`, `existingClient` instead of `existing`.
 
 ### AGENTS.md style guide -- single-word names
 
@@ -59,6 +63,8 @@ External PRs that change files beyond their stated scope get pushed back immedia
 
 **Rule**: If your PR is about the UI, do not touch session processing code. If your PR fixes a bug, do not refactor adjacent code. Stay in scope.
 
+**REJECT IF:** The diff modifies files in directories unrelated to the stated task. A bug fix touching formatting in adjacent files, or a UI change touching `session/`, `tool/`, or `provider/` code.
+
 ### rekram1-node on PR #14586 -- unrelated reformatting
 
 > "why change this unrelated stuff?"
@@ -73,6 +79,8 @@ The contributor also refactored surrounding code (restructuring an `if` chain, c
 > "why can't we just have this change +1 test for it, ill cleanup later cause we should be a bit better at doing this across the board but there was a special case that caused errors in the past"
 
 **Rule**: Minimal diffs. One change per PR. Do not refactor while fixing.
+
+**REJECT IF:** The diff includes formatting changes, variable renames, import reordering, or structural refactoring that is not directly required by the stated change.
 
 ---
 
@@ -100,6 +108,8 @@ And again on the same PR:
 
 **Rule**: If the types do not align, fix the types. Never cast to `any`. The AGENTS.md is explicit: "Avoid using the `any` type."
 
+**REJECT IF:** The diff contains `as any`, `as unknown as`, or any type assertion that masks a type error instead of fixing it. Zero tolerance — no exceptions.
+
 ---
 
 ## 4. Use Existing Libraries, Do Not Reinvent
@@ -119,6 +129,8 @@ And again on the same PR:
 (on a custom `use-reduced-motion.ts` hook)
 
 **Rule**: Before writing a custom utility, check if a community primitive already exists. The project uses `@solid-primitives/*` heavily. Do not add custom hooks that duplicate them.
+
+**REJECT IF:** A new `use-*.ts` hook or utility function duplicates functionality available in `@solid-primitives/*`, `@/util/*`, or `@/effect/*`. Check before writing.
 
 ---
 
@@ -157,6 +169,8 @@ External contributors frequently try to add provider-specific code directly into
 
 **Rule**: Provider definitions, model lists, API URLs, and env var names all live in `models.dev`. Do not duplicate them in the opencode source. Make a PR to models.dev instead.
 
+**REJECT IF:** The diff adds hardcoded provider-specific data (model IDs, API URLs, environment variable names, model capabilities) that should live in `models.dev`. This is the single most common rejection reason for external PRs.
+
 ---
 
 ## 6. Do Not Promote Third-Party Services as "Recommended"
@@ -176,6 +190,8 @@ External contributors frequently try to add provider-specific code directly into
 (on adding Kilo to the TUI provider dialog)
 
 **Rule**: The recommended provider list is curated. External providers should work through `models.dev` and the generic auth flow. Do not add promotional copy, special sort order, or recommendation badges for third-party services.
+
+**REJECT IF:** The diff adds a provider to the recommended list, changes provider sort order, or adds promotional language for any third-party service.
 
 ---
 
@@ -201,6 +217,8 @@ External contributors frequently try to add provider-specific code directly into
 > "Do you need to push the message still?"
 
 **Rule**: When you remove code, the reviewer will ask why. Have a reason. If you are refactoring, make sure you are not silently dropping logic.
+
+**REJECT IF:** The diff deletes logic (guard clauses, error handlers, function calls, return statements) without a comment or commit message explaining why the code is safe to remove.
 
 ---
 
@@ -246,6 +264,8 @@ External contributors frequently try to add provider-specific code directly into
 
 **Rule**: Every change in a PR must have a clear reason. If the reviewer cannot understand why a line changed from reading the diff, the PR will be blocked with "???" until explained.
 
+**REJECT IF:** The diff contains variable renames, type alias changes, structural reorganization, or any modification where the "why" is not obvious from context. If you cannot explain the change in one sentence, it needs a comment.
+
 ---
 
 ## 9. Correctness Over Cleverness
@@ -272,6 +292,8 @@ External contributors frequently try to add provider-specific code directly into
 ```
 
 **Rule**: Reviewers will test your logic mentally. If a condition can never be true, or a comparison does not test what it claims to test, it will be caught.
+
+**REJECT IF:** A conditional checks a state that cannot occur (removed enum value, impossible type, completed migration), OR an assertion/comparison tests the wrong value (e.g., comparing `String(id)` instead of comparing against the correct constant).
 
 ---
 
@@ -310,6 +332,8 @@ const serverDefault = "https://web-14275-d60e67f5-pyqs0590.onporter.run"
 
 **Rule**: Effect services follow a specific pattern in this codebase. Look at existing services (`account/effect.ts`, `account/index.ts`) before writing new ones. Use `Effect.cached` for deduplication. Use existing Effect services rather than raw calls.
 
+**REJECT IF:** A new service doesn't follow the 5-layer pattern (Interface → Service class → Layer → makeRuntime → facade). Also reject if code uses raw `await` calls to a module that already has an Effect Service (use `yield* ServiceName` instead).
+
 ---
 
 ## 11. Testing Patterns
@@ -344,6 +368,8 @@ Preferred:
 
 **Rule from AGENTS.md**: "Avoid mocks as much as possible. Test actual implementation, do not duplicate logic into tests."
 
+**REJECT IF:** Tests wrap non-promises in `Promise.all`, use `jest.mock()`/`vi.mock()` for modules that can be tested with real services via `Instance.provide`, or add `waitForTimeout()` as a flaky-test workaround instead of fixing the underlying timing issue.
+
 ---
 
 ## 12. UI Code -- Use Correct Variants and Patterns
@@ -375,6 +401,8 @@ Preferred:
 
 **Rule**: Know the UI component library. Use the right variant (`ghost` vs `secondary`). Use `focus-visible` not `focus` for keyboard-only focus styles. Batch SolidJS store updates.
 
+**REJECT IF:** A component uses the wrong variant (check existing usage of the same component type for the correct variant), uses `:focus` pseudo-class instead of `:focus-visible`, or makes multiple individual `setStore()` calls that could be batched into a single update.
+
 ---
 
 ## 13. Platform and Cross-Platform Concerns
@@ -400,6 +428,8 @@ Preferred:
 
 **Rule**: Think about Windows. Think about encoding. Think about file paths with special characters.
 
+**REJECT IF:** The diff uses hardcoded `"\n"` for line endings instead of `os.EOL`, splits file paths on tabs (use null bytes like Zed does), or calculates byte sizes from base64 strings without accounting for encoding overhead.
+
 ---
 
 ## 14. Scope Discipline for CLI and Console Output
@@ -414,6 +444,8 @@ Preferred:
 ```
 
 **Rule**: CLI output should go through the project's output utilities (prompts, formatters), not raw `console.error`. Stay consistent with how other commands display errors.
+
+**REJECT IF:** A CLI command handler uses `console.log`, `console.error`, or `process.stderr.write` directly instead of the project's formatting utilities. Check how neighboring commands in the same file output their messages.
 
 ---
 
@@ -435,6 +467,8 @@ Preferred:
 > "the custom tool takes precedence."
 
 **Rule**: Docs must be precise. Do not claim something is a "common pattern" without evidence. Do not add unnecessary qualifiers that imply temporary behavior when it is permanent.
+
+**REJECT IF:** Documentation claims something is "common", "typical", or "recommended" without a concrete example or link. Also reject scope-narrowing qualifiers like "for that session" when the behavior is permanent.
 
 ---
 

@@ -42,22 +42,30 @@ Load the reference that matches what you're building:
 | Server routes, config, plugins, project lifecycle | [server-and-routes.md](references/server-and-routes.md) |
 | Tests | [test-writing.md](references/test-writing.md) |
 
-### 4. Check — does it smell right?
+### 4. CHECK GATE — code MUST pass all of these before proceeding
 
-Load [style-dna.md](references/style-dna.md). Verify:
-- Single-word variable names where clear
-- No `try`/`catch`, no `else`, no `any`, no unnecessary destructuring
-- `const` + ternary over `let` + mutation
-- snake_case Drizzle fields, `.meta({ref})` on boundary schemas
-- Effect is used for services, not plain async classes
+Load [style-dna.md](references/style-dna.md). **If ANY of the following fail, fix the code before proceeding to Review:**
 
-### 5. Review — would the core team accept this?
+- [ ] Single-word variable names where clear
+- [ ] No `try`/`catch`, no `else`, no `any`, no unnecessary destructuring
+- [ ] `const` + ternary over `let` + mutation
+- [ ] snake_case Drizzle fields, `.meta({ref})` on boundary schemas
+- [ ] Effect is used for services, not plain async classes
+- [ ] No patterns from Section 7 ("Things That Compile But Get Rejected") present in the diff
 
-Load [review-voice.md](references/review-voice.md). Self-check against real reviewer feedback:
-- Would Dax or Aiden push back on any of this?
-- Am I adding abstraction they'd ask to remove?
-- Am I renaming things that don't need renaming?
-- Is the diff minimal for what I'm changing?
+**DO NOT proceed if any check fails.** Go back to phase 3 and fix.
+
+### 5. REVIEW GATE — REJECT the diff if any of these apply
+
+Load [review-voice.md](references/review-voice.md). **The diff MUST NOT contain any of the following. If it does, fix before submitting:**
+
+- [ ] Changes to files outside the scope of the task
+- [ ] `as any` or `as unknown as` casts
+- [ ] Custom utilities that duplicate community primitives or `@/util/*` helpers
+- [ ] Provider-specific code that should live in models.dev
+- [ ] Code removal without a clear reason documented in the commit
+- [ ] Unexplained variable renames or structural changes
+- [ ] Abstraction the core team would ask to remove (check refactoring-patterns.md)
 
 ---
 
@@ -67,13 +75,16 @@ Load [review-voice.md](references/review-voice.md). Self-check against real revi
 
 Load [architecture.md](references/architecture.md). Map the blast radius before changing anything.
 
-### 2. Study — what do good transitions look like?
+### 2. Study — which pattern applies here?
 
-Load [refactoring-patterns.md](references/refactoring-patterns.md). See real before/after diffs from the core team:
+Load [refactoring-patterns.md](references/refactoring-patterns.md). **Start with the Decision Matrix at the top** — match the code smell you see to the correct pattern. Then read the specific pattern section for real before/after diffs:
 - Simplification patterns (removing unnecessary abstraction)
-- Consolidation patterns (merging scattered files)
+- Consolidation patterns (Bun → Node migration)
+- Extraction patterns (pulling reusable utilities)
 - Migration patterns (moving to Effect services)
 - Deletion patterns (removing dead code)
+- Stabilization patterns (fixing ordering/race conditions)
+- Variant elimination (removing special cases)
 
 ### 3. Gather — can an existing utility replace this code?
 
@@ -87,7 +98,7 @@ Same as implement phases 4-5: [style-dna.md](references/style-dna.md) then [revi
 
 ## Key decisions (always apply)
 
-- **Effect is mandatory** — all services use `Context.Tag` / `Layer` / `makeRuntime`. No plain async classes.
+- **Effect is mandatory** — all services use `ServiceMap.Service` / `Layer` / `makeRuntime`. No plain async classes.
 - **Namespace ownership** — one `export namespace X {}` per feature, one file until real split pressure.
 - **Zod for boundaries, Effect Schema for internals** — Zod + `z.infer` for DTOs/tool params. `Schema.TaggedErrorClass` for Effect errors. `Newtype` for branded IDs.
 - **Event-sourced writes** — mutations go through `SyncEvent.run` → projectors → SQLite. Direct DB writes only for non-event-sourced features.

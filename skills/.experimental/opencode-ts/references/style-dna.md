@@ -13,7 +13,7 @@ These are enforced. Violating any of them gets code rejected.
 - Avoid `try`/`catch` where possible
 - Avoid using the `any` type
 - Prefer single word variable names where possible
-- Use Bun APIs when possible, like `Bun.file()`
+- ~~Use Bun APIs when possible, like `Bun.file()`~~ **SUPERSEDED:** The codebase migrated away from Bun-specific APIs. Use `Filesystem`, `Glob`, `Process` from `@/util/` instead of `Bun.file()`, `Bun.Glob`, `Bun.spawn`. See [refactoring-patterns.md](refactoring-patterns.md) Pattern 2.
 - Rely on type inference when possible; avoid explicit type annotations or interfaces unless necessary for exports or clarity
 - Prefer functional array methods (flatMap, filter, map) over for loops; use type guards on filter to maintain type inference downstream
 

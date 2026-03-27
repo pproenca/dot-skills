@@ -6,7 +6,40 @@ that define the codebase's quality direction.
 
 ---
 
+## Refactoring Decision Matrix
+
+**Use this table to decide WHEN to apply each pattern.** If you see a code smell in the left column, apply the corresponding pattern.
+
+| Code Smell | Pattern | Trigger Threshold |
+|---|---|---|
+| Function called from exactly one site | **1. Simplification** (inline) | Function is >3 lines AND the call site doesn't lose clarity when inlined |
+| `clone()` / `structuredClone()` in a data flow | **1. Simplification** (remove clone) | The original is never read after mutation — the clone is defensive, not functional |
+| `createMemo` / computed that duplicates a check handled elsewhere | **1. Simplification** (eliminate redundant) | The component or parent already handles the same condition |
+| `Bun.file()`, `Bun.Glob`, `Bun.spawn`, `Bun.connect`, or `` $ `` shell template in non-test code | **2. Consolidation** (Bun → Node) | Always — the codebase has migrated to `@/util/{Filesystem,Glob,Process}` |
+| Same logic copy-pasted in 3+ call sites with minor variations | **3. Extraction** (utility) | The variations can be captured as function parameters |
+| A function needs to be testable in isolation but is embedded in a larger function | **3. Extraction** (testability) | Test would require mocking/stubbing the outer function to reach the logic |
+| Module has `Instance.state()` + `async function` exports with hidden dependencies | **4. Migration** (→ Effect) | The module needs injectable dependencies or would benefit from Effect tracing |
+| Tool/feature removed from schema or AVAILABLE_TOOLS | **5. Deletion** (dead tool) | Always — remove from all registration points (permissions, config, CLI, UI) |
+| Import has zero usages | **5. Deletion** (dead import) | Always — even 2-line commits are encouraged |
+| Error handler / conditional for a case that can never be true | **5. Deletion** (dead special case) | The condition references a removed feature, completed migration, or reversed decision |
+| IDs or ordering assigned inside `Promise.all` or concurrent resolution | **6. Stabilization** (ordering) | The order matters for display, storage, or deterministic replay |
+| Special case with 3+ string-matching conditions to detect a specific variant | **7. Variant Elimination** | Upstream SDK or config now handles the case natively |
+
+**COUNTER-SIGNALS — when NOT to refactor:**
+- The code is outside the scope of your current task (see review-voice.md Rule: "Stay in scope")
+- The function is called from one site but serves as a named abstraction that aids comprehension
+- Test infrastructure files (`test/`, `*.test.ts`) may legitimately use Bun APIs directly
+- A module is scheduled for a larger rewrite — don't do a partial migration
+
+---
+
 ## Pattern 1: Simplification -- Remove Unnecessary Abstraction
+
+> **TRIGGER:** Apply when you see a function called from exactly one site (inline it), a `clone()`/`structuredClone()` where the original is never read after mutation (remove it), a `createMemo`/computed that duplicates a check already handled elsewhere (eliminate it), or a helper function whose only purpose is to wrap a single-expression call (flatten it).
+>
+> **THRESHOLD:** The function must be >3 lines AND inlining must not lose clarity. For clones, confirm the original is truly never read again.
+>
+> **COUNTER-SIGNAL:** Do NOT inline if the function name provides important documentation, or if the function is likely to gain a second caller soon (evidence: TODO, open PR, or discussion referencing it).
 
 ### 1a. Inline a function that exists only to be called once
 
@@ -192,6 +225,19 @@ indirection. The special call site was changed to use the key-based function.
 ---
 
 ## Pattern 2: Consolidation -- Replace Scattered Bun APIs with Unified Utilities
+
+> **TRIGGER:** Any `Bun.file()`, `Bun.Glob`, `Bun.spawn`, `Bun.connect`, `Bun.stdin`, or `` $ `` (Bun shell) in non-test code. The migration is complete — these should not exist in `packages/opencode/src/` outside of `test/`.
+>
+> **REPLACEMENT MAP:**
+> - `Bun.file()` → `Filesystem.readText()`, `Filesystem.readJson()`, `Filesystem.write()`
+> - `Bun.write()` → `writeFile()` from `fs/promises` or `Filesystem.writeJson()`
+> - `new Bun.Glob()` / `Bun.Glob.scan()` → `Glob.scan()`, `Glob.match()` from `@/util/glob`
+> - `Bun.spawn()` → `Process.spawn()` from `@/util/process`
+> - `Bun.connect()` → `createConnection()` from `net`
+> - `Bun.stdin.text()` → `text(process.stdin)` from `node:stream/consumers`
+> - `` $`git ...` `` → `git(["arg1", "arg2"])` from `@/util/git`
+>
+> **COUNTER-SIGNAL:** Test files (`test/`, `*.test.ts`, `preload.ts`, `fixture.ts`) may use Bun APIs since they always run under Bun.
 
 This is the single largest refactoring campaign in the codebase: migrating from
 Bun-specific APIs to portable Node.js equivalents, centralized behind utility
@@ -529,6 +575,12 @@ on the same day. The team does not wait for perfection on the first pass.
 
 ## Pattern 3: Extraction -- Pull Reusable Utilities from Specific Modules
 
+> **TRIGGER:** Apply when the same logic appears in 3+ call sites with minor variations (consolidate into a parameterized utility), OR when a function needs to be testable in isolation but is embedded inside a larger function that requires mocking to reach it.
+>
+> **THRESHOLD:** The duplicated logic must be >3 lines per site. For testability extraction, there must be a concrete test that can't be written without the extraction.
+>
+> **COUNTER-SIGNAL:** Do NOT extract if the logic appears in only 2 places — wait for the third occurrence. Do NOT extract if the variations between call sites are fundamental (not just parameter differences).
+
 ### 3a. Extract createApp for server testability
 
 **Commit:** `89d6f60d2` -- "refactor(server): extract createApp function for server initialization"
@@ -624,6 +676,12 @@ type changed from `$.ShellError` to `Process.RunFailedError`.
 ---
 
 ## Pattern 4: Migration -- Moving to Effect Services
+
+> **TRIGGER:** Apply when a module has `Instance.state()` + `async function` exports that need injectable dependencies (e.g., Auth, Config) or would benefit from Effect tracing via `Effect.fn()`. Also apply when a module needs to participate in the Effect DI graph (other services depend on it via `yield*`).
+>
+> **THRESHOLD:** The module must have at least one hidden dependency that should be injectable, OR it must be called from inside an Effect pipeline where `await` breaks composition.
+>
+> **COUNTER-SIGNAL:** Do NOT migrate purely for consistency — migrate when there's a concrete benefit (testability, tracing, dependency injection). Always preserve backward-compatible `async function` exports so non-Effect callers don't break.
 
 ### 4a. Effectify agent.ts
 
@@ -731,6 +789,17 @@ export namespace Agent {
 ---
 
 ## Pattern 5: Deletion -- Removing Dead Code and Speculative Features
+
+> **TRIGGER:** Apply when ANY of the following are true:
+> - A tool/feature is no longer in `AVAILABLE_TOOLS`, the schema, or the agent config → remove from ALL registration points
+> - An import has zero usages → delete it (even 2-line commits are encouraged)
+> - A conditional handles a case that can never be true (migration completed, feature removed, provider variant deleted)
+> - An error handler targets a specific API/provider that no longer exists
+> - A product decision was reversed (warning dialogs, promotional copy, deprecated prompts)
+>
+> **THRESHOLD:** Any dead code. The team does not batch dead code removal — small focused commits are normal and encouraged.
+>
+> **COUNTER-SIGNAL:** If you are unsure whether code is dead, grep for all usages first. If the code has a TODO referencing future use, leave it.
 
 ### 5a. Remove an entire tool (TodoRead)
 
@@ -991,6 +1060,12 @@ were vestigial from a deprecated partnership arrangement.
 
 ## Pattern 6: Stabilization -- Fix Ordering and Race Conditions
 
+> **TRIGGER:** Apply when time-sensitive values (IDs, timestamps, sequence numbers) are assigned inside `Promise.all()` or other concurrent execution where resolution order is non-deterministic, AND the ordering matters for display, storage, or deterministic replay.
+>
+> **THRESHOLD:** The ordering must have user-visible or data-integrity consequences. If order doesn't matter (e.g., parallel fetches where results are merged into a Set), leave it.
+>
+> **FIX PATTERN:** Assign IDs/ordering AFTER concurrent resolution using `.then(results => results.map(assign))`.
+
 ### 6a. Assign IDs after async resolution to maintain part order
 
 **Commit:** `e35a4131d` -- "core: keep message part order stable when files resolve asynchronously"
@@ -1038,6 +1113,12 @@ sequential IDs matching the original part array order.
 ---
 
 ## Pattern 7: Variant/Special-Case Elimination
+
+> **TRIGGER:** Apply when a special case uses 3+ string-matching conditions to detect a specific variant (provider, model, deployment type), AND the upstream SDK or configuration system now handles the case natively.
+>
+> **THRESHOLD:** The special case must be provably unnecessary — either the upstream fix has landed, or the variant has been removed from `models.dev`.
+>
+> **COUNTER-SIGNAL:** Do NOT remove a special case just because it looks ugly. Verify the upstream handles it first. If unsure, add a comment explaining why the special case exists and leave it.
 
 ### 7a. Remove redundant openai-compatible Anthropic variant logic
 
