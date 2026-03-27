@@ -1,6 +1,6 @@
 ---
 name: opencode-ts
-description: Write and refactor TypeScript code that fits the opencode codebase. Use this skill when implementing features, fixing bugs, writing tests, or refactoring in opencode or opencode-style repos that use Effect services, Zod schemas, event-sourced persistence, and namespace-driven architecture. Triggers on tasks involving TypeScript code in packages/opencode, session/tool/provider changes, new service modules, test writing, route handlers, or schema definitions.
+description: Write and refactor TypeScript code in repos that use Effect-TS services, Zod schemas, event-sourced persistence, and namespace-driven architecture. Use this skill when implementing features, fixing bugs, writing tests, or refactoring in opencode or any TypeScript codebase built on the same stack (Effect DI, Drizzle ORM, Hono routes, Bun runtime). Triggers on tasks involving Effect services, namespace modules, Zod schema definitions, SyncEvent patterns, tool implementations, test writing, or code review in Effect-based TypeScript projects.
 ---
 
 # Opencode TypeScript
