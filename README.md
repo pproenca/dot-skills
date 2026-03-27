@@ -87,6 +87,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [nginx-c-module-design](skills/.experimental/nginx-c-module-design) | nginx C module directive design guidelines for creating admin-friendly configuration interfaces |
 | [nginx-c-module-perf](skills/.experimental/nginx-c-module-perf) | nginx C module performance optimization and reliability guidelines based on the official nginx.. |
 | [nginx-c-modules](skills/.experimental/nginx-c-modules) | nginx C module development guidelines based on the official nginx development guide |
+| [opencode-ts](skills/.experimental/opencode-ts) | Write and refactor TypeScript code that fits the opencode codebase |
 | [orval](skills/.experimental/orval) | Orval OpenAPI TypeScript client generation best practices |
 | [pulumi](skills/.experimental/pulumi) | Pulumi infrastructure as code performance and reliability guidelines |
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |

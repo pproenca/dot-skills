@@ -1,0 +1,12 @@
+{
+  "version": "1.0.0",
+  "organization": "Opencode",
+  "technology": "TypeScript (Effect + Zod)",
+  "date": "March 2026",
+  "abstract": "Coding distillation skill for the opencode TypeScript codebase. Contains 352KB of real code extracted from the sst/opencode repo — complete service implementations, tool modules, test suites, SQL schemas, server routes, architecture maps, PR review patterns, and refactoring diffs from the core team. 11 reference files organized as a workflow: orient (architecture) → gather (helpers) → build (task-specific reference) → check (style DNA) → review (reviewer voice). Evaluated: +33% skill advantage on test writing tasks vs no-skill baseline.",
+  "references": [
+    "https://github.com/sst/opencode",
+    "https://effect.website",
+    "https://zod.dev"
+  ]
+}
