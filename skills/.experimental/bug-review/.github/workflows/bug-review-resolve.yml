@@ -1,0 +1,77 @@
+name: Track Bug Review Resolutions
+
+# TEMPLATE: This Action requires adaptation for your repository.
+#
+# Before using:
+# 1. Copy this file to your repo's .github/workflows/
+# 2. Copy the bug-review scripts/ directory to your repo root (or adjust SCRIPT_DIR below)
+# 3. Set FINDINGS_DIR to where your findings are stored
+#    (default assumes findings are committed to .bug-review/findings/ in the repo)
+# 4. Ensure gh CLI is available (actions/checkout provides it)
+#
+# This Action uses repo-committed findings (not CLAUDE_PLUGIN_DATA, which is local-only).
+# To use this, configure store-findings.sh to write to .bug-review/findings/ in the repo
+# and commit the findings as part of the review workflow.
+#
+# Alternative: Skip this Action entirely and run /bug-review:resolve <PR> manually.
+
+on:
+  pull_request:
+    types: [closed]
+
+env:
+  # Adjust these paths for your repository
+  SCRIPT_DIR: .bug-review/scripts
+  FINDINGS_DIR: .bug-review/findings
+
+jobs:
+  resolve:
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      pull-requests: read
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for stored findings
+        id: check
+        run: |
+          PR=${{ github.event.pull_request.number }}
+          if [[ -f "${{ env.FINDINGS_DIR }}/pr-${PR}.json" ]]; then
+            echo "found=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "No bug-review findings for PR #$PR — skipping."
+          fi
+
+      - name: Classify resolutions
+        if: steps.check.outputs.found == 'true'
+        run: |
+          export CLAUDE_PLUGIN_DATA="$(pwd)/.bug-review"
+          bash ${{ env.SCRIPT_DIR }}/classify-resolutions.sh ${{ github.event.pull_request.number }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Update category weights
+        if: steps.check.outputs.found == 'true'
+        run: |
+          export CLAUDE_PLUGIN_DATA="$(pwd)/.bug-review"
+          bash ${{ env.SCRIPT_DIR }}/update-weights.sh ${{ env.SCRIPT_DIR }}/../config.json \
+            || echo "Insufficient data for weight update — skipping."
+
+      - name: Commit resolution data
+        if: steps.check.outputs.found == 'true'
+        run: |
+          git config user.name "bug-review[bot]"
+          git config user.email "bug-review[bot]@users.noreply.github.com"
+          git add .bug-review/findings/ .bug-review/config.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "chore: update bug-review resolution data for PR #${{ github.event.pull_request.number }}"
+            git push
+          fi

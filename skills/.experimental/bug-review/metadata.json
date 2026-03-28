@@ -1,0 +1,14 @@
+{
+  "version": "2.0.0",
+  "organization": "dot-skills",
+  "technology": "GitHub Pull Requests",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "March 2026",
+  "abstract": "Multi-pass PR review agent with 5 parallel passes (shuffled diffs for attention diversity), majority voting, independent Opus validation, and resolution rate learning. Tracks whether findings get resolved at merge time and adjusts category weights to improve future precision. Supports repo-specific rules via .bug-review.md, optional autofix with scope validation, and resolution rate reporting.",
+  "references": [
+    "https://cursor.com/blog/bugbot-out-of-beta",
+    "https://cursor.com/blog/building-bugbot",
+    "https://cursor.com/blog/dynamic-context-discovery"
+  ]
+}
