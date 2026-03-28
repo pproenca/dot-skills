@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "pproenca",
+  "technology": "Security Patch Remediation",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "March 2026",
+  "abstract": "Reads security findings from Codex CSV, threat models, or individual descriptions and produces minimal, surgical code patches. Triages by severity, groups related findings, confirms vulnerabilities in HEAD, and generates fixes with structured documentation including summary, validation steps, and diffs.",
+  "references": [
+    "https://owasp.org/www-community/Threat_Modeling",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Vulnerability_Disclosure_Cheat_Sheet.html"
+  ]
+}

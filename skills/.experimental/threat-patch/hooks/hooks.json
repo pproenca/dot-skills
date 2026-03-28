@@ -1,0 +1,22 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Edit",
+        "hooks": [{
+          "type": "command",
+          "command": "echo '⚠️  Security patch: about to edit a source file. Review the proposed change above before approving.'",
+          "timeout": 5
+        }]
+      },
+      {
+        "matcher": "Write",
+        "hooks": [{
+          "type": "command",
+          "command": "echo '⚠️  Security patch: about to write a file. Review the proposed content before approving.'",
+          "timeout": 5
+        }]
+      }
+    ]
+  }
+}

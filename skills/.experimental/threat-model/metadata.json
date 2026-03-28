@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "organization": "pproenca",
+  "technology": "Security Threat Modeling",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "March 2026",
+  "abstract": "Produces structured, evidence-backed security threat models for any codebase. Goes beyond surface enumeration with five analytical techniques: data flow tracing (entry-to-sink), pattern clustering (root cause grouping), exploit chain construction (combining findings), cross-language bridge analysis, and incremental diff analysis. Designed to match the finding depth and severity accuracy of automated security scanning tools.",
+  "references": [
+    "https://owasp.org/www-community/Threat_Modeling",
+    "https://learn.microsoft.com/en-us/azure/security/develop/threat-modeling-tool",
+    "https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
+  ]
+}

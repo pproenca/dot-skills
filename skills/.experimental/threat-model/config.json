@@ -1,0 +1,8 @@
+{
+  "output_path": "THREAT-MODEL.md",
+  "diff_range": "",
+  "_setup_instructions": {
+    "output_path": "Where to write the threat model relative to the project root (default: THREAT-MODEL.md)",
+    "diff_range": "Git range for incremental analysis (e.g., HEAD~10..HEAD or main...feature-branch). Leave empty for full analysis"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "findings_json_path": "findings.json",
+  "findings_csv_path": "",
+  "threat_model_path": "THREAT-MODEL.md",
+  "commit_patches": false,
+  "branch_prefix": "security/",
+  "_setup_instructions": {
+    "findings_json_path": "Path to findings.json from threat-model (preferred input, default: findings.json in project root)",
+    "findings_csv_path": "Path to a Codex security findings CSV (alternative input)",
+    "threat_model_path": "Path to THREAT-MODEL.md for cross-referencing (default: THREAT-MODEL.md in project root)",
+    "commit_patches": "Whether to create git commits for each patch (default: false — just apply edits)",
+    "branch_prefix": "Prefix for security fix branches when committing (default: security/)"
+  }
+}
