@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "pproenca",
+  "technology": "Model Context Protocol",
+  "discipline": "composition",
+  "type": "scaffolding",
+  "date": "March 2026",
+  "abstract": "Guided MCP server development skill — interrogates the use case, picks deployment model (remote HTTP, MCPB, local stdio), tool-design pattern, and framework, then scaffolds the server with reference docs for auth, tool design, elicitation, and deployment.",
+  "references": [
+    "https://modelcontextprotocol.io/specification",
+    "https://github.com/modelcontextprotocol/typescript-sdk",
+    "https://github.com/jlowin/fastmcp",
+    "https://developers.cloudflare.com/agents/guides/remote-mcp-server/"
+  ]
+}

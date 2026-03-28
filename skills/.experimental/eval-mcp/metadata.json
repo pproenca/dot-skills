@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "pproenca",
+  "technology": "Model Context Protocol",
+  "discipline": "composition",
+  "type": "verification",
+  "date": "March 2026",
+  "abstract": "MCP tool evaluation skill — tests whether Claude uses your tools correctly by analyzing schema quality, measuring tool selection accuracy, and iteratively optimizing descriptions.",
+  "references": [
+    "https://modelcontextprotocol.io/specification",
+    "https://github.com/modelcontextprotocol/typescript-sdk"
+  ]
+}
