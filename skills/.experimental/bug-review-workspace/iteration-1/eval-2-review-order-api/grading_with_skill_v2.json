@@ -1,0 +1,99 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 issues",
+      "passed": true,
+      "evidence": "findings.json contains 7 findings (ids 1-7). The transcript confirms '7 findings passed voting, 3 discarded (single vote)' in Step 4. The summary object shows total_findings: 7. This exceeds the threshold of 3."
+    },
+    {
+      "text": "At least one finding identifies an injection vulnerability",
+      "passed": true,
+      "evidence": "Finding 1 in findings.json has category 'injection' and title 'SQL injection via string interpolation in INSERT query' (severity CRITICAL, 3/3 votes). The transcript's Section 5 Finding 1 is 'SQL Injection via String Interpolation (CRITICAL, 3/3 votes)' with a concrete trigger scenario: POST /orders with shippingAddress containing SQL injection payload."
+    },
+    {
+      "text": "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+      "passed": true,
+      "evidence": "All 7 findings in findings.json use valid severity values: Finding 1 = CRITICAL, Finding 2 = CRITICAL, Finding 3 = HIGH, Finding 4 = HIGH, Finding 5 = HIGH, Finding 6 = HIGH, Finding 7 = HIGH. The summary.by_severity object confirms: CRITICAL: 2, HIGH: 5, MEDIUM: 0, LOW: 0. No invalid severity values are present."
+    },
+    {
+      "text": "Transcript documents vote counts and aggregation from multiple passes",
+      "passed": true,
+      "evidence": "Transcript Step 4 'Aggregate & Vote' contains a detailed table showing all 10 candidate findings across Pass 1/2/3 with Y/N indicators, vote totals, and threshold status. Section 4 'Review Pass Results and Voting Outcome' further documents raw finding counts per pass (Pass 1: 4, Pass 2: 6, Pass 3: 7, total 16 raw), vote distribution (3/3 votes: 2 findings, 2/3 votes: 5 findings, 1/3 vote discarded: 3 findings), and consensus quality analysis. The grouping algorithm is also documented: 'Same file + line within +/-5 + same or related category'."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "total_tokens": 32578,
+    "executor_duration_seconds": 179.1
+  },
+  "claims": [
+    {
+      "claim": "3 parallel review passes were conducted with distinct focus areas",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 3 documents three distinct passes: Pass 1 (Logic & Edge Cases, 4 findings), Pass 2 (Security & Data Integrity, 6 findings), Pass 3 (Error Handling & API Contracts, 7 findings). Each has a different focus and diff ordering strategy."
+    },
+    {
+      "claim": "Vote threshold was 2 out of 3 passes",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1 states config.json confirmed 'vote_threshold=2'. The voting table in Step 4 shows findings with 1 vote marked 'NO - discarded' and findings with 2+ votes marked 'YES'. findings.json metadata confirms vote_threshold: 2."
+    },
+    {
+      "claim": "3 findings were discarded due to single votes",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json discarded_findings array contains exactly 3 entries, each with reason 'single_vote' and votes: 1. Titles: input validation, no try/catch, email header injection."
+    },
+    {
+      "claim": "Each finding was validated against 4 criteria (trigger, evidence, coverage, rules)",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 5 shows a validation table with all 7 findings tested against Trigger/Evidence/Coverage/Rules. findings.json contains a validationResult object for each finding with all 4 fields, each marked PASS with explanations."
+    },
+    {
+      "claim": "The review passes were simulated inline rather than using actual sub-agents",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Section 1 explicitly states: 'Since this is a simulated eval (no real GitHub PR), the gh CLI and fetch-pr.sh script were not available. The workflow was adapted to... Simulate 3 parallel review passes inline (instead of launching sub-agents)'. This is an honest adaptation noted upfront."
+    },
+    {
+      "claim": "SQL injection finding had unanimous 3/3 agreement",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json Finding 1 shows votes: 3 and votedBy: ['pass1', 'pass2', 'pass3']. Transcript voting table confirms Y/Y/Y for SQL injection."
+    },
+    {
+      "claim": "Findings were ranked by votes * severity_weight",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 7 shows a ranked table with Score column. SQL injection (CRITICAL, 3 votes) = 12, connection pool leak (HIGH, 3 votes) = 9, pagination (CRITICAL, 2 votes) = 8. This implies CRITICAL weight=4, HIGH weight=3, consistent with scores across all 7 findings."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": ["Sub-agents were simulated inline rather than actually spawned as parallel processes; this means the independence guarantee of separate passes is not truly enforced"],
+    "workarounds": ["Adapted workflow to skip gh CLI and fetch-pr.sh since no real GitHub PR was available"]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Findings contain at least 3 issues",
+        "reason": "This is a low bar that could be satisfied by listing superficial observations. Consider also checking that findings reference specific line numbers and include trigger scenarios, which would distinguish genuine analysis from generic commentary."
+      },
+      {
+        "reason": "No assertion checks whether the connection pool leak (a non-obvious resource management issue) was found. This is arguably the most discriminating finding for a code review skill since it requires understanding runtime behavior, not just pattern-matching on SQL strings or missing auth. An assertion like 'at least one finding identifies a resource leak' would add real signal."
+      },
+      {
+        "assertion": "Transcript documents vote counts and aggregation from multiple passes",
+        "reason": "This assertion could pass even if the passes were trivially identical. A stronger version would check that at least one finding was discarded by the voting process (evidence of genuine disagreement between passes). The current run does show 3 discarded findings, which is a good sign, but the assertion does not require it."
+      }
+    ],
+    "overall": "The assertions cover the basics well (volume, injection detection, severity schema, workflow documentation). The main gap is lack of assertions testing finding quality or discriminating analysis -- e.g., whether non-obvious issues were caught, whether trigger scenarios are concrete, or whether the voting process actually filtered anything out."
+  }
+}

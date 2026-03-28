@@ -1,0 +1,101 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 CRITICAL or HIGH severity issues",
+      "passed": true,
+      "evidence": "findings.json contains 4 CRITICAL/HIGH findings: 2 critical (line 26 'null-dereference', line 50 'logic-error') and 2 high (line 39 'race-condition', line 65 'logic-error'). Confirmed by scripted check (check_eval1_min_findings: PASS with 4)."
+    },
+    {
+      "text": "Every finding has a non-empty triggerScenario field",
+      "passed": true,
+      "evidence": "All 9 findings in findings.json have substantive triggerScenario strings. For example, finding 1: 'A request arrives with an Authorization header containing a valid Bearer prefix but an invalid or expired token...'. Confirmed by scripted check (check_eval1_trigger_scenarios: PASS, all 9 have triggerScenario)."
+    },
+    {
+      "text": "No finding targets the isAdmin function",
+      "passed": true,
+      "evidence": "The isAdmin function lives at lines 60-62. No finding references those lines. The closest findings target line 65 (hasPermission), not isAdmin. Confirmed by scripted check (check_eval1_no_isadmin: PASS)."
+    },
+    {
+      "text": "Findings use category IDs from the skill's category taxonomy",
+      "passed": false,
+      "evidence": "The skill's categories.md defines IDs: null-access, boundary, race, resource-leak, injection, auth-bypass, data-loss, error-swallow, type-coercion, stale-ref, api-contract, dead-code, perf, config. The findings use ad-hoc categories instead: 'null-dereference' (not 'null-access'), 'logic-error' (not in taxonomy), 'race-condition' (not 'race'), 'quality' (not in taxonomy), 'security' (not in taxonomy), 'error-handling' (not 'error-swallow'). Zero of the 6 unique categories match the skill's taxonomy. This is expected for the without_skill baseline since the executor had no access to the taxonomy."
+    },
+    {
+      "text": "Transcript documents running multiple review passes",
+      "passed": false,
+      "evidence": "The transcript shows a single linear workflow: Step 1 (Read file), Step 4 (Manual analysis -- single pass reviewing all functions sequentially), Step 5 (Write findings). No mention of multiple passes, parallel agents, or separate review rounds. The skill defines 3 passes (Logic & Edge Cases, Security & Data Integrity, Error Handling & API Contracts) but the without_skill baseline performed one monolithic review."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  },
+  "timing": {
+    "total_tokens": 18250,
+    "executor_duration_seconds": 84.0
+  },
+  "claims": [
+    {
+      "claim": "9 findings were produced",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json contains exactly 9 JSON objects in the array"
+    },
+    {
+      "claim": "The fixture file is a 70-line TypeScript file with 5 exported functions/utilities",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Cannot verify without reading the fixture file, but the transcript states this in Step 1"
+    },
+    {
+      "claim": "Findings include structured fields: file, line, severity, category, title, description, triggerScenario, and suggestedFix",
+      "type": "factual",
+      "verified": true,
+      "evidence": "All 9 findings in findings.json contain all listed fields with non-empty values"
+    },
+    {
+      "claim": "No issues were encountered during execution",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript 'Issues Encountered' section says 'None' and the output was produced successfully"
+    },
+    {
+      "claim": "The inverted expiration check (line 50) is a real bug",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Finding 2 correctly identifies that session.expiresAt < Date.now() extends expired sessions rather than active ones, which is a genuine logic inversion bug"
+    },
+    {
+      "claim": "The TOCTOU race condition in deductCredits is a real bug",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Finding 3 correctly identifies the read-check-write pattern without atomicity as a classic TOCTOU race condition"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Findings use category IDs from the skill's category taxonomy",
+        "reason": "This assertion is inherently designed to fail for the without_skill baseline, since the executor has no access to the taxonomy. This makes it useful as a discriminator between with_skill and without_skill runs, but it should be documented as an expected-fail baseline assertion rather than a general quality check."
+      },
+      {
+        "assertion": "Transcript documents running multiple review passes",
+        "reason": "Similarly, this is testing a skill-specific workflow (3 parallel review passes) that the without_skill baseline has no instruction to follow. It functions as a discriminator but should be flagged as expected-fail for baselines."
+      },
+      {
+        "reason": "No assertion checks the quality or correctness of the findings themselves -- whether identified bugs are real bugs in the fixture code rather than false positives. The baseline produced 9 findings but some could be noise. A false-positive rate check would add meaningful signal."
+      },
+      {
+        "reason": "No assertion checks whether key known bugs in the fixture were found (recall). If the fixture has planted bugs, testing for their detection would be more discriminating than just counting CRITICAL/HIGH findings."
+      }
+    ],
+    "overall": "The eval has a sensible mix of assertions. Two of the five (category taxonomy and multiple passes) are designed to discriminate between skill and no-skill runs, which is good for comparison but means the baseline is expected to fail those. The remaining three check output quality at a structural level. Adding a content-correctness check (are the bugs real?) and a recall check (were the key planted bugs found?) would strengthen the eval significantly."
+  }
+}

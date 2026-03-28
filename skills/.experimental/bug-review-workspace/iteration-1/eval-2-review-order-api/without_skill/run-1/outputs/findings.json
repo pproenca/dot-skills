@@ -1,0 +1,142 @@
+[
+  {
+    "file": "api-orders.ts",
+    "line": 30,
+    "severity": "critical",
+    "category": "security",
+    "title": "SQL injection via string interpolation in INSERT statement",
+    "description": "The POST /orders endpoint constructs the INSERT query using template literal interpolation (`${total}`, `'${shippingAddress}'`, `'${paymentMethodId}'`). This directly embeds user-controlled values into the SQL string without parameterization, making it trivially exploitable via SQL injection. An attacker can craft a malicious `shippingAddress` or `paymentMethodId` to execute arbitrary SQL.",
+    "triggerScenario": "Send a POST /orders request with shippingAddress set to `'); DROP TABLE orders; --` to delete the orders table.",
+    "suggestedFix": "Use parameterized queries: `INSERT INTO orders (total, shipping_address, payment_method, status) VALUES ($1, $2, $3, 'pending') RETURNING id` with `[total, shippingAddress, paymentMethodId]` as the parameter array."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 26,
+    "severity": "high",
+    "category": "security",
+    "title": "Order total computed from client-supplied prices",
+    "description": "The total is calculated using `item.price` sent by the client in the request body. A malicious user can set item prices to zero or negative values, resulting in incorrect or fraudulent order totals. Prices should be looked up server-side from the product catalog.",
+    "triggerScenario": "Send a POST /orders request with items that have `price: 0` or `price: -100` to get free or negative-cost orders.",
+    "suggestedFix": "Fetch the canonical price for each `productId` from the database and use those server-side prices to compute the total, ignoring the client-supplied `price` field."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 34,
+    "severity": "high",
+    "category": "logic",
+    "title": "Email sent to undefined address (email not in CreateOrderBody)",
+    "description": "The `sendEmail` call uses `req.body.email` but the `CreateOrderBody` interface does not include an `email` field. This means `req.body.email` will be `undefined` at the TypeScript level (and potentially at runtime), causing the confirmation email to either fail silently or be sent to no one.",
+    "triggerScenario": "Create an order with the defined interface fields only. The email confirmation will attempt to send to `undefined`.",
+    "suggestedFix": "Add `email: string` to the `CreateOrderBody` interface, destructure it alongside other fields, validate it is present, and use the validated value in the `sendEmail` call."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 34,
+    "severity": "medium",
+    "category": "logic",
+    "title": "sendEmail called without awaiting the promise (fire-and-forget)",
+    "description": "The `sendEmail` call is not awaited. If it returns a promise (likely, as it is an async I/O operation), any errors will result in unhandled promise rejections. Additionally, the response is sent before the email is confirmed sent, and any failure is silently swallowed.",
+    "triggerScenario": "If the email service is down or returns an error, the promise rejection will be unhandled, potentially crashing the Node.js process in strict environments.",
+    "suggestedFix": "Either `await sendEmail(...)` inside a try/catch (if email failure should be surfaced), or wrap it in a `.catch()` handler to log failures gracefully without blocking the response."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 42,
+    "severity": "medium",
+    "category": "logic",
+    "title": "Off-by-one error in pagination offset calculation",
+    "description": "The offset is calculated as `page * limit`. For page 1 (the first page), this produces an offset of `1 * limit`, skipping the first `limit` rows. The correct formula is `(page - 1) * limit` so that page 1 starts at offset 0.",
+    "triggerScenario": "Request GET /orders?page=1. The first page of results will be skipped entirely; the response will contain what should be page 2.",
+    "suggestedFix": "Change the offset calculation to `const offset = (page - 1) * limit;`."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 19,
+    "severity": "medium",
+    "category": "error-handling",
+    "title": "No try/catch around POST /orders handler",
+    "description": "The POST handler performs a database query and email send but has no try/catch. If `db.query` throws (e.g., database connection failure, constraint violation), the error will propagate as an unhandled rejection, potentially crashing the process or returning a 500 with a stack trace leak.",
+    "triggerScenario": "Database goes offline or the insert violates a constraint. The async handler throws, Express does not catch async errors by default (pre-Express 5), resulting in an unhandled promise rejection.",
+    "suggestedFix": "Wrap the handler body in a try/catch and return `res.status(500).json({ error: 'Internal server error' })` on failure, or use an async error handling middleware."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 39,
+    "severity": "medium",
+    "category": "error-handling",
+    "title": "No try/catch around GET /orders handler",
+    "description": "The GET /orders list endpoint has no try/catch. Any database error will result in an unhandled promise rejection in Express 4.",
+    "triggerScenario": "Database is unreachable when listing orders. The unhandled rejection crashes the process or leaks a stack trace.",
+    "suggestedFix": "Wrap in try/catch or use async error middleware to handle database failures gracefully."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 52,
+    "severity": "medium",
+    "category": "error-handling",
+    "title": "No try/catch around GET /orders/:id handler",
+    "description": "The GET /orders/:id endpoint has no try/catch around the database query. Same unhandled rejection risk as the other endpoints.",
+    "triggerScenario": "Database error when fetching a single order results in an unhandled rejection.",
+    "suggestedFix": "Wrap in try/catch or use async error middleware."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 64,
+    "severity": "high",
+    "category": "error-handling",
+    "title": "Database connection not released in DELETE handler (connection pool leak)",
+    "description": "The DELETE /orders/:id handler acquires a client from the connection pool via `db.pool.connect()` but never calls `client.release()`. On the success path, the connection is leaked back to the pool. On the error path, after ROLLBACK the error is re-thrown but release is still not called. Over time this will exhaust the connection pool, causing the application to hang.",
+    "triggerScenario": "Delete several orders. Each call leaks a connection. After the pool is exhausted (default 10 in pg), all subsequent database operations hang indefinitely.",
+    "suggestedFix": "Add a `finally` block that calls `client.release()`: `} catch (e) { await client.query('ROLLBACK'); throw e; } finally { client.release(); }`."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 64,
+    "severity": "medium",
+    "category": "security",
+    "title": "DELETE endpoint has no authorization check",
+    "description": "The DELETE /orders/:id endpoint allows any unauthenticated request to delete any order. There is no authentication or authorization middleware, meaning anyone who can reach this endpoint can delete arbitrary orders.",
+    "triggerScenario": "An unauthenticated user sends DELETE /orders/123 and the order is permanently removed.",
+    "suggestedFix": "Add authentication middleware to verify the caller's identity, and authorization logic to ensure they own the order or have admin privileges before allowing deletion."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 20,
+    "severity": "medium",
+    "category": "validation",
+    "title": "No validation of shippingAddress or paymentMethodId",
+    "description": "The POST handler only validates that `items` is non-empty. It does not check that `shippingAddress` and `paymentMethodId` are present and valid strings. Missing or empty values will be inserted into the database.",
+    "triggerScenario": "Send a POST /orders with `items` but omit `shippingAddress`. The order is created with a NULL or undefined shipping address.",
+    "suggestedFix": "Add validation: check that `shippingAddress` is a non-empty string and `paymentMethodId` is a valid, non-empty string before proceeding."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 22,
+    "severity": "medium",
+    "category": "validation",
+    "title": "No validation of individual order items",
+    "description": "The handler checks that `items` is non-empty but does not validate individual items. Items with negative quantities, zero or negative prices, or missing productId values will be accepted and used to compute the total.",
+    "triggerScenario": "Send an item with `quantity: -5` and `price: 100`. The total becomes negative, potentially crediting the user.",
+    "suggestedFix": "Validate each item: ensure `productId` is a non-empty string, `quantity` is a positive integer, and `price` is a positive number."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 28,
+    "severity": "medium",
+    "category": "logic",
+    "title": "Order items are not inserted into order_items table",
+    "description": "The POST handler inserts a row into the `orders` table but never inserts the individual line items into `order_items`. The DELETE handler references an `order_items` table, confirming it exists in the schema. This means created orders will have no associated items in the database.",
+    "triggerScenario": "Create an order with 3 items. Only the orders row is created. Querying order_items for that order returns empty. The DELETE handler deletes from order_items but nothing was ever inserted.",
+    "suggestedFix": "After inserting the order, insert each item into `order_items` with the returned `orderId`, `productId`, `quantity`, and `price`. Wrap the whole operation in a transaction."
+  },
+  {
+    "file": "api-orders.ts",
+    "line": 41,
+    "severity": "low",
+    "category": "security",
+    "title": "No upper bound on pagination limit parameter",
+    "description": "The `limit` query parameter is parsed from user input with a default of 20 but no maximum. A user can request `?limit=1000000` to retrieve the entire orders table in one query, causing high memory usage and slow response times.",
+    "triggerScenario": "Request GET /orders?limit=999999. The query attempts to load all orders into memory.",
+    "suggestedFix": "Clamp the limit to a maximum value, e.g.: `const limit = Math.min(parseInt(req.query.limit as string) || 20, 100);`."
+  }
+]

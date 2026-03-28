@@ -1,0 +1,44 @@
+{
+  "skill_name": "bug-review",
+  "discipline": "composition",
+  "evals": [
+    {
+      "id": 1,
+      "name": "review-auth-middleware",
+      "prompt": "I just pushed some auth middleware changes and want a review before merging. The code is in evals/fixtures/auth-middleware.ts — can you review it for bugs? Follow the bug-review workflow (parallel passes, voting, validation). Treat the file as a PR diff and review it end-to-end.",
+      "expected_output": "Structured review with findings using the multi-pass voting workflow, categories, trigger scenarios, and severity ratings",
+      "files": ["evals/fixtures/auth-middleware.ts"],
+      "assertions": [
+        "Findings contain at least 3 CRITICAL or HIGH severity issues",
+        "Every finding has a non-empty triggerScenario field",
+        "Findings include vote counts showing multi-pass consensus",
+        "Transcript documents running 3 distinct review passes with voting aggregation"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "review-order-api",
+      "prompt": "hey can you bug-review my order API changes? File is evals/fixtures/api-orders.ts — it's an Express REST API for orders. Do the full bug-review workflow please.",
+      "expected_output": "Structured review using parallel passes, voting, and validation with findings in the standard format",
+      "files": ["evals/fixtures/api-orders.ts"],
+      "assertions": [
+        "Findings contain at least 3 issues",
+        "At least one finding identifies an injection vulnerability",
+        "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+        "Transcript documents vote counts and aggregation from multiple passes"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "review-clean-utils",
+      "prompt": "Review evals/fixtures/clean-utils.ts for bugs using the bug-review process. Utility functions — formatCurrency, safeJsonParse, debounce, chunk, retry. Give me a thorough review.",
+      "expected_output": "Finds only legitimate edge-case bugs with concrete trigger scenarios, or reports no bugs. No false positives.",
+      "files": ["evals/fixtures/clean-utils.ts"],
+      "assertions": [
+        "Every finding has a concrete reproducible trigger scenario",
+        "No finding alleges a security vulnerability",
+        "Transcript documents running multiple review passes"
+      ]
+    }
+  ]
+}

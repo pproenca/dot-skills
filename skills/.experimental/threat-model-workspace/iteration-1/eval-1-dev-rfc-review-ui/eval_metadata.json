@@ -1,0 +1,15 @@
+{
+  "id": 1,
+  "name": "dev-rfc-review-ui",
+  "prompt": "I've got this skill at skills/.experimental/dev-rfc/ that generates an HTML review page for RFC documents. The review template at assets/review_template.html renders user-submitted RFC markdown and displays it in the browser. Can you do a security analysis of this skill? I want to understand what could go wrong.",
+  "expected_output": "A structured threat model identifying the XSS in review_template.html, trust boundary classification, and context-aware calibration.",
+  "assertions": [
+    "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+    "Trust boundaries section classifies inputs into at least 2 distinct tiers (attacker-controlled vs developer-controlled)",
+    "Output identifies marked.parse or markdown rendering into innerHTML without sanitization as a risk",
+    "Output references the specific file review_template.html in an attack surface section",
+    "At least one attack surface includes a concrete attacker story with action and impact",
+    "Criticality section acknowledges that the review UI runs on localhost, affecting severity"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

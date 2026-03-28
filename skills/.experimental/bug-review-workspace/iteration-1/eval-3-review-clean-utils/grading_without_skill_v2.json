@@ -1,0 +1,79 @@
+{
+  "expectations": [
+    {
+      "text": "Every finding has a concrete reproducible trigger scenario",
+      "passed": true,
+      "evidence": "Both findings in findings.json include a triggerScenario field with specific reproducible calls. Finding 1: 'Call chunk([1,2,3,4,5], 1.5). Expected: either an error or chunks of size 1 or 2 without overlap. Actual: overlapping chunks due to fractional index arithmetic.' Finding 2: 'Call safeJsonParse<{ id: number }>(\"{\\\"name\\\": \\\"foo\\\"}\")', with expected vs actual behavior described. Both provide a concrete function call, inputs, and observable incorrect output."
+    },
+    {
+      "text": "No finding alleges a security vulnerability",
+      "passed": true,
+      "evidence": "Finding 1 is categorized as 'input-validation' and concerns non-integer chunk sizes producing overlapping results. Finding 2 is categorized as 'type-safety' and concerns an unchecked type cast. Neither finding uses security-related terminology (no mention of vulnerability, exploit, injection, XSS, SSRF, etc.). Both are correctly scoped as correctness/type-safety issues."
+    },
+    {
+      "text": "Transcript documents running multiple review passes",
+      "passed": false,
+      "evidence": "The transcript shows exactly three sequential steps: Step 1 (read the file), Step 2 (analyze each function in a single linear sweep), Step 3 (write findings). There is no mention of a second pass, re-examination, cross-cutting analysis, or iterative review. The analysis was a single pass through the five functions in order, then output was written. No multiple review passes were documented."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 1,
+    "total": 3,
+    "pass_rate": 0.67
+  },
+  "timing": {
+    "total_tokens": 17561,
+    "executor_duration_seconds": 67.0
+  },
+  "claims": [
+    {
+      "claim": "The fixture file has 78 lines and 5 exported functions",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Reading clean-utils.ts confirms 77 lines of code (78 with trailing newline) and 5 exported functions: formatCurrency, safeJsonParse, debounce, chunk, retry."
+    },
+    {
+      "claim": "chunk([1,2,3,4,5], 1.5) yields overlapping chunks",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Tracing the code: i=0, slice(0,1.5)->slice(0,1)=[1]; i=1.5, slice(1.5,3)->slice(1,3)=[2,3]; i=3, slice(3,4.5)->slice(3,4)=[4]; i=4.5, slice(4.5,6)->slice(4,5)=[5]. Result: [[1],[2,3],[4],[5]]. While the transcript claims 'overlap', the actual result is not overlapping per se but produces inconsistent chunk sizes. The finding's description in findings.json states 'the second chunk overlaps with the first' which is slightly misleading -- elements are not duplicated, but chunk boundaries are irregular. The core issue (fractional indices cause malformed output) is valid."
+    },
+    {
+      "claim": "safeJsonParse performs an unchecked 'as T' cast",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Line 12 of clean-utils.ts: 'return JSON.parse(input) as T;' -- confirmed. There is no runtime validation of the parsed value against type T."
+    },
+    {
+      "claim": "Only 2 findings were produced",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json contains exactly 2 entries in its JSON array."
+    },
+    {
+      "claim": "No bugs in formatCurrency, debounce, or retry",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Reviewed the source code. formatCurrency delegates to Intl.NumberFormat which handles edge cases. debounce properly manages timeout lifecycle. retry correctly implements exponential backoff with maxRetries+1 total attempts and proper error propagation. These functions appear clean."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Every finding has a concrete reproducible trigger scenario",
+        "reason": "This assertion could be strengthened by verifying the trigger scenario is actually correct (produces the claimed output). The chunk finding's claim of 'overlapping chunks' is slightly inaccurate -- the chunks don't actually contain duplicate elements, they just have inconsistent sizes. A more precise assertion might be 'trigger scenarios produce the described misbehavior when manually traced'."
+      },
+      {
+        "assertion": "Transcript documents running multiple review passes",
+        "reason": "This assertion is interesting for discriminating skill-guided vs baseline behavior. A baseline agent will almost always do a single linear pass. However, note that doing multiple passes does not inherently improve quality -- the baseline here found 2 legitimate issues in a single pass. Consider whether the assertion should focus on the outcome (finding quality) rather than the process (number of passes)."
+      }
+    ],
+    "overall": "The revised assertions are reasonable. The trigger-scenario and no-security assertions are well-targeted for this clean-utils fixture. The multiple-passes assertion is a good discriminator between skill-guided and baseline behavior, though it tests process rather than outcome quality."
+  }
+}

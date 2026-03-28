@@ -1,0 +1,116 @@
+{
+  "expectations": [
+    {
+      "text": "Output has all 6 sections: Overview, Trust boundaries, Attack surfaces, Systemic findings (or omitted if <3 similar), Exploit chains (or omitted if none), Criticality calibration",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md contains all 6 sections: '## 1. Overview' (line 3), '## 2. Threat model, Trust boundaries and assumptions' (line 12), '## 3. Attack surface, mitigations and attacker stories' (line 43), '## 4. Systemic findings' (line 194), '## 5. Exploit chains' (line 227), '## 6. Criticality calibration (critical, high, medium, low)' (line 250). Each section contains substantive content, not just headings."
+    },
+    {
+      "text": "Contains at least one data flow trace showing entry point → function chain → sink with validation status at each step",
+      "passed": true,
+      "evidence": "The transcript documents TRACE 1 with full flow: 'Entry: fs.readFileSync(mdPath) (generate_review.ts:312) | transform: JSON.stringify(mdContent) (ts:322) -- safe for JS string context | pass-through: template replacement ... | transform: marked.parse(stripFrontmatter(MARKDOWN_CONTENT)) (template:917) | NO SANITIZATION between marked.parse() and innerHTML | Sink: tmp.innerHTML = html (template:919) | Validation: NONE'. Section 3.1 of THREAT-MODEL.md also describes this flow with validation status: 'The markdown content is embedded in the HTML page via JSON.stringify() (line 322), which properly escapes it for the JavaScript string context... The vulnerability is in the subsequent marked.parse() call that converts it to HTML and injects it via innerHTML.'"
+    },
+    {
+      "text": "The XSS finding includes a specific trace: markdown content → marked.parse() → innerHTML, with line numbers or code references",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md Section 3.1 states: 'RFC markdown is parsed by marked.parse() (line 917 in batch mode, line 1510/1700 in live mode) and the resulting HTML is assigned to innerHTML (lines 919, 996/999, 1511, 1703).' Entry point is identified at 'generate_review.ts:312 / generate_review.py:242 via fs.readFileSync(mdPath)' with the intermediate steps: 'embedded in the HTML via JSON.stringify(mdContent) at line 322 (TS) / 248 (PY)'. All three stages (markdown content entry, marked.parse transformation, innerHTML sink) have specific line numbers."
+    },
+    {
+      "text": "Trust boundaries classify RFC markdown content as attacker-controlled input",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md Section 2 under 'Attacker-controlled inputs' explicitly lists: 'RFC markdown content: The primary untrusted input. Markdown is authored by the agent (Claude Code) based on user instructions, but the content itself may incorporate untrusted data from external sources (user-pasted text, code snippets, RFC content from repositories).' It then details the entry points: 'Enters the system at generate_review.ts:312 / generate_review.py:242 via fs.readFileSync(mdPath)' and the live mode vector: 'In live mode, markdown enters via POST /api/section/add body (generate_review.ts:493-501).'"
+    },
+    {
+      "text": "If multiple XSS-class findings exist, they are grouped into a systemic finding with a shared root cause",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md Section 4.1 'No HTML sanitization on markdown-derived content' groups 4 XSS instances: 'Pattern: XSS_NO_SANITIZE -- 4 instances. Root cause: The codebase uses marked.parse() to convert markdown to HTML and assigns the result to innerHTML in 4 distinct code paths, with no HTML sanitizer (such as DOMPurify) applied to the output in any of them. Affected files: assets/review_template.html (lines 917-919, 996-999, 1510-1511, 1700-1705). Individual findings: Section 3.1, Section 3.2, Section 3.3.' A second systemic finding (4.2) groups 2 incomplete HTML escaping instances."
+    },
+    {
+      "text": "Criticality calibration rates findings with context-aware severity (localhost deployment noted)",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md Section 6 includes a scope note: 'The localhost-binding of the server (127.0.0.1) means remote network-based exploitation is not possible; all findings assume the attacker can influence input data (markdown content or CLI arguments) rather than having direct network access to the server.' It also provides context-aware downgrade guidance: 'If the developer only reviews self-authored RFC content that they fully control, the XSS findings can be downgraded to Low since the attacker is the developer themselves.' Individual calibrations reference deployment context, e.g., the predictable /tmp path finding is rated Low with the note: 'not exploitable in typical single-user usage.'"
+    },
+    {
+      "text": "At least one attacker story references specific code behavior, not just generic vulnerability description",
+      "passed": true,
+      "evidence": "Multiple attacker stories reference specific code behavior. Section 3.1: 'That text contains an <img src=x onerror=\"...\"> payload. When the review UI renders the markdown, the payload executes in the browser, exfiltrating the developer's feedback data or probing other localhost services.' Section 3.6: 'A malicious webpage includes JavaScript that sends POST http://localhost:3118/api/section/feedback with {\"section\":\"abstract\",\"action\":\"approve\"} to auto-approve a live session section. In practice, the CORS preflight for Content-Type: application/json would block this from a browser context.' Section 3.5: 'When the victim runs the tool in static mode with my-rfc.md, the HTML content overwrites their .bashrc.' These reference concrete API endpoints, specific payloads, and actual code mechanisms rather than generic descriptions."
+    }
+  ],
+  "summary": {
+    "passed": 7,
+    "failed": 0,
+    "total": 7,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 27615,
+    "transcript_chars": 8891
+  },
+  "timing": {
+    "total_tokens": 106130,
+    "executor_duration_seconds": 382.7
+  },
+  "claims": [
+    {
+      "claim": "The review template is approximately 1820 lines and required 8 separate Read calls",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Phase 4 states 'Read on template HTML (in 200-line segments across 8 reads)' and Phase 1 notes 'HTML template at assets/review_template.html (~1820 lines)'. 8 reads of 200 lines each would cover approximately 1600 lines; 1820/200 rounds up to about 9-10 segments if starting from line 1 with no overlap, but 8 is plausible if some segments were larger or if portions were skipped."
+    },
+    {
+      "claim": "4 distinct code paths have marked.parse() to innerHTML without sanitization",
+      "type": "factual",
+      "verified": true,
+      "evidence": "THREAT-MODEL.md Section 4.1 lists the 4 paths with specific line numbers: 'assets/review_template.html (lines 917-919, 996-999, 1510-1511, 1700-1705)'. These are corroborated by Sections 3.1, 3.2, and 3.3 which describe the batch mode (917-919, 996-999), batch section card (999), and live mode (1510-1511, 1700-1705) paths individually."
+    },
+    {
+      "claim": "JSON.stringify properly escapes the markdown for JavaScript string context",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is a correct technical assertion. JSON.stringify escapes characters that would break a JavaScript string context (quotes, backslashes, angle brackets in some implementations, control characters). The vulnerability is correctly identified as being in the subsequent marked.parse() step, not the initial embedding."
+    },
+    {
+      "claim": "The title escaping only replaces double quotes with &quot; and not <, >, or &",
+      "type": "factual",
+      "verified": true,
+      "evidence": "THREAT-MODEL.md Section 3.4 states: 'the only escaping is title.replace(/\"/g, \"&quot;\"), which escapes double quotes but not <, >, or &' with code reference at generate_review.ts:323. This matches the transcript's TRACE 3."
+    },
+    {
+      "claim": "The trace-data-flows.sh script was run during the analysis",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Phase 5 states: 'Bash to run scripts/trace-data-flows.sh on the dev-rfc directory (the script is at skills/.experimental/threat-model/scripts/trace-data-flows.sh)'. The Issues Encountered section corroborates this by noting issues with the script output: 'the trace-data-flows.sh output included many matches from mermaid.min.js (bundled library), which cluttered results.'"
+    },
+    {
+      "claim": "Content-Type: application/json triggers CORS preflight, providing incidental CSRF protection",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is technically accurate. Per the Fetch specification, Content-Type values other than application/x-www-form-urlencoded, multipart/form-data, and text/plain trigger a CORS preflight request. Since the server sets no Access-Control-Allow-Origin header, the preflight would be denied."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [
+      "trace-data-flows.sh was not at the project root; found inside the threat-model skill directory",
+      "Large HTML template (1823 lines) required 8 separate Read calls with offset/limit",
+      "Minified JS files in the dev-rfc assets directory matched sink patterns in the trace script output, causing noise"
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Contains at least one data flow trace showing entry point → function chain → sink with validation status at each step",
+        "reason": "The trace is primarily documented in the transcript rather than the THREAT-MODEL.md output itself. The output describes the flow narratively in section 3.1 but does not include the structured trace format (Entry -> transform -> pass-through -> Sink with validation annotations). Consider checking specifically whether the output document contains a structured trace, not just whether the transcript records that tracing was performed."
+      },
+      {
+        "reason": "No assertion checks whether the output includes concrete remediation code or actionable fix recommendations. The output contains DOMPurify helper code and an escapeHtmlAttr function, which is a strong signal of actionable analysis. A discriminating assertion like 'Remediation recommendations include code-level fixes with specific function signatures' would test this."
+      },
+      {
+        "assertion": "At least one attacker story references specific code behavior, not just generic vulnerability description",
+        "reason": "This assertion is somewhat subjective. A story that mentions a specific API endpoint or payload format is more specific than generic, but the line between 'specific code behavior' and 'specific vulnerability description' is fuzzy. Consider testing for something more concrete, such as 'attacker story references a specific API endpoint path and payload structure'."
+      }
+    ],
+    "overall": "The assertions cover the key structural and analytical requirements well. The main gap is that expectation 2 could be stricter about where the trace appears (transcript vs output document). The assertions together do a good job of testing that the threat model goes beyond surface-level analysis, with expectations 3, 5, and 7 being particularly discriminating."
+  }
+}

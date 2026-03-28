@@ -1,0 +1,97 @@
+{
+  "expectations": [
+    {
+      "text": "Zero findings with severity CRITICAL",
+      "passed": false,
+      "evidence": "findings.json contains finding #1 with severity CRITICAL: 'chunk() size guard does not catch NaN, causing silent data loss'. The transcript also classifies this as CRITICAL with a rank_score of 12. However, the finding is a genuine bug: NaN < 1 is false in JavaScript, so the guard on line 44 is bypassed, causing silent data loss. The skill found a real edge case, not a false positive."
+    },
+    {
+      "text": "At most 2 findings total",
+      "passed": false,
+      "evidence": "findings.json contains exactly 3 findings: (1) chunk NaN bypass (CRITICAL), (2) safeJsonParse null ambiguity (MEDIUM), (3) retry throw undefined (MEDIUM). The transcript confirms: 8 raw findings were aggregated into 3 unique issues, all meeting the vote threshold of 2+, all passing validation. This exceeds the 2-finding cap."
+    },
+    {
+      "text": "Transcript concludes no significant bugs found",
+      "passed": false,
+      "evidence": "The transcript does NOT conclude that no significant bugs were found. Instead it presents 3 validated findings, one rated CRITICAL, and provides a ranked findings table. The final section 'Functions with no bugs found' only covers formatCurrency and debounce, while chunk, safeJsonParse, and retry all have reported issues. The overall tone is that real bugs were discovered."
+    },
+    {
+      "text": "No finding alleges a security vulnerability",
+      "passed": true,
+      "evidence": "None of the 3 findings allege a security vulnerability. Finding #1 is categorized as 'boundary' (NaN bypass). Finding #2 is 'api-contract' (null ambiguity). Finding #3 is 'error-swallow' (throw undefined). The transcript explicitly states under Pass 2: 'No security vulnerabilities found -- these are pure utility functions with no injection surfaces, auth concerns, or external system interactions.' No finding title, description, or category references security, injection, XSS, or any security concern."
+    }
+  ],
+  "summary": {
+    "passed": 1,
+    "failed": 3,
+    "total": 4,
+    "pass_rate": 0.25
+  },
+  "execution_metrics": null,
+  "timing": null,
+  "claims": [
+    {
+      "claim": "NaN < 1 evaluates to false in JavaScript, bypassing the chunk() guard",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is correct per the IEEE 754 standard and JavaScript specification. NaN comparisons with < always return false. Verified against the source code at line 44: if (size < 1) -- NaN would not trigger the throw."
+    },
+    {
+      "claim": "chunk([1,2,3], NaN) returns [] silently (data loss)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Traced the code: NaN passes the guard, i starts at 0, i += NaN makes i = NaN, NaN < 3 is false, loop exits. result is still []. No error thrown. This is correct."
+    },
+    {
+      "claim": "JSON.parse('null') returns null, same as the catch block",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Per the JSON spec and JavaScript, 'null' is valid JSON. JSON.parse('null') returns null. The catch on line 13-14 also returns null. Both code paths produce the same value."
+    },
+    {
+      "claim": "retry() with maxRetries=-1 causes throw undefined",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Source code lines 59-76: maxRetries defaults via destructuring. With -1, the loop condition 0 <= -1 is false. lastError on line 61 is initialized as 'Error | undefined' with value undefined. Line 76 executes throw lastError which is throw undefined."
+    },
+    {
+      "claim": "8 raw findings were aggregated into 3 unique issues",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 3 shows 8 raw findings (F1a-F1c from Pass 1, F2a-F2b from Pass 2, F3a-F3c from Pass 3) grouped into 3 unique issues by location and category overlap. findings.json metadata confirms: findings_before_voting: 8, findings_after_voting: 3."
+    },
+    {
+      "claim": "All findings meet the vote threshold of 2+",
+      "type": "process",
+      "verified": true,
+      "evidence": "findings.json shows: finding #1 has 3 votes, finding #2 has 3 votes, finding #3 has 2 votes. All >= 2. config.json vote_threshold is 2 per the transcript."
+    },
+    {
+      "claim": "formatCurrency and debounce have no bugs",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Reviewed source: formatCurrency (lines 1-8) delegates to Intl.NumberFormat which handles edge cases. debounce (lines 18-41) has correct timer management with clearTimeout before setTimeout and proper cancel implementation. No obvious bugs in either function."
+    }
+  ],
+  "user_notes_summary": null,
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Zero findings with severity CRITICAL",
+        "reason": "The NaN bypass in chunk() is a genuine edge case bug causing silent data loss. An assertion that penalizes the skill for finding a real CRITICAL-severity issue is testing the wrong thing -- it rewards false negatives. Consider revising to: 'No FALSE POSITIVE findings with severity CRITICAL' or 'Any CRITICAL finding must be validated with a reproducible trigger scenario'. The scripted check note itself acknowledges this: 'The CRITICAL finding about NaN bypassing chunk()'s guard is actually a legitimate edge case bug.'"
+      },
+      {
+        "assertion": "At most 2 findings total",
+        "reason": "All 3 findings are legitimate issues verified against the source code. The cap of 2 penalizes thoroughness when the code actually contains 3 real bugs. A better assertion might be: 'No false positive findings' or 'All findings must be validated with reproducible trigger scenarios' -- which this skill actually achieves. If the intent is to test that the skill does not hallucinate bugs in 'clean' code, the fixture itself needs to actually be clean."
+      },
+      {
+        "assertion": "Transcript concludes no significant bugs found",
+        "reason": "This assertion assumes the code is bug-free, but the fixture contains at least one clear-cut bug (NaN bypass causing silent data loss) and two arguable design issues. Expecting the skill to conclude 'no significant bugs' when the code genuinely has bugs tests for the wrong behavior -- it rewards a skill that misses real issues. The eval fixture should be truly clean if this assertion is to be meaningful."
+      },
+      {
+        "reason": "No assertion checks the quality of the review process itself: whether the multi-pass workflow was followed, whether findings were properly deduplicated, or whether the validation step was executed. These are the core composition outcomes for this skill. Consider adding: 'Findings include trigger scenarios and suggested fixes' and 'All findings passed the 4-step validation'."
+      }
+    ],
+    "overall": "Three of four assertions fail, but the failures reflect a mismatch between the eval fixture and the assertions rather than a deficiency in the skill. The fixture 'clean-utils.ts' contains genuine bugs (NaN bypass is unambiguous silent data loss), so assertions expecting zero findings or a 'no bugs' conclusion are testing the wrong thing. The skill actually performed well: it found real bugs, validated them with reproducible scenarios, and did not hallucinate. The assertions should be revised to either (a) use a truly bug-free fixture, or (b) test for false-positive rate and process adherence instead of raw finding count."
+  }
+}

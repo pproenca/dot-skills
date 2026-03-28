@@ -1,0 +1,100 @@
+{
+  "expectations": [
+    {
+      "text": "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+      "passed": false,
+      "evidence": "The THREAT-MODEL.md uses '## 1. System Description' (line 9) instead of a section explicitly titled 'Overview'. The scripted check (check_eval1_structure.sh) also reported FAIL: Missing sections: Overview. The other three sections are present: '## 2. Trust Boundaries' (line 27), '## 3. Attack Surfaces' (line 38), '## 4. Criticality Calibration' (line 148). The System Description section functions as an overview, describing the skill's purpose, workflow, and components, but it does not use the exact heading 'Overview'."
+    },
+    {
+      "text": "Output identifies CSV input or findings data as potentially untrusted/attacker-controlled",
+      "passed": true,
+      "evidence": "Multiple places clearly identify CSV input as untrusted. Line 31: 'CSV input -> parse-findings.sh | External CSV file crosses into the shell/Python parsing layer. The CSV originates from Codex or a user-supplied source -- its contents are untrusted.' Line 40: '### 3.1 Malicious CSV Injection into parse-findings.sh'. Line 75: 'The skill's workflow directly feeds untrusted content (finding titles, descriptions, file paths) into the AI agent's context.' The entire T4 threat (lines 74-81) is dedicated to prompt injection via untrusted CSV content."
+    },
+    {
+      "text": "Output notes that the skill modifies source code files as a write/destructive risk",
+      "passed": true,
+      "evidence": "The output extensively covers source code modification as a risk. Trust boundary line 33: 'AI agent -> target codebase | The agent reads and writes files in the target repository. Edit/Write tool calls cross from the agent's reasoning into actual file system mutations.' Threat T4 impact (line 81): 'arbitrary code modification in the target repository, potential supply chain compromise if patches are committed and pushed.' Threat T5 (line 93-96) highlights that file modifications proceed unblocked. Recommendation 10 (line 186) suggests a dry-run mode to avoid 'directly modifying the codebase'. The summary (line 209) notes the gap between 'the documented intent (human reviews every edit) and the technical reality (nothing actually blocks an edit from proceeding without review)'."
+    },
+    {
+      "text": "Output references the specific script parse-findings.sh in an attack surface section",
+      "passed": true,
+      "evidence": "parse-findings.sh is referenced extensively within the Attack Surfaces section (## 3). Specifically: '### 3.1 Malicious CSV Injection into parse-findings.sh' (line 40) with 'Component: scripts/parse-findings.sh (lines 53-123, inline Python)' (line 42). Also '### 3.6 parse-findings.sh Argument Handling' (line 135) with 'Component: scripts/parse-findings.sh lines 36-49' (line 137). Additionally referenced in T1 threat path (line 48): 'Attacker crafts CSV -> parse-findings.sh parses with Python csv.DictReader'."
+    },
+    {
+      "text": "Output mentions hooks.json or PreToolUse hooks as an existing mitigation or control",
+      "passed": true,
+      "evidence": "hooks.json and PreToolUse hooks are discussed both as system components and as mitigations/controls. Line 20: 'hooks/hooks.json -- PreToolUse hooks on Edit and Write that echo a warning message before file modifications.' Line 84: 'The PreToolUse hooks (hooks.json) display a warning before Edit/Write, giving the human operator a chance to review.' Section 3.3 (lines 87-104) is entirely about hook analysis, identifying hooks.json as the existing safety control while noting it is non-blocking. Line 94: 'The hooks defined in hooks.json use type: \"command\" with a simple echo command.' Recommendation 5 (line 175) proposes adding a PreToolUse hook on the Bash tool."
+    },
+    {
+      "text": "Output includes an explicit out-of-scope or not-applicable section",
+      "passed": false,
+      "evidence": "There is no dedicated section with a heading like 'Out of Scope', 'Not Applicable', 'Exclusions', or similar. The only uses of 'N/A' are inline within threat T10 (lines 143-144: 'Likelihood: N/A, Impact: N/A') where the analysis concludes the specific threat is 'Not exploitable'. This is a per-threat annotation, not a standalone section enumerating what is out of scope for the threat model."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 2,
+    "total": 6,
+    "pass_rate": 0.67
+  },
+  "timing": {
+    "total_tokens": 32453,
+    "executor_duration_seconds": 173.5
+  },
+  "claims": [
+    {
+      "claim": "9 files were identified in the threat-patch skill directory",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 1 states '9 files identified across the root, hooks/, references/, and scripts/ directories.' Step 2 lists 9 specific files read."
+    },
+    {
+      "claim": "4 trust boundaries were identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The THREAT-MODEL.md Trust Boundaries table (lines 29-34) lists exactly 4 boundaries: CSV input -> parse-findings.sh, Parsed findings -> AI agent, AI agent -> target codebase, User -> config.json."
+    },
+    {
+      "claim": "10 threats were identified rated from Critical to Low",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The Criticality Calibration table (lines 150-160) lists 9 threats (T1-T9). T10 is described in section 3.6 but rated N/A (not exploitable), so 9 rated threats plus 1 non-exploitable. The transcript says '10 threats identified, rated from Critical to Low' which is slightly imprecise since T10 is N/A, but 10 threats were enumerated total."
+    },
+    {
+      "claim": "12 recommendations were provided organized by priority",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Recommendations section (lines 164-188) contains 12 numbered items: P0 has 3 (items 1-3), P1 has 3 (items 4-6), P2 has 3 (items 7-9), P3 has 3 (items 10-12)."
+    },
+    {
+      "claim": "The PreToolUse hooks are echo-only and non-blocking",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Line 94: 'The hooks defined in hooks.json use type: \"command\" with a simple echo command. These print a warning message but do not return a non-zero exit code that would block the tool invocation.' This matches the actual hooks.json content described in the transcript Step 2."
+    },
+    {
+      "claim": "The most critical threat is indirect prompt injection through untrusted CSV content",
+      "type": "quality",
+      "verified": true,
+      "evidence": "T4 is rated Critical/P0 in the calibration table (line 152). The summary (line 205) confirms: 'The most critical risk...is indirect prompt injection through untrusted finding content (T4).' This is a reasonable assessment given the skill feeds CSV data into an AI agent that then modifies code."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+        "reason": "The output uses 'System Description' instead of 'Overview' but the content is functionally equivalent. This expectation is testing for exact heading names rather than semantic content. Consider accepting common synonyms (e.g., 'System Description', 'Introduction', 'Overview') or rephrase to test that the output 'describes the system under analysis at a high level' rather than requiring the exact word 'Overview'."
+      },
+      {
+        "assertion": "Output includes an explicit out-of-scope or not-applicable section",
+        "reason": "This is a formatting/structural expectation that is uncommon in naturally produced threat models. The output does mark individual threats as N/A when they turn out not to be exploitable (T10), and defines scope in the header. A dedicated 'Out of Scope' section is a specific convention that an unguided model is unlikely to produce. If the skill is supposed to enforce this structure, this is a good discriminating test for with-skill vs without-skill comparison. But the assertion should be clearer about what qualifies -- does a scope statement in the header count, or must it be a separate heading?"
+      }
+    ],
+    "overall": "The assertions are a reasonable mix of structural and content checks. The two failures are both structural/naming issues rather than substantive gaps -- the output is a thorough, high-quality threat model that addresses all the key concerns. The eval would benefit from assertions that check analytical depth (e.g., 'identifies at least 3 distinct threat categories' or 'provides risk ratings with likelihood and impact') which this output handles well but goes untested."
+  }
+}

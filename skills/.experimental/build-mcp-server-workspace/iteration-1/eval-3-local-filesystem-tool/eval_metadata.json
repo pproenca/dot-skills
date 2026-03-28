@@ -1,0 +1,14 @@
+{
+  "id": 3,
+  "name": "local-filesystem-tool",
+  "prompt": "I want Claude to be able to read and analyze log files on my local machine. The logs are in /var/log/myapp/ and I want tools to search them, tail them, and parse error patterns. Just for me, no one else needs this.",
+  "expected_output": "Should recommend local stdio or MCPB, one-per-action pattern, readOnlyHint annotations. Should NOT recommend remote HTTP.",
+  "assertions": [
+    "Recommends local stdio or MCPB, NOT remote HTTP",
+    "Recommends one-per-action pattern (under 15 tools)",
+    "Uses readOnlyHint: true annotation for read-only tools",
+    "Mentions MCPB upgrade path for future distribution",
+    "Does NOT recommend OAuth"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

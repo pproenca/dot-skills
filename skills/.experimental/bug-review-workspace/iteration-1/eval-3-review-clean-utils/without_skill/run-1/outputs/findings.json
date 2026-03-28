@@ -1,0 +1,22 @@
+[
+  {
+    "file": "evals/fixtures/clean-utils.ts",
+    "line": 43,
+    "severity": "medium",
+    "category": "input-validation",
+    "title": "chunk() does not validate non-integer size values, producing overlapping or malformed chunks",
+    "description": "The chunk function validates that size >= 1 but does not check that size is an integer. When a non-integer size (e.g. 1.5 or 2.7) is passed, the loop increment `i += size` produces fractional indices. Array.prototype.slice floors its arguments to integers, which causes chunks to overlap. For example, chunk([1,2,3,4,5], 1.5) yields [[1],[2,3],[4],[5]] — the second chunk overlaps with the first because slice(1.5, 3) is interpreted as slice(1, 3).",
+    "triggerScenario": "Call chunk([1,2,3,4,5], 1.5). Expected: either an error or chunks of size 1 or 2 without overlap. Actual: overlapping chunks due to fractional index arithmetic.",
+    "suggestedFix": "Add a check at the top of the function: if (!Number.isInteger(size)) { throw new RangeError('Chunk size must be an integer'); } — or use Math.floor(size) / Math.ceil(size) to normalize."
+  },
+  {
+    "file": "evals/fixtures/clean-utils.ts",
+    "line": 10,
+    "severity": "low",
+    "category": "type-safety",
+    "title": "safeJsonParse() provides false type safety via unchecked 'as T' cast",
+    "description": "The generic parameter T and the 'as T' cast give callers a false sense of type safety. The function name implies safety, but only protects against malformed JSON (catching parse errors). It does not validate that the parsed value actually conforms to type T. A caller writing safeJsonParse<{ id: number }>('{\"name\": \"test\"}') gets back an object that does not have an 'id' property, yet TypeScript will treat it as if it does.",
+    "triggerScenario": "Call safeJsonParse<{ id: number }>('{\"name\": \"foo\"}'). TypeScript reports the return type as { id: number } | null, but the actual runtime value is { name: 'foo' } with no 'id' property. Accessing result.id returns undefined, which can propagate silently.",
+    "suggestedFix": "Either (a) accept and document the limitation, renaming to clarify it only handles parse errors, or (b) accept a runtime validator/type guard (e.g. a Zod schema or predicate function) as a second parameter and return null when validation fails."
+  }
+]

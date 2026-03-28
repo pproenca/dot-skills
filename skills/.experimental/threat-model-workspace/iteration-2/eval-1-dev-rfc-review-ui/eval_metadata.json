@@ -1,0 +1,16 @@
+{
+  "id": 1,
+  "name": "dev-rfc-review-ui",
+  "prompt": "I've got this skill at skills/.experimental/dev-rfc/ that generates an HTML review page for RFC documents. The review template at assets/review_template.html renders user-submitted RFC markdown and displays it in the browser. Can you do a security analysis of this skill? I want to understand what could go wrong.",
+  "expected_output": "Evidence-backed threat model with data flow traces, pattern clustering if applicable, and exploit chains.",
+  "assertions": [
+    "Output has all 6 sections: Overview, Trust boundaries, Attack surfaces, Systemic findings (or omitted if <3 similar), Exploit chains (or omitted if none), Criticality calibration",
+    "Contains at least one data flow trace showing entry point → function chain → sink with validation status at each step",
+    "The XSS finding includes a specific trace: markdown content → marked.parse() → innerHTML, with line numbers or code references",
+    "Trust boundaries classify RFC markdown content as attacker-controlled input",
+    "If multiple XSS-class findings exist, they are grouped into a systemic finding with a shared root cause",
+    "Criticality calibration rates findings with context-aware severity (localhost deployment noted)",
+    "At least one attacker story references specific code behavior, not just generic vulnerability description"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

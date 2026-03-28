@@ -1,0 +1,101 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 issues",
+      "passed": true,
+      "evidence": "findings.json contains 14 findings. The transcript summary table also confirms: Critical 1, High 3, Medium 8, Low 1 = 14 total, well exceeding the 3 minimum."
+    },
+    {
+      "text": "At least one finding identifies an injection vulnerability",
+      "passed": true,
+      "evidence": "The first finding in findings.json (line 30, severity 'critical') has title 'SQL injection via string interpolation in INSERT statement' and describes template literal interpolation enabling SQL injection. The scripted check also confirmed: 'check_eval2_injection_found: PASS (1 injection finding)'."
+    },
+    {
+      "text": "No finding targets the GET /orders/:id endpoint",
+      "passed": false,
+      "evidence": "Finding at index 7 in findings.json explicitly targets line 52 with title 'No try/catch around GET /orders/:id handler' and description 'The GET /orders/:id endpoint has no try/catch around the database query.' This directly targets the GET /orders/:id endpoint, violating the expectation."
+    },
+    {
+      "text": "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+      "passed": true,
+      "evidence": "All 14 findings have a severity field with one of the four valid values (case-insensitively): 'critical' (1 finding), 'high' (3 findings), 'medium' (9 findings), 'low' (1 finding). No finding uses an unexpected severity value. Note: values are lowercase in the JSON rather than the uppercase specified in the expectation."
+    },
+    {
+      "text": "Transcript mentions voting or aggregation",
+      "passed": false,
+      "evidence": "The transcript contains neither the word 'voting' nor 'aggregation'. The baseline review used a single-pass systematic code review (Step 4 describes 'Reviewed each endpoint line-by-line'). No multi-pass, voting, or aggregation workflow was described anywhere in the transcript."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  },
+  "execution_metrics": {
+    "output_chars": 10692,
+    "transcript_chars": 2346
+  },
+  "timing": {
+    "total_tokens": 18908,
+    "executor_duration_seconds": 90.3,
+    "total_duration_seconds": 90.3
+  },
+  "claims": [
+    {
+      "claim": "The file contains 81 lines",
+      "type": "factual",
+      "verified": "unverifiable",
+      "evidence": "The transcript states 'Successfully read all 81 lines of api-orders.ts' but the source fixture file is not available in the outputs directory to verify."
+    },
+    {
+      "claim": "The file contains four endpoints: POST /orders, GET /orders, GET /orders/:id, and DELETE /orders/:id",
+      "type": "factual",
+      "verified": true,
+      "evidence": "All 14 findings reference these four endpoints consistently, and the DELETE handler is described with transaction-level operations (BEGIN/ROLLBACK) matching the findings."
+    },
+    {
+      "claim": "14 findings were identified across severity levels",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json contains exactly 14 JSON objects in the array, matching the transcript's claim."
+    },
+    {
+      "claim": "No issues were encountered during the review",
+      "type": "process",
+      "verified": true,
+      "evidence": "The transcript section 'Issues Encountered' states 'None' and the findings were produced without any reported errors."
+    },
+    {
+      "claim": "The connection pool leak finding is valid (client.release() never called)",
+      "type": "quality",
+      "verified": "unverifiable",
+      "evidence": "Cannot verify against the source fixture file, but the finding describes a common and well-known pg pool pattern bug (connect without release in finally block) that is plausible."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No finding targets the GET /orders/:id endpoint",
+        "reason": "This expectation seems designed to test whether the reviewer avoids false positives on a 'clean' endpoint, but the baseline model flagged it for missing try/catch (a generic error-handling pattern rather than a logic/security bug specific to the endpoint). The assertion should clarify whether cross-cutting concerns like missing error handling count as 'targeting' the endpoint, or whether only bugs in the endpoint's core logic qualify."
+      },
+      {
+        "assertion": "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+        "reason": "The expectation specifies uppercase values but the output uses lowercase. This passed on case-insensitive interpretation. If strict casing matters for downstream tooling, add a scripted check that enforces exact casing, or update the assertion to say 'case-insensitive'."
+      },
+      {
+        "assertion": "Transcript mentions voting or aggregation",
+        "reason": "This is clearly a discriminator between skill and baseline runs, so failing on baseline is expected. However, it is brittle -- an agent that writes 'I did not use voting or aggregation' would pass a naive keyword search. A scripted check that looks for evidence of actual multi-pass execution (e.g., multiple review rounds in the transcript) would be more robust."
+      },
+      {
+        "reason": "No assertion checks the structural quality of individual findings. The baseline output included description, suggestedFix, and triggerScenario fields on every finding -- an unusually thorough baseline. An assertion like 'each finding includes a suggested fix' or 'each finding includes a trigger scenario' would measure output completeness and help differentiate skill quality from baseline."
+      }
+    ],
+    "overall": "The assertions cover count, content, endpoint targeting, severity format, and process structure. The main gap is expectation 3 conflating generic error-handling concerns with endpoint-specific bugs -- this is likely to fail on most capable models regardless of skill usage, since flagging missing try/catch is standard practice. For a composition skill eval, adding assertions about multi-pass structure evidence and output schema completeness would improve discrimination."
+  }
+}

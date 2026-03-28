@@ -1,0 +1,95 @@
+{
+  "expectations": [
+    {
+      "text": "Recommends remote streamable-HTTP deployment model",
+      "passed": true,
+      "evidence": "response.md Phase 2 heading is 'Deployment Model: Remote Streamable-HTTP' and states: 'Remote HTTP is the only viable option here.' The summary table row reads: 'Deployment model | Remote streamable-HTTP | Cloud API + multi-user OAuth'. The transcript decisions table also confirms: 'Remote streamable-HTTP'."
+    },
+    {
+      "text": "Recommends search+execute pattern for large API surface",
+      "passed": true,
+      "evidence": "response.md Phase 3 heading is 'Tool Pattern: Search + Execute (Hybrid)' and states: '600+ operations for standard objects alone — nowhere near registerable as individual tools.' The output includes search_salesforce_actions and execute_salesforce_action tools, plus a full salesforce-catalog.ts (12KB) implementing the pattern with a rankActions() keyword ranker and 9 catalog actions (bulk, reports, Apex, flows, metadata, SOSL, delete, etc.)."
+    },
+    {
+      "text": "Mentions CIMD as preferred over DCR for OAuth",
+      "passed": true,
+      "evidence": "response.md Phase 5 states: 'CIMD is preferred (MCP spec 2025-11-25 promoted it to SHOULD). Implement DCR as a fallback for hosts that haven\u2019t moved to CIMD yet.' auth-config.ts header comment states: 'CIMD (Client ID Metadata Document) \u2014 SHOULD (preferred)' and 'DCR (Dynamic Client Registration) \u2014 MAY (fallback)'. The summary table reads: 'Auth | OAuth 2.0 via CIMD (preferred) + DCR fallback'."
+    },
+    {
+      "text": "Mentions promoting top 3-5 operations to dedicated tools (hybrid pattern)",
+      "passed": true,
+      "evidence": "response.md Phase 3 states: 'Dedicated tools for the 5 most common operations \u2014 these get called constantly and benefit from tight schemas' and lists soql_query, get_record, create_record, update_record, describe_object. The explanation says: 'Promoting them to dedicated tools means Claude gets tight schemas and precise descriptions without a discovery round-trip. The long tail stays behind search/execute.' The transcript Step 3 also notes the skill references: '30+ tools \u2192 switch to search + execute' and 'Promote top 3-5 to dedicated tools (hybrid pattern)'."
+    },
+    {
+      "text": "Does NOT recommend local stdio or MCPB",
+      "passed": true,
+      "evidence": "The only mention of stdio or MCPB in all output files is in response.md Phase 2 where they are explicitly rejected: '...makes local stdio or MCPB a non-starter. OAuth redirects require a real hosted callback URL.' Grep confirms no other occurrences. The recommended deployment is consistently remote streamable-HTTP on Cloudflare Workers or Express."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "total_tokens": 47405,
+    "output_files": 5,
+    "output_chars_approx": 62744
+  },
+  "timing": {
+    "total_duration_seconds": 324.0
+  },
+  "claims": [
+    {
+      "claim": "Salesforce has 600+ operations for standard objects alone",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Reasonable estimate: Salesforce has ~200 standard objects, each supporting at minimum CRUD + query + describe = ~6 operations. 200 x 6 = 1200. Even conservatively with 100 commonly used objects, that exceeds 600."
+    },
+    {
+      "claim": "CIMD was promoted to SHOULD in MCP spec 2025-11-25",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 2 confirms reading references/auth.md which states 'CIMD (Client ID Metadata Document) is PREFERRED per MCP spec 2025-11-25'. The auth-config.ts and response.md both cite this consistently. The skill references were verified against versions.md per transcript Step 6."
+    },
+    {
+      "claim": "Token passthrough is forbidden by the MCP spec",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 2 notes 'Token passthrough is explicitly FORBIDDEN \u2014 MCP bearer != Salesforce access token'. This is documented in auth-config.ts (line 14: 'NEVER forward the MCP bearer to Salesforce') and response.md Phase 5."
+    },
+    {
+      "claim": "All 7 tools (5 dedicated + 2 search/execute) are implemented in scaffold code",
+      "type": "quality",
+      "verified": true,
+      "evidence": "server-workers.ts and server-express.ts both scaffold 7 tools. The 5 dedicated tools (soql_query, get_record, create_record, update_record, describe_object) are defined inline, and the 2 search/execute tools reference the salesforce-catalog.ts module."
+    },
+    {
+      "claim": "Delete was intentionally excluded from dedicated tools for safety",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Section 3 states: 'Delete was intentionally put in the catalog rather than as a dedicated tool \u2014 destructive operations benefit from the extra discovery step (forces Claude to be deliberate).' The salesforce-catalog.ts confirms delete is a catalog action, not a dedicated tool."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Recommends remote streamable-HTTP deployment model",
+        "reason": "This assertion checks for the right recommendation but not the reasoning. A stronger assertion would verify the output explains WHY stdio/MCPB are ruled out (OAuth redirect requirement, multi-user token storage). The current output does explain this, but the assertion does not require it."
+      },
+      {
+        "reason": "No assertion checks whether the output actually produces working scaffold code (e.g., that server-workers.ts and server-express.ts exist and contain tool registrations). The eval only checks the design recommendations. Adding an assertion like 'produces scaffold files with at least 5 registered MCP tools' would verify the skill completes the full workflow, not just the recommendation phase."
+      },
+      {
+        "reason": "No assertion checks whether the output mentions token passthrough being forbidden. This is a critical security concern for the OAuth scenario and the skill correctly addresses it. An assertion like 'warns that MCP bearer token must not be forwarded to the upstream API' would catch outputs that get the auth model dangerously wrong."
+      }
+    ],
+    "overall": "Assertions cover the five key decision points well and all pass with strong evidence. The main gap is that assertions only test the recommendation layer (Phase 2-4 decisions) but not the implementation layer (Phase 5 scaffold code), so a response that gives correct recommendations but no code would also pass. Consider adding assertions that verify scaffold output."
+  }
+}

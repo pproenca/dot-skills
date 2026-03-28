@@ -1,0 +1,93 @@
+{
+  "expectations": [
+    {
+      "text": "Recommends one-per-action tool pattern (not search+execute)",
+      "passed": false,
+      "evidence": "The output does follow a one-tool-per-endpoint pattern in practice (8 separate tools for 8 REST endpoints), but there is no explicit recommendation or discussion of the one-per-action principle versus alternatives like compound search+execute tools. The transcript (Step 2) says 'Each REST endpoint maps to one MCP tool' and response.md states 'Each REST endpoint maps to one MCP tool' but this is just a description of what was built, not a recommendation of the pattern or an explanation of why one-per-action is preferred over combining search+execute. The expectation asks for an explicit recommendation of the pattern, which is absent."
+    },
+    {
+      "text": "Scaffold code reads API key from environment variable, not hardcoded",
+      "passed": true,
+      "evidence": "In src/client.ts lines 4-9: 'const API_KEY = process.env.ISSUE_TRACKER_API_KEY ?? \"\";' followed by a runtime check 'if (!API_KEY) { throw new Error(\"ISSUE_TRACKER_API_KEY environment variable is required\"); }'. The transcript also explicitly states (Step 1): 'API key: Read from environment variable (ISSUE_TRACKER_API_KEY), never hardcoded.' The response.md section 'API Key Handling' confirms: 'The API key is read from an environment variable (ISSUE_TRACKER_API_KEY)... This avoids hardcoding credentials and keeps the key out of version control.'"
+    },
+    {
+      "text": "Tool descriptions include what the tool does AND what it returns",
+      "passed": false,
+      "evidence": "Tool descriptions in src/index.ts only state what the tool does, not what it returns. For example: 'Create a new issue in the issue tracker' (line 51), 'Fetch a single issue by its ID' (line 65), 'Full-text search across issues with optional filters for status, priority, assignee, and labels' (line 78), 'List all comments on a specific issue' (line 100). None of these descriptions mention the return value format (e.g., that create_issue returns the created issue's ID, title, status, priority; or that search_issues returns a paginated list with status/priority/title per issue). Every tool description is purely action-oriented with no mention of what information is returned."
+    },
+    {
+      "text": "Tool schemas use typed parameters with .describe() annotations",
+      "passed": true,
+      "evidence": "All tool schemas use Zod with typed parameters and .describe() annotations. Examples from create_issue.ts: 'z.string().min(1).describe(\"Short title for the issue\")' (line 6), 'z.enum([\"low\", \"medium\", \"high\", \"critical\"]).optional().default(\"medium\").describe(\"Issue priority\")' (line 11-15). From search_issues.ts: 'z.string().describe(\"Full-text search query\")' (line 6), 'z.number().int().min(1).optional().default(1).describe(\"Page number\")' (line 17). From list_comments.ts: 'z.string().describe(\"Issue ID to list comments for\")' (line 6). Every parameter across all 8 tool schemas has both a Zod type and a .describe() annotation."
+    },
+    {
+      "text": "Mentions readOnlyHint annotation for read-only tools",
+      "passed": false,
+      "evidence": "No mention of 'readOnlyHint' anywhere in the outputs or transcript. Searched all files recursively for 'readOnlyHint', 'read-only hint', 'readonly hint' with no matches. The tools get_issue, search_issues, list_issues, and list_comments are clearly read-only operations but none have readOnlyHint annotations. The response.md and transcript do not mention this MCP annotation concept at all."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  },
+  "timing": {
+    "total_tokens": 28443,
+    "executor_duration_seconds": 181.4
+  },
+  "claims": [
+    {
+      "claim": "The SDK v1.x accepts the raw Zod shape object which it converts to JSON Schema",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Code in index.ts uses 'createIssueSchema.shape' pattern consistently (e.g., line 53), which is the correct SDK API for passing Zod shapes."
+    },
+    {
+      "claim": "All server-side logs go to stderr because stdout is reserved for MCP protocol messages",
+      "type": "process",
+      "verified": true,
+      "evidence": "In index.ts line 110: 'process.stderr.write(\"Issue tracker MCP server running on stdio\\n\");' — correct pattern for stdio transport."
+    },
+    {
+      "claim": "4xx errors are returned as readable text, 5xx errors are thrown",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The wrapHandler function in index.ts (lines 23-45) catches ApiClientError, returns 4xx as text content, and re-throws 5xx/network errors."
+    },
+    {
+      "claim": "Each REST endpoint maps to one MCP tool",
+      "type": "factual",
+      "verified": true,
+      "evidence": "8 tools registered in index.ts matching 8 REST endpoints: create_issue, update_issue, get_issue, delete_issue, search_issues, list_issues, add_comment, list_comments."
+    },
+    {
+      "claim": "API key is read from environment variable, never hardcoded",
+      "type": "factual",
+      "verified": true,
+      "evidence": "client.ts line 4: 'const API_KEY = process.env.ISSUE_TRACKER_API_KEY ?? \"\";' with runtime validation on lines 8-10."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Recommends one-per-action tool pattern (not search+execute)",
+        "reason": "This assertion tests whether the output explicitly recommends the pattern as a design principle, but the output naturally follows it without naming it. Consider clarifying whether you want the pattern to be explicitly named and justified (recommendation) versus merely implemented (practice). A baseline agent may produce good one-per-action tools without ever articulating the reasoning, which is arguably fine for a scaffold but misses the educational value."
+      },
+      {
+        "assertion": "Tool descriptions include what the tool does AND what it returns",
+        "reason": "Good discriminating assertion -- this is a common gap in baseline outputs. The tool handlers do format return values well (e.g., create_issue returns 'Created issue #id, Title, Status, Priority'), but none of the tool descriptions exposed to the LLM client mention what data comes back. This is a genuine quality gap the skill should address."
+      },
+      {
+        "assertion": "Mentions readOnlyHint annotation for read-only tools",
+        "reason": "This is a strong discriminator for the skill since readOnlyHint is a relatively niche MCP feature that baseline models are unlikely to produce without guidance. Good for demonstrating skill value."
+      }
+    ],
+    "overall": "The assertions form a reasonable set for distinguishing skill-guided output from baseline. Two pass (env var for API key, .describe() annotations) -- these represent patterns modern LLMs already know well. Three fail -- these represent the genuine knowledge gap the skill should fill: explicit pattern recommendations, return-value documentation in tool descriptions, and readOnlyHint annotations. The pass/fail split is plausible for a without-skill baseline."
+  }
+}

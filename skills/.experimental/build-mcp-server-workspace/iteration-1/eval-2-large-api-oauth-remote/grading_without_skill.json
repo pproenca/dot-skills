@@ -1,0 +1,96 @@
+{
+  "expectations": [
+    {
+      "text": "Recommends remote streamable-HTTP deployment model",
+      "passed": true,
+      "evidence": "The response.md clearly recommends remote deployment and mentions streamable HTTP. Line 16: 'remote deployment is the right choice, not a locally-installed stdio server.' Line 25: 'HTTP with SSE (Server-Sent Events) or the newer Streamable HTTP transport introduced in MCP spec 2025-03-26.' However, the actual scaffold code uses SSEServerTransport, not StreamableHTTPServerTransport — so the recommendation text mentions it but the implementation does not follow through on streamable HTTP. Passing on the basis of the recommendation text mentioning it."
+    },
+    {
+      "text": "Recommends search+execute pattern for large API surface",
+      "passed": false,
+      "evidence": "The output does not use the term 'search+execute pattern' or articulate that specific two-phase approach (first search/discover available operations, then execute them). Instead, it recommends a 'Small Set of Generic Tools + Dynamic Schema' pattern with ~10 generic CRUD tools where the Salesforce object name is a parameter. It includes salesforce_describe and salesforce_list_objects tools for schema discovery, and mentions 'Use salesforce_describe first to understand available fields' in a tool description, which is adjacent to the search+execute concept. However, the pattern is framed as generic CRUD tools rather than the explicit search-then-execute two-phase pattern the assertion expects. This is a different (though related) approach — generic parameterized tools rather than a deliberate search+execute workflow pattern for large API surfaces."
+    },
+    {
+      "text": "Mentions CIMD as preferred over DCR for OAuth",
+      "passed": false,
+      "evidence": "No mention of CIMD (Client-Initiated Metadata Discovery), DCR (Dynamic Client Registration), or any comparison between them anywhere in the response.md, transcript, or scaffold code. The output discusses OAuth 2.0 Web Server Flow with a Connected App but does not address MCP-specific OAuth patterns like CIMD or DCR at all."
+    },
+    {
+      "text": "Mentions promoting top 3-5 operations to dedicated tools (hybrid pattern)",
+      "passed": false,
+      "evidence": "No mention of a hybrid pattern, promoting top operations to dedicated tools, or any concept of having a few high-frequency operations as first-class tools alongside generic ones. The output takes the opposite approach: all operations are generic tools (~10 tools total like salesforce_query, salesforce_create, etc.) with object names as parameters. There is no discussion of identifying the most common operations and giving them dedicated tool definitions for better LLM ergonomics."
+    },
+    {
+      "text": "Does NOT recommend local stdio or MCPB",
+      "passed": true,
+      "evidence": "The output explicitly rejects local stdio. Response.md line 16: 'remote deployment is the right choice, not a locally-installed stdio server.' The tradeoffs table (line 327) lists 'Local stdio server' with decision 'Rejected' and reason 'No OAuth callback URL possible'. MCPB is never mentioned anywhere in the outputs or transcript. The transcript (line 22) states: 'a remote HTTP-based MCP server is the only viable approach.'"
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 3,
+    "total": 5,
+    "pass_rate": 0.4
+  },
+  "timing": {
+    "executor_duration_seconds": 248.7,
+    "total_duration_seconds": 248.7
+  },
+  "claims": [
+    {
+      "claim": "10 generic tools beat 400 object-specific tools for LLM usability",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The scaffold code in tools/index.ts defines exactly 10 tools (salesforce_list_objects, salesforce_describe, salesforce_query, salesforce_search, salesforce_get, salesforce_create, salesforce_update, salesforce_delete, salesforce_bulk_create, salesforce_get_limits) matching the recommendation. The rationale about context window impact is sound."
+    },
+    {
+      "claim": "Remote deployment is non-negotiable for OAuth-based, multi-user MCP servers",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Correct — OAuth requires a callback URL which requires an HTTP endpoint, and multi-user token storage requires server-side persistence. Both are impossible with stdio."
+    },
+    {
+      "claim": "The scaffold uses HTTP with SSE transport",
+      "type": "factual",
+      "verified": true,
+      "evidence": "server.ts imports SSEServerTransport and sets up /mcp/sse and /mcp/messages endpoints. Despite the response.md also mentioning 'Streamable HTTP', the actual implementation uses SSE only."
+    },
+    {
+      "claim": "jsforce v2 handles token refresh automatically via refreshFn callback",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The client.ts scaffold code uses jsforce Connection with a refreshFn parameter that calls the token store for refresh, consistent with jsforce v2 API."
+    },
+    {
+      "claim": "Tokens are encrypted at rest with AES-256-GCM",
+      "type": "process",
+      "verified": true,
+      "evidence": "token-store.ts implements encrypt/decrypt functions using AES-256-GCM with proper IV generation and auth tag handling."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Recommends remote streamable-HTTP deployment model",
+        "reason": "This assertion conflates two things: (1) recommending remote deployment and (2) specifically recommending streamable-HTTP as the transport. The output mentions streamable HTTP in passing ('or the newer Streamable HTTP transport') but actually implements SSE. Consider splitting into two assertions — one for remote deployment (which a baseline model reliably gets right for OAuth scenarios) and one specifically for streamable-HTTP as the preferred transport over SSE."
+      },
+      {
+        "assertion": "Recommends search+execute pattern for large API surface",
+        "reason": "This is a specific pattern name that may not be standard terminology outside the skill's vocabulary. A baseline model (without the skill) found a reasonable alternative (generic parameterized CRUD tools with describe/list for discovery) that solves the same problem differently. The assertion could be more precise about what distinguishes search+execute from generic-tools-with-discovery, since they are related but distinct approaches."
+      },
+      {
+        "assertion": "Mentions CIMD as preferred over DCR for OAuth",
+        "reason": "CIMD (Client-Initiated Metadata Discovery) is a very specific MCP spec concept that a baseline model without the skill is unlikely to know. This assertion is a good discriminator between with-skill and without-skill runs. No change needed — it correctly tests whether the skill adds value."
+      },
+      {
+        "reason": "No assertion checks whether the output warns about SSE being deprecated in favor of streamable HTTP. The response mentions both transports as options but does not flag SSE as legacy/deprecated — yet the scaffold code uses SSE. This is a meaningful gap between recommendation and implementation that no assertion catches."
+      }
+    ],
+    "overall": "The assertions effectively test for skill-specific knowledge (CIMD, hybrid pattern, search+execute) that a baseline model is unlikely to produce from general knowledge. The 40% pass rate for the without-skill baseline is expected and validates that these assertions are good discriminators. The two passing assertions (remote deployment, no stdio/MCPB) represent domain-obvious decisions that any competent model would get right for an OAuth scenario, making them weak discriminators on their own."
+  }
+}

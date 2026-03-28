@@ -1,0 +1,51 @@
+{
+  "skill_name": "bug-review",
+  "discipline": "composition",
+  "iteration": 1,
+  "timestamp": "2026-03-28",
+  "summary": {
+    "with_skill": { "total_assertions": 14, "passed": 8, "failed": 6, "pass_rate": 57.1 },
+    "without_skill": { "total_assertions": 14, "passed": 10, "failed": 4, "pass_rate": 71.4 },
+    "delta": -14.3
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "review-auth-middleware",
+      "with_skill": { "passed": 3, "total": 5, "pass_rate": 60.0, "tokens": 28213, "duration_ms": 156386 },
+      "without_skill": { "passed": 3, "total": 5, "pass_rate": 60.0, "tokens": 18250, "duration_ms": 83976 },
+      "assertions": [
+        { "text": "Findings contain at least 3 CRITICAL or HIGH severity issues", "with_skill": true, "without_skill": true, "discriminating": false },
+        { "text": "Every finding has a non-empty triggerScenario field", "with_skill": true, "without_skill": true, "discriminating": false },
+        { "text": "No finding targets the isAdmin function", "with_skill": false, "without_skill": true, "discriminating": true, "note": "FLAWED: with-skill finding mentions isAdmin in comparison text but targets hasPermission" },
+        { "text": "Findings use category IDs from skill taxonomy", "with_skill": false, "without_skill": false, "discriminating": false, "note": "FLAWED: grader couldn't access categories.md to verify" },
+        { "text": "Transcript documents running multiple review passes", "with_skill": true, "without_skill": false, "discriminating": true, "note": "CLEAN WIN: skill-specific workflow behavior" }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "review-order-api",
+      "with_skill": { "passed": 4, "total": 5, "pass_rate": 80.0, "tokens": 32578, "duration_ms": 179072 },
+      "without_skill": { "passed": 3, "total": 5, "pass_rate": 60.0, "tokens": 18908, "duration_ms": 90341 },
+      "assertions": [
+        { "text": "Findings contain at least 3 issues", "with_skill": true, "without_skill": true, "discriminating": false },
+        { "text": "At least one finding identifies an injection vulnerability", "with_skill": true, "without_skill": true, "discriminating": false },
+        { "text": "No finding targets the GET /orders/:id endpoint", "with_skill": false, "without_skill": false, "discriminating": false, "note": "FLAWED: broad auth-bypass findings cover all endpoints" },
+        { "text": "Each finding has a valid severity", "with_skill": true, "without_skill": true, "discriminating": false },
+        { "text": "Transcript mentions voting or aggregation", "with_skill": true, "without_skill": false, "discriminating": true, "note": "CLEAN WIN: skill-specific workflow behavior" }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "review-clean-utils",
+      "with_skill": { "passed": 1, "total": 4, "pass_rate": 25.0, "tokens": 27342, "duration_ms": 149799 },
+      "without_skill": { "passed": 4, "total": 4, "pass_rate": 100.0, "tokens": 17561, "duration_ms": 67037 },
+      "assertions": [
+        { "text": "Zero findings with severity CRITICAL", "with_skill": false, "without_skill": true, "discriminating": true, "note": "FLAWED: skill correctly found NaN bypass bug — not a false positive" },
+        { "text": "At most 2 findings total", "with_skill": false, "without_skill": true, "discriminating": true, "note": "FLAWED: all 3 findings are legitimate edge case bugs" },
+        { "text": "Transcript concludes no significant bugs found", "with_skill": false, "without_skill": true, "discriminating": true, "note": "FLAWED: there ARE significant bugs in the code" },
+        { "text": "No finding alleges a security vulnerability", "with_skill": true, "without_skill": true, "discriminating": false }
+      ]
+    }
+  ]
+}

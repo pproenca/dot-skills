@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "name": "threat-patch-self-analysis",
+  "prompt": "Can you threat model the skill at skills/.experimental/threat-patch/? It parses Codex security finding CSVs and generates code patches. I'm worried about what happens if someone feeds it a malicious CSV or if the patch workflow has unintended side effects.",
+  "expected_output": "A threat model identifying CSV parsing risks, source code modification risks, config path handling, and hooks as existing mitigations.",
+  "assertions": [
+    "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+    "Output identifies CSV input or findings data as potentially untrusted/attacker-controlled",
+    "Output notes that the skill modifies source code files as a write/destructive risk",
+    "Output references the specific script parse-findings.sh in an attack surface section",
+    "Output mentions hooks.json or PreToolUse hooks as an existing mitigation or control",
+    "Output includes an explicit out-of-scope or not-applicable section"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

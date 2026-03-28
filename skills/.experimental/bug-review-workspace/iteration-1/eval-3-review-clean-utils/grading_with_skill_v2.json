@@ -1,0 +1,74 @@
+{
+  "expectations": [
+    {
+      "text": "Every finding has a concrete reproducible trigger scenario",
+      "passed": true,
+      "evidence": "All 3 findings in findings.json include a 'triggerScenario' field with exact function calls and concrete arguments. Finding 1: 'Call chunk([1, 2, 3], NaN) or chunk([1, 2, 3], parseInt(\"abc\"))'. Finding 2: 'Call safeJsonParse(\"null\")... Call safeJsonParse(\"{invalid\")'. Finding 3: 'Call retry(() => fetch(\"/api\"), { maxRetries: -1 })'. Each also describes the observable incorrect behavior (e.g., returns [], returns null for both cases, throws undefined). The transcript's Step 4 further validates each trigger with explicit PASS verdicts."
+    },
+    {
+      "text": "No finding alleges a security vulnerability",
+      "passed": true,
+      "evidence": "The three finding categories are 'boundary', 'api-contract', and 'error-swallow' -- none is a security category. The transcript explicitly states in Pass 2: 'No security vulnerabilities found -- these are pure utility functions with no injection surfaces, auth concerns, or external system interactions.' No finding title, description, or category mentions security, injection, authentication, or any security-related concern."
+    },
+    {
+      "text": "Transcript documents running multiple review passes",
+      "passed": true,
+      "evidence": "The transcript's Step 2 is titled 'Three Parallel Review Passes (Simulated Sequentially)' and documents three distinct passes: 'Pass 1: Logic & Edge Cases', 'Pass 2: Security & Data Integrity', 'Pass 3: Error Handling & API Contracts'. Each pass has a different focus area, method description, and independent findings list (F1a-F1c, F2a-F2b, F3a-F3c). Step 3 then aggregates across passes, showing which passes contributed each vote."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 0,
+    "total": 3,
+    "pass_rate": 1.0
+  },
+  "claims": [
+    {
+      "claim": "8 raw findings were reduced to 3 after voting and deduplication",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json metadata shows findings_before_voting: 8, findings_after_voting: 3. The transcript Step 3 table lists exactly 3 deduplicated findings, and the raw findings across the three passes (F1a-F1c, F2a-F2b, F3a-F3c) total 8."
+    },
+    {
+      "claim": "All findings met the vote threshold of 2+",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json shows votes of 3, 3, and 2 for the three findings. The config vote_threshold is 2. All meet or exceed this threshold."
+    },
+    {
+      "claim": "chunk NaN bug is CRITICAL severity",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The claim is reasonable: NaN size causes silent data loss (returns empty array for any non-empty input). The rank_score of 12 (3 votes * weight 4) reflects CRITICAL severity. Silent data loss without any error is a legitimate critical-severity issue."
+    },
+    {
+      "claim": "formatCurrency and debounce have no bugs",
+      "type": "quality",
+      "verified": false,
+      "evidence": "Cannot fully verify without seeing the source file. The transcript states both are 'Clean' but this is an unverifiable negative claim. The reasoning given (Intl.NumberFormat delegation, correct timer management) is plausible but not provable from the transcript alone."
+    },
+    {
+      "claim": "Each finding was validated against 4 tests",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 4 shows each finding tested against: Trigger test, Evidence test, Existing coverage, and Rules test. All three findings show PASS for the first three and N/A for Rules test (no .bug-review.md exists). All are marked VALIDATED."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": ["No user_notes.md file found in outputs directory"]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Every finding has a concrete reproducible trigger scenario",
+        "reason": "This assertion checks for the presence and concreteness of trigger scenarios, which is good. To make it more discriminating, consider also asserting that the trigger scenarios are technically correct (e.g., NaN < 1 is indeed false in JS, JSON.parse('null') does return null). A hallucinated but plausible-sounding scenario would still pass the current assertion."
+      },
+      {
+        "reason": "No assertion checks the accuracy of the findings themselves against the actual source code. For a composition-discipline skill, verifying that the multi-pass workflow produced correct results (not just that it ran) would strengthen the eval. For instance, verifying that chunk([1,2,3], NaN) truly returns [] by running the code."
+      }
+    ],
+    "overall": "The revised assertions are well-targeted for a clean-utils review: they check trigger quality, avoid false security claims, and verify the multi-pass workflow ran. The main gap is that no assertion verifies finding correctness against the actual source code."
+  }
+}

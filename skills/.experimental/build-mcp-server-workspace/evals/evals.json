@@ -1,0 +1,48 @@
+{
+  "skill_name": "build-mcp-server",
+  "discipline": "composition",
+  "evals": [
+    {
+      "id": 1,
+      "name": "wrap-small-saas-api",
+      "prompt": "I want to build an MCP server that wraps our company's internal issue tracker API. It's a REST API with about 8 endpoints — create issue, update issue, search, add comment, that sort of thing. Just our team uses it (5 engineers). No OAuth, just an API key. Can you help me set this up?",
+      "expected_output": "Should recommend remote HTTP or local stdio (small team), one-per-action tool pattern, scaffold with TS SDK or FastMCP, API key from env var. Should produce working scaffold code with typed tool schemas and descriptive tool descriptions.",
+      "files": [],
+      "expectations": [
+        "Recommends one-per-action tool pattern (not search+execute)",
+        "Scaffold code reads API key from environment variable, not hardcoded",
+        "Tool descriptions include what the tool does AND what it returns",
+        "Tool schemas use typed parameters with .describe() annotations",
+        "Mentions readOnlyHint annotation for read-only tools"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "large-api-oauth-remote",
+      "prompt": "We need an MCP server for our Salesforce integration. Hundreds of objects and operations, and it needs to work for any user who installs it — they'd authenticate with their own Salesforce org via OAuth. What's the best approach?",
+      "expected_output": "Should recommend remote streamable-HTTP, search+execute pattern (too many endpoints), OAuth via CIMD. Should reference auth.md for OAuth wiring and tool-design.md for the search+execute pattern. Should mention promoting top 3-5 frequently used ops to dedicated tools.",
+      "files": [],
+      "expectations": [
+        "Recommends remote streamable-HTTP deployment model",
+        "Recommends search+execute pattern for large API surface",
+        "Mentions CIMD as preferred over DCR for OAuth",
+        "Mentions promoting top 3-5 operations to dedicated tools (hybrid pattern)",
+        "Does NOT recommend local stdio or MCPB"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "local-filesystem-tool",
+      "prompt": "I want Claude to be able to read and analyze log files on my local machine. The logs are in /var/log/myapp/ and I want tools to search them, tail them, and parse error patterns. Just for me, no one else needs this.",
+      "expected_output": "Should recommend local stdio or MCPB, one-per-action pattern (< 15 tools), note the MCPB upgrade path. Should scaffold tools with readOnlyHint annotations. Should NOT recommend remote HTTP.",
+      "files": [],
+      "expectations": [
+        "Recommends local stdio or MCPB, NOT remote HTTP",
+        "Recommends one-per-action pattern (under 15 tools)",
+        "Uses readOnlyHint: true annotation for read-only tools",
+        "Mentions MCPB upgrade path for future distribution",
+        "Does NOT recommend OAuth"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,58 @@
+{
+  "metadata": {
+    "skill": "bug-review",
+    "file_reviewed": "evals/fixtures/clean-utils.ts",
+    "review_passes": 3,
+    "vote_threshold": 2,
+    "findings_before_voting": 8,
+    "findings_after_voting": 3,
+    "findings_after_validation": 3
+  },
+  "findings": [
+    {
+      "id": 1,
+      "file": "evals/fixtures/clean-utils.ts",
+      "line": 44,
+      "endLine": 52,
+      "severity": "CRITICAL",
+      "category": "boundary",
+      "title": "chunk() size guard does not catch NaN, causing silent data loss",
+      "description": "The guard `if (size < 1)` on line 44 does not catch NaN because `NaN < 1` evaluates to false in JavaScript. When size is NaN, `i += NaN` on line 49 makes the loop index NaN, and the loop condition `NaN < array.length` is always false, so the loop body never executes. The function returns an empty array for any non-empty input, silently dropping all elements.",
+      "triggerScenario": "Call chunk([1, 2, 3], NaN) or chunk([1, 2, 3], parseInt('abc')). The guard does not throw. The for-loop never executes because NaN < 3 is false. Returns [] instead of throwing or returning the original data. All array elements are silently lost.",
+      "suggestedFix": "Change the guard to: if (!Number.isFinite(size) || size < 1) { throw new RangeError('Chunk size must be a finite number >= 1'); }. Alternatively: if (!(size >= 1)) to catch NaN via the inverted comparison.",
+      "votes": 3,
+      "votingPasses": ["pass1-logic", "pass2-security", "pass3-error-handling"],
+      "rank_score": 12
+    },
+    {
+      "id": 2,
+      "file": "evals/fixtures/clean-utils.ts",
+      "line": 10,
+      "endLine": 16,
+      "severity": "MEDIUM",
+      "category": "api-contract",
+      "title": "safeJsonParse() cannot distinguish valid JSON null from parse failure",
+      "description": "Both a successful parse of the JSON literal 'null' and a parse failure return null. The caller has no way to distinguish between valid input that parsed to null and invalid JSON that failed to parse. This is an ambiguous API contract: JSON.parse('null') returns null (per the JSON spec), and the catch block also returns null.",
+      "triggerScenario": "Call safeJsonParse('null'). JSON.parse('null') returns null. Call safeJsonParse('{invalid'). The catch block returns null. Both calls return null. A caller using `if (result === null) handleError()` would incorrectly treat valid JSON null as a parse failure, or vice versa.",
+      "suggestedFix": "Return a discriminated result: { success: true, data: T } | { success: false, error: Error } instead of T | null. Alternatively, use a sentinel like undefined for errors: return undefined on failure and null only for valid JSON null.",
+      "votes": 3,
+      "votingPasses": ["pass1-logic", "pass2-security", "pass3-error-handling"],
+      "rank_score": 6
+    },
+    {
+      "id": 3,
+      "file": "evals/fixtures/clean-utils.ts",
+      "line": 60,
+      "endLine": 76,
+      "severity": "MEDIUM",
+      "category": "error-swallow",
+      "title": "retry() throws undefined when maxRetries is negative",
+      "description": "When maxRetries is negative (e.g., -1), the loop condition `attempt <= maxRetries` (0 <= -1) is false on the first check, so the loop body never executes. The variable lastError on line 60 is initialized as undefined and never assigned. Line 76 then executes `throw undefined`, which produces an untyped throw that breaks error handling conventions and will confuse any catch block expecting an Error instance.",
+      "triggerScenario": "Call retry(() => fetch('/api'), { maxRetries: -1 }). The for-loop never runs. lastError remains undefined. `throw undefined` is executed. A caller with `catch (e) { console.error(e.message) }` gets TypeError: Cannot read property 'message' of undefined.",
+      "suggestedFix": "Add input validation: if (maxRetries < 0) throw new RangeError('maxRetries must be >= 0'). Alternatively, clamp: const safeRetries = Math.max(0, maxRetries).",
+      "votes": 2,
+      "votingPasses": ["pass1-logic", "pass3-error-handling"],
+      "rank_score": 4
+    }
+  ]
+}

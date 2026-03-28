@@ -1,0 +1,107 @@
+{
+  "expectations": [
+    {
+      "text": "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md contains all four sections: '## 1. Overview' (line 4), '## 2. Threat model, Trust boundaries and assumptions' (line 9), '## 3. Attack surface, mitigations and attacker stories' (line 44), '## 4. Criticality calibration (critical, high, medium, low)' (line 166). Each section has substantive content. Scripted check also returned PASS."
+    },
+    {
+      "text": "Output identifies CSV input or findings data as potentially untrusted/attacker-controlled",
+      "passed": true,
+      "evidence": "Section 2 explicitly labels CSV as attacker-controlled: 'Codex security findings CSV: The primary ingest path... An attacker who can supply or tamper with this CSV controls all field values.' (line 21). Also states: 'CSV files may come from external sources (Codex exports, CI pipelines, shared security reports). They should be treated as potentially attacker-influenced' (line 39). CSV is listed first under 'Attacker-controlled inputs' (line 20). Scripted check also returned PASS."
+    },
+    {
+      "text": "Output notes that the skill modifies source code files as a write/destructive risk",
+      "passed": true,
+      "evidence": "Multiple references to write/destructive risks: 'writes patches to source files via the agent's Edit/Write tools' (line 7). 'Host filesystem integrity: The skill uses Edit and Write tools to modify source code files. Malicious inputs could direct writes to unintended locations or inject malicious code content.' (line 13). 'Codebase integrity: Patches are applied to the developer's working tree. Incorrect or malicious patches could introduce backdoors, weaken security controls, or corrupt the project.' (line 14). Entire attack surface 3.3 is dedicated to code injection via patch generation."
+    },
+    {
+      "text": "Output references the specific script parse-findings.sh in an attack surface section",
+      "passed": true,
+      "evidence": "Two attack surface subsections reference parse-findings.sh directly: '### 3.1 CSV parsing and field injection (scripts/parse-findings.sh)' (line 45) with detailed analysis of the script's Python heredoc and field handling, and '### 3.6 Python code execution in parse-findings.sh (scripts/parse-findings.sh)' (line 126) analyzing the script's execution model and permissions. Both are within '## 3. Attack surface, mitigations and attacker stories'."
+    },
+    {
+      "text": "Output mentions hooks.json or PreToolUse hooks as an existing mitigation or control",
+      "passed": true,
+      "evidence": "hooks.json and PreToolUse hooks are mentioned extensively as mitigations: 'The hooks/hooks.json configuration registers PreToolUse hooks on Edit and Write that display a warning message before each file modification, prompting the developer to review.' (line 87-88, as mitigation in section 3.3). 'hooks/hooks.json: Defines PreToolUse hooks for Edit and Write.' (line 29, in trust boundary mapping). Also analyzed in section 3.4 as its own attack surface with mitigations: 'The hooks mechanism is a defense-in-depth layer, not the sole protection.' (line 104)."
+    },
+    {
+      "text": "Output includes an explicit out-of-scope or not-applicable section",
+      "passed": true,
+      "evidence": "THREAT-MODEL.md contains '### Out-of-scope / not applicable' (line 158) with five explicit items: network-based attacks, multi-tenant isolation, authentication and session management, cryptographic key management, and binary exploitation. Each includes a brief rationale for exclusion."
+    }
+  ],
+  "summary": {
+    "passed": 6,
+    "failed": 0,
+    "total": 6,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 25326,
+    "transcript_chars": 4811
+  },
+  "timing": {
+    "total_tokens": 49416,
+    "executor_duration_seconds": 317.9,
+    "total_duration_seconds": 317.9
+  },
+  "claims": [
+    {
+      "claim": "The threat model follows the seven-phase methodology from the threat-model skill",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 3 describes following all seven phases: Codebase Survey, Component Mapping, Asset Identification, Trust Boundaries, Attack Surface Enumeration, Criticality Calibration, and Output. The output document matches the four-section format from the methodology."
+    },
+    {
+      "claim": "Seven attack surface areas were identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "THREAT-MODEL.md contains sections 3.1 through 3.7, each covering a distinct attack surface: CSV parsing (3.1), arbitrary file read (3.2), code injection via patches (3.3), hook bypass (3.4), git history manipulation (3.5), Python execution (3.6), inline prompt injection (3.7)."
+    },
+    {
+      "claim": "Criticality ratings include 1 critical, 3 high, 3 medium, 3 low",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Section 4 of THREAT-MODEL.md lists: Critical (1 item: code injection via finding descriptions), High (3 items: arbitrary file read, prompt injection via CSV fields, hook bypass), Medium (3 items: git history manipulation, social engineering, DoS via oversized CSV), Low (3 items: Python execution, hook config tampering, branch name injection)."
+    },
+    {
+      "claim": "The hooks are advisory, not blocking",
+      "type": "factual",
+      "verified": true,
+      "evidence": "This is a key analytical finding documented both in the transcript ('the PreToolUse hooks run echo commands that display warnings but do not actually prevent tool execution') and in the output (section 3.4: 'The hooks run echo commands that print warnings. They do not actually block the Edit/Write operations'). This is consistent with the hooks.json using echo commands."
+    },
+    {
+      "claim": "All nine files in the threat-patch skill were read during analysis",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 2 lists nine files read: SKILL.md, config.json, metadata.json, gotchas.md, hooks/hooks.json, references/workflow.md, references/fix-patterns.md, references/output-format.md, scripts/parse-findings.sh."
+    },
+    {
+      "claim": "No blocking issues were encountered",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript 'Issues Encountered' section states 'No blocking issues were encountered' and lists only observational notes, not errors or failures."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+        "reason": "The scripted check likely matches section headings with regex. Consider also checking that each section has a minimum content length or at least one substantive paragraph, to prevent passing on a document with correct headings but empty sections."
+      },
+      {
+        "reason": "No assertion checks whether each attack surface subsection follows the required internal structure (Surface/Risks/Mitigations/Attacker-story). This is a key structural requirement of the threat-model skill's output format. The output does follow it, but a hollow output with headings only could pass all current assertions."
+      },
+      {
+        "reason": "No assertion validates the criticality calibration section actually maps findings to severity levels. A section titled 'Criticality calibration' with placeholder text would pass current checks. Consider asserting that at least 'critical' or 'high' severity items are listed."
+      }
+    ],
+    "overall": "The assertions cover the major structural and content requirements well. The main gap is depth verification -- all assertions can currently be satisfied by surface-level compliance (correct headings, keyword mentions) without checking that the analysis beneath those headings is substantive and internally consistent. The scripted checks add useful automated validation for two of the six assertions."
+  }
+}

@@ -1,0 +1,30 @@
+{
+  "skill_name": "threat-model",
+  "discipline": "composition",
+  "evals": [
+    {
+      "id": 1,
+      "name": "dev-rfc-review-ui",
+      "prompt": "I've got this skill at skills/.experimental/dev-rfc/ that generates an HTML review page for RFC documents. The review template at assets/review_template.html renders user-submitted RFC markdown and displays it in the browser. Can you do a security analysis of this skill? I want to understand what could go wrong.",
+      "expected_output": "A structured threat model that identifies the XSS vulnerability in review_template.html (marked.parse rendering untrusted markdown into innerHTML without DOMPurify), classifies RFC markdown as attacker-controlled input, and calibrates severity considering it runs on localhost.",
+      "files": [],
+      "expectations": []
+    },
+    {
+      "id": 2,
+      "name": "threat-patch-self-analysis",
+      "prompt": "Can you threat model the skill at skills/.experimental/threat-patch/? It parses Codex security finding CSVs and generates code patches. I'm worried about what happens if someone feeds it a malicious CSV or if the patch workflow has unintended side effects.",
+      "expected_output": "A threat model that identifies: the parse-findings.sh script processes untrusted CSV input, the skill modifies source code (write risk), config.json has path fields, and hooks.json gates some but not all destructive operations.",
+      "files": [],
+      "expectations": []
+    },
+    {
+      "id": 3,
+      "name": "harness-scripts-low-surface",
+      "prompt": "Run a threat model on the build-agents-md.js and validate-skill.js scripts. They're Node.js build/validation tools that read skill directories and check structure. These are internal tools. I just want a quick check that they're not doing anything dangerous.",
+      "expected_output": "A proportionate, brief threat model. These are read-only validation scripts processing trusted developer input. Should identify low risk and avoid inflating non-threats.",
+      "files": [],
+      "expectations": []
+    }
+  ]
+}

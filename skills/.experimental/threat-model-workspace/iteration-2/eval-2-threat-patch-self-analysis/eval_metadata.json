@@ -1,0 +1,16 @@
+{
+  "id": 2,
+  "name": "threat-patch-self-analysis",
+  "prompt": "Can you threat model the skill at skills/.experimental/threat-patch/? It parses Codex security finding CSVs and generates code patches. I'm worried about what happens if someone feeds it a malicious CSV or if the patch workflow has unintended side effects.",
+  "expected_output": "Evidence-backed threat model with data flow traces through the CSV parsing and patching workflow.",
+  "assertions": [
+    "Contains at least one data flow trace showing CSV field value → through parse-findings.sh or agent workflow → to a sink operation",
+    "Identifies the prompt injection chain: CSV description field → agent context → influences patch generation → source code modification",
+    "Notes hooks.json as an existing mitigation AND identifies its limitation (echo-only, not blocking)",
+    "Groups related findings if 3+ share a root cause (e.g., multiple untrusted-CSV-field findings clustered)",
+    "If exploit chains are found, documents them with prerequisite arrows and terminal impact",
+    "Output includes an explicit out-of-scope section",
+    "Calibration adjusts severity based on deployment context (interactive vs automated/CI)"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

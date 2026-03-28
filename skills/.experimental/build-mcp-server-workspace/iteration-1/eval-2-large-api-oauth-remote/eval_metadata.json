@@ -1,0 +1,14 @@
+{
+  "id": 2,
+  "name": "large-api-oauth-remote",
+  "prompt": "We need an MCP server for our Salesforce integration. Hundreds of objects and operations, and it needs to work for any user who installs it — they'd authenticate with their own Salesforce org via OAuth. What's the best approach?",
+  "expected_output": "Should recommend remote streamable-HTTP, search+execute pattern, OAuth via CIMD.",
+  "assertions": [
+    "Recommends remote streamable-HTTP deployment model",
+    "Recommends search+execute pattern for large API surface",
+    "Mentions CIMD as preferred over DCR for OAuth",
+    "Mentions promoting top 3-5 operations to dedicated tools (hybrid pattern)",
+    "Does NOT recommend local stdio or MCPB"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

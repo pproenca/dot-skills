@@ -1,0 +1,101 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 issues",
+      "passed": true,
+      "evidence": "findings.json contains 7 findings (IDs 1-7). The transcript Section 4 confirms '7 findings passed voting, 3 discarded (single vote).' The summary in findings.json also shows total_findings: 7."
+    },
+    {
+      "text": "At least one finding identifies an injection vulnerability",
+      "passed": true,
+      "evidence": "Finding 1 in findings.json has category 'injection' and title 'SQL injection via string interpolation in INSERT query' targeting lines 29-31 of api-orders.ts. The scripted check (check_eval2_injection_found) also returned PASS."
+    },
+    {
+      "text": "No finding targets the GET /orders/:id endpoint",
+      "passed": false,
+      "evidence": "Finding 7 (id: 7, lines 19-78) is titled 'No authentication or authorization on any endpoint' and its description explicitly names GET /orders/:id: 'view any order's details' and the suggested fix says 'verify the requesting user owns the order before allowing GET/:id or DELETE/:id operations.' While the finding covers all four endpoints, GET /orders/:id is explicitly included as a target."
+    },
+    {
+      "text": "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+      "passed": true,
+      "evidence": "All 7 findings use valid severity values. Finding 1: CRITICAL, Finding 2: CRITICAL, Finding 3: HIGH, Finding 4: HIGH, Finding 5: HIGH, Finding 6: HIGH, Finding 7: HIGH. No findings use any value outside the valid set {CRITICAL, HIGH, MEDIUM, LOW}."
+    },
+    {
+      "text": "Transcript mentions voting or aggregation",
+      "passed": true,
+      "evidence": "The transcript has a dedicated 'Step 4: Aggregate & Vote' section (around line 89) with a full voting table showing vote counts per finding across 3 passes. Section 4 is titled 'Review Pass Results and Voting Outcome' and details '2/3 votes', '3/3 votes', and 'Findings with 1/3 vote (discarded)'. Both 'voting' and 'aggregate' appear multiple times."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "execution_metrics": {
+    "output_chars": 12023,
+    "transcript_chars": 10200
+  },
+  "timing": {
+    "total_tokens": 32578,
+    "executor_duration_seconds": 179.1
+  },
+  "claims": [
+    {
+      "claim": "3 parallel review passes were conducted",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 3 documents three distinct passes: Pass 1 (Logic & Edge Cases, 4 findings), Pass 2 (Security & Data Integrity, 6 findings), Pass 3 (Error Handling & API Contracts, 7 findings). Each pass has distinct focus areas and findings."
+    },
+    {
+      "claim": "Vote threshold of 2/3 was applied",
+      "type": "process",
+      "verified": true,
+      "evidence": "The voting table in Step 4 shows 3 findings discarded with 1 vote each, and 7 findings kept with 2 or 3 votes. config.json confirms vote_threshold=2. All kept findings have votes >= 2."
+    },
+    {
+      "claim": "16 total raw findings were produced across passes",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Pass 1: 4 findings, Pass 2: 6 findings, Pass 3: 7 findings = 17 raw items. However, the voting table shows 10 unique findings (after grouping overlaps), and metadata says total_raw_findings: 16. The count is plausible given overlapping findings across passes."
+    },
+    {
+      "claim": "All 7 findings passed validation (trigger, evidence, coverage, rules)",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Each of the 7 findings in findings.json includes a validationResult object with all four criteria (trigger, evidence, coverage, rules) marked PASS with specific justifications."
+    },
+    {
+      "claim": "Findings were ranked by votes * severity_weight",
+      "type": "process",
+      "verified": true,
+      "evidence": "The final ranked table in transcript Section 7 shows scores: SQL injection (3 votes, CRITICAL) = 12, Connection pool leak (3 votes, HIGH) = 9, Pagination (2 votes, CRITICAL) = 8. This is consistent with CRITICAL=4, HIGH=3 weighting: 3*4=12, 3*3=9, 2*4=8."
+    },
+    {
+      "claim": "SQL injection was found on lines 29-31",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Finding 1 references lines 29-31 with string interpolation in INSERT query. The description and trigger scenario are consistent with a real SQL injection pattern using template literals."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": ["Sub-agents were not available, so 3 review passes were simulated inline rather than launched as parallel sub-agents"]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No finding targets the GET /orders/:id endpoint",
+        "reason": "This assertion is ambiguous. Finding 7 covers all endpoints including GET /orders/:id (auth-bypass spans lines 19-78). It's unclear whether a finding that encompasses an endpoint among several 'targets' it. Consider rephrasing to 'No finding is exclusively about the GET /orders/:id endpoint' or testing that no finding has GET /orders/:id as its primary subject with a narrow line range."
+      },
+      {
+        "reason": "No assertion checks whether the findings are actually plausible bugs vs hallucinated issues. The scripted check confirms injection was found, but the other 6 findings are unchecked against the fixture file. Consider adding assertions that verify key findings reference real code patterns (e.g., pagination off-by-one, connection pool leak)."
+      },
+      {
+        "reason": "No assertion checks the structure of findings.json (e.g., that each finding has required fields like line, category, description, triggerScenario). The output happens to be well-structured, but a malformed JSON with correct severities would still pass all current assertions."
+      }
+    ],
+    "overall": "The assertions cover breadth (count), specificity (injection), precision (no false positives on GET/:id), severity validation, and workflow compliance (voting). The GET /orders/:id assertion is the weakest due to ambiguity around broad-scope findings. Adding structural checks on findings.json and verifying at least one non-injection finding against the actual fixture would strengthen the eval."
+  }
+}

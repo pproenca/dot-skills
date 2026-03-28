@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "name": "review-auth-middleware",
+  "prompt": "I just pushed some auth middleware changes and want a review before merging. The code is in evals/fixtures/auth-middleware.ts — can you review it for bugs? Follow the bug-review workflow (parallel passes, voting, validation). Treat the file as a PR diff and review it end-to-end.",
+  "expected_output": "Structured review with findings using the multi-pass voting workflow, categories, trigger scenarios, and severity ratings",
+  "assertions": [
+    "Findings contain at least 3 CRITICAL or HIGH severity issues",
+    "Every finding has a non-empty triggerScenario field",
+    "No finding targets the isAdmin function",
+    "Findings use category IDs from the skill's category taxonomy",
+    "Transcript documents running multiple review passes"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

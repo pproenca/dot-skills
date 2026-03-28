@@ -1,0 +1,13 @@
+{
+  "id": 3,
+  "name": "review-clean-utils",
+  "prompt": "Review evals/fixtures/clean-utils.ts for bugs using the bug-review process. Utility functions — formatCurrency, safeJsonParse, debounce, chunk, retry. Give me a thorough review.",
+  "expected_output": "Reports no significant bugs found or only very minor observations. No false positive CRITICAL/HIGH findings.",
+  "assertions": [
+    "Zero findings with severity CRITICAL",
+    "At most 2 findings total",
+    "Transcript concludes no significant bugs found",
+    "No finding alleges a security vulnerability"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

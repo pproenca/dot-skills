@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "name": "wrap-small-saas-api",
+  "prompt": "I want to build an MCP server that wraps our company's internal issue tracker API. It's a REST API with about 8 endpoints — create issue, update issue, search, add comment, that sort of thing. Just our team uses it (5 engineers). No OAuth, just an API key. Can you help me set this up?",
+  "expected_output": "Should recommend remote HTTP or local stdio (small team), one-per-action tool pattern, scaffold with TS SDK or FastMCP, API key from env var.",
+  "assertions": [
+    "Recommends one-per-action tool pattern (not search+execute)",
+    "Scaffold code reads API key from environment variable, not hardcoded",
+    "Tool descriptions include what the tool does AND what it returns",
+    "Tool schemas use typed parameters with .describe() annotations",
+    "Mentions readOnlyHint annotation for read-only tools"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

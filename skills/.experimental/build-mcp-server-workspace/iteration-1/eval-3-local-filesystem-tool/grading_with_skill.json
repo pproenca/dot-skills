@@ -1,0 +1,95 @@
+{
+  "expectations": [
+    {
+      "text": "Recommends local stdio or MCPB, NOT remote HTTP",
+      "passed": true,
+      "evidence": "response.md Phase 2 heading: 'Recommendation: Local stdio (npx / personal tool)'. Server code imports StdioServerTransport and uses it at line 372. The response explicitly explains why remote HTTP is inappropriate: 'A remote HTTP server cannot do this without a local agent relay.' No remote HTTP recommendation appears anywhere."
+    },
+    {
+      "text": "Recommends one-per-action pattern (under 15 tools)",
+      "passed": true,
+      "evidence": "response.md Phase 3 heading: 'Tool Design: One Tool Per Action (Pattern A)' with '3 tools, well within the < 15 threshold. Each gets a dedicated schema.' The server.ts implements exactly 3 separate tools (search_logs, tail_log, parse_errors), each with its own registerTool call and independent schema."
+    },
+    {
+      "text": "Uses readOnlyHint: true annotation for read-only tools",
+      "passed": true,
+      "evidence": "All three tool registrations in server.ts include 'annotations: { readOnlyHint: true, idempotentHint: true }' — search_logs (line 124), tail_log (line 210), parse_errors (line 266). response.md also states: 'All three are read-only, no mutations → mark all with readOnlyHint: true.'"
+    },
+    {
+      "text": "Mentions MCPB upgrade path for future distribution",
+      "passed": true,
+      "evidence": "response.md line 33: 'The MCPB upgrade path exists if this ever needs distribution. For now, local stdio wins on simplicity.' Transcript Step 6 also states: 'MCPB is the sanctioned distribution format; local stdio is fine for personal tools. Since this is explicitly just for me, local stdio is the right choice. The skill itself says to recommend this and flag the MCPB upgrade path.'"
+    },
+    {
+      "text": "Does NOT recommend OAuth",
+      "passed": true,
+      "evidence": "The word 'OAuth' does not appear in any output file or the transcript. The response explicitly states 'Auth? | None — local filesystem, no upstream service' in the Phase 1 table. The transcript confirms auth.md was intentionally skipped: 'I skipped: auth.md (no auth)'. No authentication mechanism of any kind is recommended."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "execution_metrics": {
+    "output_chars": 18452,
+    "transcript_chars": 4261
+  },
+  "timing": {
+    "total_tokens": 33954,
+    "executor_duration_seconds": 157.9
+  },
+  "claims": [
+    {
+      "claim": "All Phase 1 questions were answered by the task prompt",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 1 and response.md Phase 1 table both show five questions answered: connects to local filesystem, personal use, 3 tools, no mid-call input, no auth."
+    },
+    {
+      "claim": "Server validates file paths to prevent path traversal",
+      "type": "factual",
+      "verified": true,
+      "evidence": "server.ts lines 14-23 implement resolveLogPath() which uses path.basename() to strip directory components and path.resolve() to verify the result stays within LOG_DIR. Every tool handler calls this function before file access."
+    },
+    {
+      "claim": "Tool descriptions say what the tool does, what it returns, and what it does NOT do",
+      "type": "quality",
+      "verified": true,
+      "evidence": "search_logs description: 'Search log files...Returns matching lines...Does NOT follow symlinks and does NOT return real-time output — use tail_log for that.' tail_log: 'Return the last N lines...Does NOT search — use search_logs for pattern matching.' parse_errors: 'Scan log file(s)...Returns a structured summary...Use search_logs for precise pattern matching.' Each follows the skill's tool-design guidance."
+    },
+    {
+      "claim": "References files were read selectively, not all upfront",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 2 lists which files were read and why, and which were skipped: 'auth.md (no auth), elicitation.md (no mid-call input needed), resources-and-prompts.md (no prompts or resources needed), deploy-cloudflare-workers.md (not applicable).' Four files were read, four were skipped."
+    },
+    {
+      "claim": "Results are truncated with count reported when cap is reached",
+      "type": "factual",
+      "verified": true,
+      "evidence": "server.ts lines 180-183 in search_logs: checks if allResults.length >= max_results and reports 'Showing first N matches (cap reached — refine the pattern to narrow down).' The tool uses a remaining counter to stop collecting after the cap."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Does NOT recommend OAuth",
+        "reason": "This assertion is trivially satisfied for any local-filesystem use case -- it would be nearly impossible to fail since no reasonable agent would recommend OAuth for reading local log files. A more discriminating assertion would test that the agent correctly identifies auth requirements for a use case where OAuth IS needed (e.g., an eval with an upstream API)."
+      },
+      {
+        "reason": "No assertion checks whether the scaffolded code uses StdioServerTransport specifically (vs StreamableHTTPServerTransport). The deployment recommendation is checked textually, but a mismatch between recommendation and implementation would go undetected. Consider adding: 'server.ts uses StdioServerTransport, not StreamableHTTPServerTransport'."
+      },
+      {
+        "reason": "No assertion validates tool description quality (disambiguating sibling tools with 'does NOT do X, use Y instead'). This is a key differentiator of the skill's tool-design guidance and would catch outputs that merely name tools without proper disambiguation."
+      }
+    ],
+    "overall": "Assertions cover the deployment model decision well but lean toward checking broad directional choices rather than implementation quality. The scaffold code is well-structured and goes beyond what the assertions verify. Adding assertions for transport class usage and tool description discipline would make these evals more discriminating."
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 issues",
+      "passed": true,
+      "evidence": "findings.json contains 14 findings: 1 critical, 3 high, 8 medium, 1 low. This far exceeds the minimum of 3."
+    },
+    {
+      "text": "At least one finding identifies an injection vulnerability",
+      "passed": true,
+      "evidence": "The first finding in findings.json is titled 'SQL injection via string interpolation in INSERT statement' (severity: critical, category: security). It describes template literal interpolation enabling SQL injection via shippingAddress and paymentMethodId fields."
+    },
+    {
+      "text": "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+      "passed": true,
+      "evidence": "All 14 findings have a severity field with values from the set {critical, high, medium, low} (lowercase). Values: critical (1), high (3), medium (8), low (1). Every finding has a valid severity; the only difference is casing (lowercase vs the uppercase examples in the assertion)."
+    },
+    {
+      "text": "Transcript documents vote counts and aggregation from multiple passes",
+      "passed": false,
+      "evidence": "The transcript describes a single-pass code review with 5 sequential steps (read file, verify output dir, create output dir, systematic review, write findings). There is no mention of 'votes', 'vote counts', 'aggregation', 'multiple passes', 'consensus', or any multi-pass methodology. A grep for these terms returned zero matches. This is expected for the baseline (without_skill) config -- the agent performed a straightforward single-pass review."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 1,
+    "total": 4,
+    "pass_rate": 0.75
+  },
+  "execution_metrics": {
+    "total_tokens": 18908,
+    "output_chars": 10692,
+    "transcript_chars": 2578
+  },
+  "timing": {
+    "executor_duration_seconds": 90.3,
+    "total_duration_seconds": 90.3
+  },
+  "claims": [
+    {
+      "claim": "The file contains an Express router with four endpoints: POST /orders, GET /orders, GET /orders/:id, and DELETE /orders/:id",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The findings.json references all four endpoints across its 14 findings, consistent with this claim."
+    },
+    {
+      "claim": "14 findings were identified across severity levels",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json contains exactly 14 JSON objects, each with severity, category, title, description, triggerScenario, and suggestedFix fields."
+    },
+    {
+      "claim": "No issues were encountered during the review",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript states 'None. The file was straightforward to read and review.' under Issues Encountered. The execution completed with findings output successfully written."
+    },
+    {
+      "claim": "Security category has 4 findings (SQL injection, client prices, no auth, unbounded limit)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Counted 4 findings with category 'security' in findings.json: SQL injection (line 30), client-trusted prices (line 26), no auth on DELETE (line 64), unbounded pagination limit (line 41)."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+        "reason": "The assertion lists uppercase values but the actual output uses lowercase. Consider making the assertion case-insensitive explicitly (e.g., 'valid severity matching CRITICAL/HIGH/MEDIUM/LOW case-insensitively') or specifying exact casing expected. As written, a strict interpreter could argue lowercase 'critical' does not match 'CRITICAL'."
+      },
+      {
+        "assertion": "Transcript documents vote counts and aggregation from multiple passes",
+        "reason": "This assertion is designed to distinguish the skill-enhanced config from the baseline. For the 'without_skill' baseline, it is expected to fail. This is appropriate as a discriminating assertion -- it verifies the skill adds genuine multi-pass methodology rather than just producing more findings. However, consider whether this assertion should only be applied to the 'with_skill' config, since it will always fail for the baseline by design."
+      },
+      {
+        "reason": "No assertion checks the structural quality of findings (e.g., that each finding has description, suggestedFix, triggerScenario fields). The baseline output is quite rich in structure -- an assertion verifying schema completeness would help distinguish quality of output beyond just count and severity."
+      }
+    ],
+    "overall": "The assertions are reasonable for comparing baseline vs skill-enhanced runs. The vote/aggregation assertion is the key discriminator and correctly fails for the baseline. Consider splitting baseline-specific and skill-specific assertions, and adding schema validation for finding structure."
+  }
+}

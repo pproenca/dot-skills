@@ -1,0 +1,60 @@
+{
+  "skill_name": "bug-review",
+  "discipline": "composition",
+  "iteration": "1-v2",
+  "timestamp": "2026-03-28",
+  "note": "Re-graded with revised assertions (fixed 5 flawed assertions from v1)",
+  "summary": {
+    "with_skill": { "total_assertions": 11, "passed": 11, "failed": 0, "pass_rate": 100.0 },
+    "without_skill": { "total_assertions": 11, "passed": 7, "failed": 4, "pass_rate": 63.6 },
+    "delta": 36.4
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "review-auth-middleware",
+      "with_skill": { "passed": 4, "total": 4, "pass_rate": 100.0, "tokens": 28213, "duration_ms": 156386 },
+      "without_skill": { "passed": 2, "total": 4, "pass_rate": 50.0, "tokens": 18250, "duration_ms": 83976 },
+      "delta": 50.0,
+      "assertions": [
+        { "text": "At least 3 CRITICAL/HIGH findings", "with_skill": true, "without_skill": true },
+        { "text": "Every finding has triggerScenario", "with_skill": true, "without_skill": true },
+        { "text": "Findings include vote counts", "with_skill": true, "without_skill": false },
+        { "text": "Transcript documents 3 review passes with voting", "with_skill": true, "without_skill": false }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "review-order-api",
+      "with_skill": { "passed": 4, "total": 4, "pass_rate": 100.0, "tokens": 32578, "duration_ms": 179072 },
+      "without_skill": { "passed": 3, "total": 4, "pass_rate": 75.0, "tokens": 18908, "duration_ms": 90341 },
+      "delta": 25.0,
+      "assertions": [
+        { "text": "At least 3 issues found", "with_skill": true, "without_skill": true },
+        { "text": "Injection vulnerability identified", "with_skill": true, "without_skill": true },
+        { "text": "Valid severity on each finding", "with_skill": true, "without_skill": true },
+        { "text": "Transcript documents vote counts and aggregation", "with_skill": true, "without_skill": false }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "review-clean-utils",
+      "with_skill": { "passed": 3, "total": 3, "pass_rate": 100.0, "tokens": 27342, "duration_ms": 149799 },
+      "without_skill": { "passed": 2, "total": 3, "pass_rate": 66.7, "tokens": 17561, "duration_ms": 67037 },
+      "delta": 33.3,
+      "assertions": [
+        { "text": "Every finding has concrete trigger scenario", "with_skill": true, "without_skill": true },
+        { "text": "No finding alleges security vulnerability", "with_skill": true, "without_skill": true },
+        { "text": "Transcript documents multiple review passes", "with_skill": true, "without_skill": false }
+      ]
+    }
+  ],
+  "cost": {
+    "with_skill_avg_tokens": 29378,
+    "without_skill_avg_tokens": 18240,
+    "token_overhead": "1.61x",
+    "with_skill_avg_duration_s": 161.8,
+    "without_skill_avg_duration_s": 80.5,
+    "duration_overhead": "2.01x"
+  }
+}

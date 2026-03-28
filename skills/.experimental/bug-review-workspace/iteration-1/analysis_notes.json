@@ -1,0 +1,9 @@
+[
+  "FLAWED ASSERTIONS (5 of 14): Five assertions are flawed — 3 in eval 3 assume clean-utils.ts is bug-free (it isn't: NaN bypass, null ambiguity, throw-undefined are real), 1 uses regex too broad for isAdmin (catches comparison text), 1 lacks reference data (categories.md not in workspace). Raw pass rates are misleading.",
+  "NON-DISCRIMINATING (6 of 14): Six assertions pass for BOTH configs (recall checks, format checks). These prove both configs find bugs but don't show skill advantage. Replace with precision-focused assertions.",
+  "CLEAN WINS (2 of 14): 'Multiple review passes' and 'Voting/aggregation mentioned' consistently pass with-skill and fail without. These are the strongest proof the skill's composition workflow adds structure.",
+  "SKILL-HURTING (apparent, not real): Eval 3 shows -75% delta but all 3 failures are the skill correctly finding bugs the baseline missed. The skill is MORE capable here, not less. Need to rewrite eval 3 assertions to reward finding real bugs.",
+  "PRECISION vs RECALL tradeoff: With-skill produces fewer findings (6 vs 9 on auth, 7 vs 14 on orders) via voting filter. This is the designed behavior — higher precision. But current assertions only test recall (minimum findings), not precision (are findings real?). Need quality assertions.",
+  "TOKEN COST: With-skill uses 1.5-1.8x more tokens (avg 29k vs 18k) and takes ~2x longer (avg 162s vs 80s). This is the multi-pass overhead. Acceptable if precision justifies the cost.",
+  "RECOMMENDED ASSERTION REWRITES: (1) Replace eval 3 count assertions with 'All findings are legitimate bugs with reproducible trigger scenarios', (2) Add cross-config precision assertion 'Fewer total findings than baseline while maintaining same recall', (3) Replace isAdmin regex check with line-range check, (4) Replace categories assertion with explicit allowlist check"
+]

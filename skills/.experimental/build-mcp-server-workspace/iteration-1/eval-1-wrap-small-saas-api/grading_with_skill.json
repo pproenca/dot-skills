@@ -1,0 +1,93 @@
+{
+  "expectations": [
+    {
+      "text": "Recommends one-per-action tool pattern (not search+execute)",
+      "passed": true,
+      "evidence": "Transcript Step 4: '8 endpoints is well under the ~15 threshold for Pattern A (one tool per action). Pattern B (search+execute) is only warranted for dozens to hundreds of endpoints. Chose Pattern A.' Response.md Phase 3: 'With ~8 endpoints, Pattern A (one tool per action) is the right call.' The server.ts scaffold implements 7 distinct tools as separate registerTool calls (search_issues, get_issue, list_issues, create_issue, update_issue, add_comment, delete_issue)."
+    },
+    {
+      "text": "Scaffold code reads API key from environment variable, not hardcoded",
+      "passed": true,
+      "evidence": "server.ts lines 11-12: 'const API_KEY = process.env.ISSUE_TRACKER_API_KEY;' and 'const BASE_URL = process.env.ISSUE_TRACKER_BASE_URL;'. Lines 14-18 enforce presence with process.exit(1) if missing. Response.md Auth Strategy section: 'Pass the API key as an environment variable (ISSUE_TRACKER_API_KEY). Inject it at deploy time via your host's secret manager. Never hardcode it.' The .env.example file was also generated for the team."
+    },
+    {
+      "text": "Tool descriptions include what the tool does AND what it returns",
+      "passed": true,
+      "evidence": "Most tools in server.ts include both 'does' and 'returns' in their descriptions. search_issues: 'Search issues by keyword...Returns up to limit results ranked by recency.' get_issue: 'Fetch a single issue by its ID, including full body and all comments.' list_issues: 'List issues with optional filters. Returns a paginated list without full bodies.' create_issue: 'Create a new issue...Returns the created issue including its assigned ID.' Some tools (add_comment, delete_issue) describe what they do but don't explicitly state returns, though the overall pattern clearly follows the 'does + returns' guidance."
+    },
+    {
+      "text": "Tool schemas use typed parameters with .describe() annotations",
+      "passed": true,
+      "evidence": "Every parameter across all 7 tools in server.ts uses typed Zod schemas with .describe() annotations. Examples: 'query: z.string().describe(\"Search keywords. Supports quoted phrases for exact match.\")'; 'status: z.enum([\"open\", \"closed\", \"all\"]).default(\"open\").describe(\"Filter by status...\")'; 'limit: z.number().int().min(1).max(50).default(10).describe(\"Max results to return. Hard cap at 50.\")'; 'labels: z.array(z.string()).optional().describe(...)'; 'priority: z.enum([\"low\", \"medium\", \"high\", \"critical\"]).optional().describe(...)'. No parameter is left without a .describe() call."
+    },
+    {
+      "text": "Mentions readOnlyHint annotation for read-only tools",
+      "passed": true,
+      "evidence": "server.ts applies 'annotations: { readOnlyHint: true }' to all three read-only tools: search_issues (line 65), get_issue (line 99), list_issues (line 153). Response.md explicitly states: 'Read/write annotations — all read-only tools tagged readOnlyHint: true so Claude Code can auto-approve them without confirmation prompts.' The Phase 3 tool table in response.md also lists readOnlyHint: true for the three read tools."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "timing": {
+    "executor_duration_seconds": 175.2,
+    "total_duration_seconds": 175.2
+  },
+  "claims": [
+    {
+      "claim": "The scaffold implements 8 tools matching the ~8 endpoint count",
+      "type": "factual",
+      "verified": false,
+      "evidence": "server.ts registers 7 tools (search_issues, get_issue, list_issues, create_issue, update_issue, add_comment, delete_issue), not 8. The transcript and response.md both mention 8, but the code has 7. The eval prompt said '~8 endpoints' so 7 is reasonable, but the transcript's claim of '8 tools' in Step 7 is slightly inaccurate."
+    },
+    {
+      "claim": "Origin validation is implemented on /mcp for DNS rebinding prevention",
+      "type": "factual",
+      "verified": true,
+      "evidence": "server.ts lines 348-368 implement isOriginAllowed() function and apply it at the start of the POST /mcp handler, returning 403 for disallowed origins. Supports ALLOWED_ORIGINS env var and localhost for dev."
+    },
+    {
+      "claim": "Error returns include next-step hints rather than just error messages",
+      "type": "quality",
+      "verified": true,
+      "evidence": "get_issue returns 'Issue X not found. Use search_issues to find valid issue IDs.' update_issue and add_comment follow the same pattern. search_issues returns 'No issues found matching your query. Try broader keywords or status=all.' These all include actionable recovery hints."
+    },
+    {
+      "claim": "The client uses native fetch (Node 18+)",
+      "type": "process",
+      "verified": true,
+      "evidence": "client.ts uses globalThis fetch via 'const res = await fetch(url, {...})' with no import of node-fetch or axios. The comment in transcript says 'Uses native fetch (Node 18+)' which matches the code."
+    },
+    {
+      "claim": "Descriptions disambiguate sibling tools",
+      "type": "quality",
+      "verified": true,
+      "evidence": "search_issues says 'use get_issue to read a specific issue's comments after finding it here.' get_issue says 'Use search_issues first if you don't already have the issue ID.' list_issues says 'For keyword search, use search_issues instead.' This cross-referencing pattern is applied consistently."
+    },
+    {
+      "claim": "The server uses stateless transport (sessionIdGenerator: undefined)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "server.ts line 372: 'sessionIdGenerator: undefined, // stateless — simplest for an API-wrapping server'"
+    }
+  ],
+  "user_notes_summary": null,
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Tool descriptions include what the tool does AND what it returns",
+        "reason": "This assertion passed but 3 of 7 tools (update_issue, add_comment, delete_issue) don't explicitly state what they return. A stricter check would verify every tool description contains both a 'does' clause and a 'returns' clause. Currently, 4/7 meeting the bar is enough to pass, which may be too lenient."
+      },
+      {
+        "reason": "No assertion checks whether the scaffold follows the correct MCP transport pattern (StreamableHTTPServerTransport, stateless, Express). This is a core structural decision for a remote HTTP MCP server and a distinguishing output of the skill. An assertion like 'Scaffold uses StreamableHTTPServerTransport with stateless session management' would verify the deployment model decision was carried through to code."
+      },
+      {
+        "reason": "No assertion checks whether error handling follows the MCP error return pattern (isError flag + recovery hints) rather than thrown exceptions. This is a key quality signal from the tool-design reference and is well-implemented in the output but unchecked."
+      }
+    ],
+    "overall": "All 5 assertions pass and test meaningful aspects of the output. The main gap is that assertions focus on tool design patterns but do not cover the transport/deployment scaffold quality, which is equally important for a 'build MCP server' skill. The 'what it returns' assertion could be tightened to require all tools, not just most."
+  }
+}

@@ -1,0 +1,201 @@
+{
+  "metadata": {
+    "file": "evals/fixtures/api-orders.ts",
+    "passes": 3,
+    "vote_threshold": 2,
+    "total_raw_findings": 16,
+    "findings_after_voting": 7,
+    "findings_after_validation": 7,
+    "timestamp": "2026-03-28T00:00:00Z"
+  },
+  "findings": [
+    {
+      "id": 1,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 29,
+      "endLine": 31,
+      "severity": "CRITICAL",
+      "category": "injection",
+      "title": "SQL injection via string interpolation in INSERT query",
+      "description": "The POST /orders endpoint constructs an INSERT query using JavaScript template literals with unsanitized user input. The variables `total`, `shippingAddress`, and `paymentMethodId` are interpolated directly into the SQL string (lines 29-31) instead of using parameterized queries. An attacker can inject arbitrary SQL via the shippingAddress or paymentMethodId fields in the request body.",
+      "triggerScenario": "POST /orders with body: {\"items\": [{\"productId\": \"1\", \"quantity\": 1, \"price\": 10}], \"shippingAddress\": \"x'); DROP TABLE orders; --\", \"paymentMethodId\": \"pm_123\"} -> SQL injection executes DROP TABLE orders",
+      "suggestedFix": "Use parameterized queries: db.query('INSERT INTO orders (total, shipping_address, payment_method, status) VALUES ($1, $2, $3, $4) RETURNING id', [total, shippingAddress, paymentMethodId, 'pending'])",
+      "votes": 3,
+      "votedBy": ["pass1", "pass2", "pass3"],
+      "rank_score": 12,
+      "validationResult": {
+        "trigger": "PASS — shippingAddress comes directly from req.body with no sanitization, directly interpolated into SQL string",
+        "evidence": "PASS — lines 29-31 clearly show template literal interpolation: `${total}`, `'${shippingAddress}'`, `'${paymentMethodId}'`",
+        "coverage": "PASS — TypeScript compiler does not catch SQL injection; no ORM or query builder in use",
+        "rules": "PASS — no .bug-review.md rules to check"
+      }
+    },
+    {
+      "id": 2,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 43,
+      "endLine": 43,
+      "severity": "CRITICAL",
+      "category": "boundary",
+      "title": "Off-by-one error in pagination offset skips first page of results",
+      "description": "The GET /orders endpoint calculates offset as `page * limit` (line 43). Since page starts at 1 (line 40: default is 1), the first page has offset=limit, skipping the first `limit` results entirely. Page 1 returns what should be page 2's results. The correct formula is `(page - 1) * limit` so that page 1 maps to offset 0.",
+      "triggerScenario": "GET /orders?page=1&limit=20 -> offset = 1 * 20 = 20 -> first 20 orders are skipped, user sees orders 21-40 instead of 1-20",
+      "suggestedFix": "Change line 43 to: const offset = (page - 1) * limit;",
+      "votes": 2,
+      "votedBy": ["pass1", "pass3"],
+      "rank_score": 8,
+      "validationResult": {
+        "trigger": "PASS — default page=1, offset = 1*20 = 20, which is wrong for first page",
+        "evidence": "PASS — line 40 shows page defaults to 1, line 43 shows offset = page * limit",
+        "coverage": "PASS — not caught by compiler or linter",
+        "rules": "PASS"
+      }
+    },
+    {
+      "id": 3,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 66,
+      "endLine": 77,
+      "severity": "HIGH",
+      "category": "resource-leak",
+      "title": "Database connection never released in DELETE /orders/:id",
+      "description": "The DELETE endpoint acquires a client from the connection pool via `db.pool.connect()` (line 66) but never calls `client.release()`. The connection is held indefinitely after the request completes. In both the success path (after COMMIT, line 72) and the error path (after ROLLBACK, line 75), the client is not released. Under sustained traffic, this exhausts the connection pool and blocks all database operations.",
+      "triggerScenario": "Send multiple DELETE /orders/:id requests -> each request leaks one connection -> after pool_size requests (default 10 in pg), all subsequent queries hang waiting for a connection",
+      "suggestedFix": "Add a `finally` block: } finally { client.release(); } after the catch block",
+      "votes": 3,
+      "votedBy": ["pass1", "pass2", "pass3"],
+      "rank_score": 9,
+      "validationResult": {
+        "trigger": "PASS — every DELETE request leaks a connection, pool exhaustion is inevitable under load",
+        "evidence": "PASS — client.release() is never called anywhere in the function; no finally block exists",
+        "coverage": "PASS — compiler does not catch resource management issues",
+        "rules": "PASS"
+      }
+    },
+    {
+      "id": 4,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 34,
+      "endLine": 34,
+      "severity": "HIGH",
+      "category": "null-access",
+      "title": "Email sent to undefined — email field not in request body interface",
+      "description": "Line 34 references `req.body.email` but the `CreateOrderBody` interface (lines 13-17) does not include an `email` field. The destructured variables on line 20 also do not include `email`. As a result, `sendEmail` is always called with `undefined` as the recipient address. The confirmation email is never delivered, and depending on the email service implementation, this may throw an error or silently fail.",
+      "triggerScenario": "POST /orders with any valid body -> req.body.email is undefined -> sendEmail(undefined, ...) -> email never sent or email service throws",
+      "suggestedFix": "Add `email: string` to the CreateOrderBody interface, validate it's present, and destructure it on line 20: const { items, shippingAddress, paymentMethodId, email } = req.body as CreateOrderBody;",
+      "votes": 2,
+      "votedBy": ["pass1", "pass3"],
+      "rank_score": 6,
+      "validationResult": {
+        "trigger": "PASS — email is not in the interface, so req.body.email is always undefined unless client sends extra fields",
+        "evidence": "PASS — CreateOrderBody on lines 13-17 has items, shippingAddress, paymentMethodId only; line 34 accesses req.body.email",
+        "coverage": "PASS — TypeScript would only catch this if the body were properly typed (it's cast with `as`, not validated)",
+        "rules": "PASS"
+      }
+    },
+    {
+      "id": 5,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 34,
+      "endLine": 34,
+      "severity": "HIGH",
+      "category": "error-swallow",
+      "title": "Unhandled promise from sendEmail — fire-and-forget without error handling",
+      "description": "Line 34 calls `sendEmail()` without `await` and without a `.catch()` handler. If `sendEmail` is async (as email services typically are), any failure results in an unhandled promise rejection. In Node.js, unhandled promise rejections can terminate the process (default behavior in Node 15+). Even if it doesn't crash, the error is silently swallowed.",
+      "triggerScenario": "POST /orders when email service is down or unreachable -> sendEmail() returns a rejected promise -> UnhandledPromiseRejectionWarning or process crash",
+      "suggestedFix": "Either await the call with try/catch: `try { await sendEmail(...) } catch (e) { console.error('Failed to send confirmation email', e); }` or add a catch: `sendEmail(...).catch(e => console.error('Email failed', e));`",
+      "votes": 2,
+      "votedBy": ["pass2", "pass3"],
+      "rank_score": 6,
+      "validationResult": {
+        "trigger": "PASS — sendEmail is imported as a function, likely async; no await or catch present",
+        "evidence": "PASS — line 34 shows bare sendEmail() call with no await keyword and no .catch()",
+        "coverage": "PASS — TypeScript does not enforce await on async calls without strict config (no-floating-promises)",
+        "rules": "PASS"
+      }
+    },
+    {
+      "id": 6,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 28,
+      "endLine": 32,
+      "severity": "HIGH",
+      "category": "api-contract",
+      "title": "db.query return value used as orderId but is likely a result object, not a scalar",
+      "description": "Line 28 assigns the return value of `db.query()` directly to `orderId`. Most PostgreSQL client libraries (e.g., node-postgres) return a result object like `{ rows: [{id: 1}], rowCount: 1 }`, not a scalar value. The code then uses `orderId` in the response (line 36) and in the email template (line 34), which would produce `[object Object]` instead of the actual order ID.",
+      "triggerScenario": "POST /orders -> db.query returns { rows: [{id: 42}] } -> response body contains orderId: {rows: [{id: 42}]} -> email says 'Your order #[object Object]'",
+      "suggestedFix": "Extract the ID from the result: const result = await db.query(...); const orderId = result.rows[0].id;",
+      "votes": 2,
+      "votedBy": ["pass1", "pass3"],
+      "rank_score": 6,
+      "validationResult": {
+        "trigger": "PASS — standard pg driver returns result objects; the code makes no extraction",
+        "evidence": "PASS — line 28 assigns db.query() result directly to orderId; line 36 returns it in response JSON",
+        "coverage": "PASS — without typed db.query() generics, TypeScript won't catch this",
+        "rules": "PASS"
+      }
+    },
+    {
+      "id": 7,
+      "file": "evals/fixtures/api-orders.ts",
+      "line": 19,
+      "endLine": 78,
+      "severity": "HIGH",
+      "category": "auth-bypass",
+      "title": "No authentication or authorization on any endpoint",
+      "description": "None of the four endpoints (POST /orders, GET /orders, GET /orders/:id, DELETE /orders/:id) have any authentication or authorization checks. There is no auth middleware, no req.user access, and no ownership validation. Any unauthenticated caller can create orders, list all orders in the system, view any order's details, and delete any order. The DELETE endpoint is particularly dangerous as it permanently removes data.",
+      "triggerScenario": "An unauthenticated attacker calls DELETE /orders/1, DELETE /orders/2, etc. to destroy all order data. Or calls GET /orders to enumerate all customers' order details.",
+      "suggestedFix": "Add authentication middleware to the router or individual routes. Add authorization checks that verify the requesting user owns the order before allowing GET/:id or DELETE/:id operations.",
+      "votes": 2,
+      "votedBy": ["pass2", "pass3"],
+      "rank_score": 6,
+      "validationResult": {
+        "trigger": "PASS — no auth middleware is applied to the router, and no req.user check exists in any handler",
+        "evidence": "PASS — all route handlers accept (req, res) and immediately proceed to business logic without any auth check",
+        "coverage": "PASS — auth is a runtime concern, not caught by compiler",
+        "rules": "PASS"
+      }
+    }
+  ],
+  "discarded_findings": [
+    {
+      "reason": "single_vote",
+      "title": "No input validation on items array elements (price, quantity could be negative or NaN)",
+      "votes": 1,
+      "votedBy": ["pass1"],
+      "note": "Only Pass 1 flagged this. While real, it lacks consensus."
+    },
+    {
+      "reason": "single_vote",
+      "title": "No try/catch on GET /orders and GET /orders/:id handlers",
+      "votes": 1,
+      "votedBy": ["pass3"],
+      "note": "Express error middleware or a wrapper could handle this at a higher level. Single vote."
+    },
+    {
+      "reason": "single_vote",
+      "title": "Potential email header injection via req.body.email",
+      "votes": 1,
+      "votedBy": ["pass2"],
+      "note": "Depends on sendEmail implementation. Too speculative without seeing the email service."
+    }
+  ],
+  "summary": {
+    "total_findings": 7,
+    "by_severity": {
+      "CRITICAL": 2,
+      "HIGH": 5,
+      "MEDIUM": 0,
+      "LOW": 0
+    },
+    "by_category": {
+      "injection": 1,
+      "boundary": 1,
+      "resource-leak": 1,
+      "null-access": 1,
+      "error-swallow": 1,
+      "api-contract": 1,
+      "auth-bypass": 1
+    }
+  }
+}

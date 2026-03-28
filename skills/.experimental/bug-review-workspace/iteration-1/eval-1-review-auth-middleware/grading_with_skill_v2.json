@@ -1,0 +1,82 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 CRITICAL or HIGH severity issues",
+      "passed": true,
+      "evidence": "findings.json contains 5 findings at CRITICAL or HIGH severity: F1 (CRITICAL, null-access), F2 (CRITICAL, null-access), F3 (HIGH, auth-bypass), F4 (CRITICAL, race), F6 (HIGH, auth-bypass). The 6th finding F5 is MEDIUM. Total: 3 CRITICAL + 2 HIGH = 5 qualifying findings, well above the threshold of 3."
+    },
+    {
+      "text": "Every finding has a non-empty triggerScenario field",
+      "passed": true,
+      "evidence": "All 6 findings in findings.json include substantive triggerScenario strings. F1: 'Any request with an invalid or expired Bearer token -> store.get() returns null -> ...', F2: 'Request to refresh endpoint with no Authorization header -> ...', F3: 'User's session expires -> user calls /refresh -> ...', F4: 'User has 100 credits. Two concurrent requests each try to deduct 80 credits...', F5: 'Session store becomes unavailable (e.g., Redis connection drops) -> ...', F6: 'A user with role user has permission read-reports in their session.permissions array...'. Each provides a concrete reproduction scenario, not just a generic description."
+    },
+    {
+      "text": "Findings include vote counts showing multi-pass consensus",
+      "passed": true,
+      "evidence": "Every finding in findings.json has both a 'votes' integer and a 'votedBy' array identifying which passes agreed. Specifically: F1 votes=3 (all 3 passes), F2 votes=3 (all 3 passes), F3 votes=3 (all 3 passes), F4 votes=2 (pass2-security, pass3-error-handling), F5 votes=2 (pass2-security, pass3-error-handling), F6 votes=2 (pass1-logic, pass3-error-handling). All retained findings met the 2/3 majority threshold. Two findings with votes=1 were correctly discarded and listed in the discarded_findings array."
+    },
+    {
+      "text": "Transcript documents running 3 distinct review passes with voting aggregation",
+      "passed": true,
+      "evidence": "Transcript Step 2 contains three clearly delineated subsections: 'Pass 1: Logic & Edge Cases' (5 findings), 'Pass 2: Security & Data Integrity' (6 findings), and 'Pass 3: Error Handling & API Contracts' (6 findings). Each pass has a distinct focus description and produces its own independent set of findings. Step 3 titled 'Aggregation & Voting' documents the consolidation with a full table showing per-pass yes/no votes, total vote counts, and KEEP/DISCARD decisions for all 8 raw findings, with the vote threshold stated as 2."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 0,
+    "total": 4,
+    "pass_rate": 1.0
+  },
+  "claims": [
+    {
+      "claim": "8 raw findings were produced across the 3 passes",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The voting table in the transcript lists 8 distinct rows. The meta.findings_before_voting field in findings.json is 8. Counting unique findings across all three passes in the transcript yields 8 distinct bugs."
+    },
+    {
+      "claim": "6 findings survived voting and all 6 passed validation",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The voting table shows 6 findings with votes >= 2 (KEEP) and 2 with votes = 1 (DISCARD). Step 4 validates all 6 survivors individually. findings.json contains exactly 6 entries in the findings array and meta.findings_after_validation is 6."
+    },
+    {
+      "claim": "Findings are ranked by votes * severity_weight",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The final table in the transcript shows rank scores: 12 (3*4 CRITICAL), 12 (3*4 CRITICAL), 9 (3*3 HIGH), 8 (2*4 CRITICAL), 6 (2*3 HIGH), 4 (2*2 MEDIUM). These are consistent with severity weights of CRITICAL=4, HIGH=3, MEDIUM=2 multiplied by vote counts. The findings.json rank_score fields match."
+    },
+    {
+      "claim": "Three review passes were run with different focus areas",
+      "type": "process",
+      "verified": true,
+      "evidence": "The transcript documents Pass 1 focusing on 'null/undefined access, off-by-one, boolean logic errors', Pass 2 on 'injection, auth bypasses, data corruption, sensitive data exposure', and Pass 3 on 'swallowed exceptions, resource leaks, API contract violations, race conditions'. The passes produced overlapping but distinct finding sets, as expected from independent reviews with different lenses."
+    },
+    {
+      "claim": "The skill workflow was executed end-to-end following SKILL.md",
+      "type": "process",
+      "verified": true,
+      "evidence": "The transcript documents all skill phases: setup (Step 1), three review passes (Step 2), voting aggregation (Step 3), validation with four tests per finding (Step 4), dedup (Step 5), and final ranking (Step 6). This matches the expected bug-review skill workflow."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Findings contain at least 3 CRITICAL or HIGH severity issues",
+        "reason": "This is a reasonable threshold check. To make it more discriminating, consider asserting that specific known-planted bugs appear in the output (e.g., 'TOCTOU race in deductCredits is identified as CRITICAL'). A model could produce 3 CRITICAL findings for spurious or less important issues and still pass."
+      },
+      {
+        "reason": "No assertion checks the accuracy of findings against the actual bugs in the fixture file. For a composition skill eval, verifying that specific planted bugs were found (true positives) and that no spurious bugs were reported (false positives) would be highly discriminating. The fixture is a controlled environment, so ground-truth validation is feasible."
+      },
+      {
+        "reason": "No assertion verifies that the discarded findings were correctly filtered out. The voting mechanism discarded 2 findings (loose equality, missing Bearer validation), which is part of the skill's value proposition. Testing that low-confidence findings are excluded would strengthen the eval."
+      }
+    ],
+    "overall": "The four assertions form a solid set covering severity thresholds, trigger scenario completeness, multi-pass consensus evidence, and workflow documentation. The main gap is that no assertion tests finding accuracy against known bugs in the fixture, which would be the strongest signal for a composition skill eval."
+  }
+}

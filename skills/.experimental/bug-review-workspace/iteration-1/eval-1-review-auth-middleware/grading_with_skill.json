@@ -1,0 +1,98 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 CRITICAL or HIGH severity issues",
+      "passed": true,
+      "evidence": "findings.json contains 5 CRITICAL/HIGH findings: F1 (CRITICAL, null-access), F2 (CRITICAL, null-access), F3 (HIGH, auth-bypass), F4 (CRITICAL, race), F6 (HIGH, auth-bypass). Scripted check check_eval1_min_findings also reports PASS with 5 CRITICAL/HIGH. Only F5 is MEDIUM severity."
+    },
+    {
+      "text": "Every finding has a non-empty triggerScenario field",
+      "passed": true,
+      "evidence": "All 6 findings in findings.json have populated triggerScenario fields. F1: 'Any request with an invalid or expired Bearer token...', F2: 'Request to refresh endpoint with no Authorization header...', F3: 'User\u2019s session expires -> user calls /refresh...', F4: 'User has 100 credits. Two concurrent requests...', F5: 'Session store becomes unavailable...', F6: 'A user with role user has permission read-reports...'. Scripted check check_eval1_trigger_scenarios also reports PASS (all 6 have triggerScenario)."
+    },
+    {
+      "text": "No finding targets the isAdmin function",
+      "passed": false,
+      "evidence": "Finding F6 (hasPermission ignores the permission parameter) contains 'the function is equivalent to isAdmin()' in its description field. The scripted check check_eval1_no_isadmin reports FAIL: '1 finding(s) incorrectly flag isAdmin'. The jq query confirms F6's description matches the case-insensitive regex test for 'isAdmin'. The isAdmin function at lines 60-62 is clean code (simple role check with strict equality), and findings should not reference it."
+    },
+    {
+      "text": "Findings use category IDs from the skill's category taxonomy",
+      "passed": false,
+      "evidence": "The transcript claims in Step 1 that it read 'references/categories.md for bug category definitions and severity weights', but this file does not exist in the workspace (no references/ directory found under bug-review-workspace). The categories used in findings are: null-access, auth-bypass, race, error-swallow. Without the actual categories.md reference file, it is impossible to verify that these category IDs belong to a defined taxonomy rather than being ad-hoc inventions. The burden of proof is on the assertion, and the evidence is unverifiable."
+    },
+    {
+      "text": "Transcript documents running multiple review passes",
+      "passed": true,
+      "evidence": "The transcript clearly documents three distinct review passes in Step 2: 'Pass 1: Logic & Edge Cases' (5 findings), 'Pass 2: Security & Data Integrity' (6 findings), and 'Pass 3: Error Handling & API Contracts' (6 findings). Each pass has a stated focus area and independent findings. Step 3 shows a voting aggregation table referencing all three passes. The summary confirms: 'Three review passes (logic, security, error-handling) produced 8 raw findings.'"
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  },
+  "timing": {
+    "total_tokens": 28213,
+    "executor_duration_seconds": 156.4
+  },
+  "claims": [
+    {
+      "claim": "Three review passes were conducted with distinct focuses",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 2 documents Pass 1 (Logic & Edge Cases), Pass 2 (Security & Data Integrity), Pass 3 (Error Handling & API Contracts), each with independent finding lists."
+    },
+    {
+      "claim": "8 raw findings were produced, 6 survived voting at threshold 2/3",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 3 voting table shows 8 findings: 6 with votes >= 2 (KEEP) and 2 with votes = 1 (DISCARD). findings.json contains exactly 6 findings plus 2 in discarded_findings."
+    },
+    {
+      "claim": "All 6 findings passed validation",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript Step 4 documents validation of F1-F6, each passing trigger, evidence, and existing-coverage tests. Conclusion states: 'All 6 findings validated. 0 discarded at validation.'"
+    },
+    {
+      "claim": "references/categories.md was read for bug category definitions",
+      "type": "process",
+      "verified": false,
+      "evidence": "No references/categories.md file exists in the workspace. The file may have been available during execution but is not present for verification. This is a process claim that cannot be confirmed from outputs alone."
+    },
+    {
+      "claim": "The isAdmin function is not targeted by any finding",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Finding F6 description contains 'the function is equivalent to isAdmin()'. While F6 targets hasPermission (not isAdmin directly), the mention of isAdmin in the description causes the scripted check to fail."
+    },
+    {
+      "claim": "TOCTOU race in deductCredits is CRITICAL severity",
+      "type": "quality",
+      "verified": true,
+      "evidence": "The finding correctly identifies a read-check-write pattern across three separate async operations (lines 34-40 in the fixture). This is a legitimate TOCTOU race condition that could cause double-spending, warranting CRITICAL severity."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "No finding targets the isAdmin function",
+        "reason": "The scripted check uses case-insensitive regex on title+description for 'isAdmin', which catches incidental mentions (F6 says 'the function is equivalent to isAdmin()'). F6 genuinely targets hasPermission, not isAdmin. The check is too broad -- consider scoping it to the finding's 'line' field (lines 60-62 are isAdmin) or checking the function name in the title only, not the full description. As written, it penalizes findings that correctly describe hasPermission's behavior by referencing isAdmin for comparison."
+      },
+      {
+        "assertion": "Findings use category IDs from the skill's category taxonomy",
+        "reason": "This assertion is unverifiable because the skill's reference files (SKILL.md, references/categories.md) are not included in the eval outputs or workspace. To make this assertion testable, either include the taxonomy file in the eval fixtures, or hardcode the valid category IDs in a scripted check (e.g., check that each finding's category is one of [null-access, auth-bypass, race, error-swallow, type-coercion, ...])."
+      },
+      {
+        "reason": "No assertion checks that findings correctly map to actual bugs in the fixture code. All 6 findings can be verified against auth-middleware.ts (e.g., line 24-26 truly has no null check, line 50 truly has inverted logic). An assertion like 'Each finding references a real code defect verifiable in the fixture' would catch hallucinated bugs."
+      }
+    ],
+    "overall": "Two of five assertions have structural issues. The isAdmin check is too coarse-grained (regex on full description catches legitimate comparative mentions). The category taxonomy check is unverifiable without the reference file in the workspace. Consider adding a scripted check with an explicit allowlist of valid categories, and narrowing the isAdmin check to line ranges or title-only matching."
+  }
+}

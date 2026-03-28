@@ -1,0 +1,115 @@
+{
+  "expectations": [
+    {
+      "text": "Output has all 6 sections: Overview, Trust boundaries, Attack surfaces, Systemic findings (or omitted if <3 similar), Exploit chains (or omitted if none), Criticality calibration",
+      "passed": false,
+      "evidence": "The output has 5 sections: '1. System Overview', '2. Trust Boundaries', '3. Threat Catalog', '4. Threat Summary Matrix', '5. Prioritized Recommendations'. There is no 'Attack surfaces' section (the Threat Catalog lists threats, not attack surfaces as a distinct concept). 'Systemic findings' is absent -- there are 3+ XSS-class findings (THREAT-01, THREAT-02, THREAT-09) that could warrant a systemic grouping, so the omission condition (<3 similar) is not met. 'Exploit chains' is absent -- THREAT-03+THREAT-04+THREAT-10 form an obvious chain (CSRF -> feedback write -> prompt injection) which is described in prose within THREAT-10 but not presented as a formal exploit chain section. 'Criticality calibration' is entirely absent as a section. Only 2 of the 6 expected sections (Overview, Trust boundaries) are clearly present."
+    },
+    {
+      "text": "Contains at least one data flow trace showing entry point → function chain → sink with validation status at each step",
+      "passed": false,
+      "evidence": "The System Overview (lines 27-32 of THREAT-MODEL.md) has a 4-step data flow: agent writes markdown -> server JSON-serializes and injects -> browser calls marked.parse() -> innerHTML. THREAT-01 lists affected code paths with line numbers. However, neither the data flow nor the threat description includes 'validation status at each step' -- there is no explicit annotation at each step stating whether input is validated, sanitized, or unvalidated. The closest is THREAT-01 stating that marked does 'not sanitize HTML' and that escapeHtml() exists but is not used on main markdown content, but this is scattered prose rather than a structured trace with validation status annotations per step."
+    },
+    {
+      "text": "The XSS finding includes a specific trace: markdown content → marked.parse() → innerHTML, with line numbers or code references",
+      "passed": true,
+      "evidence": "THREAT-01 (lines 49-77 of THREAT-MODEL.md) explicitly traces: markdown content -> marked.parse(stripFrontmatter(MARKDOWN_CONTENT)) -> innerHTML. It provides 4 specific line references: line 917 ('tmp.innerHTML = html'), line 1510 ('div.innerHTML = ... ${rendered}'), line 1700 (SSE update path), and line 998 ('${sec.html}'). The trace also notes that escapeHtml() exists but is NOT used for main markdown content."
+    },
+    {
+      "text": "Trust boundaries classify RFC markdown content as attacker-controlled input",
+      "passed": false,
+      "evidence": "Section 2 'Trust Boundaries' lists 5 boundaries. B1 labels the source as 'AI agent (writes markdown content)' crossing to 'Server (reads and embeds markdown)'. The markdown content is characterized as coming from the 'AI agent', not classified as 'attacker-controlled input'. While THREAT-01 describes scenarios where malicious content could be in the markdown, the trust boundary table itself does not label markdown as attacker-controlled. The phrase 'attacker-controlled' does not appear anywhere in the trust boundary section."
+    },
+    {
+      "text": "If multiple XSS-class findings exist, they are grouped into a systemic finding with a shared root cause",
+      "passed": false,
+      "evidence": "There are three XSS-class findings: THREAT-01 (XSS via markdown/innerHTML), THREAT-02 (HTML injection via __DOC_TITLE__), and THREAT-09 (Mermaid XSS via crafted diagrams). These are presented as separate, independent threats with no systemic grouping. There is no 'Systemic findings' section at all. The shared root cause (lack of output sanitization before DOM insertion) is not called out as a systemic pattern connecting these threats. The Prioritized Recommendations section partially addresses this by noting DOMPurify would close THREAT-01 and partially mitigate THREAT-09, but this is a recommendation, not a systemic finding analysis."
+    },
+    {
+      "text": "Criticality calibration rates findings with context-aware severity (localhost deployment noted)",
+      "passed": false,
+      "evidence": "There is no 'Criticality calibration' section in the output. THREAT-03 mentions 'binding to localhost limits network exposure' as context, and the Threat Summary Matrix (Section 4) assigns severity/likelihood/impact ratings. However, there is no dedicated calibration discussion that adjusts severity based on the localhost deployment context. THREAT-01 is rated HIGH severity without any discussion of how localhost-only deployment reduces (or does not reduce) exploitability. The ratings appear to use a generic assessment rather than context-aware calibration that accounts for the deployment model."
+    },
+    {
+      "text": "At least one attacker story references specific code behavior, not just generic vulnerability description",
+      "passed": true,
+      "evidence": "THREAT-01 references specific code behavior: 'marked.parse(stripFrontmatter(MARKDOWN_CONTENT))' output is inserted via 'tmp.innerHTML = html' at line 917, and notes that 'escapeHtml() function exists and is used for feedback text (line 974, 983)' but NOT for main markdown content. THREAT-02 references the exact escaping code: 'title.replace(/\"/g, \"&quot;\")' and identifies that '<', '>', '&', \"'\" are NOT escaped. THREAT-05 describes killPort() behavior including 'lsof -ti :${port}' and the race condition. These are specific code-behavior-informed attacker scenarios, not generic vulnerability descriptions."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 5,
+    "total": 7,
+    "pass_rate": 0.29
+  },
+  "execution_metrics": {
+    "output_chars": 18091,
+    "transcript_chars": 5765
+  },
+  "timing": {
+    "total_tokens": 73745,
+    "executor_duration_seconds": 222.8
+  },
+  "claims": [
+    {
+      "claim": "10 threats cataloged with severity ratings",
+      "type": "factual",
+      "verified": true,
+      "evidence": "THREAT-01 through THREAT-10 are present in the output with severity ratings (HIGH, MEDIUM, LOW) for each"
+    },
+    {
+      "claim": "STRIDE classification provided for each threat",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Each threat includes a STRIDE line (e.g., THREAT-01: 'Tampering, Information Disclosure') and the summary matrix has a STRIDE column"
+    },
+    {
+      "claim": "Line numbers provided for affected code paths",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Multiple threats reference specific line numbers: THREAT-01 cites lines 917, 1510, 1700, 998; THREAT-02 cites lines 249, 323, 6, 842; THREAT-05 cites lines 23-58, 30-60"
+    },
+    {
+      "claim": "escapeHtml() exists but is NOT used for main markdown content",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 5 confirms: 'escapeHtml() function exists and is used for feedback text, previous comments, headings in live mode -- but NOT for the main markdown content'"
+    },
+    {
+      "claim": "5 trust boundaries identified",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Section 2 lists B1 through B5 in the trust boundary table"
+    },
+    {
+      "claim": "DOMPurify recommended as the single most impactful fix",
+      "type": "quality",
+      "verified": true,
+      "evidence": "Recommendation #1 in the Prioritized Recommendations section explicitly states this and notes it closes THREAT-01 and partially mitigates THREAT-09"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": []
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Output has all 6 sections: Overview, Trust boundaries, Attack surfaces, Systemic findings (or omitted if <3 similar), Exploit chains (or omitted if none), Criticality calibration",
+        "reason": "This assertion tests conformance to a specific output structure that is presumably defined by the threat-model skill. For a 'without_skill' baseline run, the model has no knowledge of these section names. This assertion will almost always fail for baseline runs, which is useful for measuring skill uplift but makes it important to interpret the pass rate in context -- a low score here is expected and informative, not a deficiency."
+      },
+      {
+        "assertion": "Contains at least one data flow trace showing entry point → function chain → sink with validation status at each step",
+        "reason": "The 'validation status at each step' requirement is highly specific to the skill's output format. The without-skill run produced a 4-step data flow and noted where sanitization was missing, but did not annotate each step with validation status. Consider whether the assertion should credit partial data flow traces that convey the same security insight without the exact format."
+      },
+      {
+        "reason": "No assertion checks the quality or completeness of mitigation recommendations. The output includes detailed, actionable mitigations (DOMPurify, CSP headers, CSRF tokens, SRI hashes) that demonstrate genuine security understanding. This is a meaningful outcome that goes ungraded."
+      },
+      {
+        "reason": "No assertion checks whether exploit chains were identified across threats. The output describes THREAT-03 + THREAT-04 + THREAT-10 as a connected chain (CSRF -> feedback write -> prompt injection) within THREAT-10's prose, but this chaining insight is not captured by any expectation."
+      }
+    ],
+    "overall": "The assertions are well-designed to measure the uplift that the threat-model skill provides: they test for specific structural elements (6 sections, systemic grouping, criticality calibration) and analytical depth (data flow traces, trust boundary classification). For a without-skill baseline, the 2/7 pass rate is informative -- the model produces good security analysis (10 threats with line numbers, specific code traces, actionable mitigations) but does not organize it into the skill's prescribed format. The assertions effectively discriminate between generic security analysis and skill-guided structured threat modeling."
+  }
+}

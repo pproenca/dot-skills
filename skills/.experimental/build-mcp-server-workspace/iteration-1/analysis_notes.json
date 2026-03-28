@@ -1,0 +1,7 @@
+[
+  "NON-DISCRIMINATING (7/15): These pass for BOTH configs and don't prove skill value: 'API key from env var' (eval 1), 'Typed params with .describe()' (eval 1), 'Remote HTTP deployment' (eval 2), 'Does NOT recommend local/MCPB' (eval 2), 'Local stdio/MCPB not HTTP' (eval 3), 'One-per-action pattern' (eval 3), 'Does NOT recommend OAuth' (eval 3). The baseline model already knows these patterns.",
+  "CLEAN WINS (8/15): These consistently FAIL without skill and PASS with skill — the skill's strongest value: 'readOnlyHint annotations' (evals 1+3), 'MCPB upgrade path' (eval 3), 'search+execute pattern' (eval 2), 'CIMD over DCR' (eval 2), 'hybrid promotion pattern' (eval 2), 'tool descriptions include returns' (eval 1), 'explicit one-per-action recommendation' (eval 1).",
+  "TOKEN COST: With-skill runs average 39% more tokens (38.5k vs 27.6k) and 16% longer (212s vs 182s). The extra cost comes from reading 3-5 reference files per run. Acceptable given the 53% improvement in assertion pass rate.",
+  "EVAL 1 SURPRISE: Baseline chose stdio transport for a 5-person team; with-skill chose remote HTTP. Both are defensible — the skill argues 'one URL beats 5 local installs' which is opinionated but reasonable. This isn't tested by any assertion.",
+  "ASSERTION GAP: Graders noted that assertions test recommendations but not scaffold code quality. A response giving correct advice without producing working code would pass all assertions. Consider adding 'scaffold code contains registerTool calls' or 'scaffold includes server instructions field'."
+]

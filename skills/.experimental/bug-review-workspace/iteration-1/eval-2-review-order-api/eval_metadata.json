@@ -1,0 +1,14 @@
+{
+  "id": 2,
+  "name": "review-order-api",
+  "prompt": "hey can you bug-review my order API changes? File is evals/fixtures/api-orders.ts — it's an Express REST API for orders. Do the full bug-review workflow please.",
+  "expected_output": "Structured review using parallel passes, voting, and validation with findings in the standard format",
+  "assertions": [
+    "Findings contain at least 3 issues",
+    "At least one finding identifies an injection vulnerability",
+    "No finding targets the GET /orders/:id endpoint",
+    "Each finding has a valid severity (CRITICAL/HIGH/MEDIUM/LOW)",
+    "Transcript mentions voting or aggregation"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

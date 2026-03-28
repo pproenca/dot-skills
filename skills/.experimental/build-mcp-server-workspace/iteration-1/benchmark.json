@@ -1,0 +1,42 @@
+{
+  "skill_name": "build-mcp-server",
+  "iteration": 1,
+  "summary": {
+    "with_skill": { "passed": 15, "total": 15, "pass_rate": 100.0 },
+    "without_skill": { "passed": 7, "total": 15, "pass_rate": 46.7 },
+    "delta": 53.3
+  },
+  "evals": [
+    {
+      "id": 1,
+      "name": "wrap-small-saas-api",
+      "with_skill": { "passed": 5, "total": 5, "pass_rate": 100.0 },
+      "without_skill": { "passed": 2, "total": 5, "pass_rate": 40.0 },
+      "delta": 60.0
+    },
+    {
+      "id": 2,
+      "name": "large-api-oauth-remote",
+      "with_skill": { "passed": 5, "total": 5, "pass_rate": 100.0 },
+      "without_skill": { "passed": 2, "total": 5, "pass_rate": 40.0 },
+      "delta": 60.0
+    },
+    {
+      "id": 3,
+      "name": "local-filesystem-tool",
+      "with_skill": { "passed": 5, "total": 5, "pass_rate": 100.0 },
+      "without_skill": { "passed": 3, "total": 5, "pass_rate": 60.0 },
+      "delta": 40.0
+    }
+  ],
+  "timing": {
+    "with_skill": {
+      "avg_tokens": 38491,
+      "avg_duration_seconds": 212.0
+    },
+    "without_skill": {
+      "avg_tokens": 27645,
+      "avg_duration_seconds": 182.1
+    }
+  }
+}

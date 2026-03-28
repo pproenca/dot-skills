@@ -1,0 +1,81 @@
+{
+  "expectations": [
+    {
+      "text": "Findings contain at least 3 CRITICAL or HIGH severity issues",
+      "passed": true,
+      "evidence": "findings.json contains 4 critical/high severity findings: (1) line 26, severity 'critical' - null dereference; (2) line 50, severity 'critical' - inverted expiration check; (3) line 39, severity 'high' - TOCTOU race condition; (4) line 65, severity 'high' - hasPermission ignores permission parameter. 4 >= 3, so this passes."
+    },
+    {
+      "text": "Every finding has a non-empty triggerScenario field",
+      "passed": true,
+      "evidence": "All 9 findings in findings.json have a 'triggerScenario' field with substantive content. Examples: finding 1 describes 'A request arrives with an Authorization header containing a valid Bearer prefix but an invalid or expired token...'; finding 3 describes 'A user with 100 credits sends two concurrent requests that each cost 80 credits...'. No empty or missing triggerScenario fields found."
+    },
+    {
+      "text": "Findings include vote counts showing multi-pass consensus",
+      "passed": false,
+      "evidence": "findings.json contains only these fields per finding: file, line, severity, category, title, description, triggerScenario, suggestedFix. There are no vote-related fields (no 'votes', 'voteCount', 'passes', 'consensus', or similar). This is expected for a baseline run without the skill -- multi-pass consensus is a skill-specific workflow feature that a vanilla agent would not implement."
+    },
+    {
+      "text": "Transcript documents running 3 distinct review passes with voting aggregation",
+      "passed": false,
+      "evidence": "The transcript documents 6 sequential steps: (1) Read fixture file, (2) Check output directory, (3) Create output directory, (4) Analyze code -- a single manual analysis pass, (5) Write findings.json, (6) Write transcript.md. There is no mention of multiple review passes, voting, or aggregation anywhere in the transcript. Step 4 is described as 'Systematic line-by-line review of all functions' -- a single pass. This is the expected baseline behavior without the skill."
+    }
+  ],
+  "summary": {
+    "passed": 2,
+    "failed": 2,
+    "total": 4,
+    "pass_rate": 0.5
+  },
+  "timing": {
+    "total_tokens": 18250,
+    "executor_duration_seconds": 84.0
+  },
+  "claims": [
+    {
+      "claim": "9 findings were written to findings.json",
+      "type": "factual",
+      "verified": true,
+      "evidence": "findings.json contains exactly 9 objects in its top-level array, matching the transcript's claim of '9 findings written'."
+    },
+    {
+      "claim": "The fixture file is a 70-line TypeScript file with 5 exported functions",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Cannot verify directly since the fixture file was not included in outputs. The transcript states '70-line TypeScript file with 5 exported functions/utilities' and findings reference 5 distinct code regions, which is consistent but not independently verifiable."
+    },
+    {
+      "claim": "Findings include file, line, severity, category, title, description, triggerScenario, and suggestedFix fields",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Every finding in findings.json contains exactly these 8 fields. All fields are populated with substantive, non-placeholder content."
+    },
+    {
+      "claim": "No issues were encountered during execution",
+      "type": "process",
+      "verified": true,
+      "evidence": "Transcript 'Issues Encountered' section states 'None'. The output file was successfully written and contains well-formed JSON."
+    }
+  ],
+  "user_notes_summary": null,
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Findings contain at least 3 CRITICAL or HIGH severity issues",
+        "reason": "This assertion is solid for baseline comparison. Consider also checking whether the critical/high findings map to the known seeded bugs in the fixture (e.g., the inverted expiration check, the race condition, the null dereference). A count-only check could pass even if the agent found 3 'high' issues that were all false positives."
+      },
+      {
+        "assertion": "Findings include vote counts showing multi-pass consensus",
+        "reason": "This assertion is well-designed for discriminating skill vs. baseline: it is expected to fail for the baseline (as it did) and should only pass when the skill's multi-pass workflow is active. Good discriminator."
+      },
+      {
+        "assertion": "Transcript documents running 3 distinct review passes with voting aggregation",
+        "reason": "Same as above -- good discriminator for skill vs. baseline. Together with the vote counts assertion, these two form a strong pair for verifying the skill's unique workflow contribution."
+      },
+      {
+        "reason": "No assertion checks the quality or accuracy of the findings themselves. The baseline found 9 issues including plausible bugs (null dereference, inverted logic, race condition, broken permissions). It would be valuable to have an assertion like 'Findings correctly identify the inverted expiration check on line 50' to verify detection accuracy, not just volume and structure."
+      }
+    ],
+    "overall": "The revised assertions are well-structured for a baseline vs. skill comparison. Expectations 1-2 test output quality (should pass for both), while 3-4 test the skill's unique multi-pass workflow (should only pass with the skill). This 2-pass/2-fail pattern for baseline is exactly what you want. The main gap is that no assertion validates finding accuracy against known seeded bugs."
+  }
+}

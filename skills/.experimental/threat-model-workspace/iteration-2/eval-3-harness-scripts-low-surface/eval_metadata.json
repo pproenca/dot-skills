@@ -1,0 +1,14 @@
+{
+  "id": 3,
+  "name": "harness-scripts-low-surface",
+  "prompt": "Run a threat model on the build-agents-md.js and validate-skill.js scripts. They're Node.js build/validation tools that read skill directories and check structure. These are internal tools. I just want a quick check that they're not doing anything dangerous.",
+  "expected_output": "Proportionate threat model. Data flow traces show values stay within safe operations. No inflated findings.",
+  "assertions": [
+    "Output is under 250 lines (proportionate for low-risk validation scripts)",
+    "Contains at least one data flow trace (even if it shows the trace terminates safely)",
+    "Explicitly states the risk is low or that the scripts have minimal attack surface",
+    "Criticality section has no critical or high severity findings",
+    "Does NOT generate systemic findings or exploit chains (would be over-application for 2 simple scripts)"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

