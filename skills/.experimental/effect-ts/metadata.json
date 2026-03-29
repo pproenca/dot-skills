@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Effect",
+  "technology": "TypeScript, Effect",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "March 2026",
+  "abstract": "Comprehensive reference for the Effect TypeScript library, covering the core Effect type, Schema validation, error management, fiber-based concurrency, services and layers, streams, platform APIs, and AI integration.",
+  "references": [
+    "https://effect.website/llms.txt",
+    "https://effect.website/llms-full.txt",
+    "https://effect.website/docs/getting-started/introduction/",
+    "https://tim-smart.github.io/effect-io-ai/"
+  ]
+}
