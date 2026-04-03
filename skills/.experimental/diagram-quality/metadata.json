@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "pproenca",
+  "technology": "agent-uml",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "April 2026",
+  "abstract": "Quality guidelines for PlantUML diagrams rendered on the agent-uml collaborative canvas. Contains 18 rendering safety rules, 5 conversation decision tables, and 4 design effectiveness heuristics — all grounded in agent-uml's SVG element selection, canvas theme, version timeline, and chat panel behavior.",
+  "references": [
+    "https://plantuml.com/",
+    "https://github.com/pproenca/agent-uml (private)"
+  ]
+}
