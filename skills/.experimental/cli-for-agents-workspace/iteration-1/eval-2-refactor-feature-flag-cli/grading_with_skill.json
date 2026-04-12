@@ -1,0 +1,56 @@
+{
+  "eval_id": "eval-2",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "list command has --limit and/or --all flag to bound default result size",
+      "passed": true,
+      "evidence": "flagctl.py:358-371 — `cmd_list` has both `@click.option('-l', '--limit', type=click.IntRange(min=1), default=DEFAULT_LIMIT, ...)` and `@click.option('--all', 'all_records', is_flag=True, ...)`. DEFAULT_LIMIT=50 (line 35). Truncation logic at lines 411-414: `if not all_records and len(flags) > limit: flags = flags[:limit]; truncated = True`."
+    },
+    {
+      "text": "Per-subcommand --help includes a copy-pasteable Examples section with concrete invocations",
+      "passed": true,
+      "evidence": "Every subcommand docstring has a `\\b\\nExamples:` block with 2-5 concrete invocations. list:383-387 ('flagctl list', 'flagctl list --limit 10', 'flagctl list --all --json', 'flagctl list --json | jq ...'); get:442-444; create:558-562; toggle:753-758; delete:965-968. All use `\\b` to opt out of click's whitespace collapsing so the examples render verbatim."
+    },
+    {
+      "text": "Human-readable list output is grep-friendly one-record-per-line (no separator row, no table borders)",
+      "passed": true,
+      "evidence": "flagctl.py:257-265 in `emit_list`: `echo_out('NAME\\tSTATE\\tUPDATED\\tOWNER')` header, then a single tab-separated line per record `echo_out(f'{name}\\t{state}\\t{updated}\\t{owner}')`. Embedded tabs/newlines in owner are sanitized at line 264 (`owner = owner.replace('\\t', ' ').replace('\\n', ' ')`). No box-drawing characters, no separator row. The transcript line 128 explicitly notes 'The ASCII box table from the original is gone.'"
+    },
+    {
+      "text": "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+      "passed": true,
+      "evidence": "There is no missing-flag prompt fallback at all — required values use Click's `required=True` (lines 428, 506, 512, 518, 710, 922) so missing flags error at parse time. The only interactive paths are `click.confirm` for destructive actions (lines 832-835, 1006-1009), and they are guarded by both `no_input` AND `sys.stdin.isatty()` (lines 822, 1000): `if no_input or not sys.stdin.isatty(): print_error(...); ctx.exit(EXIT_USAGE)`. The `--no-input` flag (lines 312-318, also wired to `FLAGCTL_NO_INPUT`) provides the explicit non-interactive opt-out, which is stronger than (and inverse of) an `--interactive` opt-in: missing flags never prompt, period."
+    },
+    {
+      "text": "Disables color in non-TTY contexts or references NO_COLOR env var handling",
+      "passed": true,
+      "evidence": "flagctl.py:54-65 — `_no_color()` helper: `if os.environ.get('NO_COLOR'): return True` AND `if not sys.stdout.isatty(): return True`. Both branches are present (NO_COLOR env var honoring the no-color.org spec, plus non-TTY detection on stdout). Also documented in the help epilog at line 283: 'NO_COLOR           Set to any non-empty value to disable colored output'."
+    }
+  ],
+  "summary": {
+    "passed": 5,
+    "failed": 0,
+    "total": 5,
+    "pass_rate": 1.0
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+        "reason": "The assertion's literal phrasing assumes a prompt fallback exists and asks how it's gated. A stricter, more discriminating version would assert directly: 'Required flags are validated at parse time with no prompt fallback (no input() / click.prompt() calls in command bodies)'. As written, a CLI that prompts on missing flags but only gates the prompt by --interactive (which would still be a worse design than failing fast) would technically pass — and a CLI that has no prompt fallback at all (the actually-correct design) only passes by trivial satisfaction. Consider grepping for `input(`/`click.prompt(` and asserting their absence in command bodies."
+      },
+      {
+        "assertion": "Disables color in non-TTY contexts or references NO_COLOR env var handling",
+        "reason": "The 'or' in the assertion makes it easy to satisfy by mentioning NO_COLOR in a comment or docstring without ever wiring it to actual output suppression. Here the helper is present but unused (the transcript at line 121-123 admits 'I didn't actually add any color in this pass...the helper is there if anyone adds color decorators later'). A discriminating version would only assert the helper exists if the CLI also emits color, or would check that any styled output (e.g. click.style/click.secho) consults the helper."
+      },
+      {
+        "reason": "No assertion checks the most agent-relevant behaviors mentioned heavily in the transcript: (a) errors go to stderr not stdout, (b) classified non-zero exit codes (e.g. 2 for usage, 69 for unavailable), (c) --json on every command emits parseable output, (d) --dry-run on destructive commands. These are the highest-value distillation outcomes for a 'cli-for-agents' skill and currently go unverified by the eval."
+      },
+      {
+        "reason": "No assertion checks that the original `input()` calls were actually removed. The whole point of the refactor (per the transcript task description) is that the CLI hangs on prompts in CI; an assertion like 'no `input(` calls remain in the file' would directly verify the regression-fix."
+      }
+    ],
+    "overall": "All five assertions pass on this run, but several pass only because the rewrite went well beyond what they literally check. The eval underweights the most important behaviors of an agent-friendly CLI (stderr routing, exit codes, --json, removal of input() calls) and over-relies on weak 'or' / 'requires X opt-in' phrasings that can be satisfied trivially. Worth tightening before reusing on other refactors."
+  }
+}

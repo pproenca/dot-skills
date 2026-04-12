@@ -1,0 +1,31 @@
+{
+  "eval_id": "eval-1",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "References NO_COLOR environment variable for color gating (per no-color.org spec)",
+      "passed": false,
+      "evidence": "Baseline shipit-deploy.ts checks only `opts.color !== false` and `process.stderr.isTTY`; no reference to NO_COLOR env var anywhere in the file."
+    },
+    {
+      "text": "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+      "passed": false,
+      "evidence": "Baseline writeResult function produces a 'shipit deploy SUCCESS' block with service/env/tag/deploymentId/duration/url but no 'Next:' or 'See also:' hint pointing at a follow-up command."
+    },
+    {
+      "text": "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+      "passed": false,
+      "evidence": "Baseline deploy command flags are --service, --env, --tag, --dry-run, --timeout-seconds, --output, --no-color, --verbose, --yes. No --idempotency-key, --deployment-id, or --request-id flag. runDeploy generates deploymentId via Math.random() server-side."
+    },
+    {
+      "text": "Defines exit code 75 (EX_TEMPFAIL) or equivalent retry-friendly transient failure code",
+      "passed": false,
+      "evidence": "Baseline ExitCode enum defines 0, 1, 2, 3, 4, 5, 6 only (Success, GenericError, UsageError, ValidationError, DeployFailed, Timeout, Aborted). No 75 or EX_TEMPFAIL-labeled retry-friendly code."
+    },
+    {
+      "text": "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)",
+      "passed": false,
+      "evidence": "Baseline uses isAgentContext() detection (CI env var + SHIPIT_AGENT + CLAUDE_AGENT + !isTTY) to auto-switch defaults. There is no --interactive or --no-input flag for explicit opt-in/out."
+    }
+  ]
+}

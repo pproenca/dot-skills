@@ -1,0 +1,15 @@
+{
+  "id": 3,
+  "name": "add-safety-to-cleanup-script",
+  "prompt": "We have this bash script `cleanup-stale-branches.sh` that deletes old merged git branches on shared dev servers. Problem: our AI agents on the ops team can't use it safely because there's no way to preview what would be deleted, and no way to skip the confirmation prompt in automation. I need you to add safety flags without breaking the existing behavior for humans. The file is at `inputs/cleanup-stale-branches.sh`. Save the updated version as `cleanup-stale-branches.sh` in the outputs directory.",
+  "expected_output": "An updated bash script with --dry-run that shows what would be deleted without deleting, --yes/--force to skip confirmation, --help with copy-pasteable examples, isatty check for the confirmation prompt, proper exit codes, and errors that suggest the correct flag to fix the problem.",
+  "input_files": ["inputs/cleanup-stale-branches.sh"],
+  "assertions": [
+    "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+    "Error when --yes is missing in non-TTY prints a copy-pasteable example invocation",
+    "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+    "Supports --no-input or equivalent env var as another way to force non-interactive mode",
+    "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

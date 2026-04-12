@@ -1,0 +1,48 @@
+{
+  "skill_name": "cli-for-agents",
+  "discipline": "distillation",
+  "evals": [
+    {
+      "id": 1,
+      "name": "scaffold-deploy-cli",
+      "prompt": "I'm building a new internal deploy tool called `shipit` for our ops team. I need you to design the TypeScript interface for the `shipit deploy` subcommand — the commander.js setup, --help text, flag parsing, and error handling. The command should deploy a service by name to a target environment using a specified image tag. It will be used BOTH by humans typing at a terminal and by our Claude agents running it in CI pipelines, so it needs to work equally well in both cases. Don't implement the actual deploy logic — just stub it with a TODO and a fake return value. Save everything to `shipit-deploy.ts` in the outputs directory. I want to see the complete commander.js setup, --help examples, error handling, exit codes, and at least one way to get structured output for agents.",
+      "expected_output": "A TypeScript file with a fully-specified `shipit deploy` command: flag definitions (--service, --env, --tag, probably --replicas, --json, --dry-run, --yes), copy-pasteable examples in --help, error messages that include example invocations, non-zero exit codes for distinct failures, stdout for success/stderr for errors, and structured success output that agents can chain.",
+      "input_files": [],
+      "assertions": [
+        "References NO_COLOR environment variable for color gating (per no-color.org spec)",
+        "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+        "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+        "Defines exit code 75 (EX_TEMPFAIL) or equivalent retry-friendly transient failure code",
+        "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "refactor-feature-flag-cli",
+      "prompt": "I inherited this Python `flagctl` CLI from a previous team and our Claude Code agents in CI keep struggling with it — they hang on prompts, the output is hard to parse, and they can't skip confirmations. Can you rewrite it so it works reliably for agents without breaking it for humans? Keep it a single-file click-based CLI. The file is at `inputs/flagctl.py`. Save the rewritten version to the outputs directory as `flagctl.py`.",
+      "expected_output": "A rewritten flagctl.py that removes interactive input() calls, adds --json output, --yes flag for delete/toggle, copy-pasteable --help examples per subcommand, actionable error messages, proper stderr/stdout separation, and grep-friendly line-based human output instead of ASCII tables.",
+      "input_files": ["inputs/flagctl.py"],
+      "assertions": [
+        "list command has --limit and/or --all flag to bound default result size",
+        "Per-subcommand --help includes a copy-pasteable Examples section with concrete invocations",
+        "Human-readable list output is grep-friendly one-record-per-line (no separator row, no table borders)",
+        "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+        "Disables color in non-TTY contexts or references NO_COLOR env var handling"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "add-safety-to-cleanup-script",
+      "prompt": "We have this bash script `cleanup-stale-branches.sh` that deletes old merged git branches on shared dev servers. Problem: our AI agents on the ops team can't use it safely because there's no way to preview what would be deleted, and no way to skip the confirmation prompt in automation. I need you to add safety flags without breaking the existing behavior for humans. The file is at `inputs/cleanup-stale-branches.sh`. Save the updated version as `cleanup-stale-branches.sh` in the outputs directory.",
+      "expected_output": "An updated bash script with --dry-run that shows what would be deleted without deleting, --yes/--force to skip confirmation, --help with copy-pasteable examples, isatty check for the confirmation prompt, proper exit codes, and errors that suggest the correct flag to fix the problem.",
+      "input_files": ["inputs/cleanup-stale-branches.sh"],
+      "assertions": [
+        "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+        "Error when --yes is missing in non-TTY prints a copy-pasteable example invocation",
+        "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+        "Supports --no-input or equivalent env var as another way to force non-interactive mode",
+        "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)"
+      ]
+    }
+  ]
+}

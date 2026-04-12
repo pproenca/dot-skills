@@ -1,0 +1,329 @@
+{
+  "metadata": {
+    "skill_name": "cli-for-agents",
+    "skill_path": "<path/to/skill>",
+    "executor_model": "<model-name>",
+    "analyzer_model": "<model-name>",
+    "timestamp": "2026-04-12T20:48:01Z",
+    "evals_run": [
+      0,
+      1,
+      2
+    ],
+    "runs_per_configuration": 3
+  },
+  "runs": [
+    {
+      "eval_id": 0,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.6,
+        "passed": 3,
+        "failed": 2,
+        "total": 5,
+        "time_seconds": 505.979,
+        "tokens": 23836,
+        "tool_calls": null,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "References NO_COLOR environment variable for color gating (per no-color.org spec)",
+          "passed": true,
+          "evidence": "shipit-deploy.ts:79-81 \u2014 `// no-color.org spec: any non-empty value disables color.\\n  const envNoColor = process.env.NO_COLOR;\\n  if (envNoColor !== undefined && envNoColor !== '') return false;`. Also documented in help text at line 404: `'  NO_COLOR         when set (any non-empty value), disables ANSI color'`. The implementation correctly follows the no-color.org spec by treating any non-empty value as a disable signal."
+        },
+        {
+          "text": "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+          "passed": true,
+          "evidence": "shipit-deploy.ts:219 \u2014 `process.stdout.write('\\nNext:\\n');` inside `printHumanResult`. Followed by concrete follow-up commands at lines 222 (`shipit deploy --service ... --yes` for dry-run case) and lines 225-227 (`shipit deploy status --id ${r.deploy_id}`, `shipit logs --service ...`, `shipit deploy rollback --id ${r.deploy_id}` for the success case). Also a `See also:` block in `--help` at line 483."
+        },
+        {
+          "text": "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+          "passed": false,
+          "evidence": "The deploy subcommand declares only these flags (lines 416-451): `-s/--service`, `-e/--env`, `-t/--tag`, `-n/--dry-run`, `-y/--yes`, `--json`, `--no-input`. There is no `--idempotency-key`, no `--deployment-id`, no `--id` flag on `shipit deploy`. The `--id` references at lines 225/227/484/485 are example invocations of *other* (future) subcommands (`shipit deploy status --id`, `shipit deploy rollback --id`), not a flag the caller can pass to `deploy` itself. The TODO comment at lines 171-176 mentions reconciling state by `{service, env, tag}` but never accepts a client-supplied idempotency token. The `runDeploy` stub generates `deploy_id` server-side at line 179 (`const fakeDeployId = ...`) rather than accepting one as input."
+        },
+        {
+          "text": "Defines exit code 75 (EX_TEMPFAIL) or equivalent retry-friendly transient failure code",
+          "passed": true,
+          "evidence": "shipit-deploy.ts:29 \u2014 `TEMPFAIL: 75, //  EX_TEMPFAIL \u2014 transient, retry with backoff` in the `ExitCode` enum. The code is wired into `classifyError` at line 359 (`if (name.includes('timeout') || name.includes('network')) return ExitCode.TEMPFAIL;`), used in error handling at line 329, and documented in `--help` at line 481 (`'  75  transient failure \u2014 safe to retry with backoff'`)."
+        },
+        {
+          "text": "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)",
+          "passed": false,
+          "evidence": "No `--interactive` flag is declared anywhere on the program or the deploy subcommand. The grep for `interactive` only finds the words 'non-interactive' in comments and an error message (lines 273, 287, 446). The transcript explicitly documents the choice at lines 102-103: 'Chose NOT to add an `--interactive` flag. The design is strictly flag-first; missing required flags error with exit 2.' The skill instead uses a `--no-input` flag (line 448) plus `isTty` detection (line 281) for non-interactive gating. While `--no-input` is the inverse polarity of `--interactive`, the assertion specifically requires an explicit `--interactive` flag, which is absent. Note also that the CLI has no prompt fallback at all \u2014 there is nothing to gate \u2014 so the assertion's premise does not match the design."
+        }
+      ],
+      "notes": [
+        "Commander wrote duplicate error lines on parse failure; had to call configureOutput({ writeErr: swallow }) on program and each subcommand to silence its built-in writes (transcript section 5, Issue 2).",
+        "Commander treats --no-input as negation of an implicit --input, so the parsed key is `input` not `noInput`; required manual inversion in the action handler (transcript section 5, Issue 3)."
+      ]
+    },
+    {
+      "eval_id": 1,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 1.0,
+        "passed": 5,
+        "failed": 0,
+        "total": 5,
+        "time_seconds": 0.0,
+        "tokens": 106600,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "list command has --limit and/or --all flag to bound default result size",
+          "passed": true,
+          "evidence": "flagctl.py:358-371 \u2014 `cmd_list` has both `@click.option('-l', '--limit', type=click.IntRange(min=1), default=DEFAULT_LIMIT, ...)` and `@click.option('--all', 'all_records', is_flag=True, ...)`. DEFAULT_LIMIT=50 (line 35). Truncation logic at lines 411-414: `if not all_records and len(flags) > limit: flags = flags[:limit]; truncated = True`."
+        },
+        {
+          "text": "Per-subcommand --help includes a copy-pasteable Examples section with concrete invocations",
+          "passed": true,
+          "evidence": "Every subcommand docstring has a `\\b\\nExamples:` block with 2-5 concrete invocations. list:383-387 ('flagctl list', 'flagctl list --limit 10', 'flagctl list --all --json', 'flagctl list --json | jq ...'); get:442-444; create:558-562; toggle:753-758; delete:965-968. All use `\\b` to opt out of click's whitespace collapsing so the examples render verbatim."
+        },
+        {
+          "text": "Human-readable list output is grep-friendly one-record-per-line (no separator row, no table borders)",
+          "passed": true,
+          "evidence": "flagctl.py:257-265 in `emit_list`: `echo_out('NAME\\tSTATE\\tUPDATED\\tOWNER')` header, then a single tab-separated line per record `echo_out(f'{name}\\t{state}\\t{updated}\\t{owner}')`. Embedded tabs/newlines in owner are sanitized at line 264 (`owner = owner.replace('\\t', ' ').replace('\\n', ' ')`). No box-drawing characters, no separator row. The transcript line 128 explicitly notes 'The ASCII box table from the original is gone.'"
+        },
+        {
+          "text": "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+          "passed": true,
+          "evidence": "There is no missing-flag prompt fallback at all \u2014 required values use Click's `required=True` (lines 428, 506, 512, 518, 710, 922) so missing flags error at parse time. The only interactive paths are `click.confirm` for destructive actions (lines 832-835, 1006-1009), and they are guarded by both `no_input` AND `sys.stdin.isatty()` (lines 822, 1000): `if no_input or not sys.stdin.isatty(): print_error(...); ctx.exit(EXIT_USAGE)`. The `--no-input` flag (lines 312-318, also wired to `FLAGCTL_NO_INPUT`) provides the explicit non-interactive opt-out, which is stronger than (and inverse of) an `--interactive` opt-in: missing flags never prompt, period."
+        },
+        {
+          "text": "Disables color in non-TTY contexts or references NO_COLOR env var handling",
+          "passed": true,
+          "evidence": "flagctl.py:54-65 \u2014 `_no_color()` helper: `if os.environ.get('NO_COLOR'): return True` AND `if not sys.stdout.isatty(): return True`. Both branches are present (NO_COLOR env var honoring the no-color.org spec, plus non-TTY detection on stdout). Also documented in the help epilog at line 283: 'NO_COLOR           Set to any non-empty value to disable colored output'."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "with_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.8,
+        "passed": 4,
+        "failed": 1,
+        "total": 5,
+        "time_seconds": 0.0,
+        "tokens": 84972,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+          "passed": true,
+          "evidence": "cleanup-stale-branches.sh:224-227 sets IS_TTY via `if [[ -t 0 ]]; then IS_TTY=1; fi`. Lines 230-233 derive NON_INTERACTIVE from `IS_TTY -eq 0`. The interactive `read -r -p` at line 365 is gated by `if (( NON_INTERACTIVE ))` at line 355 \u2014 non-TTY callers without --yes hit the exit-2 branch at lines 356-360 instead of reaching the prompt."
+        },
+        {
+          "text": "Error when --yes is missing in non-TTY prints a copy-pasteable example invocation",
+          "passed": true,
+          "evidence": "cleanup-stale-branches.sh:356-360 \u2014 after `log_error \"refusing to delete ... without --yes in non-interactive mode.\"`, prints three copy-pasteable invocations: `${PROG} --yes            # delete without prompting`, `${PROG} --dry-run        # preview without deleting`, and `${PROG} --dry-run --json # preview as JSON`."
+        },
+        {
+          "text": "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+          "passed": false,
+          "evidence": "The exit-code taxonomy documented at lines 14-17 only defines 0 (success), 1 (runtime failure), and 2 (usage error). No distinct transient-failure code. `git fetch` failure exits 1 at line 271 \u2014 the same code used for user cancellation at line 369 and for partial deletion failure at line 406. There is no exit code (e.g. 75 EX_TEMPFAIL) that an agent could use to distinguish a retryable network/git failure from a non-retryable cancellation or runtime error."
+        },
+        {
+          "text": "Supports --no-input or equivalent env var as another way to force non-interactive mode",
+          "passed": true,
+          "evidence": "cleanup-stale-branches.sh:145-147 declares `--no-input` as a flag (`NO_INPUT=1; shift`). Lines 33-38 read the equivalent env var `CLEANUP_NO_INPUT` with a normalization case statement: `\"\"|0|false|FALSE|no|NO) NO_INPUT=0 ;; *) NO_INPUT=1 ;;`. Line 231 includes `NO_INPUT -eq 1` in the NON_INTERACTIVE derivation. Help text at lines 60-61 and 74 documents both forms."
+        },
+        {
+          "text": "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)",
+          "passed": true,
+          "evidence": "cleanup-stale-branches.sh:343-348 \u2014 the dry-run path calls `emit_result \"would-delete\" \"${to_delete[@]}\"`. The emit_result helper at lines 317-319 prints `printf '%s\\n' \"${branches[@]}\"` (one branch name per line) on stdout in plain mode, or a single JSON record at lines 314-315 in --json mode. No decorative borders, ASCII art, or spinner glyphs anywhere in the script. All progress messages (`log_info`) go to stderr (line 111: `printf '%s\\n' \"$*\" >&2`), keeping stdout a clean data stream."
+        }
+      ],
+      "notes": [
+        "Executor noted `bash -n` was denied by sandbox so the script was only manually reviewed for syntax \u2014 there is residual risk of a parser/expansion issue that wasn't caught.",
+        "Fell back from `bash -n` syntax check to manual review of set -euo pipefail interactions, array expansions, heredocs, and case branches."
+      ]
+    },
+    {
+      "eval_id": 0,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "time_seconds": 0.0,
+        "tokens": 26679,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "References NO_COLOR environment variable for color gating (per no-color.org spec)",
+          "passed": false,
+          "evidence": "Baseline shipit-deploy.ts checks only `opts.color !== false` and `process.stderr.isTTY`; no reference to NO_COLOR env var anywhere in the file."
+        },
+        {
+          "text": "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+          "passed": false,
+          "evidence": "Baseline writeResult function produces a 'shipit deploy SUCCESS' block with service/env/tag/deploymentId/duration/url but no 'Next:' or 'See also:' hint pointing at a follow-up command."
+        },
+        {
+          "text": "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+          "passed": false,
+          "evidence": "Baseline deploy command flags are --service, --env, --tag, --dry-run, --timeout-seconds, --output, --no-color, --verbose, --yes. No --idempotency-key, --deployment-id, or --request-id flag. runDeploy generates deploymentId via Math.random() server-side."
+        },
+        {
+          "text": "Defines exit code 75 (EX_TEMPFAIL) or equivalent retry-friendly transient failure code",
+          "passed": false,
+          "evidence": "Baseline ExitCode enum defines 0, 1, 2, 3, 4, 5, 6 only (Success, GenericError, UsageError, ValidationError, DeployFailed, Timeout, Aborted). No 75 or EX_TEMPFAIL-labeled retry-friendly code."
+        },
+        {
+          "text": "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)",
+          "passed": false,
+          "evidence": "Baseline uses isAgentContext() detection (CI env var + SHIPIT_AGENT + CLAUDE_AGENT + !isTTY) to auto-switch defaults. There is no --interactive or --no-input flag for explicit opt-in/out."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 1,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "time_seconds": 0.0,
+        "tokens": 31949,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "list command has --limit and/or --all flag to bound default result size",
+          "passed": false,
+          "evidence": "Baseline list_flags command has only a --state filter (on|off|all). No --limit or --all flag to bound result size; the command returns every flag the API returns."
+        },
+        {
+          "text": "Per-subcommand --help includes a copy-pasteable Examples section with concrete invocations",
+          "passed": false,
+          "evidence": "Baseline subcommand docstrings (create, delete, list_flags, toggle) describe the command's behavior but have no Examples: section with concrete copy-pasteable invocations. The module docstring has usage examples but they are not visible on a per-subcommand --help."
+        },
+        {
+          "text": "Human-readable list output is grep-friendly one-record-per-line (no separator row, no table borders)",
+          "passed": false,
+          "evidence": "Baseline list_flags emits a header row + a separator row (`'-' * w`) + data rows using adaptive widths. The separator row ('---  ---  ---  ---') breaks line-based grep-friendly parsing."
+        },
+        {
+          "text": "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+          "passed": false,
+          "evidence": "Baseline require_value helper falls back to click.prompt whenever sys.stdin.isatty() is true, with no --interactive opt-in flag. This is exactly the anti-pattern the rule warns against."
+        },
+        {
+          "text": "Disables color in non-TTY contexts or references NO_COLOR env var handling",
+          "passed": false,
+          "evidence": "Baseline has no NO_COLOR env var handling or color disablement logic. Relies on click's implicit defaults only; no explicit NO_COLOR or --no-color check."
+        }
+      ],
+      "notes": []
+    },
+    {
+      "eval_id": 2,
+      "configuration": "without_skill",
+      "run_number": 1,
+      "result": {
+        "pass_rate": 0.0,
+        "passed": 0,
+        "failed": 0,
+        "total": 0,
+        "time_seconds": 0.0,
+        "tokens": 27373,
+        "tool_calls": 0,
+        "errors": 0
+      },
+      "expectations": [
+        {
+          "text": "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+          "passed": false,
+          "evidence": "Baseline cleanup-stale-branches.sh still uses `read -p` without any `[ -t 0 ]` guard. If invoked with no --yes and no TTY, the read will block indefinitely."
+        },
+        {
+          "text": "Error when --yes is missing in non-TTY prints a copy-pasteable example invocation",
+          "passed": false,
+          "evidence": "Baseline has no error path for 'missing --yes in non-TTY'; it simply hangs on read. The only error messages (unknown flag, unexpected arg) point to 'Run --help' but not a copy-pasteable example."
+        },
+        {
+          "text": "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+          "passed": false,
+          "evidence": "Baseline documents only exit codes 0 (success), 1 (cancelled), 2 (invalid arguments). No EX_TEMPFAIL (75) or equivalent retry-friendly transient failure code for git fetch failures."
+        },
+        {
+          "text": "Supports --no-input or equivalent env var as another way to force non-interactive mode",
+          "passed": false,
+          "evidence": "Baseline has --yes only; no --no-input flag and no env-var alternative (like CLEANUP_NO_INPUT) for forcing non-interactive mode."
+        },
+        {
+          "text": "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)",
+          "passed": false,
+          "evidence": "Baseline dry-run output prints human-readable bullets ('  - $branch') on stdout interleaved with progress text ('Fetching latest from origin...', '[dry-run] Would delete N branches'). Not cleanly machine-parseable \u2014 diagnostics and data share stdout."
+        }
+      ],
+      "notes": []
+    }
+  ],
+  "run_summary": {
+    "with_skill": {
+      "pass_rate": {
+        "mean": 0.8,
+        "stddev": 0.2,
+        "min": 0.6,
+        "max": 1.0
+      },
+      "time_seconds": {
+        "mean": 168.6597,
+        "stddev": 292.1271,
+        "min": 0.0,
+        "max": 505.979
+      },
+      "tokens": {
+        "mean": 71802.6667,
+        "stddev": 42924.8579,
+        "min": 23836,
+        "max": 106600
+      }
+    },
+    "without_skill": {
+      "pass_rate": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "time_seconds": {
+        "mean": 0.0,
+        "stddev": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "tokens": {
+        "mean": 28667.0,
+        "stddev": 2863.3987,
+        "min": 26679,
+        "max": 31949
+      }
+    },
+    "delta": {
+      "pass_rate": "+0.80",
+      "time_seconds": "+168.7",
+      "tokens": "+43136"
+    }
+  },
+  "notes": []
+}

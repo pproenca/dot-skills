@@ -1,0 +1,31 @@
+{
+  "eval_id": "eval-2",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "list command has --limit and/or --all flag to bound default result size",
+      "passed": false,
+      "evidence": "Baseline list_flags command has only a --state filter (on|off|all). No --limit or --all flag to bound result size; the command returns every flag the API returns."
+    },
+    {
+      "text": "Per-subcommand --help includes a copy-pasteable Examples section with concrete invocations",
+      "passed": false,
+      "evidence": "Baseline subcommand docstrings (create, delete, list_flags, toggle) describe the command's behavior but have no Examples: section with concrete copy-pasteable invocations. The module docstring has usage examples but they are not visible on a per-subcommand --help."
+    },
+    {
+      "text": "Human-readable list output is grep-friendly one-record-per-line (no separator row, no table borders)",
+      "passed": false,
+      "evidence": "Baseline list_flags emits a header row + a separator row (`'-' * w`) + data rows using adaptive widths. The separator row ('---  ---  ---  ---') breaks line-based grep-friendly parsing."
+    },
+    {
+      "text": "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+      "passed": false,
+      "evidence": "Baseline require_value helper falls back to click.prompt whenever sys.stdin.isatty() is true, with no --interactive opt-in flag. This is exactly the anti-pattern the rule warns against."
+    },
+    {
+      "text": "Disables color in non-TTY contexts or references NO_COLOR env var handling",
+      "passed": false,
+      "evidence": "Baseline has no NO_COLOR env var handling or color disablement logic. Relies on click's implicit defaults only; no explicit NO_COLOR or --no-color check."
+    }
+  ]
+}

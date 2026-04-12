@@ -1,0 +1,127 @@
+{
+  "eval_id": "eval-1-scaffold-deploy-cli",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "References NO_COLOR environment variable for color gating (per no-color.org spec)",
+      "passed": true,
+      "evidence": "shipit-deploy.ts:79-81 — `// no-color.org spec: any non-empty value disables color.\\n  const envNoColor = process.env.NO_COLOR;\\n  if (envNoColor !== undefined && envNoColor !== '') return false;`. Also documented in help text at line 404: `'  NO_COLOR         when set (any non-empty value), disables ANSI color'`. The implementation correctly follows the no-color.org spec by treating any non-empty value as a disable signal."
+    },
+    {
+      "text": "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+      "passed": true,
+      "evidence": "shipit-deploy.ts:219 — `process.stdout.write('\\nNext:\\n');` inside `printHumanResult`. Followed by concrete follow-up commands at lines 222 (`shipit deploy --service ... --yes` for dry-run case) and lines 225-227 (`shipit deploy status --id ${r.deploy_id}`, `shipit logs --service ...`, `shipit deploy rollback --id ${r.deploy_id}` for the success case). Also a `See also:` block in `--help` at line 483."
+    },
+    {
+      "text": "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+      "passed": false,
+      "evidence": "The deploy subcommand declares only these flags (lines 416-451): `-s/--service`, `-e/--env`, `-t/--tag`, `-n/--dry-run`, `-y/--yes`, `--json`, `--no-input`. There is no `--idempotency-key`, no `--deployment-id`, no `--id` flag on `shipit deploy`. The `--id` references at lines 225/227/484/485 are example invocations of *other* (future) subcommands (`shipit deploy status --id`, `shipit deploy rollback --id`), not a flag the caller can pass to `deploy` itself. The TODO comment at lines 171-176 mentions reconciling state by `{service, env, tag}` but never accepts a client-supplied idempotency token. The `runDeploy` stub generates `deploy_id` server-side at line 179 (`const fakeDeployId = ...`) rather than accepting one as input."
+    },
+    {
+      "text": "Defines exit code 75 (EX_TEMPFAIL) or equivalent retry-friendly transient failure code",
+      "passed": true,
+      "evidence": "shipit-deploy.ts:29 — `TEMPFAIL: 75, //  EX_TEMPFAIL — transient, retry with backoff` in the `ExitCode` enum. The code is wired into `classifyError` at line 359 (`if (name.includes('timeout') || name.includes('network')) return ExitCode.TEMPFAIL;`), used in error handling at line 329, and documented in `--help` at line 481 (`'  75  transient failure — safe to retry with backoff'`)."
+    },
+    {
+      "text": "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)",
+      "passed": false,
+      "evidence": "No `--interactive` flag is declared anywhere on the program or the deploy subcommand. The grep for `interactive` only finds the words 'non-interactive' in comments and an error message (lines 273, 287, 446). The transcript explicitly documents the choice at lines 102-103: 'Chose NOT to add an `--interactive` flag. The design is strictly flag-first; missing required flags error with exit 2.' The skill instead uses a `--no-input` flag (line 448) plus `isTty` detection (line 281) for non-interactive gating. While `--no-input` is the inverse polarity of `--interactive`, the assertion specifically requires an explicit `--interactive` flag, which is absent. Note also that the CLI has no prompt fallback at all — there is nothing to gate — so the assertion's premise does not match the design."
+    }
+  ],
+  "summary": {
+    "passed": 3,
+    "failed": 2,
+    "total": 5,
+    "pass_rate": 0.6
+  },
+  "execution_metrics": {
+    "tool_calls": {},
+    "total_tool_calls": null,
+    "total_steps": 10,
+    "errors_encountered": 0,
+    "output_chars": 23836,
+    "transcript_chars": 17069
+  },
+  "timing": {
+    "executor_duration_seconds": 505.979,
+    "total_duration_seconds": 505.979
+  },
+  "claims": [
+    {
+      "claim": "tsc --strict passes with zero errors on the generated file",
+      "type": "process",
+      "verified": false,
+      "evidence": "Cannot verify from outputs alone — no compiled artifact or tsc log was saved. The transcript claims this at line 306 but no artifact is preserved in outputs/."
+    },
+    {
+      "claim": "The runtime sandbox tests in section 6 (e.g. zero args prints help, --json emits parseable JSON, production without --yes exits 2) all pass",
+      "type": "process",
+      "verified": false,
+      "evidence": "Cannot verify from outputs — no run logs are saved. Static reading of the source supports plausibility (the action handler at line 284 does emit USAGE for production-without-yes; printJsonResult at line 233 emits a single JSON.stringify line)."
+    },
+    {
+      "claim": "5 distinct exit codes are defined",
+      "type": "factual",
+      "verified": true,
+      "evidence": "shipit-deploy.ts:24-30 declares OK=0, FAILURE=1, USAGE=2, UNAVAILABLE=69, TEMPFAIL=75 — five distinct values."
+    },
+    {
+      "claim": "All flags have both short and long forms",
+      "type": "factual",
+      "verified": false,
+      "evidence": "Partially false. `--json`, `--no-input`, `--no-color`, `--debug` have only long form (lines 379, 380, 441, 448). The transcript itself (lines 134-135) acknowledges this: 'Custom concepts (--service, --env, --tag, --json, --debug) use long-form only.' The earlier transcript claim at line 61 ('All flags declared with both short and long forms') is contradicted by the source — only -s/--service, -e/--env, -t/--tag, -n/--dry-run, -y/--yes, -v/--verbose, -q/--quiet have both forms."
+    },
+    {
+      "claim": "`runDeploy` is stubbed with a TODO comment",
+      "type": "factual",
+      "verified": true,
+      "evidence": "shipit-deploy.ts:159-189. Lines 159-168 are a JSDoc TODO; line 171 has `// --- TODO: real work goes here ---` followed by a numbered checklist of steps the real implementation must cover."
+    },
+    {
+      "claim": "The DeployResult is a stable shape with `changed: boolean` and `dry_run: boolean`",
+      "type": "factual",
+      "verified": true,
+      "evidence": "shipit-deploy.ts:61-70 defines the interface with `changed: boolean` and `dry_run: boolean` plus deploy_id, service, env, tag, url, duration_ms."
+    },
+    {
+      "claim": "Production deploys require --yes (or --dry-run) in any mode",
+      "type": "factual",
+      "verified": true,
+      "evidence": "shipit-deploy.ts:282 — `const requireYes = !opts.dryRun && (isProduction || opts.noInput || !isTty);`. When isProduction, requireYes is true regardless of TTY. The error block at lines 285-300 emits USAGE if --yes is missing."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [],
+    "needs_review": [],
+    "workarounds": [
+      "Commander wrote duplicate error lines on parse failure; had to call configureOutput({ writeErr: swallow }) on program and each subcommand to silence its built-in writes (transcript section 5, Issue 2).",
+      "Commander treats --no-input as negation of an implicit --input, so the parsed key is `input` not `noInput`; required manual inversion in the action handler (transcript section 5, Issue 3)."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+        "reason": "This assertion is genuinely failing here, but the rationale is worth tightening: the skill's idempotency rules emphasize *state reconciliation* by (service, env, tag), which is technically a content-addressed form of idempotency. If you want to enforce a *client-supplied* token (the strongest interpretation), say so explicitly — otherwise an executor that documents 'tag is the idempotency key' might argue it satisfies the spirit. Consider rewording to 'declares an --idempotency-key, --request-id, or --deployment-id flag on the deploy subcommand'."
+      },
+      {
+        "assertion": "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)",
+        "reason": "The assertion presumes the CLI has a prompt fallback that needs gating. This skill's design is *flag-first with no prompts at all*, and uses a `--no-input` flag (the inverse polarity) plus isTTY detection. A strict reading correctly fails this run, but the assertion conflates two valid designs: (a) explicit `--interactive` opt-in for prompts and (b) explicit `--no-input` opt-out from prompts. Consider rewording to 'has an explicit flag (e.g. --interactive or --no-input) that gates non-interactive behavior, not isTTY alone' — that would discriminate between skills that detect TTY only vs skills that surface an explicit override flag."
+      },
+      {
+        "reason": "No assertion checks the destructive-action safety gate: production deploys without --yes should refuse with a non-zero exit. This is a load-bearing behavior of the skill (lines 280-300 of the output) and a wrong implementation could pass all current assertions. Consider adding: 'Production deploys without --yes (and without --dry-run) emit a usage error and exit non-zero.'"
+      },
+      {
+        "reason": "No assertion checks that errors go to stderr (not stdout) and that successful JSON output goes to stdout. The skill explicitly distinguishes the two streams; a swap would still pass current assertions but break agent piping. Consider: 'Error messages are written to stderr and the JSON success record is written to stdout.'"
+      },
+      {
+        "reason": "No assertion checks that --dry-run does not call the deploy backend / does not produce side effects. A misimplementation that always calls the API and discards the result on dry-run would pass every current assertion. Consider: 'When --dry-run is set, the deploy stub is not invoked OR the result is marked dry_run=true and changed=false without side effects.'"
+      },
+      {
+        "assertion": "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+        "reason": "Passes here, but the assertion is satisfied by literally any string containing 'Next:'. A generic 'Next: try again later' would pass. Consider tightening to 'Next-step suggestion includes a runnable command (starts with the binary name and includes flags)' — the current output qualifies (line 225: 'shipit deploy status --id ...') so the bar is achievable."
+      }
+    ],
+    "overall": "The assertion set covers good agent-friendly CLI properties but has two assertions whose phrasing forces a fail on a design that arguably satisfies the underlying intent (idempotency-via-content-key, no-input-as-inverse-of-interactive). Three high-value behaviors (production-confirmation gate, stream separation, dry-run isolation) are observable in this output but unchecked by any assertion. Strong instinct on assertion 1 and 4 — both are concrete and discriminating. Assertion 2 passes too easily."
+  }
+}

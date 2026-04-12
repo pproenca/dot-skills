@@ -1,0 +1,14 @@
+{
+  "id": 1,
+  "name": "scaffold-deploy-cli",
+  "prompt": "I'm building a new internal deploy tool called `shipit` for our ops team. I need you to design the TypeScript interface for the `shipit deploy` subcommand — the commander.js setup, --help text, flag parsing, and error handling. The command should deploy a service by name to a target environment using a specified image tag. It will be used BOTH by humans typing at a terminal and by our Claude agents running it in CI pipelines, so it needs to work equally well in both cases. Don't implement the actual deploy logic — just stub it with a TODO and a fake return value. Save everything to `shipit-deploy.ts` in the outputs directory. I want to see the complete commander.js setup, --help examples, error handling, exit codes, and at least one way to get structured output for agents.",
+  "expected_output": "A TypeScript file with a fully-specified `shipit deploy` command: flag definitions (--service, --env, --tag, probably --replicas, --json, --dry-run, --yes), copy-pasteable examples in --help, error messages that include example invocations, non-zero exit codes for distinct failures, stdout for success/stderr for errors, and structured success output that agents can chain.",
+  "assertions": [
+    "References NO_COLOR environment variable for color gating (per no-color.org spec)",
+    "Success output includes a 'Next:' or 'See also:' suggestion pointing at a follow-up command",
+    "Accepts a client-supplied idempotency key or deployment-id flag for retry safety",
+    "Defines exit code 75 (EX_TEMPFAIL) or equivalent retry-friendly transient failure code",
+    "Has an explicit --interactive flag that gates prompt fallback (not isTTY alone)"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

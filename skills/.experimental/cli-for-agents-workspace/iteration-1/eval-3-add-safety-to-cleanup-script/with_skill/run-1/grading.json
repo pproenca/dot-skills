@@ -1,0 +1,105 @@
+{
+  "eval_id": "eval-3",
+  "config": "with_skill",
+  "expectations": [
+    {
+      "text": "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+      "passed": true,
+      "evidence": "cleanup-stale-branches.sh:224-227 sets IS_TTY via `if [[ -t 0 ]]; then IS_TTY=1; fi`. Lines 230-233 derive NON_INTERACTIVE from `IS_TTY -eq 0`. The interactive `read -r -p` at line 365 is gated by `if (( NON_INTERACTIVE ))` at line 355 — non-TTY callers without --yes hit the exit-2 branch at lines 356-360 instead of reaching the prompt."
+    },
+    {
+      "text": "Error when --yes is missing in non-TTY prints a copy-pasteable example invocation",
+      "passed": true,
+      "evidence": "cleanup-stale-branches.sh:356-360 — after `log_error \"refusing to delete ... without --yes in non-interactive mode.\"`, prints three copy-pasteable invocations: `${PROG} --yes            # delete without prompting`, `${PROG} --dry-run        # preview without deleting`, and `${PROG} --dry-run --json # preview as JSON`."
+    },
+    {
+      "text": "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+      "passed": false,
+      "evidence": "The exit-code taxonomy documented at lines 14-17 only defines 0 (success), 1 (runtime failure), and 2 (usage error). No distinct transient-failure code. `git fetch` failure exits 1 at line 271 — the same code used for user cancellation at line 369 and for partial deletion failure at line 406. There is no exit code (e.g. 75 EX_TEMPFAIL) that an agent could use to distinguish a retryable network/git failure from a non-retryable cancellation or runtime error."
+    },
+    {
+      "text": "Supports --no-input or equivalent env var as another way to force non-interactive mode",
+      "passed": true,
+      "evidence": "cleanup-stale-branches.sh:145-147 declares `--no-input` as a flag (`NO_INPUT=1; shift`). Lines 33-38 read the equivalent env var `CLEANUP_NO_INPUT` with a normalization case statement: `\"\"|0|false|FALSE|no|NO) NO_INPUT=0 ;; *) NO_INPUT=1 ;;`. Line 231 includes `NO_INPUT -eq 1` in the NON_INTERACTIVE derivation. Help text at lines 60-61 and 74 documents both forms."
+    },
+    {
+      "text": "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)",
+      "passed": true,
+      "evidence": "cleanup-stale-branches.sh:343-348 — the dry-run path calls `emit_result \"would-delete\" \"${to_delete[@]}\"`. The emit_result helper at lines 317-319 prints `printf '%s\\n' \"${branches[@]}\"` (one branch name per line) on stdout in plain mode, or a single JSON record at lines 314-315 in --json mode. No decorative borders, ASCII art, or spinner glyphs anywhere in the script. All progress messages (`log_info`) go to stderr (line 111: `printf '%s\\n' \"$*\" >&2`), keeping stdout a clean data stream."
+    }
+  ],
+  "summary": {
+    "passed": 4,
+    "failed": 1,
+    "total": 5,
+    "pass_rate": 0.8
+  },
+  "timing": {
+    "executor_duration_seconds": 346.484,
+    "total_tokens": 84972
+  },
+  "claims": [
+    {
+      "claim": "Exit-code taxonomy is 0 success / 1 runtime failure / 2 usage error",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Lines 14-17 document exactly this taxonomy and the script uses these three codes consistently."
+    },
+    {
+      "claim": "Stdout stays a clean data stream while all diagnostics go to stderr",
+      "type": "process",
+      "verified": true,
+      "evidence": "log_info/log_verbose/log_error all redirect to >&2 (lines 111, 116, 120). git fetch is redirected `>&2` at line 268. git branch -D is redirected `>&2` at line 386. emit_result is the only function that writes to stdout."
+    },
+    {
+      "claim": "Idempotent delete loop: re-checks each branch exists before deleting",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Lines 380-384 — `if ! git show-ref --verify --quiet \"refs/heads/${b}\"; then ... deleted+=(\"$b\"); continue; fi` treats already-absent branches as success."
+    },
+    {
+      "claim": "Portable across BSD and GNU date",
+      "type": "factual",
+      "verified": true,
+      "evidence": "Lines 257-261 try `date -v-1d` first (BSD/macOS) and fall back to `date -d \"... days ago\"` (GNU/Linux)."
+    },
+    {
+      "claim": "Stable JSON schema across all four actions",
+      "type": "quality",
+      "verified": true,
+      "evidence": "emit_result at lines 308-315 always emits the same `{action, main_branch, stale_days, count, branches}` shape regardless of action — even the `noop` path passes no branches but still gets count=0 and an empty array via the (( count > 0 )) guard."
+    }
+  ],
+  "user_notes_summary": {
+    "uncertainties": [
+      "Executor noted `bash -n` was denied by sandbox so the script was only manually reviewed for syntax — there is residual risk of a parser/expansion issue that wasn't caught."
+    ],
+    "needs_review": [],
+    "workarounds": [
+      "Fell back from `bash -n` syntax check to manual review of set -euo pipefail interactions, array expansions, heredocs, and case branches."
+    ]
+  },
+  "eval_feedback": {
+    "suggestions": [
+      {
+        "assertion": "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+        "reason": "This is the only assertion the script failed and it caught a real gap — the executor designed a 0/1/2 taxonomy that conflates `git fetch` network failures with user cancellation. Worth keeping as-is; consider also asserting that the chosen transient code is documented in --help so agents can discover it."
+      },
+      {
+        "assertion": "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)",
+        "reason": "The current assertion would also pass if the script printed an empty stdout on dry-run (no records is technically `one record per line`). Consider adding an explicit check that the dry-run output contains the candidate branch names, so a script that silently swallowed the list would fail. Also worth asserting that progress/preview text does NOT appear on stdout, since several skills tend to leak `log_info` lines into the data stream."
+      },
+      {
+        "assertion": "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+        "reason": "Passes here, but a script that put the `-t 0` check anywhere in the file (even unused) would also pass a textual grep. A stronger version would assert that piping `</dev/null` into the script without --yes exits non-zero within a short timeout — that's the actual behavioral guarantee the rule is trying to enforce."
+      },
+      {
+        "reason": "No assertion checks the exit code on user cancellation, which the executor explicitly flagged as a judgment call (kept exit 1 to preserve original behavior). If the eval cares about agent UX, consider asserting whether cancelled-by-user should be 0 or non-zero — currently the executor chose 1 with no test pulling on that decision."
+      },
+      {
+        "reason": "No assertion checks the --json output schema. The executor invented `{action, main_branch, stale_days, count, branches}` with action ∈ {noop, would-delete, deleted, cancelled}. An assertion that pins the schema (or at least requires `action` and `branches` keys) would catch a future regression where the schema silently drifts."
+      }
+    ],
+    "overall": "Assertions cover the headline safety surface (TTY guard, --no-input, dry-run shape, error invocations) and one of them found a real gap (exit-code taxonomy). Main weaknesses: most are textual-presence checks rather than behavioral checks, and the JSON output / cancellation exit code go entirely untested despite being central to agent usability."
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "id": 2,
+  "name": "refactor-feature-flag-cli",
+  "prompt": "I inherited this Python `flagctl` CLI from a previous team and our Claude Code agents in CI keep struggling with it — they hang on prompts, the output is hard to parse, and they can't skip confirmations. Can you rewrite it so it works reliably for agents without breaking it for humans? Keep it a single-file click-based CLI. The file is at `inputs/flagctl.py`. Save the rewritten version to the outputs directory as `flagctl.py`.",
+  "expected_output": "A rewritten flagctl.py that removes interactive input() calls, adds --json output, --yes flag for delete/toggle, copy-pasteable --help examples per subcommand, actionable error messages, proper stderr/stdout separation, and grep-friendly line-based human output instead of ASCII tables.",
+  "input_files": ["inputs/flagctl.py"],
+  "assertions": [
+    "list command has --limit and/or --all flag to bound default result size",
+    "Per-subcommand --help includes a copy-pasteable Examples section with concrete invocations",
+    "Human-readable list output is grep-friendly one-record-per-line (no separator row, no table borders)",
+    "Missing-flag prompt fallback requires an explicit --interactive opt-in (not just isTTY detection)",
+    "Disables color in non-TTY contexts or references NO_COLOR env var handling"
+  ],
+  "configs": ["with_skill", "without_skill"]
+}

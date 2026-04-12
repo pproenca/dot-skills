@@ -1,0 +1,31 @@
+{
+  "eval_id": "eval-3",
+  "config": "without_skill",
+  "expectations": [
+    {
+      "text": "Confirmation prompt is guarded by [ -t 0 ] or equivalent isatty check so non-TTY callers fail fast instead of hanging",
+      "passed": false,
+      "evidence": "Baseline cleanup-stale-branches.sh still uses `read -p` without any `[ -t 0 ]` guard. If invoked with no --yes and no TTY, the read will block indefinitely."
+    },
+    {
+      "text": "Error when --yes is missing in non-TTY prints a copy-pasteable example invocation",
+      "passed": false,
+      "evidence": "Baseline has no error path for 'missing --yes in non-TTY'; it simply hangs on read. The only error messages (unknown flag, unexpected arg) point to 'Run --help' but not a copy-pasteable example."
+    },
+    {
+      "text": "Script defines or uses a retry-friendly transient-failure exit code distinct from usage (2) and cancelled (1)",
+      "passed": false,
+      "evidence": "Baseline documents only exit codes 0 (success), 1 (cancelled), 2 (invalid arguments). No EX_TEMPFAIL (75) or equivalent retry-friendly transient failure code for git fetch failures."
+    },
+    {
+      "text": "Supports --no-input or equivalent env var as another way to force non-interactive mode",
+      "passed": false,
+      "evidence": "Baseline has --yes only; no --no-input flag and no env-var alternative (like CLEANUP_NO_INPUT) for forcing non-interactive mode."
+    },
+    {
+      "text": "Dry-run output is machine-parseable (one record per line, no decorative borders or spinners)",
+      "passed": false,
+      "evidence": "Baseline dry-run output prints human-readable bullets ('  - $branch') on stdout interleaved with progress text ('Fetching latest from origin...', '[dry-run] Would delete N branches'). Not cleanly machine-parseable — diagnostics and data share stdout."
+    }
+  ]
+}
