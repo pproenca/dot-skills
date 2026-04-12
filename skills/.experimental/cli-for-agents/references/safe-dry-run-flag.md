@@ -68,4 +68,9 @@ echo "Removed ${#orphans[@]} orphaned images."
 - Same code path for dry-run and real run, reducing divergence bugs
 - `--dry-run` output is the audit trail of what the real run will do
 
-Reference: [clig.dev — Provide a --dry-run flag](https://clig.dev/#robustness)
+**When NOT to use this pattern:**
+- Commands whose action IS the preview — linters, validators, `terraform plan` (the whole command is already a dry-run)
+- Read-only commands (list, show, get) — there is nothing destructive to preview
+- Commands where "what would change" cannot be computed without actually doing the work (e.g., stream transformers that read stdin byte-by-byte)
+
+Reference: [clig.dev — Provide a --dry-run flag](https://clig.dev/#robustness-guidelines)

@@ -57,4 +57,4 @@ def invite(email):
 - The `Idempotency-Key` header protects against races even during a single retry
 - Output is identical on both runs, so downstream parsing doesn't care which branch ran
 
-Reference: [clig.dev — Make idempotency a design goal](https://clig.dev/#robustness)
+Reference: [clig.dev — Make idempotency a design goal](https://clig.dev/#robustness-guidelines)

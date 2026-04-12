@@ -58,4 +58,4 @@ echo "user ${NAME} created with role ${ROLE}"
 **When NOT to use this pattern:**
 - When duplicate resources are semantically valid (e.g., "create log entry") — accept and explain explicitly via a different verb like `append`
 
-Reference: [clig.dev — Make operations idempotent](https://clig.dev/#robustness)
+Reference: [clig.dev — Make operations idempotent](https://clig.dev/#robustness-guidelines)

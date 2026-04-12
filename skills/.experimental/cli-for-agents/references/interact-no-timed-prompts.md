@@ -64,4 +64,4 @@ func main() {
 }
 ```
 
-Reference: [clig.dev — Confirm dangerous actions](https://clig.dev/#robustness)
+Reference: [clig.dev — Confirm dangerous actions](https://clig.dev/#robustness-guidelines)

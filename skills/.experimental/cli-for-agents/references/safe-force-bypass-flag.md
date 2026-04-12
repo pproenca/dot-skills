@@ -52,4 +52,4 @@ def delete(service, yes):
 - Agent workflow works: `mycli delete myapp --yes` proceeds directly
 - Non-TTY + no `--yes` = explicit refusal (safer than silent delete)
 
-Reference: [clig.dev — Always allow -f or --force to skip confirmation](https://clig.dev/#robustness)
+Reference: [clig.dev — Always allow -f or --force to skip confirmation](https://clig.dev/#robustness-guidelines)

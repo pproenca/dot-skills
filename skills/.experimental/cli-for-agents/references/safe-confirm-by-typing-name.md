@@ -62,4 +62,4 @@ new Command()
 - Routine writes (create, update, small-file delete) are safer with a simple `--yes`
 - Read-only commands never need confirmation at all
 
-Reference: [clig.dev — Severe actions require typing the resource name](https://clig.dev/#robustness)
+Reference: [clig.dev — Severe actions require typing the resource name](https://clig.dev/#robustness-guidelines)

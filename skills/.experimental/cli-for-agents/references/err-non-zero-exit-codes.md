@@ -79,12 +79,13 @@ it obvious to the reader that `75` isn't an arbitrary number but `EX_TEMPFAIL` f
 #!/usr/bin/env bash
 set -euo pipefail
 
-# sysexits.h exit codes. Agents branch on these, so do not renumber.
+# Exit codes. 0/1/2 follow POSIX/bash convention; 69/75 come from sysexits.h.
+# Agents branch on these, so do not renumber.
 readonly EX_OK=0
 readonly EX_FAILURE=1
-readonly EX_USAGE=2
-readonly EX_UNAVAILABLE=69    # service unavailable (hard failure)
-readonly EX_TEMPFAIL=75       # transient failure, retry-friendly
+readonly EX_USAGE=2            # POSIX/getopt convention (sysexits.h defines 64)
+readonly EX_UNAVAILABLE=69     # sysexits.h EX_UNAVAILABLE: service unavailable
+readonly EX_TEMPFAIL=75        # sysexits.h EX_TEMPFAIL: transient failure, retry-friendly
 
 main() {
   local env="${ENV:-}"

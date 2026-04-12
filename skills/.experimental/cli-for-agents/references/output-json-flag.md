@@ -64,4 +64,9 @@ def list_services(as_json):
 - Human output can evolve freely without breaking scripts
 - JSON schema can be versioned and documented separately
 
+**When NOT to use this pattern:**
+- Commands whose output is a single scalar (`mycli service count` → emit the number; JSON adds `{"count": 42}` ceremony without clarity)
+- Commands that emit binary data or raw file contents — use `--output <file>` instead
+- Commands that already emit a stable structured format (YAML config dump) — re-serializing to JSON would lose fidelity
+
 Reference: [clig.dev — Implement a --json output mode](https://clig.dev/#output)

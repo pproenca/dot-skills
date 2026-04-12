@@ -53,4 +53,4 @@ def delete(service_id):
 - Distinguishes "already gone" (stderr note) from "deleted just now" (stdout)
 - Matches the semantics of `rm -f`, `kubectl delete --ignore-not-found`, `terraform destroy`
 
-Reference: [clig.dev — Make operations idempotent where possible](https://clig.dev/#robustness)
+Reference: [clig.dev — Make operations idempotent where possible](https://clig.dev/#robustness-guidelines)

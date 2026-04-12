@@ -19,41 +19,41 @@ Prescriptive design and review standards for command-line tools that AI agents a
 
 ## Table of Contents
 
-1. [Non-interactive Operation](references/_sections.md#1-non-interactive-operation) — **CRITICAL**
+1. [Non-interactive Operation](references/_sections.md) — **CRITICAL**
    - 1.1 [Avoid Blocking on stdin When a TTY Is Attached](references/interact-no-hang-on-stdin.md) — HIGH (prevents indefinite hangs when no pipe is provided)
    - 1.2 [Check for a TTY Before Prompting](references/interact-detect-tty.md) — CRITICAL (prevents indefinite hangs under agents and CI)
    - 1.3 [Express Every Input as a Flag First](references/interact-flags-first.md) — CRITICAL (prevents indefinite hangs in headless environments)
    - 1.4 [Never Use Timed Prompts or Press-Any-Key Screens](references/interact-no-timed-prompts.md) — HIGH (prevents wall-clock waste on every retry)
    - 1.5 [Replace Arrow-Key Menus with Flag-Selected Choices](references/interact-no-arrow-menus.md) — CRITICAL (prevents blocking on inputs agents cannot produce)
    - 1.6 [Support a --no-input Flag to Force Non-Interactive Mode](references/interact-no-input-flag.md) — HIGH (prevents prompts inside harnesses that falsely report TTY)
-2. [Help Text Design](references/_sections.md#2-help-text-design) — **HIGH**
+2. [Help Text Design](references/_sections.md) — **HIGH**
    - 2.1 [Every Subcommand Owns Its Own --help](references/help-per-subcommand.md) — HIGH (reduces loaded help context by 80-95%)
    - 2.2 [Include Copy-Pasteable Examples in Every --help](references/help-examples-in-help.md) — CRITICAL (reduces invocation guessing to O(1) lookup)
    - 2.3 [List Both Short and Long Forms for Every Flag](references/help-flag-summary.md) — HIGH (prevents brittle single-letter scripts and collision bugs)
    - 2.4 [Show Help When Invoked With Zero Arguments](references/help-no-flag-required.md) — HIGH (prevents silent side effects from discovery attempts)
    - 2.5 [Structure Top-Level Help as a Navigational Index](references/help-layered-discovery.md) — HIGH (reduces top-level discovery context from ~200 lines to ~15)
    - 2.6 [Suggest What to Run Next in Help and Success Output](references/help-suggest-next-steps.md) — HIGH (prevents round-trips to top-level help for related commands)
-3. [Error Messages](references/_sections.md#3-error-messages) — **HIGH**
+3. [Error Messages](references/_sections.md) — **HIGH**
    - 3.1 [Exit Fast on Missing Required Flags](references/err-exit-fast-on-missing-required.md) — HIGH (prevents wasted wall-clock on every retry)
    - 3.2 [Include a Concrete Fix in Every Error Message](references/err-actionable-fix.md) — HIGH (reduces retry loops by collapsing guess-and-check to one round)
    - 3.3 [Include a Correct Example Invocation in Error Messages](references/err-include-example-invocation.md) — HIGH (reduces re-reads of --help after a failed command)
    - 3.4 [Reserve Stack Traces for --debug Mode](references/err-no-stack-traces-by-default.md) — MEDIUM-HIGH (reduces default error output by 10-50x)
    - 3.5 [Send Errors and Warnings to stderr, Not stdout](references/err-stderr-not-stdout.md) — HIGH (prevents error text from corrupting piped data)
    - 3.6 [Use Distinct Non-Zero Exit Codes for Distinct Failures](references/err-non-zero-exit-codes.md) — HIGH (prevents silent failures and unnecessary retries)
-4. [Destructive Action Safety](references/_sections.md#4-destructive-action-safety) — **HIGH**
+4. [Destructive Action Safety](references/_sections.md) — **HIGH**
    - 4.1 [Design Multi-Step Commands for Crash-Only Recovery](references/safe-crash-only-recovery.md) — MEDIUM-HIGH (prevents stuck-state requiring manual intervention)
    - 4.2 [Exit Successfully When Delete Targets Are Already Gone](references/safe-idempotent-cleanup.md) — MEDIUM-HIGH (prevents retry-loop errors on already-clean state)
    - 4.3 [Never Prompt When --no-input Is Set](references/safe-no-prompts-with-no-input.md) — HIGH (prevents silent fallback to prompts in scripted mode)
    - 4.4 [Provide --dry-run for Every Destructive Command](references/safe-dry-run-flag.md) — HIGH (prevents irreversible mistakes during agent exploration)
    - 4.5 [Provide --yes or --force to Skip Confirmation Prompts](references/safe-force-bypass-flag.md) — HIGH (prevents confirmation prompts from blocking scripted runs)
    - 4.6 [Require Typing the Resource Name for Irreversible Actions](references/safe-confirm-by-typing-name.md) — HIGH (prevents muscle-memory past safe-by-default y/N prompts)
-5. [Input Handling](references/_sections.md#5-input-handling) — **HIGH**
+5. [Input Handling](references/_sections.md) — **HIGH**
    - 5.1 [Accept `-` as Filename for stdin and stdout](references/input-accept-stdin-dash.md) — HIGH (prevents pipeline composition workarounds and temp files)
    - 5.2 [Accept Common Flags Through Environment Variables](references/input-env-var-fallback.md) — MEDIUM-HIGH (prevents repetition of the same flag on every invocation)
    - 5.3 [Accept Secrets Through stdin or File, Never as Flag Values](references/input-stdin-for-secrets.md) — HIGH (prevents secret leakage into ps output, shell history, and logs)
    - 5.4 [Never Fall Back to a Prompt When a Flag Is Missing](references/input-no-prompt-fallback.md) — MEDIUM-HIGH (prevents silent hangs when TTY detection misfires)
    - 5.5 [Prefer Named Flags Over Positional Arguments](references/input-flags-over-positional.md) — HIGH (prevents argument-order guessing and future breakage)
-6. [Output Format](references/_sections.md#6-output-format) — **MEDIUM-HIGH**
+6. [Output Format](references/_sections.md) — **MEDIUM-HIGH**
    - 6.1 [Avoid Relying on Decorative Output to Convey State](references/output-no-decorative-only.md) — MEDIUM (prevents state from being lost when agents read raw bytes)
    - 6.2 [Bound Default Output Size with --limit and --all](references/output-bounded-by-default.md) — MEDIUM-HIGH (prevents agent context blowup on default list invocations)
    - 6.3 [Disable ANSI Color When NO_COLOR or Non-TTY](references/output-respect-no-color.md) — MEDIUM (prevents escape sequences from breaking regex matches)
@@ -61,13 +61,13 @@ Prescriptive design and review standards for command-line tools that AI agents a
    - 6.5 [Provide --json for Stable Machine-Readable Output](references/output-json-flag.md) — MEDIUM-HIGH (prevents brittle regex parsing of human-readable tables)
    - 6.6 [Return Chainable Values on Success, Not Just "Done"](references/output-machine-ids-on-success.md) — MEDIUM-HIGH (prevents round-trip lookups for IDs/URLs of just-created resources)
    - 6.7 [Stream Large Result Sets as NDJSON](references/output-ndjson-streaming.md) — MEDIUM-HIGH (prevents agent context blowup on large list commands)
-7. [Idempotency & Retries](references/_sections.md#7-idempotency-&-retries) — **MEDIUM-HIGH**
+7. [Idempotency & Retries](references/_sections.md) — **MEDIUM-HIGH**
    - 7.1 [Accept User-Provided Names Instead of Auto-Generating IDs](references/idem-stable-identifiers.md) — MEDIUM (prevents orphaned duplicates from timed-out retries)
    - 7.2 [Make Create Commands Skip When Target Already Exists](references/idem-create-or-skip.md) — MEDIUM-HIGH (prevents race conditions and wrapper if-exists checks)
    - 7.3 [Make Running the Same Command Twice Safe](references/idem-retry-safe.md) — MEDIUM-HIGH (prevents duplicate side effects on retry)
    - 7.4 [Prefer "Ensure State" Semantics Over Delta Application](references/idem-state-reconciliation.md) — MEDIUM (prevents errors when partial state is already applied)
    - 7.5 [Return the Same Output Shape Whether Acting or Skipping](references/idem-stable-output-on-skip.md) — MEDIUM (prevents downstream parser branching on did-anything-happen)
-8. [Command Structure](references/_sections.md#8-command-structure) — **MEDIUM**
+8. [Command Structure](references/_sections.md) — **MEDIUM**
    - 8.1 [Avoid Catch-All Handlers for Unknown Subcommands](references/struct-no-hidden-subcommand-catchall.md) — MEDIUM (prevents locking in support for every typo forever)
    - 8.2 [Parse Flags in Any Position Relative to Subcommands](references/struct-flag-order-independent.md) — MEDIUM (prevents confusing errors when agents append flags)
    - 8.3 [Use a Consistent Resource-Verb Command Shape](references/struct-resource-verb.md) — MEDIUM (prevents re-reading help for every new subcommand)

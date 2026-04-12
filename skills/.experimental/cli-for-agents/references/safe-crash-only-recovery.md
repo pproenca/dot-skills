@@ -61,4 +61,4 @@ step_3_restart_service  # safe to call on a running service
 - Stale locks never block indefinitely — they clear on next run
 - Each step checks desired state, so re-running is a no-op when already done
 
-Reference: [clig.dev — Crash-only design](https://clig.dev/#robustness)
+Reference: [clig.dev — Crash-only design](https://clig.dev/#robustness-guidelines)
