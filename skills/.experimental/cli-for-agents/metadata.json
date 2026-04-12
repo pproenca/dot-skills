@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Agent-Friendly",
+  "technology": "CLI Design",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "April 2026",
+  "abstract": "Prescriptive design and review standards for command-line tools that AI agents and automation will invoke. Contains 45 rules across 8 categories, prioritized by blast radius from CRITICAL (non-interactive operation) through HIGH (help text design, error messages, destructive action safety, input handling) and MEDIUM-HIGH (output format, idempotency) to MEDIUM (command structure). Each rule explains the failure mode in concrete terms, provides production-realistic incorrect and correct examples in multiple languages (TypeScript, Python, Go, Rust, Bash), and links to authoritative sources including clig.dev, the Heroku CLI Style Guide, GNU Coding Standards, POSIX utility conventions, no-color.org, and the JSON Lines spec. Used both when building new CLIs and when reviewing existing ones for agent-friendliness regressions.",
+  "references": [
+    "https://clig.dev/",
+    "https://devcenter.heroku.com/articles/cli-style-guide",
+    "https://jdx.dev/posts/2018-10-08-12-factor-cli-apps/",
+    "https://www.gnu.org/prep/standards/html_node/Command_002dLine-Interfaces.html",
+    "https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html",
+    "https://no-color.org/",
+    "https://rust-cli.github.io/book/index.html",
+    "https://jsonlines.org/"
+  ]
+}
