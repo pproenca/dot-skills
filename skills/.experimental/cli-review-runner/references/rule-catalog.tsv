@@ -1,0 +1,53 @@
+# Rule catalog for cli-review-runner.
+# Columns: rule_id\ttitle\timpact\tprobe\ttestable
+# - probe: P1-P10 for automatic probes, "manual" for black-box-untestable rules
+# - testable: "auto" (fully automated), "partial" (heuristic, may miss edge cases), "manual"
+#
+# Source of truth for rule IDs and impact: ../cli-for-agents/references/
+# When cli-for-agents adds rules, append them here and update the probe mapping.
+rule_id	title	impact	probe	testable
+interact-flags-first	Express Every Input as a Flag First	CRITICAL	P1	partial
+interact-detect-tty	Check for a TTY Before Prompting	CRITICAL	P1	partial
+interact-no-arrow-menus	Replace Arrow-Key Menus with Flag-Selected Choices	CRITICAL	P1	partial
+interact-no-input-flag	Support a --no-input Flag to Force Non-Interactive Mode	HIGH	P1	auto
+interact-no-timed-prompts	Never Use Timed Prompts or Press-Any-Key Screens	HIGH	P1	partial
+interact-no-hang-on-stdin	Avoid Blocking on stdin When a TTY Is Attached	HIGH	P1	auto
+help-examples-in-help	Include Copy-Pasteable Examples in Every --help	CRITICAL	P3	auto
+help-per-subcommand	Every Subcommand Owns Its Own --help	HIGH	P2	auto
+help-no-flag-required	Show Help When Invoked With Zero Arguments	HIGH	P2	auto
+help-layered-discovery	Structure Top-Level Help as a Navigational Index	HIGH	P2	partial
+help-flag-summary	List Both Short and Long Forms for Every Flag	HIGH	P3	partial
+help-suggest-next-steps	Suggest What to Run Next in Help and Success Output	HIGH	P3	partial
+err-exit-fast-on-missing-required	Exit Fast on Missing Required Flags	HIGH	P4	auto
+err-actionable-fix	Include a Concrete Fix in Every Error Message	HIGH	P4	partial
+err-stderr-not-stdout	Send Errors and Warnings to stderr, Not stdout	HIGH	P5	auto
+err-non-zero-exit-codes	Use Distinct Non-Zero Exit Codes for Distinct Failures	HIGH	P6	auto
+err-include-example-invocation	Include a Correct Example Invocation in Error Messages	HIGH	P4	partial
+err-no-stack-traces-by-default	Reserve Stack Traces for --debug Mode	MEDIUM-HIGH	P4	partial
+safe-dry-run-flag	Provide --dry-run for Every Destructive Command	HIGH	P9	partial
+safe-force-bypass-flag	Provide --yes or --force to Skip Confirmation Prompts	HIGH	P9	partial
+safe-confirm-by-typing-name	Require Typing the Resource Name for Irreversible Actions	HIGH	manual	manual
+safe-no-prompts-with-no-input	Never Prompt When --no-input Is Set	HIGH	P9	partial
+safe-idempotent-cleanup	Exit Successfully When Delete Targets Are Already Gone	MEDIUM-HIGH	manual	manual
+safe-crash-only-recovery	Design Multi-Step Commands for Crash-Only Recovery	MEDIUM-HIGH	manual	manual
+input-accept-stdin-dash	Accept - as Filename for stdin and stdout	HIGH	P7	auto
+input-flags-over-positional	Prefer Named Flags Over Positional Arguments	HIGH	P7	partial
+input-stdin-for-secrets	Accept Secrets Through stdin or File, Never as Flag Values	HIGH	manual	manual
+input-env-var-fallback	Accept Common Flags Through Environment Variables	MEDIUM-HIGH	manual	manual
+input-no-prompt-fallback	Never Fall Back to a Prompt When a Flag Is Missing	MEDIUM-HIGH	P1	partial
+output-json-flag	Provide --json for Stable Machine-Readable Output	MEDIUM-HIGH	P8	auto
+output-ndjson-streaming	Stream Large Result Sets as NDJSON	MEDIUM-HIGH	manual	manual
+output-bounded-by-default	Bound Default Output Size with --limit and --all	MEDIUM-HIGH	manual	manual
+output-machine-ids-on-success	Return Chainable Values on Success, Not Just "Done"	MEDIUM-HIGH	manual	manual
+output-respect-no-color	Disable ANSI Color When NO_COLOR or Non-TTY	MEDIUM	P8	auto
+output-no-decorative-only	Avoid Relying on Decorative Output to Convey State	MEDIUM	manual	manual
+output-one-record-per-line	Emit One Record Per Line for Grep-Able Human Output	MEDIUM	manual	manual
+idem-retry-safe	Make Running the Same Command Twice Safe	MEDIUM-HIGH	manual	manual
+idem-create-or-skip	Make Create Commands Skip When Target Already Exists	MEDIUM-HIGH	manual	manual
+idem-stable-output-on-skip	Return the Same Output Shape Whether Acting or Skipping	MEDIUM	manual	manual
+idem-state-reconciliation	Prefer "Ensure State" Semantics Over Delta Application	MEDIUM	manual	manual
+idem-stable-identifiers	Accept User-Provided Names Instead of Auto-Generating IDs	MEDIUM	manual	manual
+struct-resource-verb	Use a Consistent Resource-Verb Command Shape	MEDIUM	P10	partial
+struct-flag-order-independent	Parse Flags in Any Position Relative to Subcommands	MEDIUM	P10	auto
+struct-no-hidden-subcommand-catchall	Avoid Catch-All Handlers for Unknown Subcommands	MEDIUM	P10	auto
+struct-standard-flag-names	Use Standard Flag Names (--help, --version, --verbose, --quiet)	MEDIUM	P10	auto

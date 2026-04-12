@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Agent-Friendly",
+  "technology": "CLI Review Automation",
+  "discipline": "composition",
+  "type": "verification",
+  "date": "April 2026",
+  "abstract": "Automated verification skill that audits a target command-line tool against the cli-for-agents 45-rule design catalog. Runs 10 black-box probes covering non-interactive operation, layered help, actionable errors, exit codes, stdin composition, structured output, destructive safety, and command structure; emits findings as a text table, JSON, or NDJSON with per-rule pass/fail and evidence. All probes are read-only by default: safe verbs (list, get, show) may be invoked with bogus flags, while destructive verbs (delete, drop) are only inspected via --help. Includes a self-test that asserts probes detect rule violations on a deliberately-buggy mock CLI. Every script bundled with the skill dog-foods the cli-for-agents rules it checks for.",
+  "references": [
+    "https://github.com/pproenca/dot-skills/tree/master/skills/.experimental/cli-for-agents",
+    "https://clig.dev/",
+    "https://devcenter.heroku.com/articles/cli-style-guide",
+    "https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap12.html",
+    "https://man.freebsd.org/cgi/man.cgi?sektion=3&query=sysexits"
+  ]
+}

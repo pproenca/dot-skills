@@ -1,0 +1,12 @@
+{
+  "timeout_seconds": 5,
+  "safe_verbs": ["list", "get", "show", "status", "describe", "help", "version", "config", "ls", "inspect"],
+  "destructive_verbs": ["delete", "drop", "destroy", "remove", "reset", "purge", "rm", "del"],
+  "rules_skill_path": "",
+  "_setup_instructions": {
+    "timeout_seconds": "Wall-clock seconds before a probe declares the target hung. Default 5. Increase to 10+ for slow CLIs (Python imports, JVM startup).",
+    "safe_verbs": "Verb names that may be invoked with bogus flags during probing. Add project-specific read-only verbs here (e.g., 'watch', 'tail', 'logs'). Must not include any verb that mutates state.",
+    "destructive_verbs": "Verb names that are ONLY inspected via --help during probing - never invoked with arguments. Add project-specific destructive verbs here (e.g., 'kill', 'rollback', 'force-push', 'wipe').",
+    "rules_skill_path": "Optional absolute path to a cli-for-agents skill directory for rule lookups. Leave empty to use references/rule-catalog.tsv bundled with this skill."
+  }
+}
