@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "OpenAI",
+  "technology": "Rust",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "April 2026",
+  "abstract": "Distilled Rust coding patterns extracted from openai/codex (codex-rs, 1,418 Rust files across 72 workspace crates). Captures the end-to-end craft of its top contributors — Michael Bolin, jif-oai, Ahmed Ibrahim, Eric Traut, and others — across defensive coding, error discipline, async cancellation, sandboxing, type invariants, testing, protocol design, workspace organization, observability, and Ratatui TUI architecture. Each rule cites the exact codex-rs file and shows a minimal incorrect/correct pair so the reader can internalize the judgment, not just the syntax.",
+  "references": [
+    "https://github.com/openai/codex",
+    "https://github.com/openai/codex/tree/main/codex-rs",
+    "https://github.com/openai/codex/blob/main/AGENTS.md",
+    "https://github.com/openai/codex/blob/main/docs/tui-chat-composer.md",
+    "https://github.com/openai/codex/blob/main/docs/tui-stream-chunking-review.md",
+    "https://developers.openai.com/codex"
+  ]
+}
