@@ -1,0 +1,33 @@
+{
+  "review_passes": 5,
+  "vote_threshold": 3,
+  "max_context_files": 15,
+  "agent_model": "sonnet",
+  "validator_model": "opus",
+  "min_confidence": 0.5,
+  "category_weights": {
+    "null-access": 1.0,
+    "boundary": 1.0,
+    "race": 1.0,
+    "resource-leak": 1.0,
+    "injection": 1.0,
+    "auth-bypass": 1.0,
+    "data-loss": 1.0,
+    "error-swallow": 1.0,
+    "type-coercion": 1.0,
+    "stale-ref": 1.0,
+    "api-contract": 1.0,
+    "dead-code": 1.0,
+    "perf": 1.0,
+    "config": 1.0
+  },
+  "_setup_instructions": {
+    "review_passes": "Number of parallel review passes (default: 5)",
+    "vote_threshold": "Minimum votes to surface a finding (default: 3 = majority of 5)",
+    "max_context_files": "Max context files beyond changed files (default: 15)",
+    "agent_model": "Model for review passes: 'sonnet' (faster/cheaper) or 'opus' (thorough)",
+    "validator_model": "Model for independent validator: 'opus' (recommended) or 'sonnet'",
+    "min_confidence": "Findings below this confidence get a 'low confidence' warning (default: 0.5)",
+    "category_weights": "Learned from resolution rate data. 1.0 = full weight, 0.1 = suppressed. Updated by scripts/update-weights.sh"
+  }
+}

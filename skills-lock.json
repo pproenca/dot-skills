@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "bug-review": {
+      "source": "pproenca/dot-skills",
+      "sourceType": "github",
+      "computedHash": "3aa4833500bc3b503ff82bd005685ce57e707149b2d06d51c9e555fe2d9082ec"
+    }
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "name": "threat-model",
+  "version": "0.1.0",
+  "description": "Evidence-backed threat modeling and patch remediation for codebases.",
+  "author": {
+    "name": "pproenca",
+    "email": "8202400+pproenca@users.noreply.github.com",
+    "url": "https://github.com/pproenca"
+  },
+  "homepage": "https://github.com/pproenca/dot-skills",
+  "repository": "https://github.com/pproenca/dot-skills",
+  "license": "MIT",
+  "keywords": [
+    "security",
+    "threat-model",
+    "threat-patch"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Threat Model + Patch",
+    "shortDescription": "Threat model a codebase, then patch the findings it surfaces.",
+    "longDescription": "Bundles the threat-model and threat-patch skills into a single local plugin for security review and remediation workflows.",
+    "developerName": "pproenca",
+    "category": "Productivity",
+    "capabilities": [
+      "Interactive",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/pproenca/dot-skills",
+    "privacyPolicyURL": "[TODO: privacy policy URL]",
+    "termsOfServiceURL": "[TODO: terms of service URL]",
+    "defaultPrompt": [
+      "Threat model this codebase and write findings.json.",
+      "Review the latest diff for new attack surfaces.",
+      "Patch the open findings from findings.json."
+    ],
+    "brandColor": "#B45309"
+  }
+}
