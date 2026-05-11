@@ -9,11 +9,9 @@ description: >
   types, Ref/Queue/PubSub/Deferred concurrency primitives, Match module, Config providers,
   Scope/Exit/Cause/Runtime patterns, or any code using Effect's typed error channel (E parameter).
   Also trigger when the user asks about Effect patterns, migration from Promises/fp-ts/neverthrow
-  to Effect, or how to structure an Effect application. Covers the full ecosystem: core Effect type,
-  Schema validation, error management, concurrency (fibers, queues, semaphores, pools),
-  streams/sinks, services and layers (DI), resource management, scheduling, observability,
-  platform APIs, and AI integration. Do NOT trigger for React's useEffect, Redux side effects, or
-  general English usage of "effect" unless the context clearly involves the Effect-TS library.
+  to Effect, or how to structure an Effect application. Do NOT trigger for React's useEffect,
+  Redux side effects, or general English usage of "effect" unless the context clearly involves
+  the Effect-TS library.
 ---
 
 # Effect TypeScript Best Practices

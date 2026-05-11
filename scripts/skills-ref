@@ -6,6 +6,8 @@ set -euo pipefail
 
 VERSION="1.0.0"
 
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
 # Global counters (reset per skill)
 ERRORS=0
 WARNINGS=0
@@ -24,44 +26,12 @@ fail() { echo -e "${RED}✗${NC} $1"; ERRORS=$((ERRORS + 1)); }
 warn() { echo -e "${YELLOW}!${NC} $1"; WARNINGS=$((WARNINGS + 1)); }
 info() { echo -e "${BLUE}→${NC} $1"; }
 
-# Extract YAML frontmatter as JSON using Node.js
+# Extract YAML frontmatter as JSON using js-yaml (a real YAML 1.2 parser).
+# This handles plain scalars, quoted multi-line strings, block scalars
+# (| literal, > folded), inline comments (# ...), nested maps, and arrays.
 extract_frontmatter() {
   local file="$1"
-  node -e "
-    const fs = require('fs');
-    const content = fs.readFileSync(process.argv[1], 'utf8');
-    const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
-    if (!match) {
-      console.log('{}');
-      process.exit(0);
-    }
-    const yaml = match[1];
-    const result = {};
-    let currentKey = null;
-    let multilineValue = '';
-    let inMultiline = false;
-
-    yaml.split('\\n').forEach((line, i, lines) => {
-      // Skip comments
-      if (line.trim().startsWith('#')) return;
-
-      // Check for key: value pattern
-      const keyMatch = line.match(/^([a-zA-Z_-]+):\\s*(.*)$/);
-      if (keyMatch && !inMultiline) {
-        const [, key, value] = keyMatch;
-        if (value.trim()) {
-          // Remove surrounding quotes if present
-          result[key] = value.trim().replace(/^[\"']|[\"']$/g, '');
-        } else {
-          // Could be start of multiline or nested object - store empty
-          result[key] = '';
-        }
-        currentKey = key;
-      }
-    });
-
-    console.log(JSON.stringify(result));
-  " "$file"
+  node "$SCRIPT_DIR/skills-ref-parse.js" "$file"
 }
 
 # Get a specific property from frontmatter JSON
@@ -138,72 +108,18 @@ validate_description() {
   return $has_errors
 }
 
-# Validate YAML frontmatter is parseable by standard YAML parsers (gray-matter)
-# Catches unquoted strings with colons that break YAML parsing
+# Validate YAML frontmatter parses with a real YAML 1.2 parser (js-yaml).
+# Catches anything an unquoted-colon regex would miss: tabs, duplicate keys,
+# unterminated quotes, bad block scalars, reserved indicators, etc.
 validate_yaml_safety() {
   local file="$1"
-  local has_errors=0
-
-  node -e "
-    const fs = require('fs');
-    const content = fs.readFileSync(process.argv[1], 'utf8');
-    const match = content.match(/^---\n([\s\S]*?)\n---/);
-    if (!match) { process.exit(0); }
-
-    const yaml = match[1];
-    const lines = yaml.split('\n');
-    const issues = [];
-
-    lines.forEach((line, i) => {
-      if (line.trim().startsWith('#')) return;
-
-      // Check for unquoted values containing colons (YAML interprets as nested mapping)
-      const kvMatch = line.match(/^([a-zA-Z_-]+):\s+(.+)$/);
-      if (kvMatch) {
-        const value = kvMatch[2].trim();
-        // Value is unquoted and contains a colon followed by space — YAML will break
-        if (!value.startsWith('\"') && !value.startsWith(\"'\") && /:\s/.test(value)) {
-          issues.push('Line ' + (i+1) + ': value contains unquoted colon — wrap in quotes to prevent YAML parse errors: ' + kvMatch[1]);
-        }
-      }
-    });
-
-    if (issues.length > 0) {
-      issues.forEach(i => console.log('ERROR:' + i));
-      process.exit(1);
-    }
-  " "$file" 2>/dev/null
-
-  if [ $? -ne 0 ]; then
-    # Re-run to capture error messages
-    local issues
-    issues=$(node -e "
-      const fs = require('fs');
-      const content = fs.readFileSync(process.argv[1], 'utf8');
-      const match = content.match(/^---\n([\s\S]*?)\n---/);
-      if (!match) process.exit(0);
-      const yaml = match[1];
-      yaml.split('\n').forEach((line, i) => {
-        if (line.trim().startsWith('#')) return;
-        const kvMatch = line.match(/^([a-zA-Z_-]+):\s+(.+)$/);
-        if (kvMatch) {
-          const value = kvMatch[2].trim();
-          if (!value.startsWith('\"') && !value.startsWith(\"'\") && /:\s/.test(value)) {
-            console.log(kvMatch[1] + ': value contains unquoted colon — wrap in quotes');
-          }
-        }
-      });
-    " "$file" 2>/dev/null)
-
-    while IFS= read -r issue; do
-      fail "YAML safety: $issue"
-      has_errors=1
-    done <<< "$issues"
-  else
-    pass "YAML frontmatter is parser-safe"
+  local err
+  if err=$(node "$SCRIPT_DIR/skills-ref-parse.js" check-yaml "$file" 2>&1); then
+    pass "YAML frontmatter parses cleanly"
+    return 0
   fi
-
-  return $has_errors
+  fail "YAML safety: $err"
+  return 1
 }
 
 # Validate SKILL.md line count
@@ -395,63 +311,19 @@ cmd_validate_all() {
 # Command: read-properties <skill_dir>
 cmd_read_properties() {
   local skill_dir="${1:-.}"
-  local skill_md="$skill_dir/SKILL.md"
 
-  # Resolve to absolute path
   skill_dir=$(cd "$skill_dir" 2>/dev/null && pwd) || {
     echo '{"error": "Directory not found"}' >&2
     exit 1
   }
-  skill_md="$skill_dir/SKILL.md"
 
-  if [ ! -f "$skill_md" ]; then
+  if [ ! -f "$skill_dir/SKILL.md" ]; then
     echo '{"error": "SKILL.md not found"}' >&2
     exit 1
   fi
 
-  # Output full JSON including computed properties
-  node -e "
-    const fs = require('fs');
-    const path = require('path');
-    const content = fs.readFileSync(process.argv[1], 'utf8');
-    const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
-
-    const skillDir = process.argv[2];
-    const result = {
-      _source: process.argv[1],
-      _directory: path.basename(skillDir),
-      _lineCount: content.split('\\n').length,
-      _category: path.basename(path.dirname(skillDir))
-    };
-
-    if (match) {
-      const yaml = match[1];
-      yaml.split('\\n').forEach(line => {
-        if (line.trim().startsWith('#')) return;
-        const keyMatch = line.match(/^([a-zA-Z_-]+):\\s*(.*)$/);
-        if (keyMatch) {
-          const [, key, value] = keyMatch;
-          if (value.trim()) {
-            result[key] = value.trim().replace(/^[\"']|[\"']$/g, '');
-          }
-        }
-      });
-    }
-
-    // Check for AGENTS.md
-    result._hasAgentsMd = fs.existsSync(path.join(skillDir, 'AGENTS.md'));
-
-    // Check for references/
-    const refsDir = path.join(skillDir, 'references');
-    if (fs.existsSync(refsDir)) {
-      result._referenceCount = fs.readdirSync(refsDir)
-        .filter(f => f.endsWith('.md') && !f.startsWith('_')).length;
-    } else {
-      result._referenceCount = 0;
-    }
-
-    console.log(JSON.stringify(result, null, 2));
-  " "$skill_md" "$skill_dir"
+  node "$SCRIPT_DIR/skills-ref-parse.js" read-properties "$skill_dir"
+  echo
 }
 
 # Command: to-prompt <skill_dirs...>
@@ -460,59 +332,7 @@ cmd_to_prompt() {
     echo "Usage: skills-ref to-prompt <skill_dir> [skill_dir...]" >&2
     exit 1
   fi
-
-  echo '<?xml version="1.0" encoding="UTF-8"?>'
-  echo '<skills>'
-
-  for skill_dir in "$@"; do
-    local skill_md="$skill_dir/SKILL.md"
-    if [ ! -f "$skill_md" ]; then
-      echo "  <!-- Skipped: $skill_dir (no SKILL.md) -->"
-      continue
-    fi
-
-    # Use Node.js to properly escape content and extract fields
-    node -e "
-      const fs = require('fs');
-      const content = fs.readFileSync(process.argv[1], 'utf8');
-      const match = content.match(/^---\\n([\\s\\S]*?)\\n---/);
-
-      let name = '';
-      let description = '';
-
-      if (match) {
-        const yaml = match[1];
-        yaml.split('\\n').forEach(line => {
-          const nameMatch = line.match(/^name:\\s*(.*)$/);
-          const descMatch = line.match(/^description:\\s*(.*)$/);
-          if (nameMatch) name = nameMatch[1].trim().replace(/^[\"']|[\"']$/g, '');
-          if (descMatch) description = descMatch[1].trim().replace(/^[\"']|[\"']$/g, '');
-        });
-      }
-
-      // Get content after frontmatter
-      const afterFrontmatter = content.replace(/^---[\\s\\S]*?---\\n/, '').trim();
-
-      // Split CDATA terminators to prevent XML injection
-      const safeCdata = afterFrontmatter.replace(/]]>/g, ']]]]><![CDATA[>');
-
-      // Escape XML special chars in description
-      const escapeXml = (s) => s
-        .replace(/&/g, '&amp;')
-        .replace(/</g, '&lt;')
-        .replace(/>/g, '&gt;')
-        .replace(/\"/g, '&quot;');
-
-      console.log('  <skill name=\"' + escapeXml(name) + '\">');
-      console.log('    <description>' + escapeXml(description) + '</description>');
-      console.log('    <content><![CDATA[');
-      console.log(safeCdata);
-      console.log(']]></content>');
-      console.log('  </skill>');
-    " "$skill_md"
-  done
-
-  echo '</skills>'
+  node "$SCRIPT_DIR/skills-ref-parse.js" to-prompt "$@"
 }
 
 # Command: help

@@ -1,0 +1,9 @@
+---
+name: inline-comment-description
+description: Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. # YAML comment that must be stripped before the 1024-char limit is measured; if it leaks the validator wrongly fails this fixture even though the real description is well under the limit.
+---
+
+# Inline Comment Description
+
+Fixture: the raw description line exceeds 1024 chars, but the post-comment YAML value
+is well under, so a real YAML parser correctly validates this as passing.

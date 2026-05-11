@@ -72,6 +72,16 @@ test_case "Missing description fails" "fail" "$FIXTURES/missing-description"
 # Test line count
 test_case "Too long SKILL.md fails" "fail" "$FIXTURES/too-long-skill"
 
+# Test description length with folded block scalar (regression: parser used to
+# only read the first line of YAML values, so multi-line descriptions bypassed
+# the 1024-char limit)
+test_case "Folded description over 1024 chars fails" "fail" "$FIXTURES/long-folded-description"
+
+# Test inline YAML comment is stripped before measuring description length
+# (regression: hand-rolled parser kept everything after `# ` in the value,
+# inflating the apparent length)
+test_case "Inline-comment description measures post-strip length" "pass" "$FIXTURES/inline-comment-description"
+
 # Test reference consistency
 test_case "Missing reference files fails" "fail" "$FIXTURES/missing-references"
 

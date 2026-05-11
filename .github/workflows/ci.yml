@@ -14,5 +14,9 @@ jobs:
       - uses: actions/setup-node@60edb5dd545a775178f52524783378180af0d1f8 # v4.0.2
         with:
           node-version: '20'
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+      - name: Run validator tests
+        run: ./tests/run-tests.sh
       - name: Validate all skills
         run: ./scripts/skills-ref validate-all

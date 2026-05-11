@@ -1,0 +1,22 @@
+---
+name: long-folded-description
+description: >
+  This skill uses a YAML folded block scalar so its description spans multiple lines.
+  An earlier version of the validator only read the first line of YAML values, which
+  meant block-scalar descriptions silently bypassed the 1024-character limit. The
+  text below pads the description past that limit so a correct parser will fold the
+  block, measure the joined length, and report a failure. Lorem ipsum dolor sit amet,
+  consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore
+  magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris
+  nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in
+  voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat
+  cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est
+  laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam
+  varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis
+  sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
+---
+
+# Long Folded Description
+
+Fixture for validating that block-scalar descriptions are correctly folded and
+measured against the 1024-character limit.

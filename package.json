@@ -1,0 +1,12 @@
+{
+  "name": "dot-skills",
+  "private": true,
+  "description": "Tooling dependencies for skills-ref validator.",
+  "scripts": {
+    "validate": "./scripts/skills-ref validate-all",
+    "test": "./tests/run-tests.sh"
+  },
+  "dependencies": {
+    "js-yaml": "4.1.0"
+  }
+}
