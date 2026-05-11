@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "nuqs",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "May 2026",
+  "abstract": "Read-first codemod runner that scans a repository for pre-nuqs-2.5 patterns (deprecated `throttleMs`, manual `setTimeout` debounce, unchecked `parseAsJson` casts, unversioned `react-router` adapter import, `ParserBuilder<T>` type references), produces a dry-run report for user review, then applies five jscodeshift transforms gated by `tsc --noEmit` + the project's lint. Auto-reverts on verification failure.",
+  "references": [
+    "https://nuqs.dev/blog/nuqs-2.5",
+    "https://nuqs.dev/docs/options",
+    "https://github.com/facebook/jscodeshift",
+    "https://ts-morph.com"
+  ]
+}

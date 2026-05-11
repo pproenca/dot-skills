@@ -1,0 +1,18 @@
+{
+  "typecheck_command": "npx tsc --noEmit",
+  "lint_command": "npm run lint",
+  "package_manager": "npm",
+  "min_node_version": "18",
+  "include_globs": ["src/**/*.{ts,tsx,js,jsx}", "app/**/*.{ts,tsx,js,jsx}"],
+  "exclude_globs": ["**/node_modules/**", "**/.next/**", "**/dist/**", "**/build/**"],
+  "scan_max_age_minutes": 60,
+  "_setup_instructions": {
+    "typecheck_command": "Command that exits non-zero when types break. Default works for most repos; override for monorepos (e.g., `pnpm -r typecheck`).",
+    "lint_command": "Command that exits non-zero when lint fails. Use `:` (no-op) if the repo has no lint script.",
+    "package_manager": "One of: npm, pnpm, yarn, bun. Used to detect Zod/typescript availability.",
+    "min_node_version": "Minimum Node version your codemods will run under. jscodeshift needs ≥18.",
+    "include_globs": "File patterns to scan. Restrict to source directories for big monorepos.",
+    "exclude_globs": "Patterns to skip. Always include node_modules and build output dirs.",
+    "scan_max_age_minutes": "How fresh scan.json must be before apply.sh will run. Lower for fast-moving branches."
+  }
+}
