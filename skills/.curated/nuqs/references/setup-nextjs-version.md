@@ -15,6 +15,7 @@ nuqs requires specific Next.js versions depending on the router you use. Using i
 |--------|-----------------|-------|
 | App Router | 14.2.0+ | Full support including streaming |
 | App Router (basic) | 14.0.0+ | Limited features |
+| App Router (Next.js 15+) | 15.0.0+ | `searchParams` is `Promise<SearchParams>` — must be `await`-ed. See `server-next15-async`. |
 | Pages Router | 12.0.0+ | Full support |
 
 **Check your version:**
@@ -67,4 +68,4 @@ pnpm add next@latest
 - Hydration mismatches
 - `TypeError: Cannot read property 'push' of undefined`
 
-Reference: [nuqs Requirements](https://nuqs.dev/docs/getting-started)
+Reference: [nuqs Installation](https://nuqs.dev/docs/installation)

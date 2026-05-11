@@ -1,14 +1,16 @@
 {
-  "version": "1.1.1",
+  "version": "1.2.0",
   "organization": "Community",
   "technology": "nuqs",
-  "date": "January 2026",
-  "abstract": "Comprehensive best practices guide for nuqs (type-safe URL query state management) in Next.js applications, designed for AI agents and LLMs. Contains 42 rules across 8 categories, prioritized by impact from critical (parser configuration, adapter setup) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "date": "May 2026",
+  "abstract": "Comprehensive best practices guide for nuqs (type-safe URL query state management) in Next.js and other React frameworks, designed for AI agents and LLMs. Covers nuqs v2.5–v2.8 features including limitUrlUpdates (built-in debounce/throttle), key isolation, Standard Schema integration, defaultOptions on NuqsAdapter, processUrlSearchParams middleware, and the createLoader server utility. Contains 46 rules across 8 categories, prioritized by impact from critical (parser configuration, adapter setup) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
   "references": [
     "https://nuqs.dev",
+    "https://nuqs.dev/blog/nuqs-2.5",
     "https://github.com/47ng/nuqs",
     "https://nextjs.org/docs",
-    "https://react.dev"
+    "https://react.dev",
+    "https://standardschema.dev"
   ],
   "category": "Frontend"
 }

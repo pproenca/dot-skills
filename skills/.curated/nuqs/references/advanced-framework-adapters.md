@@ -2,24 +2,24 @@
 title: Use Framework-Specific Adapters
 impact: LOW
 impactDescription: prevents URL sync failures in non-Next.js apps
-tags: advanced, adapters, remix, react-router, frameworks
+tags: advanced, adapters, remix, react-router, tanstack-router, frameworks
 ---
 
 ## Use Framework-Specific Adapters
 
-nuqs works with multiple React frameworks through adapters. Use the correct adapter for your framework to ensure proper URL synchronization.
+nuqs works with multiple React frameworks through adapters. Use the correct adapter for your framework to ensure proper URL synchronisation. Picking the wrong adapter usually fails silently — hooks return stale values or never update the URL.
 
-**Incorrect (wrong adapter for React Router):**
+**Incorrect (Next.js adapter inside a React Router tree):**
 
 ```tsx
 // src/main.tsx
-import { NuqsAdapter } from 'nuqs/adapters/next/app' // Wrong!
+import { NuqsAdapter } from 'nuqs/adapters/next/app' // Wrong runtime
 import { BrowserRouter } from 'react-router-dom'
 
 function App() {
   return (
     <BrowserRouter>
-      <NuqsAdapter> {/* This won't work with React Router */}
+      <NuqsAdapter>
         <Routes />
       </NuqsAdapter>
     </BrowserRouter>
@@ -45,16 +45,23 @@ function App() {
 }
 ```
 
-**Available adapters:**
+**Available adapters (current as of nuqs v2.8):**
 
-| Framework | Import Path |
-|-----------|-------------|
-| Next.js App Router | `nuqs/adapters/next/app` |
-| Next.js Pages Router | `nuqs/adapters/next/pages` |
-| React Router v6 | `nuqs/adapters/react-router/v6` |
-| React Router v7 | `nuqs/adapters/react-router/v7` |
-| Remix | `nuqs/adapters/remix` |
-| Plain React | `nuqs/adapters/react` |
-| Testing | `nuqs/adapters/testing` |
+| Framework | Import Path | Notes |
+|-----------|-------------|-------|
+| Next.js App Router | `nuqs/adapters/next/app` | |
+| Next.js Pages Router | `nuqs/adapters/next/pages` | |
+| Next.js (unified) | `nuqs/adapters/next` | Use when an app mixes both routers |
+| React Router v5 | `nuqs/adapters/react-router/v5` | Added in v2.8 |
+| React Router v6 | `nuqs/adapters/react-router/v6` | |
+| React Router v7 | `nuqs/adapters/react-router/v7` | |
+| Remix | `nuqs/adapters/remix` | |
+| TanStack Router | `nuqs/adapters/tanstack-router` | Added in v2.5; TanStack Start support is still WIP |
+| Plain React (no router) | `nuqs/adapters/react` | For Vite / CRA apps with no router |
+| Testing | `nuqs/adapters/testing` | See `debug-testing` |
+
+**Deprecation:** The unversioned `nuqs/adapters/react-router` import (which used to alias v6) is deprecated and slated for removal in nuqs v3. Always pin the version explicitly.
+
+**Key isolation (v2.5+):** All non-Next.js adapters scope re-renders to the specific URL key a hook subscribes to. Next.js continues to re-render the entire subtree on any URL change because its `URLSearchParams` context is global. If fine-grained re-renders matter and you're not on Next.js, you generally don't need to memoize aggressively. See `perf-avoid-rerender`.
 
 Reference: [nuqs Adapters](https://nuqs.dev/docs/adapters)

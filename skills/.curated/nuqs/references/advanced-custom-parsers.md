@@ -67,4 +67,31 @@ export default function SortableTable() {
 }
 ```
 
+**Typing parser-returning helpers (v2.7+):**
+
+If you write a function that returns a custom parser (e.g. for a factory), type the return as `SingleParserBuilder<T>`. The older `ParserBuilder<T>` symbol is deprecated and will be removed in v3.
+
+```tsx
+import { createParser, type SingleParserBuilder } from 'nuqs'
+
+export function parseAsTuple<A, B>(
+  a: SingleParserBuilder<A>,
+  b: SingleParserBuilder<B>
+): SingleParserBuilder<[A, B]> {
+  return createParser<[A, B]>({
+    parse(query) {
+      const [left, right] = query.split('|')
+      const A = a.parse(left ?? '')
+      const B = b.parse(right ?? '')
+      return A === null || B === null ? null : [A, B]
+    },
+    serialize([A, B]) {
+      return `${a.serialize(A)}|${b.serialize(B)}`
+    }
+  })
+}
+```
+
+**For object/JSON-shaped values:** prefer `parseAsJson` with a Standard Schema (Zod, Valibot, ArkType, Effect Schema) over a hand-rolled `createParser` — see `parser-json-validation` and `state-standard-schema`.
+
 Reference: [nuqs Custom Parsers](https://nuqs.dev/docs/parsers/making-your-own)

@@ -1,15 +1,15 @@
 ---
 title: Use Setter Return Value for URL Access
 impact: MEDIUM
-impactDescription: enables accurate URL tracking for analytics/sharing
-tags: state, setter, return-value, url, analytics
+impactDescription: enables accurate URL tracking for analytics/sharing without re-deriving the URL
+tags: state, setter, return-value, URLSearchParams, analytics
 ---
 
 ## Use Setter Return Value for URL Access
 
-The state setter returns a Promise that resolves to the new URL search string. Use this for analytics, logging, or when you need the resulting URL immediately.
+The state setter returns a `Promise<URLSearchParams>` that resolves to the merged URL search params after the update is flushed. Use it whenever you need the resulting URL immediately (sharing, copy-to-clipboard, analytics) instead of re-deriving the URL by hand and risking drift from nuqs's own serialisation. Because it resolves to a `URLSearchParams` object, you must call `.toString()` when embedding it in a string.
 
-**Incorrect (manually constructing URL):**
+**Incorrect (manually reconstructing the URL):**
 
 ```tsx
 'use client'
@@ -20,7 +20,7 @@ export default function ShareButton() {
 
   const share = () => {
     setQuery('shared-term')
-    // Manual URL construction - may not match nuqs output
+    // Manual URL construction — drifts from nuqs's encoding (clearOnDefault, urlKeys, etc.)
     const url = `${window.location.pathname}?q=shared-term`
     navigator.clipboard.writeText(url)
   }
@@ -29,7 +29,7 @@ export default function ShareButton() {
 }
 ```
 
-**Correct (use return value):**
+**Correct (use the awaited return value):**
 
 ```tsx
 'use client'
@@ -39,9 +39,9 @@ export default function ShareButton() {
   const [query, setQuery] = useQueryState('q', parseAsString.withDefault(''))
 
   const share = async () => {
-    const searchString = await setQuery('shared-term')
-    // searchString is "q=shared-term" or similar
-    const url = `${window.location.origin}${window.location.pathname}?${searchString}`
+    const search = await setQuery('shared-term')
+    // search is URLSearchParams — call .toString() to embed in a URL.
+    const url = `${window.location.origin}${window.location.pathname}?${search.toString()}`
     await navigator.clipboard.writeText(url)
   }
 
@@ -53,15 +53,17 @@ export default function ShareButton() {
 
 ```tsx
 const trackSearch = async (term: string) => {
-  const searchString = await setQuery(term)
+  const search = await setQuery(term)
   analytics.track('search', {
     term,
-    url: `?${searchString}`
+    url: `?${search.toString()}`,
+    // You can also pull individual keys directly off URLSearchParams:
+    canonicalQuery: search.get('q')
   })
 }
 ```
 
-**With useQueryStates:**
+**With `useQueryStates` — merged params come back in one object:**
 
 ```tsx
 const [coords, setCoords] = useQueryStates({
@@ -70,9 +72,13 @@ const [coords, setCoords] = useQueryStates({
 })
 
 const shareLocation = async () => {
-  const searchString = await setCoords({ lat: 48.8566, lng: 2.3522 })
-  // searchString: "lat=48.8566&lng=2.3522"
+  const search = await setCoords({ lat: 48.8566, lng: 2.3522 })
+  // search.toString(): "lat=48.8566&lng=2.3522"
 }
 ```
 
-Reference: [nuqs Documentation](https://nuqs.dev/docs)
+**When NOT to use this pattern:**
+- You only need the local in-memory value — read it from the returned state, not the setter Promise.
+- You are inside Server Components — use `createSerializer` instead (see `perf-serialize-utility`).
+
+Reference: [nuqs Batching](https://nuqs.dev/docs/batching)

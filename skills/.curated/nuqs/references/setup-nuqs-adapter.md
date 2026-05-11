@@ -64,12 +64,18 @@ export default function MyApp({ Component, pageProps }: AppProps) {
 }
 ```
 
-**Available adapters:**
-- `nuqs/adapters/next/app` - Next.js App Router
-- `nuqs/adapters/next/pages` - Next.js Pages Router
-- `nuqs/adapters/react` - Plain React (with react-router)
-- `nuqs/adapters/remix` - Remix
-- `nuqs/adapters/react-router/v6` - React Router v6
-- `nuqs/adapters/react-router/v7` - React Router v7
+**Available adapters (nuqs v2.8+):**
+- `nuqs/adapters/next/app` — Next.js App Router
+- `nuqs/adapters/next/pages` — Next.js Pages Router
+- `nuqs/adapters/next` — Next.js unified (mixed routers)
+- `nuqs/adapters/react` — Plain React (no router, e.g. Vite/CRA)
+- `nuqs/adapters/remix` — Remix
+- `nuqs/adapters/react-router/v5` — React Router v5 (added v2.8)
+- `nuqs/adapters/react-router/v6` — React Router v6
+- `nuqs/adapters/react-router/v7` — React Router v7
+- `nuqs/adapters/tanstack-router` — TanStack Router (added v2.5)
+- `nuqs/adapters/testing` — Tests (see `debug-testing`)
+
+The unversioned `nuqs/adapters/react-router` (alias for v6) is deprecated and will be removed in v3 — always pin a version.
 
 Reference: [nuqs Adapters](https://nuqs.dev/docs/adapters)

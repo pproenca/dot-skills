@@ -75,4 +75,26 @@ export function ResultsHeader() {
 
 **Important:** Call `parse()` once at the page level before using `get()` in nested components.
 
+**Alternative: `createLoader` for non-nested cases.** If you only consume the parsed values inside the page itself (no deeply nested Server Components needing `get()`), `createLoader` is the lighter primitive — it returns a single function and skips the React-cache plumbing. Use the cache when you'd otherwise prop-drill; use the loader when you wouldn't.
+
+```tsx
+// lib/searchParams.ts
+import { createLoader, parseAsString, parseAsInteger } from 'nuqs/server'
+
+export const loadSearchParams = createLoader({
+  q: parseAsString.withDefault(''),
+  page: parseAsInteger.withDefault(1)
+})
+
+// app/search/page.tsx
+import { loadSearchParams } from '@/lib/searchParams'
+
+export default async function SearchPage({ searchParams }) {
+  const { q, page } = await loadSearchParams(searchParams)
+  return <Results query={q} page={page} />
+}
+```
+
+The same parser map can power **both** `createSearchParamsCache` and `createLoader` (and a client-side `useQueryStates`), so the choice is purely about ergonomics — see `server-share-parsers`.
+
 Reference: [nuqs Server-Side](https://nuqs.dev/docs/server-side)
