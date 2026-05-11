@@ -1,0 +1,13 @@
+{
+  "$comment": "nuqs-scaffolder spec — fill in name, module, and params, then ask the skill to render the four files.",
+
+  "name":   "__NAME__",
+  "module": "__module__",
+
+  "params": {
+    "q":          { "type": "string",                                    "default": "" },
+    "page":       { "type": "integer",                                   "default": 1 },
+    "categories": { "type": "array-of-string-native",                    "default": [] },
+    "sort":       { "type": "string-literal", "values": ["asc","desc"],  "default": "asc" }
+  }
+}

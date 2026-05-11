@@ -1,0 +1,16 @@
+{
+  "lib_dir": "lib",
+  "components_dir": "components",
+  "generate_tests": true,
+  "test_runner": "vitest",
+  "file_case": "kebab",
+  "adapter_import": "nuqs/adapters/next/app",
+  "_setup_instructions": {
+    "lib_dir": "Directory (relative to repo root) where parser maps go. Default 'lib' fits Next.js App Router.",
+    "components_dir": "Directory for client filter components. Default 'components'.",
+    "generate_tests": "Whether to emit a .test.tsx file alongside each component. Set false if the project has no test runner.",
+    "test_runner": "One of: vitest, jest. Determines test-template syntax and imports.",
+    "file_case": "Filename case style. 'kebab' = search-filters.tsx (recommended). 'pascal' = SearchFilters.tsx.",
+    "adapter_import": "Which NuqsAdapter the test wraps. Use 'nuqs/adapters/testing' inside tests; this setting is for the server-side imports."
+  }
+}

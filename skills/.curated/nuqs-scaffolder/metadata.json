@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "nuqs",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Template-driven scaffolder for nuqs URL-state filters in Next.js App Router. From a single JSON spec, generates four coherent files — client parser map, server loader/cache/serializer, client component, and Vitest test — all sharing one parser definition map per the nuqs Standard Schema pattern. Encodes the v2.5+ conventions from the companion `nuqs` distillation skill.",
+  "references": [
+    "https://nuqs.dev/docs/parsers/built-in",
+    "https://nuqs.dev/docs/server-side",
+    "https://nuqs.dev/docs/testing",
+    "https://nuqs.dev/blog/nuqs-2.5"
+  ]
+}
