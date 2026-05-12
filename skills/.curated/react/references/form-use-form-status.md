@@ -55,13 +55,16 @@ function ContactForm() {
 
 ```typescript
 function FormStatus() {
-  const { pending, data, method, action } = useFormStatus()
+  // data: FormData | null, method: 'get' | 'post', action: string | ((formData: FormData) => void | Promise<void>) | null
+  const { pending, data, method } = useFormStatus()
 
   if (!pending) return null
 
+  const email = data?.get('email')?.toString() ?? ''
+
   return (
     <div className="status">
-      Submitting {data?.get('email')} via {method}...
+      Submitting {email} via {method}...
     </div>
   )
 }

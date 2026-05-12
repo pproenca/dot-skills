@@ -1,8 +1,8 @@
 # React 19 Best Practices
 
-**Version 0.1.0**
+**Version 1.2.0**
 curated
-February 2026
+May 2026
 
 > **Note:** This React guide is mainly for agents and LLMs to follow when
 > maintaining, generating, or refactoring React codebases. Humans may also
@@ -13,7 +13,7 @@ February 2026
 
 ## Abstract
 
-Comprehensive performance optimization guide for React 19/19.2 applications, designed for AI agents and LLMs. Contains 41 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns). Covers React 19.2 features including Activity, useEffectEvent, cacheSignal, and React Compiler v1.0. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
+Comprehensive React 19/19.2 best-practices guide for AI agents and LLMs. Contains 44 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns). Covers React 19 headline changes (ref as a regular prop, native document metadata, resource preload APIs, useActionState, useOptimistic, use() hook, Context as provider) and 19.2 features (Activity, useEffectEvent, cacheSignal, React Compiler v1.0). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
 
 ---
 
@@ -45,6 +45,8 @@ Comprehensive performance optimization guide for React 19/19.2 applications, des
    - 4.3 [Use Error Boundaries with Suspense](references/data-error-boundaries.md) — MEDIUM (isolates failures to individual components, prevents full-page crashes)
    - 4.4 [Use Suspense for Declarative Loading States](references/data-suspense-data-fetching.md) — HIGH (eliminates loading state boilerplate, enables parallel data fetch coordination)
    - 4.5 [Use the use() Hook for Promises in Render](references/data-use-hook.md) — HIGH (eliminates useEffect+useState fetch pattern, integrates with Suspense boundaries)
+   - 4.6 [Render Document Metadata Inline, Not via react-helmet](references/data-document-metadata.md) — MEDIUM (eliminates external metadata libraries, native head hoisting)
+   - 4.7 [Use react-dom Resource Hints, Not Manual link Tags](references/data-resource-hints.md) — MEDIUM (100-500ms saved on critical above-the-fold assets)
 5. [State Management](references/_sections.md#5-state-management) — **MEDIUM-HIGH**
    - 5.1 [Calculate Derived Values During Render](references/rstate-derived-values.md) — MEDIUM (eliminates sync bugs, simpler code)
    - 5.2 [Split Context to Prevent Unnecessary Re-renders](references/rstate-context-optimization.md) — MEDIUM (reduces re-renders from context changes)
@@ -59,23 +61,25 @@ Comprehensive performance optimization guide for React 19/19.2 applications, des
    - 6.5 [Use useMemo for Expensive Calculations](references/memo-use-memo.md) — MEDIUM (skips O(n) recalculations on re-renders with unchanged dependencies)
 7. [Effects & Events](references/_sections.md#7-effects-&-events) — **MEDIUM**
    - 7.1 [Always Clean Up Effect Side Effects](references/effect-cleanup.md) — MEDIUM (prevents memory leaks, stale callbacks)
-   - 7.2 [Avoid Effects for Derived State and User Events](references/effect-avoid-unnecessary.md) — MEDIUM (eliminates sync bugs, simpler code)
+   - 7.2 [Avoid Effects for Derived State, Mutations, and Event Logic](references/effect-avoid-unnecessary.md) — HIGH (eliminates extra render passes, sync bugs, and chained-effect cascades)
    - 7.3 [Avoid Object and Array Dependencies in Effects](references/effect-object-dependencies.md) — MEDIUM (prevents infinite loops, unnecessary re-runs)
    - 7.4 [Use useEffectEvent for Non-Reactive Logic](references/effect-use-effect-event.md) — MEDIUM (prevents unnecessary effect re-runs from non-reactive value changes)
    - 7.5 [Use useSyncExternalStore for External Subscriptions](references/effect-use-sync-external-store.md) — MEDIUM (prevents tearing in concurrent rendering, ensures SSR-safe external state)
 8. [Component Patterns](references/_sections.md#8-component-patterns) — **LOW-MEDIUM**
-   - 8.1 [Choose Controlled vs Uncontrolled Appropriately](references/rcomp-controlled-components.md) — LOW-MEDIUM (prevents form state sync bugs, enables real-time validation)
-   - 8.2 [Prefer Composition Over Props Explosion](references/rcomp-composition.md) — LOW-MEDIUM (reduces prop drilling depth, enables independent component reuse)
-   - 8.3 [Use Key to Reset Component State](references/rcomp-key-reset.md) — LOW-MEDIUM (forces full component remount, eliminates stale state after identity changes)
-   - 8.4 [Use Render Props for Inversion of Control](references/rcomp-render-props.md) — LOW-MEDIUM (enables parent-controlled rendering without child prop explosion)
+   - 8.1 [Use ref as a Regular Prop, Not forwardRef](references/rcomp-ref-as-prop.md) — MEDIUM-HIGH (removes forwardRef wrapper, enables ref cleanup, aligns with the React 19 idiom)
+   - 8.2 [Choose Controlled vs Uncontrolled Appropriately](references/rcomp-controlled-components.md) — LOW-MEDIUM (prevents form state sync bugs, enables real-time validation)
+   - 8.3 [Prefer Composition Over Props Explosion](references/rcomp-composition.md) — LOW-MEDIUM (reduces prop drilling depth, enables independent component reuse)
+   - 8.4 [Use Key to Reset Component State](references/rcomp-key-reset.md) — LOW-MEDIUM (forces full component remount, eliminates stale state after identity changes)
+   - 8.5 [Use Render Props for Inversion of Control](references/rcomp-render-props.md) — LOW-MEDIUM (enables parent-controlled rendering without child prop explosion)
 
 ---
 
 ## References
 
 1. [React Documentation](https://react.dev)
-2. [React v19 Blog Post](https://react.dev/blog/2024/12/05/react-19)
-3. [React 19.2 Blog Post](https://react.dev/blog/2025/10/01/react-19-2)
-4. [React Compiler v1.0](https://react.dev/blog/2025/10/07/react-compiler-1)
-5. [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
-6. [React GitHub Repository](https://github.com/facebook/react)
+2. [React 19 Upgrade Guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide)
+3. [React v19 Blog Post](https://react.dev/blog/2024/12/05/react-19)
+4. [React 19.2 Blog Post](https://react.dev/blog/2025/10/01/react-19-2)
+5. [React Compiler v1.0](https://react.dev/blog/2025/10/07/react-compiler-1)
+6. [You Might Not Need an Effect](https://react.dev/learn/you-might-not-need-an-effect)
+7. [React GitHub Repository](https://github.com/facebook/react)

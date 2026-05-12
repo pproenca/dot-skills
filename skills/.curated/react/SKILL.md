@@ -1,21 +1,22 @@
 ---
 name: react
-description: React 19 performance optimization guidelines for concurrent rendering, Server Components, actions, hooks, and memoization (formerly react-19). This skill should be used when writing React 19 components, using concurrent features, or optimizing re-renders. This skill does NOT cover Next.js-specific features like App Router, next.config.js, or Next.js caching (use nextjs-16-app-router skill). For client-side form validation with React Hook Form, use react-hook-form skill.
+description: React 19/19.2 modern patterns for concurrent rendering, Server Components, actions, ref-as-prop, document metadata, resource hints, hooks, and memoization. This skill should be used when writing React 19 components, using concurrent features, migrating from React 18, or optimizing re-renders. This skill does NOT cover Next.js-specific features like App Router, next.config.js, or Next.js caching (use nextjs-16-app-router skill). For client-side form validation with React Hook Form, use react-hook-form skill.
 ---
 
 # React 19 Best Practices
 
-Comprehensive performance optimization guide for React 19/19.2 applications. Contains 41 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns).
+Comprehensive React 19/19.2 best-practices guide for AI agents. Contains 44 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns). Reflects React 19 headline changes: `ref` as a regular prop (forwardRef deprecated), native document metadata, resource preload APIs, `useActionState`, `useOptimistic`, `use()` hook, and `<Context>` as provider.
 
 ## When to Apply
 
 - Writing new React components or refactoring existing ones
+- Migrating from React 18 to React 19 (forwardRef → ref-as-prop, `<Context.Provider>` → `<Context>`, `useFormState` → `useActionState`)
 - Optimizing re-render performance or bundle size
 - Using concurrent features (useTransition, useDeferredValue, Activity)
 - Setting up Server Components or server/client boundaries
 - Implementing form actions, optimistic updates, or data fetching
 - Configuring React Compiler for automatic memoization
-- Reviewing React code for common anti-patterns
+- Reviewing React code for common anti-patterns or outdated React 18 idioms
 
 ## Rule Categories
 
@@ -24,11 +25,11 @@ Comprehensive performance optimization guide for React 19/19.2 applications. Con
 | Concurrent Rendering | CRITICAL | 6 | useTransition, useDeferredValue, Activity, batching |
 | Server Components | CRITICAL | 6 | RSC boundaries, data fetching, streaming |
 | Actions & Forms | HIGH | 5 | Form actions, useActionState, useOptimistic |
-| Data Fetching | HIGH | 5 | use() hook, cache(), Suspense, error boundaries |
+| Data Fetching | HIGH | 7 | use() hook, cache(), Suspense, document metadata, resource hints |
 | State Management | MEDIUM-HIGH | 5 | Derived values, context optimization, useReducer |
 | Memoization & Performance | MEDIUM | 5 | React Compiler, useMemo, useCallback, React.memo |
 | Effects & Events | MEDIUM | 5 | useEffectEvent, cleanup, external stores |
-| Component Patterns | LOW-MEDIUM | 4 | Composition, controlled vs uncontrolled, key reset |
+| Component Patterns | LOW-MEDIUM | 5 | ref-as-prop, composition, controlled vs uncontrolled, key reset |
 
 ## Quick Reference
 
@@ -38,10 +39,18 @@ Comprehensive performance optimization guide for React 19/19.2 applications. Con
 - Use `startTransition` for expensive non-blocking updates
 - Use `<Activity>` to preserve state across tab/page switches
 
+**React 19 modern idioms (do NOT generate React 18 patterns):**
+- `function C({ ref, ...props })` — never wrap in `forwardRef`
+- `<MyContext value={v}>` — never use `<MyContext.Provider>`
+- `useActionState` — never use `useFormState`
+- `useRef<T>(null)` — always pass an initial value
+- Render `<title>`, `<meta>`, `<link>` inline — never reach for `react-helmet`
+- `preload`/`preconnect` from `react-dom` — never hand-render `<link rel="preload">`
+
 **Common mistakes** — avoid these anti-patterns:
 - Creating promises inside Client Components for `use()` (causes infinite loops)
 - Memoizing everything (use React Compiler v1.0+ instead)
-- Using effects for derived state or user event handling
+- Using effects for derived state, mutations, parent notifications, or app init
 - Placing `'use client'` too high in the component tree
 
 ## Table of Contents
@@ -72,6 +81,8 @@ Comprehensive performance optimization guide for React 19/19.2 applications. Con
    - 4.3 [Use Error Boundaries with Suspense](references/data-error-boundaries.md) — MEDIUM (isolates failures to individual components, prevents full-page crashes)
    - 4.4 [Use Suspense for Declarative Loading States](references/data-suspense-data-fetching.md) — HIGH (eliminates loading state boilerplate, enables parallel data fetch coordination)
    - 4.5 [Use the use() Hook for Promises in Render](references/data-use-hook.md) — HIGH (eliminates useEffect+useState fetch pattern, integrates with Suspense boundaries)
+   - 4.6 [Render Document Metadata Inline, Not via react-helmet](references/data-document-metadata.md) — MEDIUM (eliminates external metadata libraries, native head hoisting)
+   - 4.7 [Use react-dom Resource Hints, Not Manual link Tags](references/data-resource-hints.md) — MEDIUM (100-500ms saved on critical above-the-fold assets)
 5. [State Management](references/_sections.md#5-state-management) — **MEDIUM-HIGH**
    - 5.1 [Calculate Derived Values During Render](references/rstate-derived-values.md) — MEDIUM (eliminates sync bugs, simpler code)
    - 5.2 [Split Context to Prevent Unnecessary Re-renders](references/rstate-context-optimization.md) — MEDIUM (reduces re-renders from context changes)
@@ -86,24 +97,26 @@ Comprehensive performance optimization guide for React 19/19.2 applications. Con
    - 6.5 [Use useMemo for Expensive Calculations](references/memo-use-memo.md) — MEDIUM (skips O(n) recalculations on re-renders with unchanged dependencies)
 7. [Effects & Events](references/_sections.md#7-effects-&-events) — **MEDIUM**
    - 7.1 [Always Clean Up Effect Side Effects](references/effect-cleanup.md) — MEDIUM (prevents memory leaks, stale callbacks)
-   - 7.2 [Avoid Effects for Derived State and User Events](references/effect-avoid-unnecessary.md) — MEDIUM (eliminates sync bugs, simpler code)
+   - 7.2 [Avoid Effects for Derived State, Mutations, and Event Logic](references/effect-avoid-unnecessary.md) — HIGH (eliminates extra render passes, sync bugs, and chained-effect cascades)
    - 7.3 [Avoid Object and Array Dependencies in Effects](references/effect-object-dependencies.md) — MEDIUM (prevents infinite loops, unnecessary re-runs)
    - 7.4 [Use useEffectEvent for Non-Reactive Logic](references/effect-use-effect-event.md) — MEDIUM (prevents unnecessary effect re-runs from non-reactive value changes)
    - 7.5 [Use useSyncExternalStore for External Subscriptions](references/effect-use-sync-external-store.md) — MEDIUM (prevents tearing in concurrent rendering, ensures SSR-safe external state)
 8. [Component Patterns](references/_sections.md#8-component-patterns) — **LOW-MEDIUM**
-   - 8.1 [Choose Controlled vs Uncontrolled Appropriately](references/rcomp-controlled-components.md) — LOW-MEDIUM (prevents form state sync bugs, enables real-time validation)
-   - 8.2 [Prefer Composition Over Props Explosion](references/rcomp-composition.md) — LOW-MEDIUM (reduces prop drilling depth, enables independent component reuse)
-   - 8.3 [Use Key to Reset Component State](references/rcomp-key-reset.md) — LOW-MEDIUM (forces full component remount, eliminates stale state after identity changes)
-   - 8.4 [Use Render Props for Inversion of Control](references/rcomp-render-props.md) — LOW-MEDIUM (enables parent-controlled rendering without child prop explosion)
+   - 8.1 [Use ref as a Regular Prop, Not forwardRef](references/rcomp-ref-as-prop.md) — MEDIUM-HIGH (removes forwardRef wrapper, enables ref cleanup, aligns with the React 19 idiom)
+   - 8.2 [Choose Controlled vs Uncontrolled Appropriately](references/rcomp-controlled-components.md) — LOW-MEDIUM (prevents form state sync bugs, enables real-time validation)
+   - 8.3 [Prefer Composition Over Props Explosion](references/rcomp-composition.md) — LOW-MEDIUM (reduces prop drilling depth, enables independent component reuse)
+   - 8.4 [Use Key to Reset Component State](references/rcomp-key-reset.md) — LOW-MEDIUM (forces full component remount, eliminates stale state after identity changes)
+   - 8.5 [Use Render Props for Inversion of Control](references/rcomp-render-props.md) — LOW-MEDIUM (enables parent-controlled rendering without child prop explosion)
 
 ## References
 
 1. [https://react.dev](https://react.dev)
-2. [https://react.dev/blog/2024/12/05/react-19](https://react.dev/blog/2024/12/05/react-19)
-3. [https://react.dev/blog/2025/10/01/react-19-2](https://react.dev/blog/2025/10/01/react-19-2)
-4. [https://react.dev/blog/2025/10/07/react-compiler-1](https://react.dev/blog/2025/10/07/react-compiler-1)
-5. [https://react.dev/learn/you-might-not-need-an-effect](https://react.dev/learn/you-might-not-need-an-effect)
-6. [https://github.com/facebook/react](https://github.com/facebook/react)
+2. [https://react.dev/blog/2024/04/25/react-19-upgrade-guide](https://react.dev/blog/2024/04/25/react-19-upgrade-guide)
+3. [https://react.dev/blog/2024/12/05/react-19](https://react.dev/blog/2024/12/05/react-19)
+4. [https://react.dev/blog/2025/10/01/react-19-2](https://react.dev/blog/2025/10/01/react-19-2)
+5. [https://react.dev/blog/2025/10/07/react-compiler-1](https://react.dev/blog/2025/10/07/react-compiler-1)
+6. [https://react.dev/learn/you-might-not-need-an-effect](https://react.dev/learn/you-might-not-need-an-effect)
+7. [https://github.com/facebook/react](https://github.com/facebook/react)
 
 ## Related Skills
 

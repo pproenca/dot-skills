@@ -39,18 +39,19 @@ function ThemeButton() {
 }
 
 function AppProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState(null)
-  const [theme, setTheme] = useState('light')
-  const [notifications, setNotifications] = useState([])
+  const [user, setUser] = useState<User | null>(null)
+  const [theme, setTheme] = useState<'light' | 'dark'>('light')
+  const [notifications, setNotifications] = useState<Notification[]>([])
 
+  // React 19+: render <Context> directly as provider; <Context.Provider> is legacy
   return (
-    <UserContext.Provider value={user}>
-      <ThemeContext.Provider value={theme}>
-        <NotificationContext.Provider value={notifications}>
+    <UserContext value={user}>
+      <ThemeContext value={theme}>
+        <NotificationContext value={notifications}>
           {children}
-        </NotificationContext.Provider>
-      </ThemeContext.Provider>
-    </UserContext.Provider>
+        </NotificationContext>
+      </ThemeContext>
+    </UserContext>
   )
 }
 ```

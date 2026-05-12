@@ -7,33 +7,50 @@ tags: rcomp, controlled, uncontrolled, forms
 
 ## Choose Controlled vs Uncontrolled Appropriately
 
-Controlled components get values from props. Uncontrolled components manage their own state. Choose based on whether you need to react to every change.
+Controlled components get values from props; uncontrolled components manage their own state. This is a context-driven choice. Use controlled only when you need to react on every keystroke (validation, conditional UI). For submit-only forms, prefer uncontrolled with React 19 form actions.
 
-**Incorrect (controlled for simple submission-only form):**
+**Incorrect (controlled state mirroring an input that's never read during render):**
 
 ```typescript
-function SimpleForm() {
+function SignupForm() {
+  const [name, setName] = useState('')  // ❌ Never read except on submit
+
   function handleSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    const formData = new FormData(e.currentTarget)
-    const name = formData.get('name')
-    // Use name on submit
+    submit(name)
   }
 
   return (
     <form onSubmit={handleSubmit}>
+      <input value={name} onChange={e => setName(e.target.value)} />
+      <button>Submit</button>
+    </form>
+  )
+}
+// Re-renders on every keystroke for no reason
+```
+
+**Correct (uncontrolled with form action for submit-only forms):**
+
+```typescript
+import { createUser } from './actions'
+
+function SignupForm() {
+  // React 19 form action: works without JS, no controlled state needed
+  return (
+    <form action={createUser}>
       <input name="name" defaultValue="John" />
       <button>Submit</button>
     </form>
   )
 }
-// Less code, works for simple forms
+// Minimum boilerplate, progressive enhancement
 ```
 
-**Correct (uncontrolled for simple form, controlled for validation):**
+**Correct (controlled for real-time validation):**
 
 ```typescript
-function ValidatedForm() {
+function ValidatedSignupForm() {
   const [email, setEmail] = useState('')
   const isValid = email.includes('@')
 
@@ -49,7 +66,7 @@ function ValidatedForm() {
     </form>
   )
 }
-// React to every keystroke
+// React on every keystroke to validate — controlled state is justified
 ```
 
 **Decision guide:**

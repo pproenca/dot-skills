@@ -58,9 +58,18 @@ export default async function Page() {
 }
 ```
 
-**Common client-only libraries:**
-- Animation: framer-motion, react-spring
-- State: zustand (browser storage), jotai (atoms)
-- UI: react-hot-toast, react-modal
-- Charts: recharts, chart.js (canvas)
-- Forms: react-hook-form (needs refs)
+**How to identify a client-only library** (rather than memorizing a list — most popular packages now ship dual entries):
+
+- Touches `window`, `document`, `localStorage`, `navigator`, or other browser-only globals
+- Uses refs to manipulate DOM (canvas, intersection observers, gesture handlers)
+- Reads from `useSyncExternalStore` against a browser-only store
+- Has a `'use client'` directive at the top of its entry point, or its package docs explicitly say "client component only"
+
+**Common categories that typically need `'use client'`:**
+- Animation libraries with browser-driven timing
+- Client-side state stores (when initialized with `localStorage`/`sessionStorage` hydration)
+- Toast/modal/portal libraries that mount to `document.body`
+- Canvas/SVG chart libraries that measure DOM
+- Form libraries that rely on refs and uncontrolled inputs
+
+**Always check the package's docs** — many libraries (e.g., framer-motion v11+, several auth SDKs) now publish dedicated server-safe entry points. The pattern "wrap in a thin client component" is the safe default when unsure.

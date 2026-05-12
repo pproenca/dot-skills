@@ -7,7 +7,7 @@ tags: conc, batching, automatic, performance
 
 ## Leverage Automatic Batching for Fewer Renders
 
-React 19 automatically batches state updates in all contexts: event handlers, promises, setTimeout, and native events. Understand this to avoid unnecessary workarounds.
+React (since 18) automatically batches state updates in all contexts: event handlers, promises, setTimeout, and native events. React 19 retains this behavior. Don't reach for `unstable_batchedUpdates` or `flushSync` workarounds — let React batch.
 
 **Incorrect (forcing synchronous updates):**
 
@@ -37,7 +37,7 @@ function handleClick() {
 
 async function handleSubmit() {
   const data = await fetchData()
-  // React 19 batches even in async callbacks
+  // React batches even in async callbacks (since 18)
   setData(data)
   setLoading(false)
   setError(null)
@@ -61,4 +61,4 @@ function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
 }
 ```
 
-**Note:** If you have code using `unstable_batchedUpdates`, you can remove it - React 19 batches everywhere automatically.
+**Note:** If you have code using `unstable_batchedUpdates`, you can remove it — React batches everywhere automatically since 18.
