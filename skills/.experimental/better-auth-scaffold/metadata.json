@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Personal",
+  "technology": "Better Auth + Next.js App Router + Drizzle",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Convention-enforced templates for scaffolding a Better Auth setup in a Next.js App Router project using the Drizzle adapter. Produces 7 template files (server auth, client auth, catch-all route, Edge middleware, env example, Drizzle schema placeholder, optional permissions module) parameterized by three plugin presets (minimal email+password, social with Google+GitHub, advanced with twoFactor+magicLink) and three Drizzle providers (pg, mysql, sqlite). Templates enforce server-only auth modules, plugin ordering (nextCookies last), Edge-safe middleware with per-page session validation, and env-loaded secrets — the same conventions documented as rules in the companion better-auth skill.",
+  "references": [
+    "https://www.better-auth.com/docs/installation",
+    "https://www.better-auth.com/docs/integrations/next",
+    "https://www.better-auth.com/docs/adapters/drizzle",
+    "https://www.better-auth.com/docs/concepts/cli",
+    "https://www.better-auth.com/docs/concepts/session-management",
+    "https://www.better-auth.com/docs/plugins/2fa",
+    "https://www.better-auth.com/docs/plugins/magic-link",
+    "https://github.com/better-auth/better-auth"
+  ]
+}

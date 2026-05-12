@@ -1,0 +1,103 @@
+// =============================================================================
+// Template: app/sign-in/page.tsx
+// Parameters:
+//   - preset: "minimal" | "social" | "advanced"  (required)
+//
+// Minimal sign-in page wired to authClient. Closes the middleware's redirect
+// loop — unauthenticated users hitting /dashboard land here.
+//
+// This is a STARTING POINT. Replace the inline form with your design system,
+// add proper error rendering, loading states, and OAuth provider buttons.
+// =============================================================================
+
+"use client";
+
+import { useState } from "react";
+import { authClient } from "@/lib/auth-client";
+
+export default function SignInPage() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
+
+  async function handleEmailSignIn(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setLoading(true);
+
+    const { error: err } = await authClient.signIn.email({
+      email,
+      password,
+      callbackURL: "/dashboard",
+    });
+
+    setLoading(false);
+    if (err) setError(err.message ?? "Sign-in failed");
+  }
+
+  // PRESET[advanced]
+  async function handleMagicLink() {
+    setError(null);
+    setLoading(true);
+    const { error: err } = await authClient.signIn.magicLink({
+      email,
+      callbackURL: "/dashboard",
+    });
+    setLoading(false);
+    if (err) setError(err.message ?? "Magic link send failed");
+    else setError("Check your email for a sign-in link.");
+  }
+  // /PRESET[advanced]
+
+  return (
+    <main style={{ maxWidth: 360, margin: "5rem auto" }}>
+      <h1>Sign in</h1>
+
+      <form onSubmit={handleEmailSignIn}>
+        <label>
+          Email
+          <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} />
+        </label>
+        <label>
+          Password
+          <input
+            type="password"
+            required
+            minLength={10}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </label>
+        <button type="submit" disabled={loading}>
+          {loading ? "Signing in…" : "Sign in with email"}
+        </button>
+      </form>
+
+      {/* PRESET[advanced] */}
+      <button type="button" onClick={handleMagicLink} disabled={loading || !email}>
+        Email me a sign-in link
+      </button>
+      {/* /PRESET[advanced] */}
+
+      {/* PRESET[social,advanced] */}
+      <div style={{ marginTop: "1rem" }}>
+        <button
+          type="button"
+          onClick={() => authClient.signIn.social({ provider: "google", callbackURL: "/dashboard" })}
+        >
+          Continue with Google
+        </button>
+        <button
+          type="button"
+          onClick={() => authClient.signIn.social({ provider: "github", callbackURL: "/dashboard" })}
+        >
+          Continue with GitHub
+        </button>
+      </div>
+      {/* /PRESET[social,advanced] */}
+
+      {error && <p role="alert">{error}</p>}
+    </main>
+  );
+}

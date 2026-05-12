@@ -1,0 +1,39 @@
+// =============================================================================
+// Template: middleware.ts
+// Parameters:
+//   - protected_paths: string[]  (required, e.g. ["/dashboard", "/settings"])
+//
+// This middleware does a cheap Edge-safe cookie-presence check and redirects
+// unauthenticated users to /sign-in. It deliberately does NOT call auth.api —
+// that would require the Node.js runtime and a DB lookup on every request.
+//
+// Full session validation happens in the page/route handler via
+// auth.api.getSession({ headers }). See references/conventions.md § Middleware.
+// =============================================================================
+
+import { NextResponse, type NextRequest } from "next/server";
+import { getSessionCookie } from "better-auth/cookies";
+
+export function middleware(request: NextRequest) {
+  const sessionCookie = getSessionCookie(request);
+
+  if (!sessionCookie) {
+    const signInUrl = new URL("/sign-in", request.url);
+    signInUrl.searchParams.set("redirect", request.nextUrl.pathname);
+    return NextResponse.redirect(signInUrl);
+  }
+
+  return NextResponse.next();
+}
+
+// IMPORTANT: emit BOTH `"{{path}}"` and `"{{path}}/:path*"` per protected route.
+// `/:path*` does not match the bare prefix in Next.js — visiting `/dashboard`
+// directly would bypass the auth check if only the wildcard form is listed.
+export const config = {
+  matcher: [
+    // {{#protected_paths}}
+    "{{path}}",
+    "{{path}}/:path*",
+    // {{/protected_paths}}
+  ],
+};

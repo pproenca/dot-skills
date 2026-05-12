@@ -1,0 +1,132 @@
+// =============================================================================
+// Template: lib/auth.ts
+// Parameters:
+//   - preset:      "minimal" | "social" | "advanced"     (required)
+//   - db_provider: "pg" | "mysql" | "sqlite"             (required)
+//   - app_name:    string                                 (required, becomes 2FA issuer when preset=advanced)
+//
+// Conditional sections are marked with PRESET tags below. When rendering:
+//   - PRESET[minimal,social,advanced]      → always include
+//   - PRESET[social,advanced]              → include for social & advanced
+//   - PRESET[advanced]                     → include only for advanced
+//   - Remove all PRESET markers from the final file.
+// =============================================================================
+
+import "server-only";
+import { betterAuth } from "better-auth";
+import { drizzleAdapter } from "better-auth/adapters/drizzle";
+import { nextCookies } from "better-auth/next-js";
+// PRESET[advanced]
+import { twoFactor, magicLink } from "better-auth/plugins";
+// /PRESET[advanced]
+import { db } from "@/db";
+import { env } from "@/env";
+// PRESET[advanced]
+import { sendEmail } from "@/lib/email";
+// /PRESET[advanced]
+
+export const auth = betterAuth({
+  appName: "{{app_name}}",
+  baseURL: env.BETTER_AUTH_URL,
+  secret: env.BETTER_AUTH_SECRET,
+
+  database: drizzleAdapter(db, {
+    provider: "{{db_provider}}",
+  }),
+
+  emailAndPassword: {
+    enabled: true,
+    requireEmailVerification: true,
+    minPasswordLength: 10,
+    autoSignIn: false,
+    revokeSessionsOnPasswordReset: true,
+    sendResetPassword: async ({ user, url }) => {
+      // PRESET[advanced]
+      await sendEmail({
+        to: user.email,
+        subject: "Reset your {{app_name}} password",
+        text: `Reset: ${url}`,
+      });
+      // /PRESET[advanced]
+      // PRESET[minimal,social]
+      // TODO: wire to your transactional email provider (Resend, Postmark, SendGrid, ...).
+      // For the `advanced` preset this is auto-wired to @/lib/email.
+      console.log(`[auth] reset password link for ${user.email}: ${url}`);
+      // /PRESET[minimal,social]
+    },
+  },
+
+  // PRESET[advanced]
+  emailVerification: {
+    sendOnSignIn: true,
+    sendVerificationEmail: async ({ user, url }) => {
+      await sendEmail({
+        to: user.email,
+        subject: "Verify your {{app_name}} email",
+        text: `Verify: ${url}`,
+      });
+    },
+  },
+  // /PRESET[advanced]
+
+  // PRESET[social,advanced]
+  socialProviders: {
+    google: {
+      clientId: env.GOOGLE_CLIENT_ID,
+      clientSecret: env.GOOGLE_CLIENT_SECRET,
+    },
+    github: {
+      clientId: env.GITHUB_CLIENT_ID,
+      clientSecret: env.GITHUB_CLIENT_SECRET,
+    },
+  },
+  // /PRESET[social,advanced]
+
+  session: {
+    expiresIn: 60 * 60 * 24 * 7, // 7 days
+    updateAge: 60 * 60 * 24,     // slide once per day
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60,            // 5 minutes
+    },
+  },
+
+  trustedOrigins: [
+    env.BETTER_AUTH_URL,
+    ...(process.env.NODE_ENV !== "production"
+      ? ["http://localhost:3000"]
+      : []),
+  ],
+
+  rateLimit: {
+    enabled: true,
+    window: 60,
+    max: 100,
+    customRules: {
+      "/sign-in/email":   { window: 60,  max: 5 },
+      "/forget-password": { window: 300, max: 3 },
+    },
+  },
+
+  plugins: [
+    // PRESET[advanced]
+    twoFactor({
+      otpOptions: { period: 30, digits: 6 },
+      backupCodes: { length: 10, amount: 10 },
+    }),
+    magicLink({
+      expiresIn: 60 * 5, // 5 minutes
+      sendMagicLink: async ({ email, url }) => {
+        await sendEmail({
+          to: email,
+          subject: "Sign in to {{app_name}}",
+          text: `Sign in: ${url}\nThis link expires in 5 minutes.`,
+        });
+      },
+    }),
+    // /PRESET[advanced]
+    nextCookies(), // MUST be last — see references/conventions.md § Plugin Ordering
+  ],
+});
+
+export type Session = typeof auth.$Infer.Session;

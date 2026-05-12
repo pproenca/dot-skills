@@ -1,0 +1,18 @@
+{
+  "preset": "minimal",
+  "db_provider": "",
+  "app_name": "",
+  "auth_path": "lib/auth.ts",
+  "client_path": "lib/auth-client.ts",
+  "api_route_path": "app/api/auth/[...all]/route.ts",
+  "protected_paths": ["/dashboard"],
+  "_setup_instructions": {
+    "preset": "Which plugin set to scaffold: 'minimal' (email+password only), 'social' (adds Google + GitHub), or 'advanced' (social + twoFactor + magicLink). Defaults to 'minimal' — easiest to extend later.",
+    "db_provider": "Drizzle database provider: 'pg' (PostgreSQL), 'mysql', or 'sqlite'. Required.",
+    "app_name": "Display name used as the 2FA issuer in authenticator apps (Google Authenticator, 1Password, etc.) and referenced in email templates. Required.",
+    "auth_path": "Where to write the server auth module. Default 'lib/auth.ts' works for the standard Next.js layout.",
+    "client_path": "Where to write the client module. Default 'lib/auth-client.ts'.",
+    "api_route_path": "Path to the catch-all route handler. MUST include '[...all]' or another catch-all segment.",
+    "protected_paths": "List of route prefixes the middleware redirects unauthenticated users away from. Default ['/dashboard']."
+  }
+}

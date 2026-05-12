@@ -1,0 +1,51 @@
+// =============================================================================
+// Template: lib/permissions.ts
+// Parameters: (none)
+//
+// Emitted only when preset includes organization/admin plugins.
+// In the current scaffold (minimal/social/advanced presets), this file is
+// OPTIONAL — included as a starting point if you later add organization+admin.
+//
+// Imported by BOTH lib/auth.ts (server) AND lib/auth-client.ts (client) so the
+// role and permission definitions are a single source of truth. Drift between
+// server and client role tables = enforcement bypass.
+//
+// See references/conventions.md § Shared Access Control.
+// =============================================================================
+
+import { createAccessControl } from "better-auth/plugins/access";
+
+export const statements = {
+  invoices: ["read", "write", "delete"] as const,
+  members: ["read", "invite", "remove"] as const,
+  // Add resources as your domain grows. Each verb here becomes a permission
+  // string roles can grant ("invoices:write", "members:invite", ...).
+} as const;
+
+export const ac = createAccessControl(statements);
+
+export const owner = ac.newRole({
+  invoices: ["read", "write", "delete"],
+  members:  ["read", "invite", "remove"],
+});
+
+export const admin = ac.newRole({
+  invoices: ["read", "write"],
+  members:  ["read", "invite"],
+});
+
+export const member = ac.newRole({
+  invoices: ["read"],
+});
+
+// Wire these into server and client like:
+//
+//   // lib/auth.ts
+//   import { organization } from "better-auth/plugins";
+//   import { ac, owner, admin, member } from "./permissions";
+//   plugins: [organization({ ac, roles: { owner, admin, member } }), ...]
+//
+//   // lib/auth-client.ts
+//   import { organizationClient } from "better-auth/client/plugins";
+//   import { ac, owner, admin, member } from "./permissions";
+//   plugins: [organizationClient({ ac, roles: { owner, admin, member } }), ...]

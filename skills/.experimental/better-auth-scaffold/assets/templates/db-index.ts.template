@@ -1,0 +1,45 @@
+// =============================================================================
+// Template: db/index.ts
+// Parameters:
+//   - db_provider: "pg" | "mysql" | "sqlite"  (required)
+//
+// Drizzle client singleton. `lib/auth.ts` imports `db` from here.
+//
+// Emitted only when the project doesn't already have a Drizzle client at
+// @/db. If you have an existing client elsewhere (e.g. `db/client.ts`),
+// adjust `auth_path`'s import or skip this template.
+// =============================================================================
+
+// PRESET[minimal,social,advanced]
+// --- Postgres (db_provider = "pg") -------------------------------------------
+// import { drizzle } from "drizzle-orm/node-postgres";
+// import { Pool } from "pg";
+// import * as schema from "./schema/auth";
+//
+// const pool = new Pool({ connectionString: process.env.DATABASE_URL });
+// export const db = drizzle(pool, { schema });
+
+// --- MySQL (db_provider = "mysql") -------------------------------------------
+// import { drizzle } from "drizzle-orm/mysql2";
+// import { createPool } from "mysql2/promise";
+// import * as schema from "./schema/auth";
+//
+// const pool = createPool({ uri: process.env.DATABASE_URL });
+// export const db = drizzle(pool, { schema, mode: "default" });
+
+// --- SQLite (db_provider = "sqlite") -----------------------------------------
+// import { drizzle } from "drizzle-orm/better-sqlite3";
+// import Database from "better-sqlite3";
+// import * as schema from "./schema/auth";
+//
+// const sqlite = new Database(process.env.DATABASE_URL ?? "local.db");
+// export const db = drizzle(sqlite, { schema });
+// /PRESET[minimal,social,advanced]
+
+// Uncomment the block matching your db_provider. Install the corresponding
+// peer dependencies:
+//   pg     → pg, drizzle-orm
+//   mysql  → mysql2, drizzle-orm
+//   sqlite → better-sqlite3, drizzle-orm
+
+export const db = {} as never; // placeholder so imports compile; replace per above

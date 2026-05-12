@@ -1,0 +1,103 @@
+// =============================================================================
+// Template: db/schema/auth.ts  (Drizzle)
+// Parameters:
+//   - db_provider: "pg" | "mysql" | "sqlite"  (required)
+//   - preset:      "minimal" | "social" | "advanced"  (required)
+//
+// This is a HAND-STUBBED starter schema covering the four Better Auth core
+// tables (user, session, account, verification) plus advanced-preset additions
+// (twoFactor). Use it so the project compiles before the CLI generator runs.
+//
+// AFTER scaffolding, replace this file with the canonical generated schema:
+//
+//     npx @better-auth/cli@latest generate     # produces ./auth-schema.ts
+//     # merge into db/schema/auth.ts, then:
+//     npx drizzle-kit generate                 # SQL migration
+//     npx drizzle-kit migrate                  # apply it
+//
+// The generator produces the same shape with correct type widths and any extra
+// columns from plugins beyond what's stubbed here.
+//
+// See references/conventions.md § Schema Generation.
+// =============================================================================
+
+// PRESET[minimal,social,advanced]
+// --- Postgres (db_provider = "pg") -------------------------------------------
+// Uncomment if db_provider=pg
+//
+// import { pgTable, text, timestamp, boolean } from "drizzle-orm/pg-core";
+//
+// export const user = pgTable("user", {
+//   id: text("id").primaryKey(),
+//   email: text("email").notNull().unique(),
+//   emailVerified: boolean("emailVerified").notNull().default(false),
+//   name: text("name"),
+//   image: text("image"),
+//   // PRESET[advanced]
+//   twoFactorEnabled: boolean("twoFactorEnabled").notNull().default(false),
+//   // /PRESET[advanced]
+//   createdAt: timestamp("createdAt").notNull().defaultNow(),
+//   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+// });
+//
+// export const session = pgTable("session", {
+//   id: text("id").primaryKey(),
+//   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+//   token: text("token").notNull().unique(),
+//   expiresAt: timestamp("expiresAt").notNull(),
+//   ipAddress: text("ipAddress"),
+//   userAgent: text("userAgent"),
+//   createdAt: timestamp("createdAt").notNull().defaultNow(),
+//   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+// });
+//
+// export const account = pgTable("account", {
+//   id: text("id").primaryKey(),
+//   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+//   providerId: text("providerId").notNull(),
+//   accountId: text("accountId").notNull(),
+//   password: text("password"),
+//   accessToken: text("accessToken"),
+//   refreshToken: text("refreshToken"),
+//   accessTokenExpiresAt: timestamp("accessTokenExpiresAt"),
+//   refreshTokenExpiresAt: timestamp("refreshTokenExpiresAt"),
+//   scope: text("scope"),
+//   idToken: text("idToken"),
+//   createdAt: timestamp("createdAt").notNull().defaultNow(),
+//   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+// });
+//
+// export const verification = pgTable("verification", {
+//   id: text("id").primaryKey(),
+//   identifier: text("identifier").notNull(),
+//   value: text("value").notNull(),
+//   expiresAt: timestamp("expiresAt").notNull(),
+//   createdAt: timestamp("createdAt").notNull().defaultNow(),
+//   updatedAt: timestamp("updatedAt").notNull().defaultNow(),
+// });
+//
+// PRESET[advanced]
+// export const twoFactor = pgTable("twoFactor", {
+//   id: text("id").primaryKey(),
+//   userId: text("userId").notNull().references(() => user.id, { onDelete: "cascade" }),
+//   secret: text("secret").notNull(),
+//   backupCodes: text("backupCodes").notNull(), // JSON-encoded array
+// });
+// /PRESET[advanced]
+// /PRESET[minimal,social,advanced]
+
+// --- MySQL (db_provider = "mysql") -------------------------------------------
+// Use `mysqlTable`, `varchar(255)`/`text`, `datetime`/`timestamp`. Same shape.
+// Generator handles the type widths correctly.
+
+// --- SQLite (db_provider = "sqlite") -----------------------------------------
+// Use `sqliteTable`, `text("id").primaryKey()`, `integer("createdAt", { mode: "timestamp" })`.
+// Booleans stored as integers (0/1).
+
+// =============================================================================
+// IMPORTANT: this file is a STUB to keep the project compiling. After running
+// `npx @better-auth/cli generate`, replace its contents with the generated
+// schema and re-export from `db/schema/index.ts` so the rest of your app
+// (and Drizzle Studio) see the same tables.
+// =============================================================================
+export {};

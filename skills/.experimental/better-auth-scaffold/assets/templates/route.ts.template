@@ -1,0 +1,16 @@
+// =============================================================================
+// Template: app/api/auth/[...all]/route.ts
+// Parameters: (none)
+//
+// This is the catch-all route handler. The folder name [...all] is REQUIRED —
+// Better Auth needs to match every sub-path under /api/auth (sign-in, sign-up,
+// callback/{provider}, verify-email, ...). Renaming the segment will produce
+// 404 errors on every auth request.
+//
+// See references/conventions.md § Route Mounting.
+// =============================================================================
+
+import { auth } from "@/lib/auth";
+import { toNextJsHandler } from "better-auth/next-js";
+
+export const { GET, POST } = toNextJsHandler(auth);
