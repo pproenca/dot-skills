@@ -1,0 +1,16 @@
+{
+  "client_path": "src/inngest/client.ts",
+  "route_path": "src/app/api/inngest/route.ts",
+  "events_dir": "src/inngest/events",
+  "functions_dir": "src/inngest/functions",
+  "schema_library": "zod",
+  "app_id": "",
+  "_setup_instructions": {
+    "client_path": "Where to write the Inngest client singleton. Default assumes Next.js src/ + App Router. Change if your project uses app/ without src/, or Pages Router.",
+    "route_path": "Where to write the Inngest serve() handler. For App Router, ends in route.ts. For Pages Router, use pages/api/inngest.ts and the templates need light adjustment (default export instead of named GET/POST/PUT exports).",
+    "events_dir": "Directory for typed event definitions. One file per domain (e.g., events/shop.ts, events/user.ts).",
+    "functions_dir": "Directory for function definitions plus the registry index.ts.",
+    "schema_library": "Either 'zod' (runtime validation at boundaries) or 'static' (compile-time only, no Zod dependency). The event template branches on this.",
+    "app_id": "Stable kebab-case ID for this Inngest app, written into client.ts. NEVER change after deploy — Inngest associates run history with this ID. Example: 'acme-storefront'."
+  }
+}

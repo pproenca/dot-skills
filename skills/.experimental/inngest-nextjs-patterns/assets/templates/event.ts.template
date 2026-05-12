@@ -1,0 +1,67 @@
+// =============================================================================
+// Template: src/inngest/events/<DOMAIN>.ts
+// Parameters:
+//   - DOMAIN (required): the event namespace, lowercase, no slash.
+//                        Examples: "user", "order", "billing", "ai".
+//   - EVENT_NAME (required): full event name in `<domain>/<entity>.<verb_past>`
+//                            form. Examples: "user/account.created",
+//                            "shop/order.placed", "billing/invoice.paid".
+//   - SYMBOL (required): camelCase symbol exported for use as a trigger.
+//                        Convention: matches the verb_past form, e.g.,
+//                        accountCreated, orderPlaced, invoicePaid.
+//   - PASCAL_SYMBOL (required): PascalCase form of SYMBOL, used in the sender
+//                                helper name. E.g., SYMBOL=orderPlaced →
+//                                PASCAL_SYMBOL=OrderPlaced → sendOrderPlaced.
+//   - PAYLOAD shape: the `data` schema. Define with Zod for runtime validation
+//                    at the system boundary (webhooks, public APIs); use
+//                    staticSchema<T>() if the producer is fully internal and
+//                    you trust TypeScript at compile time.
+//
+// One file per DOMAIN. Co-locating events keeps a domain's vocabulary in one
+// place — when you change a payload, you change the schema and the producers
+// in the same edit.
+//
+// See references/conventions.md § Event Naming and § One-Schema-Per-Event.
+// =============================================================================
+
+import { eventType } from "inngest";
+import { z } from "zod";
+
+import { inngest } from "@/inngest/client";
+
+// -- Define the typed event ---------------------------------------------------
+//
+// `eventType` binds a string name to a payload schema. Functions that use this
+// as a trigger get fully typed `event.data`. Senders use `.create()` to build a
+// validated payload — TypeScript catches missing fields at the call site.
+
+export const <SYMBOL> = eventType("<EVENT_NAME>", {
+  schema: z.object({
+    // Replace with your actual payload shape. Keep payloads small — pass IDs,
+    // not whole objects. The function will reload fresh state inside step.run.
+    id: z.string(),
+    // userId: z.string(),
+    // amountCents: z.number().int().nonnegative(),
+  }),
+});
+
+// Optional: if runtime validation is overkill (purely internal producer),
+// use staticSchema instead. Trade: no validation, but no Zod dependency.
+//
+//   import { staticSchema } from "inngest";
+//   type <PASCAL_SYMBOL>Payload = { id: string };
+//   export const <SYMBOL> = eventType("<EVENT_NAME>", {
+//     schema: staticSchema<<PASCAL_SYMBOL>Payload>(),
+//   });
+
+// -- Typed sender helper ------------------------------------------------------
+//
+// Wrap inngest.send so callers don't have to remember the event name. Using
+// `<SYMBOL>.create(...)` validates the payload at the call site.
+//
+// The function name is `send<PASCAL_SYMBOL>` — e.g., sendOrderPlaced. Substitute
+// the PascalCase form into the identifier; the angle brackets disappear.
+
+export async function send<PASCAL_SYMBOL>(data: z.infer<typeof <SYMBOL>.schema>) {
+  await inngest.send(<SYMBOL>.create(data));
+}

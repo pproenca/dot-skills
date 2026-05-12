@@ -1,0 +1,90 @@
+// =============================================================================
+// Template: src/inngest/functions/<FN_FILE>.ts
+// Parameters:
+//   - FN_ID (required): stable kebab-case ID. Example: "import-contacts".
+//   - PARENT_EVENT (required): the trigger event symbol. The orchestrator's job.
+//   - CHILD_EVENT (required): the per-item event symbol that worker functions consume.
+//   - MODE (required): one of:
+//       "fire-and-forget" → step.sendEvent for each item, return immediately.
+//                            Use when the orchestrator doesn't need results.
+//       "wait-for-results" → Promise.all(step.invoke(...)) per item.
+//                             Orchestrator returns once all children finish.
+//
+// Fan-out has two distinct shapes — pick deliberately. Fire-and-forget scales
+// to millions of items (events are cheap). wait-for-results is bounded by the
+// concurrency of the child function and the orchestrator's runtime.
+//
+// Why fan out at all? Each child becomes its own durable run — it retries,
+// reports, and observes independently in the dashboard. One bad item can't
+// stall the others.
+//
+// See references/conventions.md § Fan-Out Patterns.
+// =============================================================================
+
+import { <PARENT_EVENT> } from "@/inngest/events/<DOMAIN>";
+// For "wait-for-results" mode, also import the child function:
+// import { <childFnSymbol> } from "@/inngest/functions/<child-fn-file>";
+
+import { inngest } from "@/inngest/client";
+
+export const <fnSymbol> = inngest.createFunction(
+  {
+    id: "<FN_ID>",
+    name: "<FN_NAME>",
+
+    // Orchestrators usually need higher concurrency than their children — the
+    // bottleneck is the child function's limit, not this one.
+    concurrency: { limit: 50, scope: "fn" },
+    retries: 3,
+
+    // v4 trigger array — pass the imported event symbol directly.
+    triggers: [<PARENT_EVENT>],
+  },
+  async ({ event, step, logger }) => {
+    // 1. Resolve the work set INSIDE a step so the list is durable. Re-running
+    //    the orchestrator must produce the same fan-out, or replays will
+    //    double-dispatch.
+    const items = await step.run("resolve-work-set", async () => {
+      // Return an array of stable identifiers, not whole objects.
+      return [{ id: "1" }, { id: "2" }] as Array<{ id: string }>;
+    });
+
+    logger.info({ count: items.length }, "<FN_ID> fan-out");
+
+    // -------------------------------------------------------------------------
+    // MODE: fire-and-forget
+    // -------------------------------------------------------------------------
+    // Send one event per item. Each child run is independent. Return now.
+
+    await step.sendEvent(
+      "dispatch",
+      items.map((item) => ({
+        name: "<child/event.name>", // e.g., "import/contact.requested"
+        data: { id: item.id, parentRunId: event.id },
+      })),
+    );
+
+    return { dispatched: items.length };
+
+    // -------------------------------------------------------------------------
+    // MODE: wait-for-results
+    // -------------------------------------------------------------------------
+    // Swap the return above for the block below. Each step.invoke runs the
+    // child function inline (within the same logical workflow) and returns
+    // its result. Promise.all parallelizes the calls.
+    //
+    // Bound the batch size — Promise.all over 10,000 invokes will exhaust
+    // memory. Chunk if items.length > a few hundred.
+    //
+    // const results = await Promise.all(
+    //   items.map((item, idx) =>
+    //     step.invoke(`child-${item.id}-${idx}`, {
+    //       function: <childFnSymbol>,
+    //       data: { id: item.id },
+    //       timeout: "10m",
+    //     }),
+    //   ),
+    // );
+    // return { processed: results.length, results };
+  },
+);

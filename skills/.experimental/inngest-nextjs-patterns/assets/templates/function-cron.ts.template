@@ -1,0 +1,85 @@
+// =============================================================================
+// Template: src/inngest/functions/<FN_FILE>.ts
+// Parameters:
+//   - FN_ID (required): stable kebab-case function ID. Never rename.
+//   - FN_NAME (optional): friendly display name for the dashboard.
+//   - CRON_EXPR (required): 5-field cron expression, optionally prefixed with
+//                            "TZ=<IANA_zone> " for non-UTC schedules. Examples:
+//                              "0 9 * * 1-5"  → 9am weekdays UTC
+//                              "*/15 * * * *" → every 15 minutes UTC
+//                              "TZ=America/New_York 0 9 * * 1-5"
+//                                             → 9am ET weekdays (DST-aware)
+//                            Default timezone is UTC. The TZ= prefix is part
+//                            of the same string passed to cron().
+//   - MANUAL_TRIGGER (optional): also accept an event for ad-hoc invocation.
+//                                Useful for testing the cron logic from the dev UI.
+//
+// Cron-only functions receive NO event payload. The handler argument has step,
+// logger, runId — but `event` is unused (it exists, but data is empty).
+//
+// AFTER GENERATING: add this function to src/inngest/functions/index.ts.
+//
+// See references/conventions.md § Cron vs Event Triggers.
+// =============================================================================
+
+import { cron } from "inngest";
+
+import { inngest } from "@/inngest/client";
+// If you also want a manual trigger, import an event symbol:
+// import { <MANUAL_TRIGGER_SYMBOL> } from "@/inngest/events/<DOMAIN>";
+
+export const <fnSymbol> = inngest.createFunction(
+  {
+    id: "<FN_ID>",
+    name: "<FN_NAME>",
+
+    // Cron-triggered functions run on schedule. Use the TZ= prefix for any
+    // non-UTC schedule — DST-aware. Without TZ=, the expression evaluates in UTC.
+    triggers: [
+      cron("<CRON_EXPR>"), // e.g., cron("TZ=America/New_York 0 9 * * 1-5")
+      // Optional: allow manual invocation by sending this event from anywhere.
+      // Up to 10 triggers per function.
+      // <MANUAL_TRIGGER_SYMBOL>,
+    ],
+
+    // Flow control for crons is usually about preventing overlap when a run
+    // takes longer than the schedule interval. concurrency: { limit: 1 } makes
+    // the cron strictly serial — a slow run delays the next tick instead of
+    // stacking up parallel runs.
+    concurrency: { limit: 1, scope: "fn" },
+
+    // Crons usually shouldn't retry forever — a missed tick is often better
+    // than a stuck queue. Tune based on idempotency of the work.
+    retries: 2,
+  },
+  async ({ step, logger }) => {
+    logger.info({ at: new Date().toISOString() }, "<FN_ID> tick");
+
+    // Typical cron pattern: enumerate work, then fan out via events instead of
+    // doing all of it inline. Keeps each individual job independently retryable.
+    const items = await step.run("collect-work", async () => {
+      // Query the DB / API for items to process this tick.
+      // Return an array of identifiers — keep step results small.
+      return [] as Array<{ id: string }>;
+    });
+
+    // Option A: fan out one event per item (preferred when work is per-item).
+    // The other functions handle retries and concurrency for their own work.
+    if (items.length > 0) {
+      await step.sendEvent(
+        "fan-out",
+        items.map((item) => ({
+          name: "<domain/entity.verb_past>", // the per-item event
+          data: { id: item.id },
+        })),
+      );
+    }
+
+    // Option B: do the work inline if it's a small, atomic batch.
+    // for (const item of items) {
+    //   await step.run(`process-${item.id}`, async () => doWork(item));
+    // }
+
+    return { processed: items.length };
+  },
+);

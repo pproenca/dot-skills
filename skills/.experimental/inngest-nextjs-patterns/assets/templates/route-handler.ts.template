@@ -1,0 +1,30 @@
+// =============================================================================
+// Template: src/app/api/inngest/route.ts
+// Parameters: (none — reads from the function registry)
+//
+// The single endpoint Inngest Cloud (and the local dev server) calls to invoke
+// your functions. It exports GET, POST, and PUT — all three are required:
+//
+//   GET  → introspection: Inngest fetches the list of registered functions
+//   POST → invocation: Inngest calls this when an event triggers a function
+//   PUT  → register: Inngest pings this to register new functions on deploy
+//
+// This file should rarely change. Adding a new function = adding it to
+// src/inngest/functions/index.ts (the registry), NOT to this file.
+//
+// See references/conventions.md § Function Registry.
+// =============================================================================
+
+import { serve } from "inngest/next";
+
+import { inngest } from "@/inngest/client";
+import { functions } from "@/inngest/functions";
+
+export const { GET, POST, PUT } = serve({
+  client: inngest,
+  functions,
+  // Optional: streaming (only on platforms that support it — Vercel doesn't):
+  //   streaming: "allow",
+  // Optional: override the served path if you mount this at a non-default URL:
+  //   servePath: "/api/inngest",
+});

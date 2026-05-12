@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "personal",
+  "technology": "Inngest + Next.js",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Parameterized templates for building event-driven, durable background work on Inngest from a Next.js App Router project. Covers the one-time setup (client singleton, /api/inngest route handler), recurring scaffolds (typed events with Zod schemas, event-driven and cron-triggered durable functions, fan-out orchestrators), and the conventions that make Inngest's retry/replay/concurrency model actually work (event naming, function-id stability, step idempotency).",
+  "references": [
+    "https://www.inngest.com/docs/getting-started/nextjs-quick-start",
+    "https://www.inngest.com/docs/reference/typescript/v4/functions/triggers",
+    "https://www.inngest.com/docs/reference/typescript/v4/migrations/v3-to-v4",
+    "https://www.inngest.com/docs/guides/step-parallelism",
+    "https://www.inngest.com/docs/guides/throttling",
+    "https://www.inngest.com/docs/guides/flow-control"
+  ]
+}

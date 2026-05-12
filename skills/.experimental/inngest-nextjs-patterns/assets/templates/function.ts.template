@@ -1,0 +1,119 @@
+// =============================================================================
+// Template: src/inngest/functions/<FN_FILE>.ts
+// Parameters:
+//   - FN_ID (required): stable kebab-case function ID. Never rename.
+//                       Example: "process-order", "send-welcome-email".
+//   - FN_NAME (optional): friendly display name for the Inngest dashboard.
+//   - TRIGGER_SYMBOL (required): imported event symbol from
+//                                 src/inngest/events/<domain>.ts
+//   - retries (optional, default 4): integer 0–20. 0 disables retries.
+//   - concurrency (optional): number (limit) OR full object
+//                              { limit, key, scope: "fn" | "env" | "account" }
+//   - throttle / rateLimit / debounce (optional): see flow-control blocks below
+//   - cancelOn (optional): array of { event, match } for cancellation
+//   - onFailure (optional, boolean): include the after-retries-exhausted hook
+//
+// AFTER GENERATING: add this function to src/inngest/functions/index.ts so the
+// route handler picks it up. The registry pattern is in references/conventions.md.
+//
+// See references/conventions.md § Step Idempotency before filling in step bodies.
+// =============================================================================
+
+import { <TRIGGER_SYMBOL> } from "@/inngest/events/<DOMAIN>";
+import { inngest } from "@/inngest/client";
+
+export const <fnSymbol> = inngest.createFunction(
+  {
+    id: "<FN_ID>",
+    name: "<FN_NAME>", // optional — delete if same as id
+
+    // -- Flow control (all optional) ------------------------------------------
+    // Pick the controls your function actually needs. Don't add them "just in
+    // case" — every control has a runtime cost and a debugging cost.
+
+    retries: 4, // default 4. Set 0 only if the work is genuinely fire-and-forget.
+
+    concurrency: {
+      // Cap simultaneous runs. Scope "fn" = across all events for THIS function.
+      // Scope "env" / "account" share the limit across functions.
+      limit: 10,
+      scope: "fn",
+      // Optional: per-key isolation. Different tenants get separate concurrency
+      // buckets so one heavy tenant can't starve others.
+      // key: "event.data.accountId",
+    },
+
+    // throttle: { limit: 5, period: "1m", key: "event.data.userId" },
+    // rateLimit: { limit: 100, period: "1h", key: "event.data.accountId" },
+    // debounce: { period: "5s", key: "event.data.userId", timeout: "30s" },
+
+    // -- Trigger --------------------------------------------------------------
+    // v4 places triggers inside the config object as an array. Pass the imported
+    // event symbol directly — it carries the event name AND payload schema, so
+    // `event.data` below is fully typed.
+    triggers: [<TRIGGER_SYMBOL>],
+
+    // -- Cancellation ---------------------------------------------------------
+    // Cancel an in-flight run when a matching event arrives. `match` is a JSON
+    // path on event.data — both events must share that field's value.
+
+    // cancelOn: [
+    //   { event: "<domain/entity.verb_past>", match: "data.id" },
+    // ],
+
+    // timeouts: { finish: "30m" }, // cancel run if it exceeds 30 minutes total
+
+    // -- After-all-retries-exhausted handler ----------------------------------
+    // Runs once after the final retry fails. Use for alerting, NOT for retry
+    // logic — Inngest already did that.
+
+    // onFailure: async ({ error, event }) => {
+    //   await alertOpsChannel({
+    //     functionId: "<FN_ID>",
+    //     error: error.message,
+    //     payload: event.data,
+    //   });
+    // },
+  },
+  async ({ event, step, logger, attempt }) => {
+    logger.info({ attempt, id: event.data.id }, "<FN_ID> start");
+
+    // -------------------------------------------------------------------------
+    // Steps. EVERY external side effect MUST be wrapped in step.run.
+    //
+    // The function body re-executes from the top on each step boundary, but
+    // step.run results are memoized: on replay, Inngest returns the cached
+    // result instead of running the closure again. That means:
+    //
+    //   1. Code OUTSIDE step.run runs multiple times — keep it pure.
+    //   2. Code INSIDE step.run runs once on success, multiple times on retry.
+    //      It must be idempotent (use idempotency keys, upserts, or check-then-act).
+    //   3. Step IDs are durable — renaming "charge" → "charge-customer" re-runs
+    //      that step from scratch on replay.
+    // -------------------------------------------------------------------------
+
+    const result = await step.run("<step-id-kebab-case>", async () => {
+      // Idempotent external side effect goes here.
+      // Example: stripe.charges.create({ ..., idempotency_key: event.data.id })
+      return { ok: true, id: event.data.id };
+    });
+
+    // Durable sleep — function actually unloads from memory and resumes later.
+    // Use this for SLA-style delays ("wait 1h then check"), reminders, etc.
+    // await step.sleep("wait", "1h");
+    // await step.sleepUntil("wait-until-renewal", event.data.renewsAt);
+
+    // Pause until another event arrives. Returns the matched event or null on
+    // timeout. Match links events by a shared field (here: data.id).
+    // const followUp = await step.waitForEvent("await-confirmation", {
+    //   event: "<other/event.name>",
+    //   timeout: "7d",
+    //   match: "data.id",
+    // });
+    // if (!followUp) {
+    //   // timeout branch
+    // }
+
+    return { ok: true, result };
+  },
+);

@@ -1,0 +1,26 @@
+// =============================================================================
+// Template: src/inngest/client.ts
+// Parameters:
+//   - appId (required): stable identifier for this Inngest app, kebab-case.
+//                       Example: "acme-storefront". Never change after deploy —
+//                       Inngest associates run history and replays with this ID.
+//
+// Generate ONCE per Next.js app. Subsequent functions and event-senders import
+// from here. The client is a singleton — do not instantiate Inngest elsewhere.
+//
+// Env vars (read automatically by the SDK):
+//   INNGEST_DEV=1          → connect to local dev server at http://localhost:8288
+//   INNGEST_EVENT_KEY=...  → required in production for sending events
+//   INNGEST_SIGNING_KEY=...→ required in production for the route handler to
+//                            verify requests from Inngest Cloud
+//
+// See references/conventions.md § Function ID Stability for why appId is permanent.
+// =============================================================================
+
+import { Inngest } from "inngest";
+
+export const inngest = new Inngest({
+  id: "<APP_ID>", // e.g., "acme-storefront"
+  // Optional: pass `isDev: true` to force dev mode regardless of env vars.
+  // Leave this off in committed code — use INNGEST_DEV=1 locally instead.
+});
