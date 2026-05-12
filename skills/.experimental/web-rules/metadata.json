@@ -1,0 +1,16 @@
+{
+  "version": "1.0.0",
+  "organization": "React 19 + Next.js 16 + Tailwind CSS Strict Rules",
+  "technology": "React 19 / Next.js 16 (App Router) / Tailwind CSS 4",
+  "date": "May 2026",
+  "abstract": "Strict design and UX rules for web apps built with React 19, Next.js 16 (App Router), and Tailwind CSS 4. Modeled after Apple's HIG distillation: 33 rules across 6 categories (Navigation, Interaction Design, Accessibility, User Feedback, UX Patterns, Visual Design). Each rule states an Always/Never directive with a quantified impact metric, an incorrect example, and a correct example. Web-specific translations of HIG: tab bars become primary navigation, haptics become microinteractions, SF Symbols become lucide-react, NavigationStack becomes Next.js App Router. Targets React 19 features (Server Components, Actions, useFormState, useOptimistic) and Next.js 16 conventions (layout.tsx, loading.tsx, error.tsx, parallel routes).",
+  "references": [
+    "https://react.dev/reference/react",
+    "https://nextjs.org/docs/app",
+    "https://tailwindcss.com/docs",
+    "https://www.w3.org/WAI/WCAG22/quickref/",
+    "https://www.nngroup.com/articles/"
+  ],
+  "category": "Design Guidelines",
+  "discipline": "distillation"
+}
