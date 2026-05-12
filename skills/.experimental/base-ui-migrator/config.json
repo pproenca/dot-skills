@@ -1,0 +1,14 @@
+{
+  "project_root": "",
+  "package_manager": "",
+  "styling": "",
+  "target_paths": [],
+  "staleness_days": 7,
+  "_setup_instructions": {
+    "project_root": "Absolute path to the project root (where package.json lives). Default to current working directory if empty.",
+    "package_manager": "One of: pnpm, npm, yarn, bun. Autodetect from lockfile (pnpm-lock.yaml / package-lock.json / yarn.lock / bun.lockb) — confirm with user if multiple lockfiles or none.",
+    "styling": "One of: tailwind, css-modules, styled-components, emotion, vanilla-extract, cva, tailwind-variants, other. Detect from package.json deps and config files (tailwind.config.*, *.module.css, etc.). Migrations preserve this idiom.",
+    "target_paths": "Array of relative paths to scan, e.g., [\"src/\", \"app/\"]. Default to [\"src/\"] for most projects, [\"app/\", \"components/\"] for Next.js app router projects.",
+    "staleness_days": "Days before the cached llms.txt is considered stale and refresh-catalog.sh should rerun. Default 7."
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "pproenca",
+  "technology": "Base UI (React)",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "May 2026",
+  "abstract": "Automated workflow that migrates React UI code to Base UI (@base-ui/react). Ships a snapshotted catalog of 37 components mapped to the bespoke patterns and prior libraries (Radix UI, Headless UI, Reach UI) they replace, plus scripts to refresh the catalog from base-ui.com/llms.txt, scan a codebase for migration candidates, fetch per-component docs on demand, and verify the migration compiles. Triggers on phrases like 'migrate to base-ui' or when a React file contains bespoke modals, dropdown menus, popovers, or other component-library imports that Base UI replaces 1:1.",
+  "references": [
+    "https://base-ui.com/llms.txt",
+    "https://base-ui.com/react/overview/quick-start",
+    "https://base-ui.com/react/components/dialog",
+    "https://base-ui.com/react/components/popover",
+    "https://base-ui.com/react/components/menu",
+    "https://base-ui.com/react/components/select",
+    "https://base-ui.com/react/components/tabs",
+    "https://base-ui.com/react/components/tooltip"
+  ]
+}
