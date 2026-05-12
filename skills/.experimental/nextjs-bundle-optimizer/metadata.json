@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Next.js 16",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "May 2026",
+  "abstract": "Data-driven optimization loop for Next.js 16 bundle size and build time. Orchestrates `next experimental-analyze`, build timing, type checks, and tests to make verifiable improvements one change at a time. Enforces baseline → analyze → diagnose → apply → measure → compare → verify discipline with hard PASS/FAIL gates so each commit is a confirmed improvement.",
+  "references": [
+    "https://nextjs.org/docs/app/guides/package-bundling",
+    "https://nextjs.org/docs/app/api-reference/cli/next",
+    "https://nextjs.org/docs/app/api-reference/config/next-config-js/turbopackFileSystemCache",
+    "https://nextjs.org/docs/app/api-reference/config/next-config-js/optimizePackageImports",
+    "https://nextjs.org/docs/app/api-reference/turbopack",
+    "https://nextjs.org/docs/app/guides/upgrading/version-16",
+    "https://nextjs.org/docs/app/guides/lazy-loading"
+  ]
+}

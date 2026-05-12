@@ -1,0 +1,16 @@
+{
+  "package_manager": "",
+  "app_dir": "",
+  "build_command": "",
+  "test_command": "",
+  "typecheck_command": "",
+  "budget_dir": ".bundle-budgets",
+  "_setup_instructions": {
+    "package_manager": "One of: npm, pnpm, yarn, bun. Detect from lockfile if unsure (pnpm-lock.yaml, yarn.lock, bun.lockb, package-lock.json).",
+    "app_dir": "Absolute or relative path to the Next.js app root (the dir containing next.config.{js,ts}). Use '.' if running from inside the app.",
+    "build_command": "Command that runs `next build`. Examples: 'npm run build', 'pnpm build', 'yarn build'. Leave blank to default to '<package_manager> run build'.",
+    "test_command": "Command that runs the test suite. Examples: 'npm test', 'pnpm vitest run', 'jest --ci'. Leave blank to skip test verification.",
+    "typecheck_command": "Command that type-checks without emitting. Default: 'npx tsc --noEmit'. Override if the project uses a different command (e.g. 'pnpm run typecheck').",
+    "budget_dir": "Optional. Directory (relative to the Next.js app) where per-route bundle budgets live. Default: '.bundle-budgets'. Not strictly required for the iteration loop."
+  }
+}
