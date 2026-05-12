@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Drizzle ORM + SQLite",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Parameterized templates for scaffolding Drizzle ORM + SQLite boilerplate that bakes in the 45 rules from the `drizzle-sqlite` skill. Produces a drizzle.config.ts + singleton client with pragmas + per-table schema/repository/validator modules — every output has explicit primary keys, indexed foreign keys, declared relations(), boolean/timestamp_ms column modes, and CRUD helpers that use `.returning()`, `inArray()`, and `.onConflictDoUpdate()` by default.",
+  "references": [
+    "https://orm.drizzle.team/docs/get-started-sqlite",
+    "https://orm.drizzle.team/docs/sql-schema-declaration",
+    "https://orm.drizzle.team/docs/relations",
+    "https://orm.drizzle.team/docs/drizzle-config-file",
+    "https://orm.drizzle.team/docs/zod"
+  ]
+}

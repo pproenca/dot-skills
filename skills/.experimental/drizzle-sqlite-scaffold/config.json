@@ -1,0 +1,18 @@
+{
+  "driver": "",
+  "db_url_env": "DATABASE_URL",
+  "schema_dir": "./src/db/schema",
+  "repository_dir": "./src/db/repository",
+  "validators_dir": "./src/db/validators",
+  "client_path": "./src/db/client.ts",
+  "migrations_dir": "./drizzle",
+  "_setup_instructions": {
+    "driver": "Which SQLite driver this project uses. One of: 'better-sqlite3' (sync, Node), 'libsql' (async, Turso or local file), 'bun-sqlite' (sync, Bun runtime), 'd1' (async, Cloudflare Workers).",
+    "db_url_env": "Environment variable holding the database URL. Defaults to DATABASE_URL.",
+    "schema_dir": "Where per-table schema files are emitted. Each table becomes {schema_dir}/{name}.ts.",
+    "repository_dir": "Where per-table repository (CRUD) modules are emitted.",
+    "validators_dir": "Where drizzle-zod validators are emitted (only used when with_zod=true).",
+    "client_path": "Path to the singleton Drizzle client module.",
+    "migrations_dir": "drizzle-kit output folder. Both SQL files and meta/ snapshots must be committed."
+  }
+}
