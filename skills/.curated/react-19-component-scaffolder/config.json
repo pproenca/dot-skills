@@ -1,0 +1,16 @@
+{
+  "module_path": "src/components",
+  "route_path": "app",
+  "hooks_path": "src/hooks",
+  "reducers_path": "src/state",
+  "test_runner": "vitest",
+  "import_alias": "@",
+  "_setup_instructions": {
+    "module_path": "Directory under the project root where components are generated. Common values: src/components, app/_components, src/ui.",
+    "route_path": "Directory where Server Component pages are generated. Common values: app (Next.js App Router), src/routes, app/(routes).",
+    "hooks_path": "Directory for custom hooks. Common values: src/hooks, src/lib/hooks, app/_hooks.",
+    "reducers_path": "Directory for reducer modules. Common values: src/state, src/store, src/reducers.",
+    "test_runner": "Test runner used in generated test files. Supported: vitest (default) or jest. Changes the imports in test templates.",
+    "import_alias": "TypeScript path-alias root for non-relative imports. Common values: @ (for @/lib/db) or src (for src/lib/db). Leave empty to use only relative imports."
+  }
+}

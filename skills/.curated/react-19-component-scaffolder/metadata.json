@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "React Best Practices",
+  "technology": "React 19",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Parameterized templates for scaffolding modern React 19 / 19.2 code in TypeScript: function components with ref-as-prop, Server Component pages with inline metadata and resource hints, client islands, form-action forms with useActionState + Zod schema, context providers with the React 19 <Context value={...}> syntax, YMNNAE-compliant custom hooks, and typed reducers with exhaustive discriminated unions. Refuses to generate deprecated React 18 patterns (forwardRef, <Context.Provider>, useFormState, react-dom/test-utils, react-helmet). Pairs with the react distillation skill.",
+  "references": [
+    "https://react.dev",
+    "https://react.dev/blog/2024/04/25/react-19-upgrade-guide",
+    "https://react.dev/blog/2024/12/05/react-19",
+    "https://react.dev/blog/2025/10/01/react-19-2",
+    "https://react.dev/learn/you-might-not-need-an-effect"
+  ]
+}
