@@ -1,6 +1,8 @@
 ---
 name: invalid--name
 description: This skill has consecutive hyphens in the name which should fail validation.
+metadata:
+  internal: true
 ---
 
 # Invalid Name Skill

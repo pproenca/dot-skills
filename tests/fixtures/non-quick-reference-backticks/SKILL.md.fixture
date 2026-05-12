@@ -1,0 +1,16 @@
+---
+name: non-quick-reference-backticks
+description: Fixture proving backticked skill names outside Quick Reference are not treated as reference rules.
+metadata:
+  internal: true
+---
+
+# Non Quick Reference Backticks
+
+This fixture has a references directory but no Quick Reference section. Backticked
+skill names in ordinary sections should not require same-named reference files.
+
+## Related Skills
+
+- `react-19-component-scaffolder` - Related skill link, not a rule reference
+- `tailwind-refactor` - Related skill link, not a rule reference

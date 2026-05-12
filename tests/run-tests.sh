@@ -7,7 +7,14 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_ROOT="$(dirname "$SCRIPT_DIR")"
 SKILLS_REF="$PROJECT_ROOT/scripts/skills-ref"
-FIXTURES="$SCRIPT_DIR/fixtures"
+SOURCE_FIXTURES="$SCRIPT_DIR/fixtures"
+FIXTURES="$(mktemp -d)"
+trap 'rm -rf "$FIXTURES"' EXIT
+
+cp -R "$SOURCE_FIXTURES/." "$FIXTURES/"
+while IFS= read -r fixture; do
+  mv "$fixture" "${fixture%.fixture}"
+done < <(find "$FIXTURES" -name "SKILL.md.fixture" -type f)
 
 # Colors
 RED='\033[0;31m'
@@ -84,6 +91,7 @@ test_case "Inline-comment description measures post-strip length" "pass" "$FIXTU
 
 # Test reference consistency
 test_case "Missing reference files fails" "fail" "$FIXTURES/missing-references"
+test_case "Backticked bullets outside Quick Reference are ignored" "pass" "$FIXTURES/non-quick-reference-backticks"
 
 # Test to-prompt XML safety
 test_to_prompt_cdata_safety

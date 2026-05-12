@@ -73,6 +73,7 @@ Design and development guide for AI agent skills, including Claude Code skills a
 - `struct-code-blocks-with-language` - Specify language in code blocks
 - `struct-line-limit` - Keep SKILL.md under 500 lines
 - `struct-single-responsibility` - One skill per domain
+- `project-conventions` - Preserve repository-specific skill conventions
 
 ### 4. Trigger Optimization (HIGH)
 

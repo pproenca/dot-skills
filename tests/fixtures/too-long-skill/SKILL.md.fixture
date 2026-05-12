@@ -1,6 +1,8 @@
 ---
 name: too-long-skill
 description: This skill has more than 500 lines which should fail validation.
+metadata:
+  internal: true
 ---
 
 # Too Long Skill

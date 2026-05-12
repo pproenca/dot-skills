@@ -121,6 +121,7 @@ generate_table() {
     name=$(basename "$skill_dir")
     [[ "$name" == "experimental" ]] && continue  # Skip nested experimental dir
     [[ "$name" == ".gitkeep" ]] && continue
+    [[ ! -f "$skill_dir/SKILL.md" ]] && continue
 
     local desc
     desc=$(extract_description "$skill_dir")

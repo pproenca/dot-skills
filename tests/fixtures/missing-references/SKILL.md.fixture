@@ -1,6 +1,8 @@
 ---
 name: missing-references
 description: This skill references rules that do not have corresponding files in the references directory.
+metadata:
+  internal: true
 ---
 
 # Missing References Skill

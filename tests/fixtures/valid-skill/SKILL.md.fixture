@@ -1,6 +1,8 @@
 ---
 name: valid-skill
 description: A valid test skill with proper formatting. This skill should pass all validations and serves as a reference for the expected format.
+metadata:
+  internal: true
 ---
 
 # Valid Skill

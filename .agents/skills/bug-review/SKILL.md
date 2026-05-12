@@ -1,6 +1,8 @@
 ---
 name: bug-review
 description: Use this skill when a user asks to review a pull request for bugs, wants AI code review focused on correctness issues, or runs /bug-review. Trigger on PR review, bug finding, code review, "review this PR", "check for bugs", "find issues in this PR". This is a multi-pass review workflow with 5 parallel passes, majority voting, independent Opus validation, and resolution rate tracking. Also trigger on /bug-review:resolve to classify whether findings were fixed at merge time, and /bug-review:report for resolution rate stats. Even if the user just says "review this" while on a PR branch, trigger this skill.
+metadata:
+  internal: true
 ---
 
 # Bug Review v2

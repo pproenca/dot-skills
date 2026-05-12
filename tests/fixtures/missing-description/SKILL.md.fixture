@@ -1,5 +1,7 @@
 ---
 name: missing-description
+metadata:
+  internal: true
 ---
 
 # Missing Description Skill

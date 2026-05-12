@@ -16,13 +16,16 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [msw](skills/.curated/msw) | MSW (Mock Service Worker) best practices for API mocking in tests |
 | [mui-base](skills/.curated/mui-base) | MUI Base UI style guidelines for building headless React component libraries |
 | [nextjs](skills/.curated/nextjs) | Next.js 16 App Router performance optimization guidelines |
-| [nuqs](skills/.curated/nuqs) | nuqs (type-safe URL query state) best practices for Next.js applications |
+| [nuqs-codemod-runner](skills/.curated/nuqs-codemod-runner) | Use this skill whenever a codebase has nuqs code that may be stuck on pre-v2.5 patterns —.. |
+| [nuqs-scaffolder](skills/.curated/nuqs-scaffolder) | Use this skill whenever you need to add URL-state filters to a Next.js page, build a typed.. |
+| [nuqs](skills/.curated/nuqs) | nuqs (type-safe URL query state) best practices for Next.js and other React frameworks |
 | [playwright](skills/.curated/playwright) | Playwright testing best practices for Next.js applications |
 | [python](skills/.curated/python) | Python 3.11+ performance optimization guidelines |
 | [rails-dev](skills/.curated/rails-dev) | Ruby on Rails performance and maintainability optimization guidelines for building backend APIs.. |
 | [rails-testing](skills/.curated/rails-testing) | Ruby on Rails testing best practices for writing effective, maintainable test suites with RSpec |
+| [react-19-component-scaffolder](skills/.curated/react-19-component-scaffolder) | Use this skill whenever scaffolding new React 19 / React 19.2 code in TypeScript — components,.. |
 | [react-hook-form](skills/.curated/react-hook-form) | React Hook Form performance optimization for client-side form validation using useForm,.. |
-| [react](skills/.curated/react) | React 19 performance optimization guidelines for concurrent rendering, Server Components,.. |
+| [react](skills/.curated/react) | React 19/19.2 modern patterns for concurrent rendering, Server Components, actions, ref-as-prop,.. |
 | [refactor](skills/.curated/refactor) | Code refactoring best practices based on Martin Fowler's catalog and Clean Code principles |
 | [restful-hateoas](skills/.curated/restful-hateoas) | RESTful API design guidelines following the Richardson Maturity Model through to Level 3.. |
 | [ruby-optimise](skills/.curated/ruby-optimise) | Ruby performance optimization guidelines |
@@ -51,16 +54,24 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
 | [audio-voice-recovery](skills/.experimental/audio-voice-recovery) | Audio forensics and voice recovery guidelines for CSI-level audio analysis |
+| [base-ui-migrator](skills/.experimental/base-ui-migrator) | Use this skill whenever the user wants to migrate React UI code to Base UI (`@base-ui/react`) —.. |
+| [bug-review](skills/.experimental/bug-review) | Use this skill when a user asks to review a pull request for bugs, wants AI code review focused.. |
+| [build-mcp-server](skills/.experimental/build-mcp-server) | This skill should be used when the user asks to "build an MCP server", "create an MCP", "make an.. |
 | [chrome-extension-ui](skills/.experimental/chrome-extension-ui) | Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content.. |
 | [chrome-extension](skills/.experimental/chrome-extension) | Chrome Extensions (Manifest V3) performance and code quality guidelines |
 | [clean-architecture](skills/.experimental/clean-architecture) | Clean Architecture principles and best practices from Robert C |
 | [clean-code](skills/.experimental/clean-code) | Use when writing, reviewing, or refactoring code for maintainability and readability |
+| [cli-for-agents](skills/.experimental/cli-for-agents) | Use this skill whenever designing, building, or reviewing a command-line tool that AI agents or.. |
+| [cli-review-runner](skills/.experimental/cli-review-runner) | Use this skill whenever reviewing, auditing, or grading a command-line tool for.. |
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
+| [diagram-quality](skills/.experimental/diagram-quality) | Use this skill whenever calling agent-uml MCP tools (design_create, diagram_upsert,.. |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
 | [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |
+| [effect-ts](skills/.experimental/effect-ts) | Use this skill whenever writing, reviewing, debugging, or refactoring TypeScript code that uses.. |
 | [emilkowal-animations](skills/.experimental/emilkowal-animations) | Emil Kowalski's animation best practices for web interfaces |
+| [eval-mcp](skills/.experimental/eval-mcp) | Use this skill when the user asks to "evaluate MCP tools", "test tool selection", "improve tool.. |
 | [exec-plan](skills/.experimental/exec-plan) | Manage the lifecycle of ExecPlans — self-contained, living specifications for multi-step work |
 | [expo-react-native-coder](skills/.experimental/expo-react-native-coder) | Comprehensive Expo React Native feature development guide |
 | [expo-react-native-performance](skills/.experimental/expo-react-native-performance) | Expo React Native performance optimization guidelines |
@@ -76,18 +87,22 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [ios-hig](skills/.experimental/ios-hig) | Apple Human Interface Guidelines for iOS 26 / Swift 6.2 clinic-architecture apps |
 | [ios-navigation](skills/.experimental/ios-navigation) | Opinionated SwiftUI navigation enforcement for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |
 | [ios-storyboard](skills/.experimental/ios-storyboard) | Legacy interoperability skill for Storyboard and Interface Builder maintenance in iOS 26 / Swift.. |
-| [ios-taste](skills/.experimental/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
 | [ios-testing](skills/.experimental/ios-testing) | Testing practices for iOS 26 / Swift 6.2 clinic modular MVVM-C applications |
 | [ios-ui-refactor](skills/.experimental/ios-ui-refactor) | Principal-level SwiftUI UI review and refactoring patterns for iOS 26 / Swift 6.2.. |
 | [ios-xcode](skills/.experimental/ios-xcode) | Xcode setup and tooling guidance for iOS 26 / Swift 6.2 clinic modular MVVM-C projects covering.. |
 | [js-google](skills/.experimental/js-google) | JavaScript style and best practices based on Google's official JavaScript Style Guide |
 | [jscodeshift](skills/.experimental/jscodeshift) | jscodeshift codemod development best practices from Facebook/Meta |
 | [knip-deadcode](skills/.experimental/knip-deadcode) | Knip dead code detection best practices for JavaScript and TypeScript projects |
+| [marketplace-personalisation](skills/.experimental/marketplace-personalisation) | Use this skill whenever designing, building, debugging, reviewing, or improving a.. |
+| [marketplace-pre-member-personalisation](skills/.experimental/marketplace-pre-member-personalisation) | Use this skill whenever designing, building, reviewing, or diagnosing the pre-member journey of.. |
+| [marketplace-recsys-feature-engineering](skills/.experimental/marketplace-recsys-feature-engineering) | Use this skill whenever deciding what features to extract from raw marketplace assets — listing.. |
+| [marketplace-search-recsys-planning](skills/.experimental/marketplace-search-recsys-planning) | Use this skill whenever planning, designing, reviewing, or improving search and recommendation.. |
 | [nginx-c-module-debug](skills/.experimental/nginx-c-module-debug) | nginx C module debugging guidelines based on the official nginx development guide |
 | [nginx-c-module-design](skills/.experimental/nginx-c-module-design) | nginx C module directive design guidelines for creating admin-friendly configuration interfaces |
 | [nginx-c-module-perf](skills/.experimental/nginx-c-module-perf) | nginx C module performance optimization and reliability guidelines based on the official nginx.. |
 | [nginx-c-modules](skills/.experimental/nginx-c-modules) | nginx C module development guidelines based on the official nginx development guide |
-| [opencode-ts](skills/.experimental/opencode-ts) | Write and refactor TypeScript code that fits the opencode codebase |
+| [openai-codex-rust-patterns](skills/.experimental/openai-codex-rust-patterns) | OpenAI Codex Rust coding patterns distilled from the codex-rs workspace |
+| [opencode-ts](skills/.experimental/opencode-ts) | Write and refactor TypeScript code in repos that use Effect-TS services, Zod schemas,.. |
 | [orval](skills/.experimental/orval) | Orval OpenAPI TypeScript client generation best practices |
 | [pulumi](skills/.experimental/pulumi) | Pulumi infrastructure as code performance and reliability guidelines |
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
@@ -105,6 +120,8 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [tailwind-refactor](skills/.experimental/tailwind-refactor) | Tailwind CSS code refactoring patterns for v4 migration and anti-pattern cleanup |
 | [tailwind-responsive-ui](skills/.experimental/tailwind-responsive-ui) | Responsive UI transformation patterns for Tailwind CSS applications |
 | [tailwind-ui-refactor](skills/.experimental/tailwind-ui-refactor) | Refactoring UI design patterns for Tailwind CSS applications |
+| [threat-model](skills/.experimental/threat-model) | Use this skill whenever performing security threat modeling, attack surface mapping, or trust.. |
+| [threat-patch](skills/.experimental/threat-patch) | Use this skill to remediate security findings by producing minimal, surgical code patches |
 | [ts-google](skills/.experimental/ts-google) | Google TypeScript style guide for writing clean, consistent, type-safe code |
 | [typescript-refactor](skills/.experimental/typescript-refactor) | TypeScript refactoring and modernization guidelines from a principal specialist perspective |
 | [uniwind](skills/.experimental/uniwind) | Uniwind best practices for React Native styling with Tailwind CSS |

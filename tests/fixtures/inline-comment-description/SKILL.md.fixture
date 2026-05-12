@@ -1,6 +1,8 @@
 ---
 name: inline-comment-description
 description: Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. Use this skill for testing inline-comment handling. # YAML comment that must be stripped before the 1024-char limit is measured; if it leaks the validator wrongly fails this fixture even though the real description is well under the limit.
+metadata:
+  internal: true
 ---
 
 # Inline Comment Description

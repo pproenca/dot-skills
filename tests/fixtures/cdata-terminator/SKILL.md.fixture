@@ -1,6 +1,8 @@
 ---
 name: cdata-terminator
 description: Fixture containing a CDATA terminator to test XML-safe prompt generation.
+metadata:
+  internal: true
 ---
 
 # CDATA Terminator Fixture

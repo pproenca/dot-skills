@@ -14,6 +14,8 @@ description: >
   laborum. Curabitur pretium tincidunt lacus. Nulla gravida orci a odio. Nullam
   varius, turpis et commodo pharetra, est eros bibendum elit, nec luctus magna felis
   sollicitudin mauris. Integer in mauris eu nibh euismod gravida.
+metadata:
+  internal: true
 ---
 
 # Long Folded Description

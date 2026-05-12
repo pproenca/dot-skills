@@ -150,12 +150,21 @@ validate_references_consistency() {
     return 0
   fi
 
-  # Extract rule slugs from Quick Reference list items only
+  # Extract rule slugs from the exact "## Quick Reference" section only.
   # Format: "- `rule-slug` - Description"
-  # This avoids picking up cross-skill references in prose text
+  # This avoids picking up parameters, rejected API names, or related-skill links.
   local quick_ref_rules
-  quick_ref_rules=$(grep -E '^- `[a-z]+-[a-z0-9-]+`' "$skill_md" 2>/dev/null | \
-    grep -oE '`[a-z]+-[a-z0-9-]+`' | tr -d '`' | sort -u || true)
+  quick_ref_rules=$(awk '
+    /^##[[:space:]]+Quick Reference[[:space:]]*$/ { in_quick_reference = 1; next }
+    in_quick_reference && /^##[[:space:]]+/ { in_quick_reference = 0 }
+    in_quick_reference && /^- `[a-z]+-[a-z0-9-]+`/ {
+      line = $0
+      while (match(line, /`[a-z]+-[a-z0-9-]+`/)) {
+        print substr(line, RSTART + 1, RLENGTH - 2)
+        line = substr(line, RSTART + RLENGTH)
+      }
+    }
+  ' "$skill_md" 2>/dev/null | sort -u || true)
 
   # Get actual reference files (excluding _*.md like _sections.md)
   local ref_files
