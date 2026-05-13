@@ -18,6 +18,17 @@ Comprehensive React 19/19.2 best-practices guide for AI agents. Contains 44 rule
 - Configuring React Compiler for automatic memoization
 - Reviewing React code for common anti-patterns or outdated React 18 idioms
 
+## How to Review or Refactor Multi-File Sets
+
+**When the user asks to review, refactor, modernize, or audit React code — especially across more than one file — follow [`references/_review-algorithm.md`](references/_review-algorithm.md) instead of going rule-by-rule on each file.**
+
+Two non-negotiables from that doc:
+
+1. **Judgment over grep.** Each rule is keyed off a syntactic marker (`forwardRef`, `useFormState`, `<Context.Provider>`, etc.) — grep finds the easy violations and *misses* the high-value ones (a manually drilled callback ref because the author dodged `forwardRef`; an `onSubmit` doing the work of `useActionState`; a `useState` + `useEffect` shaped like derived state). Use grep only for inventory or post-hoc completeness checks, never as the primary detector.
+2. **Category-major, not file-major.** Load all target files first, then sweep **one category at a time across all files** in priority order (CRITICAL → LOW-MEDIUM). Reports group by category, surfacing cross-file clusters. File-by-file iteration causes late files and low-priority categories to silently get skipped.
+
+Single-file ad-hoc questions ("is this hook OK?") can go straight to the relevant rule. The algorithm exists for the multi-file case where consistency and coverage matter.
+
 ## Rule Categories
 
 | Category | Impact | Rules | Key Topics |

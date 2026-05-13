@@ -66,6 +66,17 @@ On first use, populate `config.json` with project-specific paths so generated fi
 - `hooks_path` — Where custom hooks live (e.g., `src/hooks`)
 - `test_runner` — `vitest` (default) or `jest` (changes the imports in test templates)
 
+## Conforming Existing Code (Multi-File Refactor)
+
+When the user asks to **conform, modernize, or align existing components with this skill's conventions** across one or more files — not to generate new code — follow [`references/_conform-algorithm.md`](references/_conform-algorithm.md) instead of going file-by-file.
+
+Two non-negotiables from that doc:
+
+1. **Judgment over grep.** Every convention is keyed off a syntactic marker (`forwardRef`, `<Context.Provider>`, `react-helmet`, `onSubmit=`, `react-dom/test-utils`). Grep finds the easy cases and *misses* the disguised ones — a manually drilled callback ref because the author dodged `forwardRef`, a bespoke `useState({ pending, error })` that's `useActionState` without the name, a `document.title` hand-roll. Use grep for inventory and post-hoc completeness only, never as the primary detector.
+2. **Convention-major, not file-major.** Load all target files first, then sweep one convention at a time across all files in priority order (refs/context/forms first, naming/imports last). Reports group by convention, surfacing cross-file clusters.
+
+For brand-new scaffolds, skip this — go straight to a template.
+
 ## React 19 Patterns This Skill Refuses to Generate
 
 - `forwardRef(...)` wrappers — emits `function Name({ ref, ...props })` instead
