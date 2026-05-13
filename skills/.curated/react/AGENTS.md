@@ -1,6 +1,6 @@
 # React 19 Best Practices
 
-**Version 1.2.0**
+**Version 1.3.0**
 curated
 May 2026
 
