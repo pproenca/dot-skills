@@ -1,0 +1,18 @@
+{
+  "ttfc_target_seconds": 60,
+  "apply_mode": "scratch",
+  "audit_log_path": "${CLAUDE_PLUGIN_DATA}/dx-harness/audits.log",
+  "scratch_root": "${TMPDIR}",
+  "repo_root": "",
+  "preferred_task_runner": "auto",
+  "skip_checks": [],
+  "_setup_instructions": {
+    "ttfc_target_seconds": "Target seconds for time-to-first-commit (clone → first runnable change). Default 60 — the audit treats anything over this as a P1 finding.",
+    "apply_mode": "How scaffolded edits are applied: 'scratch' (write to scratch dir, user copies in — default and safest), 'stage' (write into working tree but don't commit), 'pr' (open a PR via gh CLI).",
+    "audit_log_path": "Where attrition history is persisted across runs. Defaults to plugin data dir so it survives skill upgrades.",
+    "scratch_root": "Parent dir for ephemeral worktrees and scaffold output. Defaults to $TMPDIR.",
+    "repo_root": "Absolute path to the repo being audited. Empty means use $PWD at invocation time.",
+    "preferred_task_runner": "When the repo has no existing runner: 'just', 'make', 'npm', or 'auto' (detect-or-skip). When the repo already has a runner, the skill always extends the existing one regardless of this value.",
+    "skip_checks": "List of audit check IDs to skip. See references/audit-checklist.md for IDs. Use sparingly — skipping checks defeats the point."
+  }
+}

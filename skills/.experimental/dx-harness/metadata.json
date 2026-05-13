@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "developer experience / dev harness",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "May 2026",
+  "abstract": "Audits, scaffolds, and maintains a repository's developer-experience harness — the meta-tooling (bootstrap, reset, seed, test commands, AGENTS.md) that determines time-to-first-commit and ongoing dev velocity. Detects DX attrition (manual chores creeping back, slowing bootstrap, undocumented conventions), then applies canonical fixes and verifies them in a scratch worktree. Targets <60s time-to-first-commit and one-command flows for every routine action.",
+  "references": [
+    "https://vercel.com/blog/the-future-of-developer-experience",
+    "https://just.systems/",
+    "https://increment.com/development/what-is-developer-experience/",
+    "https://leerob.io/blog/developer-experience-examples"
+  ]
+}

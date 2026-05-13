@@ -1,0 +1,37 @@
+# Agent & Developer Conventions
+
+This file is the table of contents to the dev loop. If you're an agent (or a new human), start here.
+
+Languages detected: **{{LANGUAGES}}**
+Task runner: **{{TASK_RUNNER}}**
+
+## Dev Loop
+
+| Action      | Command          |
+|-------------|------------------|
+| Bootstrap   | `{{BOOTSTRAP_CMD}}` |
+| Dev server  | `{{DEV_CMD}}`       |
+| Run tests   | `{{TEST_CMD}}`      |
+| Watch tests | `{{WATCH_CMD}}`     |
+| Reset state | `{{RESET_CMD}}`     |
+| Re-seed     | `{{SEED_CMD}}`      |
+
+Run `{{BOOTSTRAP_CMD}}` once after cloning. Use `{{RESET_CMD}}` whenever you want a clean slate — it re-runs bootstrap and re-seeds.
+{{DB_SECTION}}
+
+## Where things live
+
+- Source code: see top-level directories
+- Tests: alongside source or under a `tests/`/`test/`/`__tests__` directory
+- Configuration: `.env.example` shows what env vars are needed
+
+## Conventions for Agents
+
+1. **Run `{{TEST_CMD}}` before declaring a task complete.** If tests fail, fix them or surface the failure.
+2. **Use `{{RESET_CMD}}` instead of manual cleanup.** Don't re-register, re-login, or hand-edit the DB.
+3. **Read existing patterns before introducing new ones.** Match the file naming, module structure, and import style already in the codebase.
+4. **Update this file when you add new harness commands.** If you wire a new common command, add a row to the Dev Loop table.
+
+## When the harness drifts
+
+Run the dx-harness skill again. It will diff the current state against the audit log and surface regressions.
