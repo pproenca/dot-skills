@@ -96,6 +96,15 @@ test_case "Backticked bullets outside Quick Reference are ignored" "pass" "$FIXT
 # Test to-prompt XML safety
 test_to_prompt_cdata_safety
 
+# Run check-versions.mjs integration tests (their own runner, own counts).
+if "$SCRIPT_DIR/check-versions.test.sh"; then
+  PASS=$((PASS + 1))
+  echo -e "${GREEN}✓${NC} check-versions.mjs integration suite"
+else
+  FAIL=$((FAIL + 1))
+  echo -e "${RED}✗${NC} check-versions.mjs integration suite"
+fi
+
 echo ""
 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
 if [ $FAIL -eq 0 ]; then
