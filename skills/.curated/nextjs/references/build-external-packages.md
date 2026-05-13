@@ -1,13 +1,23 @@
 ---
-title: Configure Server External Packages for Node Dependencies
+title: Mark Node packages with native bindings or non-bundleable resolution as serverExternalPackages
 impact: HIGH
-impactDescription: prevents bundling issues, faster builds
-tags: build, external-packages, node-modules, server
+impactDescription: prevents build failures with native bindings, eliminates bundle bloat from packages that can't ship as ESM, faster server builds
+tags: build, server-external, native-bindings, node-require
 ---
 
-## Configure Server External Packages for Node Dependencies
+## Mark Node packages with native bindings or non-bundleable resolution as serverExternalPackages
 
-Some Node.js packages with native bindings or complex dependencies should not be bundled. Use `serverExternalPackages` to exclude them from the server bundle.
+**Pattern intent:** some Node packages ship native `.node` binaries, use `require()` at runtime to resolve drivers, or pull in heavy peer trees that the bundler can't trace. Trying to bundle them either fails the build or produces a broken artifact. `serverExternalPackages` tells Next.js "don't try; load this from `node_modules` at runtime."
+
+### Shapes to recognize
+
+- A build error like "Module not found: Can't resolve './build/Release/...'" — almost always a native-binding package being bundled.
+- `puppeteer`, `sharp`, `canvas`, `bcrypt`, `argon2`, `node-gyp`-built packages used in Server Components or route handlers without being listed.
+- Database drivers (`pg`, `mysql2`, `better-sqlite3`, `@prisma/client`) imported from server-only code without externalization — sometimes works, sometimes catastrophically large bundles.
+- A workaround `next.config.js` with custom webpack `externals: [...]` config — pre-Turbopack era; should be `serverExternalPackages` in App Router.
+- A `try { require(...) }` wrapping an import to "be safe" — masks the real issue; configuring `serverExternalPackages` removes the need.
+
+The canonical resolution: list the offenders in `serverExternalPackages` in `next.config`. Next.js loads them from `node_modules` at runtime rather than trying to bundle them.
 
 **Incorrect (bundling native modules):**
 

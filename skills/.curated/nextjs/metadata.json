@@ -1,9 +1,10 @@
 {
-  "version": "1.0.2",
+  "version": "1.0.3",
   "organization": "Next.js Community",
   "technology": "Next.js 16 App Router",
   "date": "January 2026",
-  "abstract": "Comprehensive performance optimization guide for Next.js 16 App Router applications, designed for AI agents and LLMs. Contains 40+ rules across 8 categories, prioritized by impact from critical (build optimization, caching strategy) to incremental (client components). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "discipline": "distillation",
+  "abstract": "Comprehensive Next.js 16 App Router guide for AI agents and LLMs. Contains 45 rules across 9 categories, prioritized by impact from critical (build optimization, caching strategy) through to cross-cutting codebase hygiene (dedup, dead routes, boundary coherence). Covers Next.js 16 changes (`'use cache'` directive replacing implicit caching, `revalidateTag(tag, cacheLife)` requirement, `proxy.ts` replacing `middleware.ts`, Turbopack persistent caching) and App Router conventions (parallel routes, intercepting routes, server actions, server components). Rule files describe pattern shapes (not API names) and open with a 'Shapes to recognize' section listing 2-4 syntactic disguises the same break can wear. Selected high-value rules — those whose disguises are most common in practice — include a concrete 'In disguise' incorrect/correct example pair to teach pattern detection beyond grep-friendly cases. Ships a category-major review/refactor algorithm with two modes (scoped vs whole-repo) and forcing functions (scope declaration, per-category progress lines, coverage table) that make silent category skipping immediately visible.",
   "references": [
     "https://nextjs.org/docs",
     "https://nextjs.org/blog/next-16",

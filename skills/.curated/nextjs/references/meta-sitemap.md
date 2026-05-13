@@ -1,13 +1,23 @@
 ---
-title: Generate Sitemaps Dynamically
+title: Generate sitemaps at build/request time from the actual data — never hand-maintain `public/sitemap.xml`
 impact: MEDIUM
-impactDescription: improved crawlability, faster indexing
-tags: meta, sitemap, seo, crawling
+impactDescription: every dynamic route is discoverable; lastModified reflects real changes; updates ship automatically
+tags: meta, sitemap-ts, dynamic-sitemap, crawl-discovery
 ---
 
-## Generate Sitemaps Dynamically
+## Generate sitemaps at build/request time from the actual data — never hand-maintain `public/sitemap.xml`
 
-Create dynamic sitemaps that include all your pages with proper last-modified dates. This helps search engines discover and index content efficiently.
+**Pattern intent:** the sitemap is a map of the live pages. A hand-maintained `public/sitemap.xml` drifts the moment new content ships. `app/sitemap.ts` generates the sitemap from the source of truth (DB, CMS) at build or request time.
+
+### Shapes to recognize
+
+- A `public/sitemap.xml` that lists `/`, `/about`, `/contact` but no dynamic content — every blog post, product, profile is invisible to crawlers.
+- A `sitemap.xml` last updated months ago — stale `lastmod` dates tell crawlers nothing changed.
+- A custom Express/Edge route returning sitemap XML by hand — works but reinvents what `app/sitemap.ts` provides natively.
+- A static sitemap *plus* an `app/sitemap.ts` — Next.js will be confused about which one wins; remove the static one.
+- A sitemap missing `<lastmod>` values — crawlers don't know what to re-fetch.
+
+The canonical resolution: `export default async function sitemap(): Promise<MetadataRoute.Sitemap>` returning entries `{ url, lastModified, changeFrequency, priority }`. Fetch dynamic content (posts, products) and `.map(...)` into entries. For 50k+ URLs, split into paginated sitemaps via `[id]/route.ts`.
 
 **Incorrect (static sitemap missing dynamic routes):**
 

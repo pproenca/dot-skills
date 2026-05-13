@@ -1,13 +1,23 @@
 ---
-title: Handle Server Action Errors Gracefully
+title: Server Actions return a typed error/state result — never throw silently or rely on the client to know what failed
 impact: MEDIUM-HIGH
-impactDescription: prevents silent failures, better error UX
-tags: action, error-handling, validation, useActionState
+impactDescription: makes validation/business-rule failures visible at the form; `useActionState` consumes the typed result for declarative error rendering
+tags: action, action-result, useActionState, typed-errors
 ---
 
-## Handle Server Action Errors Gracefully
+## Server Actions return a typed error/state result — never throw silently or rely on the client to know what failed
 
-Return error states from Server Actions instead of throwing. Use `useActionState` to manage form state and display errors.
+**Pattern intent:** validation and business-rule failures inside a Server Action should return a typed state object (`{ error: string }` or `{ errors: { field: string[] } }`), not throw. The client form pairs the action with `useActionState`, which surfaces the returned state directly.
+
+### Shapes to recognize
+
+- A `'use server'` action that throws on validation failure — the error bubbles to `error.tsx` instead of being displayed inline at the form.
+- An action that calls `console.error('Invalid input')` and `return undefined` — silent failure; user has no idea why nothing happened.
+- An action with a `try/catch` that swallows errors and returns `null` — silently drops user input.
+- An action that returns `{ error: e.message }` but the caller doesn't render `state.error` anywhere — the typed result exists but isn't surfaced.
+- An action that uses `redirect` *as* the error path (`if (!ok) redirect('/error')`) — loses field-level error context; user can't fix the form.
+
+The canonical resolution: define a typed state (`{ error?, success?, errors? }`); validate first, return `{ error }` on failure; on success do the mutation, `revalidatePath`/`revalidateTag`, and either `redirect` or `return { success: true }`. The form uses `useActionState(action, {})`.
 
 **Incorrect (unhandled errors):**
 

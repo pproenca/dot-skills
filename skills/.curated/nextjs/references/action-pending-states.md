@@ -1,13 +1,23 @@
 ---
-title: Show Pending States with useFormStatus
+title: Submit buttons read parent-form pending state from `useFormStatus` — not from a prop drilled in
 impact: MEDIUM-HIGH
-impactDescription: better UX during form submission
-tags: action, useFormStatus, pending, loading
+impactDescription: proper "Saving..." indicators and double-submit prevention without threading `isPending` through every form's prop tree
+tags: action, form-status-context, submit-button, pending-state
 ---
 
-## Show Pending States with useFormStatus
+## Submit buttons read parent-form pending state from `useFormStatus` — not from a prop drilled in
 
-Use `useFormStatus` to show loading indicators and disable buttons during form submission. This provides immediate feedback to users.
+**Pattern intent:** the submit button knows whether *its* containing form is submitting via `useFormStatus` from `react-dom`. That information comes from the form context, not from a `useState` cell lifted to the parent.
+
+### Shapes to recognize
+
+- A submit button with `disabled={isPending}` where `isPending` is a `useState` lifted from the page-level component and threaded through `<Form><Button isPending={isPending}/></Form>`.
+- A form with no pending feedback at all — user clicks "Create" three times because nothing happens visibly.
+- `useFormStatus()` called in the *same component* as the `<form>` — returns `pending: false` always, because the hook reads the parent form's status. The fix is to extract the button to a child component.
+- A "form context" hand-rolled by the team to share submit state — reinvented `useFormStatus`.
+- A workaround calling `useTransition` in the consumer to track submission — works for non-form mutations, but for form actions `useFormStatus` is the right primitive.
+
+The canonical resolution: extract submit button into a separate Client Component; that component calls `useFormStatus()` and reads `{ pending, data, method }` from the surrounding form context.
 
 **Incorrect (no feedback during submission):**
 

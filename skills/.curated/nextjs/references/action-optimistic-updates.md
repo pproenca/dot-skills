@@ -1,13 +1,23 @@
 ---
-title: Use Optimistic Updates for Instant Feedback
+title: Mutations whose UI outcome is predictable apply optimistically with `useOptimistic` — automatic rollback on server failure
 impact: MEDIUM
-impactDescription: instant UI response, better perceived performance
-tags: action, optimistic, useOptimistic, mutation
+impactDescription: 0ms perceived latency for high-frequency actions (likes, toggles, add-to-cart); automatic revert on failure with no manual snapshot/restore
+tags: action, optimistic-ui, useOptimistic, instant-feedback
 ---
 
-## Use Optimistic Updates for Instant Feedback
+## Mutations whose UI outcome is predictable apply optimistically with `useOptimistic` — automatic rollback on server failure
 
-Use `useOptimistic` to update UI immediately before the server confirms. If the action fails, React reverts to the previous state.
+**Pattern intent:** "click → wait 200-500ms → see result" feels sluggish. For high-frequency UI actions (likes, toggles, follow, add-to-cart) where the new state is deterministic, apply the change immediately and let `useOptimistic` revert if the server rejects.
+
+### Shapes to recognize
+
+- A `'Like'` button that calls a Server Action and `await`s before updating UI — the heart icon flashes ~300ms after the click.
+- A toggle that shows a spinner during submission — the spinner is the only feedback for an instant operation.
+- A "favorite" button storing state in `useState`, manually mutating on click, manually rolling back in `catch` — handles the case but inconsistent across the app.
+- A shopping-cart "add" button that disables itself for ~500ms post-click — uses `useTransition` for pending state but doesn't update the cart count optimistically.
+- A workaround using SWR's `mutate(...)` with optimistic data — works in client-data-fetching contexts; `useOptimistic` is the React-native equivalent that pairs cleanly with Server Actions.
+
+The canonical resolution: `const [optimistic, addOptimistic] = useOptimistic(real, reducer)`. Call `addOptimistic(value)` inside the form action *before* `await`-ing the server call. React reverts automatically when the action settles, regardless of outcome.
 
 **Incorrect (waiting for server response):**
 

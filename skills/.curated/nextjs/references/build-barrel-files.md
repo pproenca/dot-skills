@@ -1,13 +1,24 @@
 ---
-title: Avoid Barrel File Imports in App Router
+title: Import from the source module, not from a barrel `index.ts` — barrel re-exports pessimize tree-shaking
 impact: CRITICAL
-impactDescription: 2-10× faster dev startup
-tags: build, imports, barrel-files, tree-shaking
+impactDescription: 2-10× faster dev startup when barrel files in hot paths are replaced with direct imports
+tags: build, barrel-file, direct-import, tree-shake
 ---
 
-## Avoid Barrel File Imports in App Router
+## Import from the source module, not from a barrel `index.ts` — barrel re-exports pessimize tree-shaking
 
-Barrel files (index.ts with re-exports) prevent tree-shaking and slow down development. Import directly from source files instead.
+**Pattern intent:** every import from a barrel file loads every module the barrel touches. In dev mode (where the bundler can't always prove unused exports are dead), one import becomes dozens of module loads. The fix is to import from the source file directly.
+
+### Shapes to recognize
+
+- `import { formatDate } from '@/lib/utils'` where `@/lib/utils/index.ts` is `export * from './formatDate'; export * from './formatCurrency'; ...` — every consumer pulls in everything.
+- A `components/ui/index.ts` re-exporting 30+ components, consumed from every page — every page touches the full re-export graph.
+- An *internal* package in a monorepo (`@org/ui`) whose root entry is a barrel — same problem at workspace scope.
+- A barrel that does `export * from './x'` (worst — loads everything in `./x`) vs `export { a } from './x'` (still loads `./x` once but compilers can sometimes optimize).
+- A barrel with side-effectful module imports — even setting `"sideEffects": false` doesn't always rescue you.
+- Workaround: route everything through `optimizePackageImports` — works for *some* packages but not your own; better to fix the barrel.
+
+The canonical resolution: import the file directly (`@/lib/utils/formatDate`) or set up TS path aliases that point at sources. For shared component libraries, prefer explicit per-component imports over a barrel.
 
 **Incorrect (imports through barrel file):**
 

@@ -1,13 +1,25 @@
 ---
-title: Use Parallel Routes for Independent Content
+title: Multi-region layouts that show independent content per region should use parallel-route slots, not one mega `page.tsx`
 impact: HIGH
-impactDescription: independent loading, streaming, error handling
-tags: route, parallel-routes, slots, layout
+impactDescription: each region gets its own loading/error/streaming lifecycle; one slow region doesn't block the whole layout
+tags: route, parallel-routes, slot, independent-streaming
 ---
 
-## Use Parallel Routes for Independent Content
+## Multi-region layouts that show independent content per region should use parallel-route slots, not one mega `page.tsx`
 
-Parallel routes (slots) render multiple pages simultaneously in the same layout. Each slot can have independent loading, error, and streaming states.
+**Pattern intent:** dashboards, multi-panel layouts, and apps with distinct regions (notifications | feed | sidebar | activity) benefit from rendering each region as a separate route slot (`@analytics/`, `@notifications/`). Each slot has its own `loading.tsx`, `error.tsx`, and streams independently.
+
+### Shapes to recognize
+
+- A single `page.tsx` for a multi-region layout that awaits N data sources before returning — one slow source blocks all regions.
+- A page that does `Promise.all([...])` of N independent fetches then renders N components — fine for fast data, but blocks streaming.
+- A layout with `<Header/>`, `<Sidebar/>`, `<Main/>`, `<Activity/>` all rendered directly — each region's loading and error states get tangled.
+- A "dashboard tile grid" rendered as a flat list of Server Components where each tile is async — works but the layout file has to know which tiles exist.
+- Custom "tile loader" abstraction with React Context to coordinate per-tile loading — reinvents parallel routes.
+
+The canonical resolution: create `app/<route>/@slotName/` directories with each region's `page.tsx`/`loading.tsx`/`error.tsx`. The layout accepts each slot as a named prop (`{ analytics, notifications, activity }`). Per-region streaming is automatic.
+
+Reference: [Parallel Routes](https://nextjs.org/docs/app/building-your-application/routing/parallel-routes)
 
 **Incorrect (sequential rendering in single page):**
 

@@ -1,13 +1,23 @@
 ---
-title: Pass Server Components as Children to Client Components
+title: Server content reaches inside a Client Component via `children` or named slots — not by being imported
 impact: LOW-MEDIUM
-impactDescription: keeps static content on server, reduces bundle
-tags: client, children, composition, server-components
+impactDescription: keeps static subtrees server-rendered when wrapped by a client-interactive parent; only the parent's interactivity ships to the client
+tags: client, children-slot, composition, server-inside-client
 ---
 
-## Pass Server Components as Children to Client Components
+## Server content reaches inside a Client Component via `children` or named slots — not by being imported
 
-Client Components can render Server Components passed as children. This keeps static content server-rendered while adding interactivity.
+**Pattern intent:** a Client Component (modal, accordion, sidebar, tab strip) that wraps static content should accept that content as `children`/slot props rendered from a Server Component parent — not import the static content directly. Direct imports across the boundary force the imported tree onto the client.
+
+### Shapes to recognize
+
+- A `'use client'` modal imports `<ProductDescription>` directly — `ProductDescription` is now bundled to the client even though it was meant to stay on the server.
+- An accordion / tab strip / drawer that conditionally renders an imported Server-Component-shaped child — the child renders client-side instead.
+- A layout shell that accepts no `children` and instead imports every section by name — every section becomes client-rendered.
+- Workaround: the author duplicates the static content into two components (one for SSR, one for client) — maintenance burden, drift risk.
+- Workaround: dynamic `import()` inside the Client Component to "defer" the import — works for code-splitting, doesn't help with the SSR/RSC distinction.
+
+The canonical resolution: the Client Component accepts `children: ReactNode` (or named slots like `header`/`sidebar`/`main`); a Server Component parent provides the slot content. Static content stays server-rendered; interactivity stays in the wrapper.
 
 **Incorrect (converting children to Client Components):**
 

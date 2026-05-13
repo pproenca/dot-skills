@@ -1,13 +1,25 @@
 ---
-title: Use Intercepting Routes for Modal Patterns
+title: Modal/lightbox detail views with shareable URLs should use intercepting routes — not client-state modals
 impact: HIGH
-impactDescription: enables shareable modal URLs, better UX
-tags: route, intercepting-routes, modal, navigation
+impactDescription: enables shareable modal URLs, browser back-button support, and refresh-survives-modal behavior with one routing convention
+tags: route, intercepting-routes, shareable-modal, deep-link
 ---
 
-## Use Intercepting Routes for Modal Patterns
+## Modal/lightbox detail views with shareable URLs should use intercepting routes — not client-state modals
 
-Intercepting routes display content in a modal when navigating client-side, while showing the full page on direct access or refresh. Perfect for image galleries, login modals, and detail views.
+**Pattern intent:** when a detail view should appear as a modal on internal navigation but as a full page on direct visit / refresh / share, intercepting routes are the React-native way. The URL is real, the back button works, and refresh-on-modal opens the full page.
+
+### Shapes to recognize
+
+- A photo gallery / product list where clicking an item opens a `useState`-driven modal — URL doesn't change; refresh closes the modal; sharing the URL doesn't deep-link to the item.
+- A "view profile" overlay that captures click events and renders a positioned div — same problem; not shareable.
+- A modal whose state is held in a `<Dialog open>` boolean tracked in URL search params via `?modal=...` — *almost* there, but loses the page semantics on refresh.
+- A workaround using `router.push(path, { shallow: true })` (a Pages-Router-era trick) — doesn't exist in App Router.
+- Two parallel implementations of the same view: a modal version in `'use client'` and a page version in a Server Component — should be one intercepting route with two entry paths.
+
+The canonical resolution: create `app/@modal/(.)<path>/page.tsx` (interception convention: `(.)` same level, `(..)` one up, `(...)` from root) that renders the content inside a `<Modal>` wrapper. The full-page version lives at `app/<path>/page.tsx`. Both fetch the same data via a shared cached fetcher.
+
+Reference: [Intercepting Routes](https://nextjs.org/docs/app/building-your-application/routing/intercepting-routes)
 
 **Incorrect (client-state modal without URL):**
 

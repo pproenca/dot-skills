@@ -1,13 +1,23 @@
 ---
-title: Colocate Data Fetching with Components
+title: Each Server Component fetches the data it renders — pull data to the leaf, not the route root
 impact: HIGH
-impactDescription: eliminates prop drilling, enables streaming
-tags: server, colocation, data-fetching, architecture
+impactDescription: eliminates prop-drilling for fetched data, unblocks per-subtree streaming, removes the "fetch everything in page.tsx" bottleneck
+tags: server, data-colocation, fetch-at-leaf, no-prop-drilling
 ---
 
-## Colocate Data Fetching with Components
+## Each Server Component fetches the data it renders — pull data to the leaf, not the route root
 
-Fetch data where it's needed, not in parent components. This enables independent streaming and eliminates prop drilling.
+**Pattern intent:** the Server Component that *renders* a piece of data is also the one that *fetches* it. This is what unlocks per-subtree Suspense streaming, removes prop-drilling, and (with `react.cache`) deduplicates shared fetches automatically.
+
+### Shapes to recognize
+
+- A `page.tsx` that awaits N fetches at the top and passes everything down through props — every child renders only after everything is fetched.
+- A layout that pre-fetches and passes data down through children — defeats per-subtree streaming.
+- A pattern where the page acts as "data-loader" and child components are "pure renderers" — feels clean but blocks streaming and over-fetches when child rendering changes.
+- A custom prop named `data` or `loaderData` carrying everything a subtree needs — Remix-style loaders ported into App Router without restructuring.
+- Workaround: pre-fetching at the top "for SEO" — usually unnecessary; Server Components SSR by default and streaming is SEO-safe.
+
+The canonical resolution: move each `await fetch(...)` (or `await db.x.findUnique(...)`) into the Server Component that actually renders the result. Wrap shared fetchers in `cache()` so they dedupe across components. Wrap subtrees in `<Suspense>` so each streams independently.
 
 **Incorrect (fetching in parent, prop drilling):**
 

@@ -1,13 +1,23 @@
 ---
-title: Use notFound() for Missing Resources
+title: A missing dynamic resource calls `notFound()` to produce a real HTTP 404 — never returns "not found" inline JSX with a 200 status
 impact: MEDIUM
-impactDescription: proper 404 handling, better SEO
-tags: route, not-found, 404, error-handling
+impactDescription: produces proper 404 HTTP status code (right for SEO crawlers and analytics); renders the closest `not-found.tsx`; standardizes the "missing" experience across routes
+tags: route, not-found, 404-status, missing-resource
 ---
 
-## Use notFound() for Missing Resources
+## A missing dynamic resource calls `notFound()` to produce a real HTTP 404 — never returns "not found" inline JSX with a 200 status
 
-Call `notFound()` when a dynamic resource doesn't exist. This renders the closest `not-found.tsx` and returns a proper 404 status code.
+**Pattern intent:** when a dynamic route's resource doesn't exist (e.g., `/products/[id]` for an id that's not in the DB), the response should be HTTP 404. Returning a "Not found" string inline in the page body returns HTTP 200, which confuses SEO crawlers, analytics, and link-checking tools.
+
+### Shapes to recognize
+
+- `if (!product) return <div>Not found</div>` — the canonical anti-pattern.
+- `if (!product) return null` — even worse; user sees a blank page and SEO sees a "valid" empty page.
+- `if (!product) redirect('/products')` — silently redirects away; user can't tell what happened; loses the canonical 404 signal.
+- A custom `<NotFound>` component imported and rendered conditionally — same problem; HTTP status is still 200.
+- A `try/catch` that catches the missing-resource case and renders fallback JSX — the catch can be valid for other errors, but missing-resource should specifically be `notFound()`.
+
+The canonical resolution: `import { notFound } from 'next/navigation'; if (!resource) notFound();` — throws, framework catches, renders the closest `not-found.tsx`, returns HTTP 404. Per-route `not-found.tsx` files customize the UX.
 
 **Incorrect (rendering empty state for missing data):**
 

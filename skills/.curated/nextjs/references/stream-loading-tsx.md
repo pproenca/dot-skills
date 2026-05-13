@@ -1,13 +1,23 @@
 ---
-title: Use loading.tsx for Route-Level Loading States
+title: Every route should have a `loading.tsx` next to its `page.tsx` — never leave navigation showing a blank screen
 impact: MEDIUM
-impactDescription: automatic loading UI, instant navigation feedback
-tags: stream, loading, skeleton, navigation
+impactDescription: instant navigation feedback during async page renders; automatic Suspense wrapping with the loading component as fallback
+tags: stream, loading-tsx, route-level-skeleton, instant-feedback
 ---
 
-## Use loading.tsx for Route-Level Loading States
+## Every route should have a `loading.tsx` next to its `page.tsx` — never leave navigation showing a blank screen
 
-Create `loading.tsx` files to show instant loading UI during route transitions. Next.js automatically wraps the page in Suspense with this component as fallback.
+**Pattern intent:** a route that fetches data during render shows nothing until that fetch lands — unless `loading.tsx` is present. Next.js auto-wraps the page in `<Suspense fallback={<Loading/>}>` so navigation feels instant.
+
+### Shapes to recognize
+
+- A route with `await fetch(...)` in `page.tsx` and no `loading.tsx` next to it — navigation to that route shows a blank screen for the full TTFB.
+- A `loading.tsx` that's a thin generic spinner with no resemblance to the real content — causes CLS when content swaps in.
+- A `loading.tsx` that itself does data fetching — defeats the "instant feedback" purpose. Loading components must be static.
+- Multiple parallel routes (slots) with only the parent route having `loading.tsx` — slot-level loading needs slot-level `loading.tsx`.
+- A workaround using a client-side `useState(loading)` in `layout.tsx` to fake loading — couples loading to client state instead of route navigation.
+
+The canonical resolution: create `loading.tsx` adjacent to every `page.tsx` (and adjacent to slot `page.tsx` files for parallel routes). Make the skeleton match the page's real dimensions to prevent CLS. No data fetching in `loading.tsx`.
 
 **Incorrect (no loading state):**
 

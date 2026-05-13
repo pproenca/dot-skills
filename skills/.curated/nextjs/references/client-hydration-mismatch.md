@@ -1,13 +1,25 @@
 ---
-title: Avoid Hydration Mismatches
+title: SSR and client initial render must produce identical HTML — defer browser-only or time-varying values to a post-mount effect
 impact: LOW-MEDIUM
-impactDescription: prevents React warnings, ensures correct rendering
-tags: client, hydration, mismatch, ssr
+impactDescription: eliminates hydration mismatch warnings; prevents visible content shifts on first paint
+tags: client, hydration-mismatch, post-mount-effect, ssr-safe
 ---
 
-## Avoid Hydration Mismatches
+## SSR and client initial render must produce identical HTML — defer browser-only or time-varying values to a post-mount effect
 
-Server and client must render identical HTML. Avoid browser-only APIs, timestamps, and random values during initial render.
+**Pattern intent:** during hydration, React asserts that the client's first render matches the server's HTML. Time-of-day, `Math.random`, `window.innerWidth`, and `navigator.userAgent` produce different values per environment and trip the assertion.
+
+### Shapes to recognize
+
+- A component rendering `new Date().toLocaleTimeString()` directly in JSX — server renders one time, client hydrates with another a moment later.
+- A `Math.random()` driving a JSX value (random tip, rotating banner) — different per render.
+- A `window.innerWidth`-driven conditional in render — undefined on server, defined on client.
+- A `localStorage.getItem(...)` read in render — undefined on server, populated on client.
+- A locale-dependent value (`new Date().toLocaleDateString(locale)`) where server locale differs from client.
+- A workaround `suppressHydrationWarning` slapped on every component — masks the symptom, hides real bugs.
+- A "loading" state initialized to `false` on server, immediately set to `true` in a `useEffect` — causes a flash; should render placeholder until effect runs.
+
+The canonical resolution: render a placeholder (or nothing) on first render; populate the time/random/storage-dependent value in a `useEffect` after mount. Use `suppressHydrationWarning` only on the specific element (a `<time>` tag, not the whole subtree) when the mismatch is *intentional*.
 
 **Incorrect (hydration mismatch):**
 

@@ -1,13 +1,23 @@
 ---
-title: Use generateMetadata for Dynamic Metadata
+title: Dynamic routes export `generateMetadata` so each variant gets per-resource title/description/OG image
 impact: MEDIUM
-impactDescription: dynamic SEO, social sharing optimization
-tags: meta, generateMetadata, seo, dynamic
+impactDescription: per-resource SEO and social sharing instead of one generic title across all dynamic routes
+tags: meta, generate-metadata, per-resource-seo, dynamic-meta
 ---
 
-## Use generateMetadata for Dynamic Metadata
+## Dynamic routes export `generateMetadata` so each variant gets per-resource title/description/OG image
 
-Export `generateMetadata` to create dynamic metadata based on route parameters and fetched data. This enables unique titles, descriptions, and OpenGraph images per page.
+**Pattern intent:** a `/product/[id]` page must surface unique title, description, and OG image per product. The static `export const metadata` cannot read route params; only `generateMetadata({ params })` can.
+
+### Shapes to recognize
+
+- `export const metadata = { title: 'Product' }` in a dynamic route — every product gets the same `<title>` in the HTML head.
+- A `generateMetadata` that ignores `params` and returns a static value — same problem with extra ceremony.
+- A `generateMetadata` that calls a different fetcher than the page itself — duplicate fetches; should share a `cache()`-wrapped fetcher.
+- A `<title>{post.title}</title>` rendered inline in the page body — works for React 19 head-hoisting, but Next.js framework convention uses `generateMetadata` for crawler-safe metadata.
+- A workaround setting `document.title` in a `useEffect` — client-side; SEO crawlers never see it.
+
+The canonical resolution: `export async function generateMetadata({ params }): Promise<Metadata>` that fetches the same data the page does (via a `cache()`-wrapped getter — Next.js dedupes) and returns the per-resource fields.
 
 **Incorrect (static metadata for dynamic pages):**
 

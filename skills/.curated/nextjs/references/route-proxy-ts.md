@@ -1,13 +1,25 @@
 ---
-title: Use proxy.ts for Network Boundary Logic
+title: Network-boundary logic (auth, redirects, header rewrites) lives in `proxy.ts` — not the deprecated `middleware.ts`
 impact: MEDIUM-HIGH
-impactDescription: clearer network boundary, Node.js runtime
-tags: route, proxy, middleware, network
+impactDescription: aligns with Next.js 16 runtime model (Node.js, not Edge), enables full Node API access for the proxy layer
+tags: route, proxy-ts, network-boundary, middleware-migration
 ---
 
-## Use proxy.ts for Network Boundary Logic
+## Network-boundary logic (auth, redirects, header rewrites) lives in `proxy.ts` — not the deprecated `middleware.ts`
 
-Next.js 16 replaces `middleware.ts` with `proxy.ts` for explicit network boundary logic. The proxy runs on Node.js runtime (not Edge), providing access to full Node.js APIs.
+**Pattern intent:** Next.js 16 renamed and re-runtimed the network boundary: `middleware.ts` (Edge runtime) → `proxy.ts` (Node.js runtime). Code at the network boundary now has full Node access; the file name and the exported function name both change.
+
+### Shapes to recognize
+
+- A `middleware.ts` file in a Next.js 16 codebase — works during a transition period, but the supported path is `proxy.ts`.
+- An exported `function middleware(...)` — same migration concern.
+- Edge-runtime-specific imports (`@edge-runtime/...`) left over from the old constraint — usually now unnecessary.
+- An auth check in `middleware.ts` calling a service that requires Node-native APIs (e.g., Prisma client) — was a hack to dodge Edge constraints; can be simplified now in `proxy.ts`.
+- A pattern of "use middleware for auth, use route handlers for everything else" — `proxy.ts` can do more (request rewrites, response header injection, redirects) without splitting into separate files.
+
+The canonical resolution: rename `middleware.ts` → `proxy.ts`, rename the exported `middleware` function → `proxy`. Keep the `config.matcher`. Remove any Edge-runtime workarounds.
+
+Reference: [Next.js 16 proxy.ts](https://nextjs.org/docs/app/building-your-application/routing/middleware)
 
 **Incorrect (old middleware.ts pattern):**
 

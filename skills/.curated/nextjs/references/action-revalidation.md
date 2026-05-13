@@ -1,13 +1,24 @@
 ---
-title: Revalidate Cache After Mutations
+title: Every Server Action that writes data must invalidate the routes/tags that surface that data
 impact: MEDIUM
-impactDescription: ensures fresh data after changes
-tags: action, revalidation, cache, mutation
+impactDescription: ensures users see their own writes immediately; without invalidation, mutations appear to silently no-op until the next cache expiry
+tags: action, revalidation, post-mutation-invalidate, cache-pair
 ---
 
-## Revalidate Cache After Mutations
+## Every Server Action that writes data must invalidate the routes/tags that surface that data
 
-Always invalidate relevant cached data after mutations. Use `revalidatePath` for routes and `revalidateTag` for tagged data.
+**Pattern intent:** mutation + invalidation form a transaction in the user's mental model. An action without a paired invalidation leaves the user looking at stale data with no error to debug.
+
+### Shapes to recognize
+
+- A `'use server'` action with `await db.x.create(...)` and no `revalidatePath`/`revalidateTag` call — user sees no change until cache expires.
+- A bug report of the form "Created the thing — refresh, still not there" — almost always a missing invalidation in the action.
+- An action that calls `revalidatePath('/foo')` but the data also surfaces on `/bar` and `/baz` — under-invalidation.
+- An action that calls `revalidatePath('/', 'layout')` for a small mutation — nukes everyone's cache; should be more targeted.
+- An action that returns `{ success: true }` and the *client* triggers `router.refresh()` afterward — works but loses the server-driven invalidation guarantee.
+- A `redirect()` called *before* `revalidatePath` — `redirect` throws internally; the invalidation never runs.
+
+The canonical resolution: after the write succeeds, call `revalidateTag(tag, cacheLife)` (preferred for granular control) or `revalidatePath(path)` (coarser), *then* `redirect(...)`. Pair every action with one or more invalidation calls.
 
 **Incorrect (stale cache after mutation):**
 

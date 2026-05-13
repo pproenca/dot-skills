@@ -1,13 +1,23 @@
 ---
-title: Configure Robots for Crawl Control
+title: Make crawl rules explicit via `app/robots.ts` and per-page `metadata.robots` — don't rely on "they won't crawl this"
 impact: MEDIUM
-impactDescription: prevents indexing of private pages
-tags: meta, robots, seo, crawling
+impactDescription: keeps admin/dashboard/staging URLs out of search results; spells out which routes are public, which are private
+tags: meta, robots-ts, crawl-control, indexability
 ---
 
-## Configure Robots for Crawl Control
+## Make crawl rules explicit via `app/robots.ts` and per-page `metadata.robots` — don't rely on "they won't crawl this"
 
-Use `robots.ts` and per-page robots metadata to control which pages search engines can crawl and index.
+**Pattern intent:** every public-facing Next.js site needs explicit crawl rules. The site-wide rules live in `app/robots.ts`; per-route exceptions live in each page's `metadata.robots`. Implicit defaults vary by environment and surprise teams.
+
+### Shapes to recognize
+
+- No `robots.ts` and no per-page robots metadata — admin pages eventually appear in search results.
+- A `robots.ts` that allows everything but key routes (`/dashboard`, `/admin`, `/api`) are missing from `disallow` — those routes get indexed.
+- A staging deployment leaking into search results because the production `robots.ts` was copied without the staging-specific disallow.
+- A login or password-reset page in search results — should be `index: false, follow: false` in per-page metadata.
+- A `noindex` meta tag hard-coded in a layout — works but invisible to maintenance; declare via the typed `metadata.robots` API.
+
+The canonical resolution: `app/robots.ts` exporting site-wide rules (disallow `/admin/`, `/api/`, `/dashboard/`) and sitemap URL; per-route `export const metadata: Metadata = { robots: { index: false, follow: false } }` for sensitive pages.
 
 **Incorrect (no robots configuration):**
 

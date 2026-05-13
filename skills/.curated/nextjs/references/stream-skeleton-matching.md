@@ -1,13 +1,24 @@
 ---
-title: Match Skeleton Dimensions to Actual Content
+title: Loading skeletons match the dimensions of the content they replace — never collapse the layout while loading
 impact: MEDIUM
-impactDescription: prevents layout shift, better CLS score
-tags: stream, skeleton, layout-shift, cls
+impactDescription: prevents Cumulative Layout Shift; CLS score goes from "needs improvement" to "good" simply by making skeletons match
+tags: stream, skeleton-dimensions, cls, no-layout-shift
 ---
 
-## Match Skeleton Dimensions to Actual Content
+## Loading skeletons match the dimensions of the content they replace — never collapse the layout while loading
 
-Loading skeletons should match the dimensions of actual content to prevent layout shift (CLS). Use fixed heights or aspect ratios.
+**Pattern intent:** a skeleton's job is to *occupy the same space* the real content will fill. If it doesn't, the page jumps when the real content arrives — that's CLS, hurts Core Web Vitals, and feels unprofessional.
+
+### Shapes to recognize
+
+- A `loading.tsx` that's `<div>Loading...</div>` — collapses to text height; real content pushes everything down.
+- A skeleton that uses `h-8` but the real content is `h-64` — content swap causes a 200+ pixel jump.
+- A skeleton with one placeholder where the real content has a list of items — the list expansion causes scroll jumps.
+- An image skeleton without `aspect-ratio` while the real `<Image>` has fixed dimensions — first paint without skeleton, then layout jumps.
+- A skeleton built before the real component, then the real component diverged — visual regression that nobody caught.
+- A workaround using opacity tricks to "hide" the layout shift — the shift still happens; CLS metric is still bad.
+
+The canonical resolution: use the same CSS layout classes for the skeleton container as the real content. Use `aspect-ratio` for media. Generate skeletons from the real component's structure (a `<XSkeleton/>` paired with `<X/>`) and lint that they stay synced.
 
 **Incorrect (skeleton causes layout shift):**
 

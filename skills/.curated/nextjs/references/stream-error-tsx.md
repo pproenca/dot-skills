@@ -1,13 +1,24 @@
 ---
-title: Use error.tsx for Route-Level Error Boundaries
+title: Every route should have an `error.tsx` next to it — a failed fetch must not kill the framework chrome
 impact: MEDIUM
-impactDescription: graceful error recovery, prevents full page crashes
-tags: stream, error, error-boundary, recovery
+impactDescription: contains async failures to their route segment; user can `reset()` to retry without navigating away; preserves layout/header state across retries
+tags: stream, error-tsx, route-level-error, reset-retry
 ---
 
-## Use error.tsx for Route-Level Error Boundaries
+## Every route should have an `error.tsx` next to it — a failed fetch must not kill the framework chrome
 
-Create `error.tsx` files to catch errors in route segments. Users can retry without navigating away or losing state.
+**Pattern intent:** a route that fetches data can fail. Without `error.tsx`, the failure bubbles up to the closest `global-error.tsx` (or Next's default), losing all surrounding chrome and navigation context.
+
+### Shapes to recognize
+
+- A route with `await fetch(...)` and no `error.tsx` — any upstream failure renders the framework's default error page.
+- A page-wide `try/catch` that catches and returns fallback JSX — works but loses the `reset` retry semantic.
+- An `error.tsx` that's a server component (missing `'use client'`) — won't work; error components must be client components.
+- An `error.tsx` that logs the error to `console.error` but never reports it to a real monitoring service — silent in production.
+- An `error.tsx` that resets state but doesn't include the `reset` button as a recovery affordance — user has to navigate away to retry.
+- An `error.tsx` placed in the wrong segment level — it doesn't catch errors in *its own* `layout.tsx` (place it in the parent for that).
+
+The canonical resolution: `'use client'` `error.tsx` next to each route segment with retry/recovery UI; `global-error.tsx` at the root for root-layout failures; client `useEffect` to log to monitoring.
 
 **Incorrect (unhandled errors crash the page):**
 

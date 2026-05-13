@@ -1,13 +1,24 @@
 ---
-title: Load Third-Party Scripts Efficiently
+title: Wrap third-party scripts in `next/script` with the right `strategy` — never `<script src=...>` in the layout `<head>`
 impact: LOW-MEDIUM
-impactDescription: prevents blocking, improves LCP
-tags: client, scripts, third-party, performance
+impactDescription: removes render-blocking from analytics/chat/social scripts; improves LCP by deferring non-critical work
+tags: client, next-script, script-strategy, lcp
 ---
 
-## Load Third-Party Scripts Efficiently
+## Wrap third-party scripts in `next/script` with the right `strategy` — never `<script src=...>` in the layout `<head>`
 
-Use `next/script` for third-party scripts with appropriate loading strategies. Avoid blocking the main thread with synchronous scripts.
+**Pattern intent:** third-party scripts (analytics, A/B testing, chat widgets, social embeds) should run at a moment that matches their purpose — not block the critical render path. `next/script` exposes `strategy` so each script declares its loading priority.
+
+### Shapes to recognize
+
+- `<script src="https://analytics.example.com/script.js" />` rendered in `<head>` inside `layout.tsx` — blocks render until script loads.
+- A `useEffect(() => { const s = document.createElement('script'); ... }, [])` to load a script — works but loses Next.js's lifecycle integration and SSR-safe insertion.
+- Every third-party script using the same `strategy` ("afterInteractive" everywhere) — chat widget loads as eagerly as analytics, but doesn't need to.
+- A workaround using `dynamic(() => import(...))` on a component that wraps a third-party script — overengineered; `<Script>` handles it.
+- A `<Script>` with no `strategy` (defaults to `afterInteractive`, fine) but missing `id` for inline scripts — inline scripts need `id` to dedupe.
+- Tag Manager `(function(w,d,s,l,i)...)` snippet pasted inline in `<head>` — should be `<Script id="gtm" strategy="beforeInteractive">` with the snippet as `dangerouslySetInnerHTML`.
+
+The canonical resolution: `<Script src=...>` for external scripts, `<Script id=...>{inline}</Script>` for inline; pick `strategy`: `beforeInteractive` for critical (rare), `afterInteractive` for analytics/tracking (default), `lazyOnload` for chat/social/widgets, `worker` (experimental) to offload to a web worker.
 
 **Incorrect (blocking script in head):**
 
