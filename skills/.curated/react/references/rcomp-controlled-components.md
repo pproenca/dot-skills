@@ -1,13 +1,23 @@
 ---
-title: Choose Controlled vs Uncontrolled Appropriately
+title: Reach for controlled state only when something reads the value on every change — otherwise prefer uncontrolled with `<form action>`
 impact: LOW-MEDIUM
-impactDescription: prevents form state sync bugs, enables real-time validation
-tags: rcomp, controlled, uncontrolled, forms
+impactDescription: avoids per-keystroke re-renders for forms that only read on submit; enables real-time UI only where it actually justifies the state cell
+tags: rcomp, controlled-vs-uncontrolled, on-every-change, submit-only
 ---
 
-## Choose Controlled vs Uncontrolled Appropriately
+## Reach for controlled state only when something reads the value on every change — otherwise prefer uncontrolled with `<form action>`
 
-Controlled components get values from props; uncontrolled components manage their own state. This is a context-driven choice. Use controlled only when you need to react on every keystroke (validation, conditional UI). For submit-only forms, prefer uncontrolled with React 19 form actions.
+**Pattern intent:** controlled inputs trade per-keystroke re-renders for per-keystroke read access. The trade only pays off when *something* downstream actually needs that per-keystroke read (validation feedback, dependent UI, programmatic transformation). For submit-only forms, uncontrolled inputs plus a form action are simpler and faster.
+
+### Shapes to recognize
+
+- A `useState('')` + `value={x} onChange={...}` pair where `x` is never read except inside `handleSubmit`.
+- A "controlled form" with three `useState` cells, all read only inside submit — every keystroke causes a render, none of the renders use the new value.
+- An uncontrolled input that's later switched to controlled mid-lifecycle (or vice versa) — produces "A component is changing an uncontrolled input to be controlled" warnings.
+- A form using React Hook Form / Formik purely to track field values for submit — for a single-action form, `<form action>` + `defaultValue` is simpler.
+- A controlled input where `onChange` simply does `setX(e.target.value)` — the React 19 + form-action path can read the value from `FormData` at submit without state.
+
+The canonical resolution: ask "does anything *between* this keystroke and the next read the new value?" If no, uncontrolled + form action. If yes (validation, dependent UI, transformation), controlled is justified. Don't flip mid-lifecycle.
 
 **Incorrect (controlled state mirroring an input that's never read during render):**
 

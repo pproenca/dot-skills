@@ -1,13 +1,23 @@
 ---
-title: Use useSyncExternalStore for External Subscriptions
+title: Subscribe to external mutable state through `useSyncExternalStore`, not `useEffect` + `useState`
 impact: MEDIUM
-impactDescription: prevents tearing in concurrent rendering, ensures SSR-safe external state
-tags: effect, useSyncExternalStore, subscription, external
+impactDescription: prevents tearing under concurrent rendering, provides correct SSR semantics, removes manual cleanup boilerplate
+tags: effect, external-subscription, sync-external-store, tearing-safe
 ---
 
-## Use useSyncExternalStore for External Subscriptions
+## Subscribe to external mutable state through `useSyncExternalStore`, not `useEffect` + `useState`
 
-For subscribing to external data sources (browser APIs, third-party stores), use `useSyncExternalStore` instead of manual useEffect subscriptions.
+**Pattern intent:** mutable state that lives outside React (browser APIs like `online`/`localStorage`, Redux stores, Mobx, Apollo, RxJS) must be read through the dedicated subscription hook. `useEffect` + `useState` works in non-concurrent rendering but tears under concurrent rendering and has no SSR snapshot story.
+
+### Shapes to recognize
+
+- `useEffect(() => { window.addEventListener('online', () => setOnline(navigator.onLine)) ... }, [])` and a paired `useState(true)` mirror.
+- A custom hook `useNetworkStatus()` whose body is the above shape.
+- Hand-written subscription to a third-party store with `useEffect` and `useState`, returning the mirrored value.
+- A reading from `localStorage` inside a `useEffect` to populate `useState` — works for one-time read; for live values that change in another tab, `useSyncExternalStore` plus the `storage` event is correct.
+- A "global counter" or "user session" piece of mutable state held in a module variable, accessed by a component via `useEffect` to copy into `useState` — same anti-shape.
+
+The canonical resolution: write a `subscribe(callback)` that registers listeners and returns an unsubscribe; write a `getSnapshot()` that returns the current value; call `useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)`. The result reads tearing-free in concurrent mode and produces correct SSR markup.
 
 **Incorrect (manual subscription in effect):**
 

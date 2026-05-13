@@ -1,13 +1,24 @@
 ---
-title: Use ref as a Regular Prop, Not forwardRef
+title: Components receive `ref` as a normal destructured prop — drop the `forwardRef` wrapper, drop the drilling
 impact: MEDIUM-HIGH
-impactDescription: removes forwardRef wrapper, enables ref cleanup, aligns with the React 19 idiom that will outlive forwardRef
-tags: rcomp, ref, forwardRef, useRef, cleanup
+impactDescription: removes a wrapper layer, removes generic-type noise, unlocks callback-ref cleanup (React 19.2), aligns with the API that will outlive `forwardRef`
+tags: rcomp, ref-as-prop, no-forwardref, callback-ref-cleanup
 ---
 
-## Use ref as a Regular Prop, Not forwardRef
+## Components receive `ref` as a normal destructured prop — drop the `forwardRef` wrapper, drop the drilling
 
-In React 19, function components receive `ref` as a regular prop. The `forwardRef` wrapper is no longer needed and will be deprecated in a future major. Always destructure `ref` from props in new components.
+**Pattern intent:** in React 19, `function C({ ref, ...rest })` works directly — `ref` is a regular prop. The `forwardRef(...)` wrapper is no longer needed and is on a deprecation path. Equally important: when authors dodged `forwardRef`'s awkwardness in pre-19 code, they drilled refs through props with names like `innerRef`, `inputRef`, or callback refs — those workarounds are the *in-disguise* shape of the same anti-pattern.
+
+### Shapes to recognize
+
+- `const X = forwardRef(function X(props, ref) { ... })` — the canonical pre-19 wrapper. Codemod removes it.
+- A component accepting `innerRef` / `inputRef` / `forwardedRef` as a regular prop and applying it to a child — the author dodged `forwardRef`, but the same indirection is here.
+- A callback-ref prop drilled through 2–3 components ("`ref` doesn't work, here's `setNodeRef`"). The chain of indirection often hides the real intent.
+- `useRef<HTMLInputElement>()` without an explicit initial value — was valid in React 18, is a TS error in 19. Fix: `useRef<HTMLInputElement>(null)`.
+- A callback ref `<div ref={(el) => (instance = el)} />` with an implicit return — TS error in 19, because the return slot is reserved for cleanup. Fix: wrap in `{ }`.
+- An old `useEffect` + `ref.current.addEventListener(...)` + return-cleanup dance — could be replaced with a callback ref that returns the cleanup directly (React 19.2 callback-ref cleanup).
+
+The canonical resolution: destructure `ref` from props in new components; codemod `forwardRef` away (`npx codemod@latest react/19/replace-forwardRef`); migrate ref-drilling props to use plain `ref`; collapse listener `useEffect`s into callback refs with returned cleanup where it shortens the code.
 
 **Incorrect (forwardRef wrapper):**
 
@@ -115,3 +126,80 @@ function Tooltip({ children }: { children: ReactNode }) {
 ```
 
 **Codemod:** `npx types-react-codemod@latest preset-19` (includes `no-implicit-ref-callback-return`).
+
+---
+
+### In disguise — callback ref drilled through three props
+
+The grep-friendly anti-pattern is `forwardRef(...)`. But the same break is *also* present in code that dodges `forwardRef` by manually drilling a callback ref through 2-3 prop layers. The intent is the same ("I need to give a ref to a child's underlying DOM element"); the disguise is the props named `innerRef` / `setNodeRef` / `nodeRef`. In React 19 this collapses to `ref` as a regular prop, no drilling.
+
+**Incorrect — in disguise (callback ref drilled through three components):**
+
+```typescript
+// Three layers, none of them using forwardRef, but the same anti-pattern.
+
+// LabeledField.tsx — wants to expose its input's DOM node to the caller
+function LabeledField({ label, innerRef, ...rest }: {
+  label: string
+  innerRef: (el: HTMLInputElement | null) => void
+}) {
+  return (
+    <label>
+      {label}
+      <Field setNodeRef={innerRef} {...rest} />
+    </label>
+  )
+}
+
+// Field.tsx — middle layer, just passes the ref further
+function Field({ setNodeRef, ...rest }: {
+  setNodeRef: (el: HTMLInputElement | null) => void
+}) {
+  return <BaseInput nodeRef={setNodeRef} {...rest} />
+}
+
+// BaseInput.tsx — leaf, finally uses it
+function BaseInput({ nodeRef, ...rest }: {
+  nodeRef: (el: HTMLInputElement | null) => void
+}) {
+  return <input ref={nodeRef} {...rest} />
+}
+
+// Consumer
+function MyForm() {
+  function focusOnLoad(el: HTMLInputElement | null) { el?.focus() }
+  return <LabeledField label="Email" innerRef={focusOnLoad} />
+}
+// Three differently-named props (innerRef, setNodeRef, nodeRef), all carrying a ref.
+// Grep for forwardRef finds nothing. The anti-pattern is still here.
+```
+
+**Correct (ref-as-prop all the way down):**
+
+```typescript
+// Same three layers, but ref is just a prop. No drilling, no rename.
+
+function LabeledField({ label, ref, ...rest }: {
+  label: string
+  ref?: Ref<HTMLInputElement>
+}) {
+  return <label>{label}<Field ref={ref} {...rest} /></label>
+}
+
+function Field({ ref, ...rest }: { ref?: Ref<HTMLInputElement> }) {
+  return <BaseInput ref={ref} {...rest} />
+}
+
+function BaseInput({ ref, ...rest }: { ref?: Ref<HTMLInputElement> }) {
+  return <input ref={ref} {...rest} />
+}
+
+// Consumer
+function MyForm() {
+  const inputRef = useRef<HTMLInputElement>(null)
+  useEffect(() => { inputRef.current?.focus() }, [])
+  return <LabeledField label="Email" ref={inputRef} />
+}
+```
+
+The fix isn't only "remove `forwardRef`" — it's also "remove the prop-drilling chains people built to avoid `forwardRef` in the first place." Audit for `innerRef` / `forwardedRef` / `setNodeRef` / `nodeRef` prop names; they're tell-tale.

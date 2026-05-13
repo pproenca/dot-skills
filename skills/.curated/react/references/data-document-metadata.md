@@ -1,13 +1,23 @@
 ---
-title: Render Document Metadata Inline, Not via react-helmet
+title: Page metadata renders as `<title>`/`<meta>`/`<link>` inline — drop helmet-style head managers
 impact: MEDIUM
-impactDescription: eliminates external metadata libraries, hoists tags to <head> automatically, works across SSR and CSR
-tags: data, metadata, title, meta, link, head
+impactDescription: eliminates the dependency entirely; React 19 hoists, dedupes, and SSR-renders these tags natively no matter where they appear in the tree
+tags: data, document-metadata, native-head-hoisting, drop-helmet
 ---
 
-## Render Document Metadata Inline, Not via react-helmet
+## Page metadata renders as `<title>`/`<meta>`/`<link>` inline — drop helmet-style head managers
 
-React 19 natively hoists `<title>`, `<meta>`, and `<link>` tags to the document `<head>` no matter where they appear in the tree. Drop `react-helmet`, `react-helmet-async`, or framework-specific Head components — render the tags directly inside the component that owns the data.
+**Pattern intent:** metadata lives next to the component that owns the data, written as plain JSX. React 19 hoists the tags to `<head>` automatically. External head managers (`react-helmet`, `react-helmet-async`, custom `<Head>` wrappers) are no longer pulling their weight.
+
+### Shapes to recognize
+
+- `import { Helmet } from 'react-helmet-async'` and `<Helmet><title>{...}</title></Helmet>` somewhere in the tree.
+- A custom `<SEO>`/`<PageHead>` component that imperatively writes to `document.title` on mount.
+- A reducer in a context provider that holds "current title" and a `useEffect` that copies it to `document.title` — manual SSR-incompatible plumbing.
+- Mixing inline `<title>` JSX with `react-helmet` calls in the same tree — both fight to be the source of truth.
+- Stylesheets imported via `<link rel="stylesheet">` inside a component but missing the `precedence` attribute, which is what enables React's dedup-and-order semantics.
+
+The canonical resolution: render `<title>`, `<meta>`, `<link>` inline in JSX. Use the `precedence` attribute on stylesheet `<link>`s. For framework metadata APIs (Next.js `generateMetadata`, Remix `meta`), prefer those at route boundaries; reach for inline tags inside components.
 
 **Incorrect (third-party head manager):**
 

@@ -1,13 +1,23 @@
 ---
-title: Enable Streaming with Nested Suspense
+title: Split slow async work behind its own Suspense boundary so fast content streams first
 impact: MEDIUM-HIGH
-impactDescription: progressive loading, faster TTFB
-tags: rsc, streaming, suspense, progressive
+impactDescription: progressive HTML delivery — fast subtrees appear immediately, slow ones stream when ready
+tags: rsc, streaming, suspense-granularity, progressive-render
 ---
 
-## Enable Streaming with Nested Suspense
+## Split slow async work behind its own Suspense boundary so fast content streams first
 
-Use multiple Suspense boundaries to stream HTML progressively. Fast components appear immediately while slow ones load.
+**Pattern intent:** the page's loading experience should match the natural timing of its parts. Static or fast subtrees should not be held hostage by a single slow async leaf.
+
+### Shapes to recognize
+
+- A single `<Suspense fallback={<FullPageSpinner/>}>` wrapping the entire route — nothing renders until the slowest child resolves.
+- Several `await fetch(...)` calls in series at the top of a Server Component — the page can't begin streaming until all complete (also overlaps with `data-parallel-fetching`).
+- Workaround: a parent that fetches everything and conditionally renders skeleton-shaped JSX — manual streaming logic, brittler than `<Suspense>`.
+- Workaround: a "loading.tsx" route file as the *only* loading state — fine for the navigation, but does nothing for slow leaves *within* a page.
+- An entire dashboard rendering a single spinner because one tile takes 2s — every other tile is ready in 50ms.
+
+The canonical resolution: wrap each independently-paced async subtree in its own `<Suspense>` with a shape-matched fallback. The framework streams each as it resolves.
 
 **Incorrect (single Suspense blocks all content):**
 

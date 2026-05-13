@@ -1,13 +1,23 @@
 ---
-title: Avoid Suspense Fallback Thrashing
+title: Keep previous content visible across navigation by wrapping the update in a transition
 impact: HIGH
-impactDescription: prevents flickering, smoother UX
-tags: conc, suspense, fallback, transitions
+impactDescription: prevents 200-500ms layout shift flicker on every navigation
+tags: conc, suspense-fallback, navigation-flicker, transition-wrap
 ---
 
-## Avoid Suspense Fallback Thrashing
+## Keep previous content visible across navigation by wrapping the update in a transition
 
-Wrap navigations in transitions to prevent Suspense fallbacks from appearing during fast updates. This keeps the previous content visible while loading.
+**Pattern intent:** during a navigation or state change that triggers Suspense, the previous content should remain on screen until the next is ready — not flash to a fallback and back.
+
+### Shapes to recognize
+
+- Plain `setPage(next)` outside any transition, where each route boundary is wrapped in `<Suspense fallback={<Spinner/>}>`. Every click causes a Spinner flash.
+- "Loading…" text that appears for ~200ms on every tab click — a tell-tale unwrapped state update.
+- Manual workaround: rendering both pages with `display:none` to dodge the fallback. Solves the symptom, not the cause.
+- Manual workaround: a `setTimeout(() => setPage(...), 100)` to "let the new page warm up" — a homemade transition that's worse than the real one.
+- Filter UI where each keystroke flashes a skeleton — same cause, different shape.
+
+The canonical resolution is `useTransition` + `startTransition` around the state update that triggers Suspense.
 
 **Incorrect (fallback shows on every navigation):**
 

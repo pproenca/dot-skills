@@ -1,13 +1,23 @@
 ---
-title: Minimize Server/Client Boundary Crossings
+title: Push the `'use client'` boundary down to the interactive leaf, not up at the route
 impact: CRITICAL
-impactDescription: reduces serialization overhead, smaller bundles
-tags: rsc, server-components, boundary, optimization
+impactDescription: shrinks the client bundle to only the interactive islands; reduces prop serialization across the boundary
+tags: rsc, boundary-placement, leaf-client, route-client, island
 ---
 
-## Minimize Server/Client Boundary Crossings
+## Push the `'use client'` boundary down to the interactive leaf, not up at the route
 
-Each `'use client'` boundary requires serializing props from server to client. Push boundaries as low as possible in the component tree.
+**Pattern intent:** the Client Component portion of the tree should be the minimum subtree that needs interactivity — not the whole page, not the whole feature, not the whole route. Everything above the boundary stays server-rendered, ships zero JS for itself, and pays no serialization cost.
+
+### Shapes to recognize
+
+- `'use client'` at the top of `page.tsx` / `layout.tsx` / a top-level route component, with most of the body being static markup and only one or two interactive leaves.
+- A `ProductPage` Client Component receiving `{ product, reviews, related, recommendations }` — most of those exist only to render static children that don't need the client.
+- A wrapper component is `'use client'` only because *one* descendant uses `useState` — the wrapper itself never needs the client (also overlaps with `cross-boundary-coherence`).
+- A "layout" Client Component that toggles a sidebar — could be a static layout with a small client island for the sidebar toggle button.
+- Heavy server-only data (large arrays, formatted HTML, image URLs) crossing the boundary because the boundary is too high — every byte gets serialized into the RSC payload.
+
+The canonical resolution: keep the route/page/layout as a Server Component; extract just the interactive part into a small Client Component; pass only the IDs/strings/handlers it needs.
 
 **Incorrect (boundary too high, serializes too much):**
 

@@ -1,13 +1,23 @@
 ---
-title: Leverage React Compiler for Automatic Memoization
+title: Adopt React Compiler v1.0 — let the build memoize, then remove the manual `useMemo`/`useCallback` noise
 impact: MEDIUM
-impactDescription: automatic optimization, less manual code
-tags: memo, compiler, automatic, optimization
+impactDescription: removes large amounts of manual memoization code; works with React 17+; the compiler handles most cases the eye can see
+tags: memo, react-compiler, auto-memoization, compiler-enabled
 ---
 
-## Leverage React Compiler for Automatic Memoization
+## Adopt React Compiler v1.0 — let the build memoize, then remove the manual `useMemo`/`useCallback` noise
 
-React Compiler v1.0 (released October 2025) automatically memoizes components and values. It's a standalone build-time tool that works with React 17+. Reduce manual useMemo/useCallback when compiler is enabled.
+**Pattern intent:** as of React Compiler v1.0 (October 2025), the build can hoist most reference-stability and recomputation concerns out of source. Once the compiler is enabled, the manual `useMemo`/`useCallback` wrappers that previously did this work add noise without value. New code should be written compiler-naïve; old code can be progressively de-memoized.
+
+### Shapes to recognize
+
+- A codebase with the compiler enabled but every value/callback still wrapped — leftover from pre-compiler conventions; codemod it back to plain expressions.
+- A new file in a compiler-enabled project that imports `useMemo`/`useCallback` for trivial expressions — the author was writing pre-compiler React.
+- Build config that lists `babel-plugin-react-compiler` but a custom Babel order/preset stops it from running on app code — the plugin is configured but inert.
+- An ESLint config that still references the deprecated `eslint-plugin-react-compiler` instead of `eslint-plugin-react-hooks@latest` (compiler rules moved there).
+- A React 17/18 project trying to install only `babel-plugin-react-compiler` and seeing runtime errors — `react-compiler-runtime` is required for pre-19 targets.
+
+The canonical resolution: install `babel-plugin-react-compiler@latest` (and `react-compiler-runtime` for React 17/18 targets), enable in Babel config, switch ESLint to `eslint-plugin-react-hooks@latest`. Write new code without manual memoization. Codemod existing manual memos away over time, measuring with React Profiler that the change is neutral or positive.
 
 **Incorrect (verbose manual memoization):**
 

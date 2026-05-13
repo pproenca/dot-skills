@@ -1,13 +1,24 @@
 ---
-title: Write Concurrent-Safe Components
+title: Keep render pure — never mutate, subscribe, or read external state during render
 impact: MEDIUM-HIGH
-impactDescription: prevents bugs in concurrent rendering
-tags: conc, concurrent, safe, rendering
+impactDescription: prevents double-fire bugs, stale reads, and lost subscriptions under React's concurrent scheduler
+tags: conc, render-purity, side-effects, idempotent-render
 ---
 
-## Write Concurrent-Safe Components
+## Keep render pure — never mutate, subscribe, or read external state during render
 
-React may pause, interrupt, and restart renders. Avoid side effects during render and ensure components are idempotent.
+**Pattern intent:** React may pause, abandon, and restart a render. A component's function body must be a pure mapping from props/state to JSX. Anything observable from the outside (counters, analytics, DOM subscriptions, network calls, mutable reads) belongs in an effect, ref, or external store, never in render.
+
+### Shapes to recognize
+
+- A `let counter = 0` at module scope, incremented inside a component's body each render — analytics or ID schemes that double-fire under concurrent mode.
+- `analytics.track(...)`, `logger.info(...)`, `console.warn` calls inside the function body, intended to fire once per logical mount.
+- `window.addEventListener` or `document.addEventListener` written directly in the component body — never cleaned up, accumulates on every render.
+- `array.push(item)` / `obj.foo = bar` mutating a prop or shared module-level value during render.
+- Reading `window.innerWidth`, `document.cookie`, or other browser-only globals directly in render — works once, breaks under SSR and breaks again under interrupted renders.
+- A `Math.random()` or `Date.now()` value persisted into a `useState` initializer's body (the unwrapped form) instead of the lazy initializer — value changes on every render attempt.
+
+The canonical resolution: side effects go in `useEffect`/`useLayoutEffect`; external state reads go through `useSyncExternalStore`; stable identifiers come from `useId` or `useRef`; "once on mount" intent is rare and should be expressed via an effect with an empty deps and ref-guarded body, not via render-body code.
 
 **Incorrect (side effects during render):**
 

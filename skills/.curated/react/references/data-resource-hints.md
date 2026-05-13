@@ -1,13 +1,23 @@
 ---
-title: Use react-dom Resource Hints, Not Manual link Tags
+title: Reach for the imperative resource-hint APIs from `react-dom` instead of hand-rendering `<link rel="preload">`
 impact: MEDIUM
-impactDescription: 100-500ms saved on critical above-the-fold assets, dedup across renders, works in Server and Client Components
-tags: data, preload, preconnect, prefetch, resource-hints
+impactDescription: 100-500ms saved on critical above-the-fold assets; deduped automatically; usable from event handlers and Server Components alike
+tags: data, resource-hints, preload-api, dedup-link
 ---
 
-## Use react-dom Resource Hints, Not Manual link Tags
+## Reach for the imperative resource-hint APIs from `react-dom` instead of hand-rendering `<link rel="preload">`
 
-React 19 ships imperative resource-loading APIs in `react-dom`: `preload`, `preconnect`, `prefetchDNS`, and `preinit`. They emit deduplicated `<link>` tags to `<head>` regardless of where they are called. Prefer them over manually rendering `<link rel="preload">` elements — the imperative API works in both Server Components and event handlers without re-mount weirdness.
+**Pattern intent:** when telling the browser "fetch this resource ahead of time," the right call is `preload(url, opts)` / `preconnect(origin)` / `prefetchDNS(origin)` / `preinit(url, opts)` from `react-dom`. They dedupe across renders, work from event handlers, and integrate with the streaming HTML.
+
+### Shapes to recognize
+
+- `<link rel="preload" as="image" href={url}>` rendered as JSX inside a component — re-renders create duplicate links; calling from event handlers is awkward.
+- `useEffect(() => { document.head.appendChild(linkEl) }, [])` to inject a preload tag imperatively — works but invents the dedup story from scratch.
+- A `useEffect` that does `fetch(url)` purely to warm a cache — kind of works for `as: 'fetch'` cases, but `preload` is more semantic and the browser may schedule it differently.
+- A "preload everything" component that renders a list of `<link>` elements that mostly aren't above-the-fold — wastes bandwidth and competes with the actual critical resources.
+- `<link rel="preconnect" href={origin}>` rendered inline for an origin you never actually fetch from — observable in Network panel as an idle preconnect; should be removed or downgraded to `prefetchDNS`.
+
+The canonical resolution: call `preload`/`preconnect`/`prefetchDNS`/`preinit` from `react-dom`. Pick the right one per the table below. Calls are idempotent — safe to make from render and from event handlers.
 
 **Incorrect (manual link tags, no deduplication):**
 

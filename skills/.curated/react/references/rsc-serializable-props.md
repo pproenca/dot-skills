@@ -1,13 +1,24 @@
 ---
-title: Pass Only Serializable Props to Client Components
+title: Only data that the RSC wire format can encode crosses the server→client boundary
 impact: HIGH
-impactDescription: prevents runtime errors, ensures correct hydration
-tags: rsc, serializable, props, boundary
+impactDescription: prevents runtime errors at the boundary, ensures correct hydration; non-serializable values must be replaced with serializable equivalents or moved
+tags: rsc, serializable-props, rsc-wire-format, server-actions
 ---
 
-## Pass Only Serializable Props to Client Components
+## Only data that the RSC wire format can encode crosses the server→client boundary
 
-Props passed from Server to Client Components must be serializable through the RSC wire format. Regular functions and class instances cannot cross the boundary; native data types like `Date`, `Map`, `Set`, `BigInt`, `Promise`, and typed arrays can.
+**Pattern intent:** the props passed from a Server Component to a Client Component travel through the RSC wire format. Plain functions, class instances, and DOM nodes cannot ride that wire. Behavior that needs to cross either rides as data (and the behavior is reconstructed on the client) or rides as a Server Action.
+
+### Shapes to recognize
+
+- Passing a plain inline `function handleClick() {...}` defined in a Server Component as a prop to a Client Component — runtime error.
+- Passing `new SomeClass(...)` (formatter, validator, computed object) — class instances aren't serializable.
+- Passing `console.log` / built-in functions / a bound method — none of those are serializable.
+- Passing a closure over server-only secrets ("just `tokens` from the request") into a Client Component "so the child can use them" — even if it serialized, it would leak secrets.
+- Passing a Date as `date.toISOString()` "to be safe" — the RSC wire format supports `Date` natively; the string conversion adds an unnecessary parse step on the client.
+- Passing `JSON.parse(JSON.stringify(complexObject))` "to be safe" — strips `Date`/`Map`/`Set` and signals the author didn't trust the wire.
+
+The canonical resolution: replace plain functions with **Server Actions** (`'use server'` exports), replace class instances with their underlying data, and trust the wire format for `Date`/`Map`/`Set`/`BigInt`/`Promise`/typed arrays.
 
 **Incorrect (non-serializable props):**
 

@@ -1,13 +1,25 @@
 ---
-title: Use useEffectEvent for Non-Reactive Logic
+title: Read latest props/state inside an effect's callback without re-subscribing when those values change
 impact: MEDIUM
-impactDescription: prevents unnecessary effect re-runs from non-reactive value changes
-tags: effect, useEffectEvent, non-reactive, events
+impactDescription: stops the "include this dep just to read latest value" → "but now my effect re-runs whenever it changes" cycle; the value reads always-fresh without re-triggering the effect
+tags: effect, non-reactive-read, effect-event, latest-value
 ---
 
-## Use useEffectEvent for Non-Reactive Logic
+## Read latest props/state inside an effect's callback without re-subscribing when those values change
 
-`useEffectEvent` creates a function that always sees the latest values but doesn't trigger effect re-runs. Use it for "event-like" behavior inside effects.
+**Pattern intent:** sometimes an effect's body (or an inner callback the effect attaches as a listener) needs the *latest* value of some prop/state, but the effect itself should *not* re-run when that prop/state changes. `useEffectEvent` (React 19.2+) gives you a function whose closure always sees the latest values but doesn't count as a dep.
+
+### Shapes to recognize
+
+- Effect deps include a value that's read in a logging/analytics path but the effect's setup/teardown doesn't depend on it — "I need the latest theme inside the message handler, but I don't want to reconnect when theme changes."
+- Workaround: a `useRef(value)` plus a `useEffect(() => { ref.current = value })` to keep a ref in sync with the latest value — exactly what `useEffectEvent` does, but hand-rolled.
+- Workaround: an `eslint-disable-next-line react-hooks/exhaustive-deps` comment over a `useEffect` whose deps array is intentionally incomplete — concedes the problem instead of solving it.
+- A child callback prop captured in an effect's dep array, where the callback's identity changes but its behavior shouldn't trigger re-subscription.
+- A `useEffect` that subscribes to an external system and reads a piece of state to format the notification — should pull the format logic into a `useEffectEvent`.
+
+The canonical resolution: extract the latest-value-reading path into a `useEffectEvent(callback)`; remove the now-non-reactive deps from the effect; effect re-subscribes only when *truly* reactive deps change.
+
+> **Version note:** `useEffectEvent` is stable in React 19.2+. For earlier React 19, use the `useRef` + sync-effect workaround; suppressing `exhaustive-deps` is not equivalent.
 
 **Incorrect (including non-reactive values in deps):**
 

@@ -1,13 +1,23 @@
 ---
-title: Use useReducer for Complex State Logic
+title: Coordinated multi-field state transitions live in a single reducer — not in N sibling `useState` cells
 impact: MEDIUM
-impactDescription: eliminates impossible state combinations, enables unit-testable state logic
-tags: rstate, useReducer, complex, actions
+impactDescription: eliminates "forgot to update one of three setters" bugs, makes state transitions unit-testable, removes invalid-combination states
+tags: rstate, reducer-extraction, multi-field-state, action-shape
 ---
 
-## Use useReducer for Complex State Logic
+## Coordinated multi-field state transitions live in a single reducer — not in N sibling `useState` cells
 
-When state has multiple sub-values or complex update logic, useReducer provides clearer state transitions and easier testing.
+**Pattern intent:** when N pieces of state co-evolve (cart items + total + discount + loading), the *transitions* between configurations are the real abstraction. A reducer expresses them as named actions, makes them testable in isolation, and makes invalid combinations representable-or-not by typing.
+
+### Shapes to recognize
+
+- A component with 4+ `useState` calls whose handlers always update multiple cells together.
+- An event handler that calls `setItems(...)`, `setTotal(...)`, `setDiscount(...)` in sequence — easy to add a fifth state cell and forget to update it everywhere.
+- "Impossible states" appearing in dev: loading is true but data is also non-null; error is set but success is too.
+- A custom hook with `useState` + a wrapper API that's effectively a reducer in disguise (every wrapper function reads the cells and writes new ones).
+- An onboarding/wizard component with a `step` cell, a `data` cell, and a `validation` cell — should be one `useReducer` whose state is a discriminated union of step variants.
+
+The canonical resolution: define a state type and an action union; write a `cartReducer(state, action)` switching on `action.type`; `const [state, dispatch] = useReducer(reducer, initial)`. Transitions become named, testable, and exhaustive.
 
 **Incorrect (multiple related useState calls):**
 

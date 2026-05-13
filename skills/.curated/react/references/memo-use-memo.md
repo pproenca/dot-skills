@@ -1,13 +1,24 @@
 ---
-title: Use useMemo for Expensive Calculations
+title: Cache a computation between renders only when its inputs are stable and the work is measurably expensive
 impact: MEDIUM
-impactDescription: skips O(n) recalculations on re-renders with unchanged dependencies
-tags: memo, useMemo, performance, calculation
+impactDescription: skips O(n) recalculations on re-renders whose dependencies haven't changed — saves time on hot paths, costs time on cold ones
+tags: memo, useMemo, expensive-calc, dep-stability
 ---
 
-## Use useMemo for Expensive Calculations
+## Cache a computation between renders only when its inputs are stable and the work is measurably expensive
 
-Wrap expensive computations in useMemo to cache results between renders. Only recalculate when dependencies change.
+**Pattern intent:** `useMemo` is a render-time cache keyed on dep identity. It pays off when (a) the computation is expensive enough to matter, and (b) deps are reference-stable enough to actually hit the cache. Both halves matter.
+
+### Shapes to recognize
+
+- `useMemo(() => a + b, [a, b])` — trivial expression; the memo overhead exceeds the work.
+- `useMemo(() => items.map(transform), [items])` where `items` comes in as an inline parent-recreated array — deps unstable, cache never hits.
+- A `useMemo` whose body internally creates an object literal and another `useMemo` consumes it — chain of unstable inputs.
+- A `useMemo` "for safety" wrapping a `JSX` expression — the value isn't reused; the memo doesn't save renders.
+- `useMemo` used to "stabilize" a result of `useState` — but `useState` values are already stable until you call the setter; the memo is redundant.
+- A `useMemo` returning a Promise inside a Client Component to pass to `use()` — recreates on every render; better to lift creation to a Server Component (see [`data-use-hook.md`](data-use-hook.md)).
+
+The canonical resolution: profile first; reach for `useMemo` when (a) the work is measurably hot, *and* (b) the deps are reference-stable enough to hit the cache. With React Compiler v1.0, most cases collapse to plain expressions.
 
 **Incorrect (recalculates on every render):**
 

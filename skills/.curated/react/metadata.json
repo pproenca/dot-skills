@@ -1,10 +1,10 @@
 {
-  "version": "1.3.0",
+  "version": "1.1.6",
   "organization": "React Best Practices",
   "technology": "React",
   "date": "May 2026",
   "discipline": "distillation",
-  "abstract": "Comprehensive React 19/19.2 best-practices guide for AI agents and LLMs. Contains 44 rules across 8 categories, prioritized by impact from critical (concurrent rendering, server components) to incremental (component patterns). Covers React 19 headline changes (ref as a regular prop, native document metadata, resource preload APIs, useActionState, useOptimistic, use() hook, Context as provider) and 19.2 features (Activity, useEffectEvent, cacheSignal, React Compiler v1.0). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.",
+  "abstract": "Comprehensive React 19/19.2 best-practices guide for AI agents and LLMs. Contains 49 rules across 9 categories, prioritized by impact from critical (concurrent rendering, server components) through to cross-cutting codebase hygiene (dedup, dead code, boundary coherence). Covers React 19 headline changes (ref as a regular prop, native document metadata, resource preload APIs, useActionState, useOptimistic, use() hook, Context as provider) and 19.2 features (Activity, useEffectEvent, cacheSignal, React Compiler v1.0). Rule files describe pattern shapes (not API names) and open with a 'Shapes to recognize' section listing 2-4 syntactic disguises the same break can wear. Selected high-value rules — those whose disguises are most common in practice — include a concrete 'In disguise' incorrect/correct example pair to teach pattern detection beyond grep-friendly cases. Ships a category-major review/refactor algorithm with two modes (scoped vs whole-repo) and forcing functions (scope declaration, per-category progress lines, coverage table) that make silent category skipping immediately visible.",
   "references": [
     "https://react.dev",
     "https://react.dev/blog/2024/04/25/react-19-upgrade-guide",

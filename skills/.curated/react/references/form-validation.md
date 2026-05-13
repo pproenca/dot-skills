@@ -1,13 +1,23 @@
 ---
-title: Validate Forms on Server with Actions
+title: Treat validation as a server-action concern; client checks are an enhancement, never the only gate
 impact: MEDIUM
-impactDescription: prevents client-only validation bypass, single source of truth for form errors
-tags: form, validation, server-actions, security
+impactDescription: prevents client-only validation bypass (security), gives one source of truth for error messages, supports progressive enhancement
+tags: form, server-validation, validation-source-of-truth, structured-errors
 ---
 
-## Validate Forms on Server with Actions
+## Treat validation as a server-action concern; client checks are an enhancement, never the only gate
 
-Always validate form data on the server, even with client-side validation. Return structured errors for display.
+**Pattern intent:** the server action is the only piece of code that genuinely receives untrusted input. Validation logic must live there. Client-side checks exist for instant feedback and reducing round trips — never as the only barrier.
+
+### Shapes to recognize
+
+- An `onSubmit` that runs Zod/Yup/joi on the form values and then calls a server function with no further validation server-side.
+- A trust-the-client API where the server function reads `formData.get('email')` and inserts it directly into a database call.
+- A `confirm()` / `alert()` in the client that's treated as a "validation step" — a curl bypasses it in seconds.
+- HTML-only validation (`required`, `pattern=...`) treated as sufficient — DevTools removes those in two clicks.
+- Validation duplicated in two places (client + server) with the schemas drifting — one source of truth missing, drift bug waiting to happen. Prefer a shared schema imported into both, with the server check authoritative.
+
+The canonical resolution: define the schema once in a server-importable module; the server action validates and returns `{ errors }` shape; the form renders errors from the `useActionState` state; the client may opt into echoing the same schema for instant feedback, but the server's `errors` shape is the source of truth.
 
 **Incorrect (client-only validation):**
 

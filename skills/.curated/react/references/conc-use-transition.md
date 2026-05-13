@@ -1,13 +1,23 @@
 ---
-title: Use useTransition for Non-Blocking Updates
+title: Mark expensive state updates as low-priority so input stays responsive
 impact: CRITICAL
-impactDescription: maintains <50ms input latency during heavy state updates
-tags: conc, useTransition, concurrent, non-blocking
+impactDescription: maintains <50ms input latency during heavy state updates by marking the heavy work as interruptible
+tags: conc, transition, low-priority-update, input-blocking
 ---
 
-## Use useTransition for Non-Blocking Updates
+## Mark expensive state updates as low-priority so input stays responsive
 
-Wrap expensive state updates in `startTransition` to keep the UI responsive. React will interrupt the transition if higher-priority updates occur.
+**Pattern intent:** when one user action triggers two updates — a fast one (the input value the user just typed) and a slow one (a filter, sort, or route render) — the slow one should be marked interruptible so React can keep input responsive.
+
+### Shapes to recognize
+
+- `onChange` handler computes a 1k+ item `.filter`/`.sort` inline and calls `setResults(...)` synchronously before returning.
+- Router-style `setPage(next)` that triggers a heavy data render with no transition — the click feels sluggish before the next page appears.
+- Tab switcher where the tab indicator visibly lags the click because the new tab's render is expensive.
+- Workaround: `setTimeout(() => setResults(...), 0)` or `requestIdleCallback(() => setResults(...))` to "yield to the browser" — a hand-rolled scheduler that doesn't integrate with Suspense or stale-content rendering.
+- Workaround: a debounced setState that delays even fast updates — fixes janky filtering at the cost of laggy typing.
+
+**Pair with `useDeferredValue` (sibling rule):** wrap with `startTransition` when you *own* the state update. Use `useDeferredValue` when you don't (prop or URL-driven).
 
 **Incorrect (blocking state update):**
 

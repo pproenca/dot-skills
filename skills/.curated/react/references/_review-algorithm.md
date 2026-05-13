@@ -1,14 +1,14 @@
 # Review & Refactor Algorithm
 
-Use this when the user asks to **review, refactor, modernize, or audit React code across one or more files** (e.g. "audit these 12 files for React 19", "find issues in this PR", "modernize this directory").
+Use this when the user asks to **review, refactor, modernize, or audit React code** — whether one file, a directory, or a whole repository.
 
-**Do not skim this.** The default review reflex — file-by-file, grep-first — produces shallow, inconsistent results on this rule set. The procedure below is designed to surface the refactors that grep cannot.
+**Do not skim this.** The default review reflex — file-by-file, grep-first — produces shallow, inconsistent results on this rule set. The procedure below is engineered to surface the refactors that grep cannot, and to make category skipping observable.
 
 ---
 
 ## Principle 1 — Judgment over grep
 
-Every rule in this skill is keyed off a syntactic marker (`forwardRef`, `useFormState`, `<Context.Provider>`, an effect with a state setter inside, etc.). Those markers are **easy to grep for and easy to miss the point of.**
+Every single-file rule in this skill names a *pattern shape*, not a syntactic marker. The rule file titles describe the shape; the rule bodies open with **Shapes to recognize** — a list of 2–4 syntactic disguises the same break can wear.
 
 **The decision rule for every rule is: "Does this code break the pattern, in spirit?"** — not "Does this string appear?"
 
@@ -24,17 +24,17 @@ Use grep/AST **only** to:
 - Take inventory at the start (count files, list components, list hooks)
 - As a **post-hoc completeness check** after judgment-based review (e.g. confirm zero remaining `forwardRef` calls *after* you finished refactoring)
 
-Never use grep as the primary detector for a rule. If a violation is visible only via grep, it's the easy case — and you'll miss the harder ones.
+Never use grep as the primary detector for a rule. If a violation is visible only via grep, it's the easy case — and you'll miss the harder ones. Read each rule's **Shapes to recognize** section *before* sweeping for that rule.
 
 ---
 
 ## Principle 2 — Category-major sweep, not file-major
 
-When reviewing N files against the 44 rules, the natural reflex is file-major:
+When reviewing N files against the 8 single-file categories + Category 9 (cross-cutting), the natural reflex is file-major:
 
 ```
 for each file:
-  for each of 8 categories:
+  for each of 9 categories:
     for each rule in category:
       check file
 ```
@@ -42,105 +42,187 @@ for each file:
 This fails in practice because:
 - Late files and low-priority categories silently get skipped due to context fatigue.
 - The reviewer never sees the *cross-file patterns* in a category (e.g. "3 of these 5 components have the same derived-state-via-effect bug").
+- Cross-cutting findings (dead code, duplicated logic, near-duplicate components) cannot surface from a file-local lens.
 - Reports come out file-by-file, which the user has to mentally re-group by theme.
 
 **Do this instead — category-major:**
 
 ```
-1. Load all target files into context up front (read them all before starting the analysis).
-2. For each category, in priority order (CRITICAL → HIGH → MEDIUM-HIGH → MEDIUM → LOW-MEDIUM):
-     a. State the category's pattern in one sentence (the underlying intent, not the syntactic marker).
+1. Load all target files into context up front.
+2. For each of Categories 1-8, in priority order (CRITICAL → HIGH → MEDIUM-HIGH → MEDIUM → LOW-MEDIUM):
+     a. State the category's pattern in one sentence (the underlying intent).
      b. Sweep every file simultaneously, looking for breaks of that pattern.
      c. Record findings grouped by category, with file:line references.
-3. After all 8 categories are swept, present findings ordered by category × severity.
+3. Run Category 9 (Codebase Hygiene) as a final cross-cutting sweep over the inventory.
+4. Emit the required coverage table.
 ```
 
-The category-major order means every file gets the same scrutiny per category. It also means cross-file patterns surface naturally ("the Form / Profile / Settings components all do derived state via effect").
+---
+
+## Principle 3 — Two modes: scoped vs whole-repo
+
+Whole-repo audits are a real workflow, not a workflow to refuse. The two modes below differ in inventory strategy, not in rule rigor.
+
+| | **Mode A — Scoped audit** | **Mode B — Repository audit** |
+|---|---|---|
+| **Scope** | Explicit file set, ≤ ~20 files (a feature directory, a PR, a hand-picked set) | A whole tree (`src/`, the repo, a subsystem) — no pre-curated file list |
+| **Inventory** | Read every file fully | Glob + classify *without reading bodies*; then read targeted files |
+| **Sweep** | Full category-major sweep across every file for every category | Targeted sweeps: top-N files per category by heuristic (see below) + full Category 9 over the inventory |
+| **Output** | Findings per category × file | Inventory table + targeted findings + Category 9 findings + explicit gaps |
+
+Both modes emit the same coverage table (Step 4 below).
+
+**Heuristics for Mode B targeted sweeps:**
+- Concurrent Rendering → top 10 client components by line count, plus any with `onChange`/`onKeyDown` on long lists.
+- Server Components → all files with `'use client'`, all `page.tsx`/`layout.tsx`.
+- Actions & Forms → all files matching `<form` JSX.
+- Data Fetching → all files containing `await fetch` or `react-helmet`.
+- State Management → top 10 components by `useState`/`useReducer` call count.
+- Memoization → all files containing `useMemo`/`useCallback`/`React.memo`.
+- Effects & Events → top 10 files by `useEffect` call count.
+- Component Patterns → all files containing `forwardRef`, all components with > 8 props.
+- Category 9 → full inventory.
+
+If a heuristic returns < 3 files, sweep all of them. If it returns > 15, sweep the first 15 ranked and note the truncation in the coverage table.
 
 ---
 
 ## Procedure
 
-### Step 0 — Confirm the file set
+### Step 0 — Pick the mode
 
-Ask the user (or take from their request) the **explicit set of files**. Do not start with a directory glob without confirmation — sweeping a whole repo wastes context. If the user said "this PR", get the diff file list.
+| User said | Mode |
+|---|---|
+| "audit these N files", "review this PR", explicit list | **Mode A** |
+| "audit my codebase", "review src/", "modernize this repo", or any whole-tree language | **Mode B** |
+| Ambiguous | Ask. Show the file count both modes would produce. |
 
-### Step 1 — Inventory pass
+Never refuse a whole-repo audit — pick Mode B.
 
-Read every file once. For each, jot a 1-line tag:
+### Step 1 — Scope declaration (REQUIRED OUTPUT)
+
+Before any reading, emit this preamble verbatim with the placeholders filled. The user must be able to see what you're about to do.
+
+```
+## Audit scope
+
+- **Mode:** A (scoped) | B (repo)
+- **Files in scope:** <N total> — <brief breakdown e.g. "37 client components, 8 server components, 4 server actions, 12 hooks">
+- **Categories to sweep, in order:**
+  1/9 Concurrent Rendering (CRITICAL) — <files to sweep>
+  2/9 Server Components (CRITICAL) — <files to sweep>
+  3/9 Actions & Forms (HIGH) — <files to sweep>
+  4/9 Data Fetching (HIGH) — <files to sweep>
+  5/9 State Management (MEDIUM-HIGH) — <files to sweep>
+  6/9 Memoization & Performance (MEDIUM) — <files to sweep>
+  7/9 Effects & Events (MEDIUM) — <files to sweep>
+  8/9 Component Patterns (LOW-MEDIUM) — <files to sweep>
+  9/9 Codebase Hygiene (CROSS-CUTTING) — full inventory
+```
+
+A scope declaration that omits any category number is a malformed audit — you cannot proceed.
+
+### Step 2 — Inventory pass
+
+Read every file once (Mode A) or glob + classify by filename and top-level imports without reading bodies (Mode B). For each, tag:
 
 - Server Component (no `'use client'`, no hooks that require client)
 - Client Component (`'use client'` directive)
-- Server Action file
+- Server Action file (`'use server'`)
 - Custom hook module
 - Route entry (`page.tsx`, `layout.tsx`)
-- Reducer / context provider
 - Other (utility, types)
 
-This tag set drives which categories apply to which files (e.g. "Server Components" category doesn't apply to a custom hook file).
+In Mode B, this tagging also feeds the Category 9 sweep (e.g. files tagged "Client Component" with hook usage that doesn't need the client become candidates for `cross-boundary-coherence`).
 
-### Step 2 — Category-major sweep
+### Step 3 — Category-major sweeps (REQUIRED PROGRESS LINES)
 
-Walk categories in priority order. For each category, do **one pass over all files**, with the pattern statement loaded as the lens.
+For each of the 9 categories in order, emit a **per-category progress line** *before* sweeping:
 
-The category sections in `_sections.md` give you the impact; the rule files give you incorrect/correct examples. Read the rule examples as **shape exemplars**, not as regex patterns. The example shows the canonical break; your job is to recognize the same break in different clothing.
+```
+### Sweeping <N>/9 — <Category Name> (<Impact>) across <M> files
+```
 
-**Category 1 — Concurrent Rendering (CRITICAL)**
-Pattern: heavy work and navigation should not block input. Look for: missing `useTransition` around obviously-expensive setState calls; unguarded list re-renders; `<Suspense>` fallbacks that swap in for fast components and cause flicker; missing `<Activity>` for tabs/modals that need state preservation.
+Then sweep that category across all in-scope files using its **Shapes to recognize** as the lens (not its API name).
 
-**Category 2 — Server Components (CRITICAL)**
-Pattern: data should be fetched on the server; the client/server boundary should be as deep in the tree as possible. Look for: `'use client'` at the root of a component tree that doesn't need it; client components doing `fetch()` in `useEffect`; non-serializable values (functions, class instances) passed across the boundary; static content rendered inside a client island.
+After the sweep, emit one of:
+- `**Findings: <K>**` followed by the findings grouped under that heading, OR
+- `**Findings: 0** (no breaks of <pattern statement> detected across <M> files)`
 
-**Category 3 — Actions & Forms (HIGH)**
-Pattern: mutations are form actions, not `onSubmit`. Pending state comes from `useFormStatus` / `useActionState`. Look for: `e.preventDefault()` + `useState` for `pending`/`error` (a `useActionState` shape in disguise); client-only validation with no server check; optimistic updates done manually with `useState` instead of `useOptimistic`.
+A category that gets no progress line is a category that got skipped. **The structure makes skipping observable.**
 
-**Category 4 — Data Fetching (HIGH)**
-Pattern: parallel where possible, cached at the request scope, declarative loading via Suspense, metadata inline. Look for: sequential `await` calls where `Promise.all` would parallelize; duplicate fetches in the same request (each component fetching the same user); `react-helmet` / manual `<head>` writes; manual `<link rel="preload">` tags; `useEffect` + `useState` fetch dance instead of `use()` or a Server Component.
+### Step 4 — Coverage table (REQUIRED OUTPUT)
 
-**Category 5 — State Management (MEDIUM-HIGH)**
-Pattern: derived values are computed in render. Context is split so unrelated consumers don't re-render. Complex state lives in a reducer. Look for: `useState` + `useEffect` that exists only to mirror a computed value; one giant context with state + dispatch causing unrelated re-renders; nested `useState` calls that should be a reducer; expensive initial state computed on every render instead of via the lazy initializer.
+After all 9 sweeps, emit a coverage table. Rows = categories. Columns = either each file (Mode A) or each tag bucket (Mode B). Cells ∈ `{clean, N findings, n/a}`.
 
-**Category 6 — Memoization & Performance (MEDIUM)**
-Pattern: don't memo by default — let React Compiler handle it — but DO memo when a measurable cost is present. Look for: `useMemo` wrapping trivial work (string concat, simple math); `useCallback` on every handler without justification; missing memo where an expensive prop is recomputed inline (inline object/array passed to a memoed child negates the memo).
+**Mode A example:**
 
-**Category 7 — Effects & Events (MEDIUM)**
-Pattern: effects synchronize with external systems. They are NOT for derived state, mutations, parent notification, app init, or external subscriptions (use `useSyncExternalStore`). Look for: effects whose body is `setOther(...)` — that's derived state; effects whose body is a side-effect after a state change — that's the event handler's job; effects with `[obj]` or `[arr]` dependencies — those compare by reference and re-run unexpectedly.
+| Category | `Foo.tsx` | `Bar.tsx` | `useUserData.ts` | … |
+|---|---|---|---|---|
+| 1 Concurrent | clean | 2 findings | n/a | |
+| 2 Server Components | n/a | n/a | n/a | |
+| … | | | | |
+| 9 Codebase Hygiene | applied across all files: 3 findings | | | |
 
-**Category 8 — Component Patterns (LOW-MEDIUM)**
-Pattern: `ref` is a regular prop; controlled vs uncontrolled is a deliberate choice; composition over prop explosion; `key` resets identity intentionally. Look for: `forwardRef` wrappers; ref drilled through props because the author dodged `forwardRef`; components with 12+ props that should accept `children`; uncontrolled→controlled flips mid-lifecycle.
+**Mode B example:**
 
-### Step 3 — Report findings
+| Category | Client comps (37) | Server comps (8) | Hooks (12) | Routes (6) | Actions (4) |
+|---|---|---|---|---|---|
+| 1 Concurrent | 10 swept, 4 findings | n/a | n/a | n/a | n/a |
+| 2 Server Components | 37 swept (boundary check), 6 findings | 8 swept, 0 findings | n/a | 6 swept, 1 finding | n/a |
+| … | | | | | |
+| 9 Codebase Hygiene | full inventory: 8 findings (4 dedup, 2 dead code, 2 boundary) | | | | |
+
+The coverage table is non-negotiable. It is the artifact that makes silent skipping impossible — a missing row or a missing column is immediately visible.
+
+### Step 5 — Report findings
 
 Group output **by category**, then by file. For each finding:
 
 - **File:line** — exact location
 - **Pattern break** — one sentence, in the spirit of the rule (not "uses `forwardRef`" but "this component wraps `forwardRef` even though no consumer needs the React-18 shape")
 - **Suggested refactor** — concrete shape, not just a rule name
-- **Rule reference** — link to the rule file for the user to read deeper
+- **Rule reference** — link to the rule file
 
 Add a **Cross-file observations** subsection per category when 2+ files share the same break — surface the cluster, don't repeat the explanation.
 
-### Step 4 — Apply (optional)
+Category 9 findings have a different shape because they are inherently cross-file:
+- **Affected files** — full list, with the canonical version named first if applicable
+- **Proposed action** — extract / consolidate / delete / rename / move to server
+- **Estimated impact** — bundle bytes saved, files deleted, props normalized
+- **Risk** — anything blocking (e.g. dynamic import, external consumer, public API surface)
+
+### Step 6 — Apply (optional)
 
 When the user approves refactors:
 - Apply by category, not by file — finish all of category 1 across all files before starting category 2. This makes the diff coherent per concern and easier to review.
-- After applying a category, take an inventory pass: re-read the touched files to confirm no regressions introduced.
+- Apply Category 9 refactors **last** — they often touch files modified in earlier categories, and doing them last lets you fold the previous fixes into the consolidated shared hook / component.
+- After applying each category, take an inventory pass: re-read the touched files to confirm no regressions introduced.
 
 ---
 
 ## What this algorithm refuses to do
 
-- **Greenfield codebase scans without a file set** — don't `find . -name '*.tsx' | xargs` 800 files into context. Demand a scope.
 - **File-major reports** — never emit findings as "## src/Foo.tsx — issues: …" headings. Always group by category.
 - **Grep-only findings** — if the only evidence is a string match, re-check by reading the surrounding 30 lines and judging the pattern. Grep is the *trigger*, never the *verdict*.
-- **Trivial syntactic rewrites masquerading as refactors** — replacing `<Context.Provider>` with `<Context>` is a codemod, not a refactor. The skill-worthy refactors are the ones that change the *shape* of state and effects.
+- **Skipping the scope declaration or coverage table** — these are required artifacts. An audit without them is not an audit.
+- **Trivial syntactic rewrites masquerading as refactors** — replacing `<Context.Provider>` with `<Context>` is a codemod, not a refactor. The skill-worthy refactors are the ones that change the *shape* of state and effects, or the *layout* of the codebase.
+
+What this algorithm **does not** refuse, despite an older version of this doc saying so:
+- Whole-repo `find` / glob scans — use Mode B with an inventory pass instead.
+- Audits without a hand-curated file list — Mode B exists precisely for this.
 
 ---
 
 ## Quick sanity check before reporting
 
-Before delivering findings, ask yourself:
-- Did I sweep every category against every applicable file, or did I bail early?
+Before delivering findings, confirm in your head:
+- Did I emit the scope declaration with all 9 categories listed?
+- Did I emit a progress line for each of the 9 categories?
 - For each finding, is the evidence holistic (I read the surrounding code) or just a keyword match?
 - Did I surface cross-file clusters where they exist?
-- If a category had zero findings, did I say so explicitly (negative result is information)?
+- For categories with zero findings, did I emit the explicit "Findings: 0" line?
+- Did I run Category 9 as a final cross-cutting sweep, not skip it because it's last?
+- Did I emit the coverage table?
+
+If any of these is "no", the audit is incomplete. Go back.

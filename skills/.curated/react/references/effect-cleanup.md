@@ -1,13 +1,43 @@
 ---
-title: Always Clean Up Effect Side Effects
+title: Every effect that subscribes, schedules, or connects must return a cleanup that tears it down
 impact: MEDIUM
-impactDescription: prevents memory leaks, stale callbacks
-tags: effect, cleanup, memory-leak, subscription
+impactDescription: prevents memory leaks, double-firing event handlers, and stale callbacks holding closures over unmounted components
+tags: effect, cleanup-return, subscription-teardown, abort-guard
 ---
 
-## Always Clean Up Effect Side Effects
+## Every effect that subscribes, schedules, or connects must return a cleanup that tears it down
 
-Return a cleanup function from effects that set up subscriptions, timers, or event listeners. This prevents memory leaks and stale callbacks.
+**Pattern intent:** any effect that opens a resource (subscription, interval, listener, socket, fetch) must close it in its cleanup. Cleanup runs on unmount *and* between renders when deps change — both cases need teardown to be idempotent.
+
+### Shapes to recognize
+
+- `useEffect(() => { setInterval(...) }, [])` with no `return () => clearInterval(...)`.
+- An `addEventListener` inside an effect with no matching `removeEventListener` in the return.
+- A `fetch(...).then(setData)` with an `AbortController` *created* but not consulted on resolve — abort fires, but the resolved-then-aborted path still calls `setData` on an unmounted component (see "Race guard" below).
+- A WebSocket / EventSource opened in an effect with no `.close()` in cleanup.
+- A subscription to a third-party store (Mobx, Apollo, RxJS) with no `subscription.unsubscribe()` on unmount.
+- A timer registered via `setTimeout` for a deferred-effect pattern with no `clearTimeout` — fires after unmount, errors on stale state setter.
+
+### Race guard for cancellable async
+
+A common subtle bug: aborting a fetch *doesn't* prevent its already-resolved `.then(setData)` from running. Guard the post-resolve state write:
+
+```typescript
+useEffect(() => {
+  const controller = new AbortController()
+  fetch('/api/data', { signal: controller.signal })
+    .then(res => res.json())
+    .then(data => {
+      if (!controller.signal.aborted) setData(data)
+    })
+    .catch(err => {
+      if (!controller.signal.aborted) setError(err)
+    })
+  return () => controller.abort()
+}, [])
+```
+
+Without the `if (!aborted)` guard, an abort that lands *after* `.then(res.json())` resolves still triggers `setData` against an unmounted (or re-keyed) component. The cleaner alternative is to migrate the read to `use(promise)` + Suspense, which handles the lifecycle structurally.
 
 **Incorrect (no cleanup):**
 
@@ -55,13 +85,15 @@ useEffect(() => {
   return () => window.removeEventListener('resize', handler)
 }, [])
 
-// Abort fetch on unmount
+// Abort fetch on unmount — with race guard against post-resolve state writes
 useEffect(() => {
   const controller = new AbortController()
 
   fetch('/api/data', { signal: controller.signal })
     .then(res => res.json())
-    .then(setData)
+    .then(data => {
+      if (!controller.signal.aborted) setData(data)
+    })
 
   return () => controller.abort()
 }, [])

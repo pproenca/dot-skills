@@ -1,13 +1,23 @@
 ---
-title: Fetch Data in Parallel with Promise.all
+title: Independent fetches run concurrently — sequential `await` is a waterfall
 impact: MEDIUM-HIGH
-impactDescription: eliminates waterfalls, 2-5× faster
-tags: data, parallel, promise-all, waterfall
+impactDescription: collapses N sequential `await`s into max(latencies); 2-5x speedup on multi-fetch pages
+tags: data, parallel-fetching, waterfall, concurrent-await
 ---
 
-## Fetch Data in Parallel with Promise.all
+## Independent fetches run concurrently — sequential `await` is a waterfall
 
-When multiple data fetches are independent, run them in parallel. Sequential awaits create waterfalls that multiply latency.
+**Pattern intent:** when two or more data requests don't depend on each other, they should be in flight at the same time. The pattern break is "sequential `await` for independent data" — the total cost becomes the sum of latencies instead of the max.
+
+### Shapes to recognize
+
+- Two or more `const x = await fetchX(); const y = await fetchY();` lines at the top of an async component where `y` doesn't reference `x`.
+- A `for (const id of ids) { items.push(await fetchOne(id)) }` loop — each iteration's await blocks the next.
+- Two `useQuery` hooks (TanStack Query) that fetch on mount, where neither depends on the other's result — the runtime already parallelizes them, but if a parent gates one behind the other's resolution, the same waterfall returns.
+- A "loader" function in a route framework that does `const a = await get('/a'); const b = await get('/b');` — should be `Promise.all([get('/a'), get('/b')])`.
+- A custom hook chaining `useEffect`s that read each other's `useState` results to "wait for the first fetch" — manual sequencing of work that could parallelize.
+
+The canonical resolution: `const [a, b, c] = await Promise.all([fetchA(), fetchB(), fetchC()])` for hard dependencies; `Promise.allSettled` when each branch should tolerate the others' failures.
 
 **Incorrect (sequential fetching):**
 

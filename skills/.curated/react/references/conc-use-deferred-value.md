@@ -1,13 +1,23 @@
 ---
-title: Use useDeferredValue for Derived Expensive Values
+title: Defer a value you don't own when it drives an expensive child re-render
 impact: CRITICAL
-impactDescription: prevents jank in derived computations
-tags: conc, useDeferredValue, concurrent, performance
+impactDescription: prevents jank in derived computations driven by props or URL values you can't wrap in startTransition
+tags: conc, deferred-value, prop-derived, expensive-child
 ---
 
-## Use useDeferredValue for Derived Expensive Values
+## Defer a value you don't own when it drives an expensive child re-render
 
-Use `useDeferredValue` to defer updates to derived values that trigger expensive re-renders. The deferred value lags behind the source during heavy updates.
+**Pattern intent:** when an expensive component re-renders on every change of a value you didn't set (a prop, a URL parameter, an external store), the value should be "deferred" — used as if it lagged slightly behind — so input stays responsive.
+
+### Shapes to recognize
+
+- Parent passes a raw `query` prop to a child that runs `searchDatabase(query)` or other O(n) work on every render — and you don't own the parent's state.
+- URL parameter (`searchParams.get('q')`) drives an expensive computation directly in render or `useMemo`.
+- Workaround: `setTimeout(() => setX(prop), 200)` mirror-state pattern inside the child, to "throttle" prop updates — that's a hand-rolled `useDeferredValue` with bugs.
+- Workaround: pulling the prop into local `useState` plus a `useEffect` that copies it after a delay — derived state with extra steps.
+- Workaround: a third-party debounce wrapping the prop in a custom hook — works, but `useDeferredValue` is the React-native answer that integrates with the scheduler.
+
+**Pair with `useTransition` (sibling rule):** `useTransition` wraps the *cause* (the state update). `useDeferredValue` wraps the *effect* (the consumed value when you can't reach the cause). If the source is a `setState` you own, prefer `useTransition`.
 
 **Incorrect (expensive derived render blocks UI):**
 

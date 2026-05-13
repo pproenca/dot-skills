@@ -1,13 +1,23 @@
 ---
-title: Use Form Actions Instead of onSubmit
+title: Wire form submission through the `action` prop, not a JS-only `onSubmit` handler
 impact: HIGH
-impactDescription: forms work without JS loaded, eliminates e.preventDefault() boilerplate
-tags: form, actions, progressive-enhancement, mutation
+impactDescription: forms work without JS loaded (progressive enhancement), removes `e.preventDefault()` and manual FormData wiring
+tags: form, action-prop, progressive-enhancement, submit
 ---
 
-## Use Form Actions Instead of onSubmit
+## Wire form submission through the `action` prop, not a JS-only `onSubmit` handler
 
-React 19 supports the `action` prop on forms. This provides progressive enhancement - forms work even without JavaScript.
+**Pattern intent:** a form's submission semantics belong in the platform — the browser submits, the server receives. React 19's `action` prop on `<form>` integrates with this so the form works whether or not JS has loaded, and removes the `preventDefault()` + manual FormData ceremony.
+
+### Shapes to recognize
+
+- `<form onSubmit={async (e) => { e.preventDefault(); ... }}>` — the most common shape; the form is JS-only.
+- An `onSubmit` handler that reads inputs from `e.currentTarget` or controlled-state instead of `FormData`.
+- A submit button with `onClick` handler that calls `formRef.current.requestSubmit()` or fetches manually — an entire side-channel that bypasses the form.
+- Workaround: a "non-JS fallback" message ("This form requires JavaScript") instead of using `action` for progressive enhancement.
+- `onSubmit` that just calls `router.push(...)` after gathering input — uses the form as a UI shell, not as a form.
+
+The canonical resolution: pass a function to `<form action={...}>`. For server mutations, use a Server Action (`'use server'` export). For client-side navigation/derived behavior, the function may live in a Client Component but the wiring stays through `action`.
 
 **Incorrect (onSubmit requires JavaScript):**
 

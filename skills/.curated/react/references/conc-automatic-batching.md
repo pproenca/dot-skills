@@ -1,13 +1,22 @@
 ---
-title: Leverage Automatic Batching for Fewer Renders
+title: Trust automatic batching — don't reach for flushSync or unstable_batchedUpdates
 impact: HIGH
-impactDescription: batches multiple setState calls into a single render in all contexts
-tags: conc, batching, automatic, performance
+impactDescription: collapses multiple state updates into a single render in all contexts (events, promises, setTimeout, native events)
+tags: conc, batching, flush-sync, manual-batching
 ---
 
-## Leverage Automatic Batching for Fewer Renders
+## Trust automatic batching — don't reach for flushSync or unstable_batchedUpdates
 
-React (since 18) automatically batches state updates in all contexts: event handlers, promises, setTimeout, and native events. React 19 retains this behavior. Don't reach for `unstable_batchedUpdates` or `flushSync` workarounds — let React batch.
+**Pattern intent:** multiple state updates in the same logical operation should produce one render, not several. React already does this automatically (since 18) in event handlers, promises, setTimeout, and native event handlers. Manual batching APIs and synchronous-flush workarounds are almost always a leftover or a misdiagnosis.
+
+### Shapes to recognize
+
+- `flushSync` wrapping individual `setState` calls "for safety" or "to make sure they apply" — produces *more* renders, not fewer.
+- Leftover `unstable_batchedUpdates` from a React 17 codebase that was never cleaned up.
+- A chain like `setX(...); await Promise.resolve(); setY(...)` written to "force separate renders" or "let X commit before Y" — the opposite of what async setState boundaries used to do, and unnecessary now.
+- A workaround like `setTimeout(() => setY(...), 0)` after a `setX` to "wait for the first render" — the real fix is to express the dependency in render or via an effect.
+
+The canonical resolution: write the consecutive `setState` calls naturally; React batches them. Reach for `flushSync` only when you genuinely need a synchronous DOM measurement before next paint.
 
 **Incorrect (forcing synchronous updates):**
 

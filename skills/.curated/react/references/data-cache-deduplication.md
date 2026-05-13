@@ -1,13 +1,23 @@
 ---
-title: Use cache() for Request Deduplication
+title: Per-request memoize data fetchers so multiple components reading the same data don't re-fetch
 impact: HIGH
-impactDescription: eliminates duplicate fetches per render
-tags: data, cache, deduplication, react
+impactDescription: collapses N identical fetches in a render tree to one; eliminates the "log appears 4 times" smell
+tags: data, request-memoization, per-request-cache, fetch-dedup
 ---
 
-## Use cache() for Request Deduplication
+## Per-request memoize data fetchers so multiple components reading the same data don't re-fetch
 
-Wrap data fetching functions with `cache()` to deduplicate identical calls within a single render tree. Multiple components can fetch the same data without duplicate requests.
+**Pattern intent:** within a single server request, multiple Server Components that need the same data (e.g., the current user, a feature flag, a tenant config) should resolve from one fetch — not N copies. Wrap the fetcher with `cache()` at module scope.
+
+### Shapes to recognize
+
+- A `getUser(id)` function called from `Header.tsx`, `Sidebar.tsx`, and `Footer.tsx` — same id, three network calls.
+- A `console.log('Fetching X')` that prints multiple times per page load — the fetcher is being called repeatedly with identical args.
+- Multiple Server Components that each `await db.user.findUnique({ where: { id } })` for the *current* user during one render.
+- A custom hook with module-level `const cache = new Map()` doing per-request dedup by hand — reinventing `react.cache`, missing the cleanup semantics and `cacheSignal`.
+- A higher-order function that wraps fetchers in `useMemo` to dedupe — `useMemo` is per-component-instance, not per-request, so it doesn't help across components.
+
+The canonical resolution: `export const getUser = cache(async (id) => { ... })`. Callers do not need to coordinate — React deduplicates by argument identity within the request boundary. For React 19.2, pair with `cacheSignal()` to abort the underlying fetch if the render is dropped.
 
 **Incorrect (duplicate fetches):**
 

@@ -1,15 +1,32 @@
 ---
-title: Avoid Effects for Derived State, Mutations, and Event Logic
+title: useEffect is for syncing with external systems — never for derived state, mutations, event logic, parent notification, or app init
 impact: HIGH
-impactDescription: eliminates extra render passes, sync bugs, and chained-effect cascades
-tags: effect, unnecessary, derived-state, events, mutation, lifting-state
+impactDescription: eliminates extra render passes, sync bugs, stale closures, and chained-effect cascades; collapses six common anti-patterns to their canonical resolutions
+tags: effect, effect-misuse-taxonomy, derived-state, event-logic, lift-state
 ---
 
-## Avoid Effects for Derived State, Mutations, and Event Logic
+## useEffect is for syncing with external systems — never for derived state, mutations, event logic, parent notification, or app init
 
-Effects synchronize React with **external systems**. They are not for orchestrating component logic. Most of what developers reach for `useEffect` to do has a better pattern. Skip the effect when:
+**Pattern intent:** `useEffect` is the React-to-outside-world synchronization primitive. It exists for: subscribing to DOM events, opening sockets, calling third-party libraries, observing external stores. Anything else that lives entirely inside React's own model has a non-effect resolution. This rule is the **taxonomy** of the six bad jobs people give `useEffect`.
 
-1. You can calculate the value during render (derived state)
+### The six anti-patterns and their resolutions
+
+| # | Anti-pattern shape | Canonical resolution |
+|---|---|---|
+| 1 | `useState` + `useEffect` to mirror derived data | Compute in render (see [`rstate-derived-values.md`](rstate-derived-values.md) — that rule is the *detection lens* for this case) |
+| 2 | `useEffect` to run logic after a user event (track, log, navigate) | Run inside the event handler |
+| 3 | `useEffect` to perform a mutation after `setState` | Mutate in the event handler; for forms use `<form action={serverAction}>` |
+| 4 | Chained `useEffect`s where each updates state that triggers the next | Compute the next state in the triggering event |
+| 5 | `useEffect` to notify the parent of state change | Lift state up, or call `onChange` in the same event that updated state |
+| 6 | `useEffect` for app/module initialization | Run at module scope (or in a framework's app-boot hook) |
+
+### Shapes to recognize
+
+See the cross-reference table above. The shorthand is: *if the body of `useEffect` only touches React state/props and doesn't talk to anything outside React, use a different pattern from the table.*
+
+The original detail (each anti-pattern with full example) follows below.
+
+1. You can calculate the value during render (derived state — see [`rstate-derived-values.md`](rstate-derived-values.md))
 2. The work belongs to a user event (mutations, navigation, analytics for actions)
 3. You're chaining effects to trigger more state updates
 4. You're notifying a parent — lift the state up instead

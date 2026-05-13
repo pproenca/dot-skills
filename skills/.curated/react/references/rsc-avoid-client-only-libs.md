@@ -1,13 +1,23 @@
 ---
-title: Avoid Client-Only Libraries in Server Components
+title: Quarantine browser-API-dependent libraries inside Client Component wrappers
 impact: MEDIUM-HIGH
-impactDescription: prevents build errors, correct component placement
-tags: rsc, libraries, client-only, server
+impactDescription: prevents build/runtime errors from browser-only globals running in Server Component context
+tags: rsc, libraries, client-only, server, wrapper-island
 ---
 
-## Avoid Client-Only Libraries in Server Components
+## Quarantine browser-API-dependent libraries inside Client Component wrappers
 
-Libraries that use browser APIs (window, document, localStorage) cannot run in Server Components. Import them only in Client Components.
+**Pattern intent:** any library that touches `window`/`document`/`localStorage`/refs-to-DOM must be reached only through a thin `'use client'` wrapper component. The Server Component imports the wrapper, not the library.
+
+### Shapes to recognize
+
+- `import { motion } from 'framer-motion'` (or any animation lib) at the top of a `page.tsx` / `layout.tsx` / other Server Component — the build will fail or the runtime will throw "window is not defined".
+- Top-level imports of toast libraries, chart libraries, or portal-mounting libraries (`react-hot-toast`, `chart.js`, `react-modal`) in a file with no `'use client'` directive.
+- A "server-safe" library used in a Server Component that *internally* calls `localStorage` lazily — the error appears only on first render, not at import time.
+- Workaround: dynamically importing the library inside an inline `useEffect` to "delay" it — the surrounding component is already on the client; you bought nothing and added a render gap.
+- Workaround: SSR-guarding every reference with `typeof window !== 'undefined'` — works for SSR but defeats the bundle-shrinking purpose of Server Components.
+
+The canonical resolution: create a small `'use client'` wrapper component that imports the library; have the Server Component import only that wrapper.
 
 **Incorrect (client library in Server Component):**
 

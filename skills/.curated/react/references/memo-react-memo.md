@@ -1,13 +1,23 @@
 ---
-title: Use React.memo for Expensive Pure Components
+title: Wrap expensive pure components in `memo()` only when their props are actually stable
 impact: MEDIUM
-impactDescription: skips expensive re-renders (5-50ms savings per unchanged component)
-tags: memo, react-memo, performance, pure
+impactDescription: 5-50ms savings per unchanged render of an expensive child when its props don't change
+tags: memo, react-memo, expensive-child, stable-props
 ---
 
-## Use React.memo for Expensive Pure Components
+## Wrap expensive pure components in `memo()` only when their props are actually stable
 
-Wrap components in memo() to skip re-renders when props are the same. Effective for expensive renders with stable props.
+**Pattern intent:** `memo` lets an expensive child skip render when its props are reference-equal to last time. The skip pays off only when the props *actually stay stable*. Memo-without-stable-props is dead code; stable-props-without-memo passes up the savings.
+
+### Shapes to recognize
+
+- A `memo`-wrapped child that receives an inline object/array literal from the parent (`<Child options={{ ... }} />`) — every parent render makes a new object, memo never skips.
+- A `memo`-wrapped child that receives an inline arrow function as a callback prop (`<Child onClick={() => doX()} />`) — same problem, same outcome.
+- A `memo`-wrapped child that receives a non-stable spread `<Child {...rest}>` from a parent that built `rest` inline — opaque, still unstable.
+- A `memo` wrapping a leaf that renders three plain strings — render is cheap; the memo overhead exceeds the savings.
+- Custom `arePropsEqual` second-argument doing deep object equality — usually wrong; the cost of comparing exceeds the savings of skipping, and you risk bugs when nested mutation slips by.
+
+The canonical resolution: profile first; reach for `memo` when the child is expensive *and* its props naturally stay reference-equal (typed once at the top, passed through). If you control the parent, prefer stabilizing the props (via `useMemo`/`useCallback` or React Compiler) over `memo` with a custom comparator. With React Compiler v1.0, most of this is handled automatically.
 
 **Incorrect (re-renders on parent state change):**
 
