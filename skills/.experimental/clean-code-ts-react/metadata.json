@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "organization": "Robert C. Martin (Uncle Bob) — adapted for TypeScript + React",
+  "technology": "TypeScript 5.x + React 19 (principles are language-agnostic; examples use modern TS+React idioms)",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Software craftsmanship guide translating Robert C. Martin's universal Clean Code principles into modern TypeScript and React. Contains 61 rules across 11 categories — names, functions/components/hooks, self-documentation via types, formatting beyond Prettier, error handling, data shape and immutability, boundaries, composition, tests, emergence, and a unique Meta category for when clean-code principles conflict (DRY vs SRP, small functions vs deep modules, type safety vs ergonomics, tests as spec vs documentation). Every rule includes incorrect and correct examples in TS 5.x + React 19 with minimal diffs, plus first-class 'When NOT to apply' sections with concrete scenarios. Sister skill to .experimental/clean-code; defers framework-specific patterns to .curated/react and TS compiler performance to .curated/typescript.",
+  "references": [
+    "https://www.oreilly.com/library/view/clean-code-a/9780136083238/",
+    "https://web.stanford.edu/~ouster/cgi-bin/aposd.php",
+    "https://www.totaltypescript.com/",
+    "https://kentcdodds.com/",
+    "https://tkdodo.eu/",
+    "https://react.dev/",
+    "https://www.typescriptlang.org/docs/handbook/",
+    "https://sandimetz.com/blog/2016/1/20/the-wrong-abstraction",
+    "https://kentbeck.github.io/TestDesiderata/"
+  ]
+}
