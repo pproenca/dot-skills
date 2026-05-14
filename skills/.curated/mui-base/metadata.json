@@ -1,6 +1,6 @@
 {
   "name": "headless-ui-style",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "organization": "MUI",
   "date": "2026-01-17",
   "description": "MUI Base UI style guidelines for building headless React component libraries",

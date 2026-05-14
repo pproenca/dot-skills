@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "Planning",
+  "date": "May 2026",
+  "abstract": "Manages the lifecycle of ExecPlans — self-contained, living specifications for multi-step work spanning sessions or touching multiple files."
+}

@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "MCP",
+  "date": "May 2026",
+  "abstract": "Development workspace for the build-mcp-server skill containing evals and iteration artifacts."
+}

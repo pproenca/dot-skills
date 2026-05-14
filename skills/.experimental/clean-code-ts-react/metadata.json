@@ -1,5 +1,5 @@
 {
-  "version": "1.0.1",
+  "version": "1.0.2",
   "organization": "Robert C. Martin (Uncle Bob) — adapted for TypeScript + React",
   "technology": "TypeScript 5.x + React 19 (principles are language-agnostic; examples use modern TS+React idioms)",
   "discipline": "distillation",

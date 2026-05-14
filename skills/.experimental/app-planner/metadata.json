@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "iOS App Planning",
+  "date": "May 2026",
+  "abstract": "Design-plan generator that maps app domains to feature groups using Apple Design DNA patterns, producing milestone-scoped buildable plans."
+}

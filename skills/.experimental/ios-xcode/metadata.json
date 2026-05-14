@@ -1,0 +1,7 @@
+{
+  "version": "1.0.1",
+  "organization": "dot-skills",
+  "technology": "Xcode",
+  "date": "May 2026",
+  "abstract": "Xcode setup and tooling guidance for iOS 26 / Swift 6.2 modular MVVM-C projects covering project configuration, SwiftData container wiring, testing, debugging, profiling, and distribution."
+}

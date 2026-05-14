@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "CLI",
+  "date": "May 2026",
+  "abstract": "Development workspace for the cli-for-agents skill containing evals and iteration artifacts."
+}

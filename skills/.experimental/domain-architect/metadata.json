@@ -1,0 +1,7 @@
+{
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "Swift Architecture",
+  "date": "May 2026",
+  "abstract": "Discovers business domains in Swift codebases by tracing user capabilities, mapping vertical slices, and producing domain maps for downstream architectural decisions."
+}
