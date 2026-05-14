@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "Robert C. Martin (Uncle Bob)",
+  "technology": "Acceptance Testing Pipeline (language-agnostic)",
+  "discipline": "composition",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Guides agents through designing new features for Uncle Bob's Acceptance Pipeline Specification. Provides a 5-phase workflow — survey, classify extension point, draft spec, design conformance items, analyze impact — to produce spec-quality output that matches the original's language-neutral, implementation-agnostic style. Works in tandem with acceptance-pipeline-catalog.",
+  "references": [
+    "https://blog.cleancoder.com/"
+  ]
+}

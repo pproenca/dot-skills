@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "Robert C. Martin (Uncle Bob)",
+  "technology": "Acceptance Testing Pipeline (language-agnostic)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Catalogs Uncle Bob's Acceptance Pipeline Specification — a language-neutral spec for a Gherkin to JSON IR to acceptance tests to mutation testing pipeline. Contains ~50 rules across 14 categories covering parser, IR, generator, runtime, step handlers, test runner, mutation, value mutation, execution, result classification, reporting, project layout, conformance, and agent setup.",
+  "references": [
+    "https://blog.cleancoder.com/"
+  ]
+}
