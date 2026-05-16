@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Storybook",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with TypeScript/React component libraries. Contains 44 rules across 8 categories — setup & configuration, CSF3 story authoring, args/argTypes/controls, decorators & composition, interaction testing (play functions + Vitest addon), accessibility (axe-core via @storybook/addon-a11y), documentation & design system (autodocs/MDX/tokens/Figma), and build/deployment (Vite, on-demand bundling, Chromatic, CI caching). Each rule includes incorrect/correct examples in modern CSF3 + `satisfies Meta` form, plus When-NOT-to-use guidance for principle conflicts. Targets Storybook 9+ APIs (`storybook/test` import path, `parameters.a11y.test = 'error'`, destructured `canvas`/`userEvent` in play, `@storybook/addon-vitest` for CI).",
+  "references": [
+    "https://storybook.js.org/docs",
+    "https://storybook.js.org/blog",
+    "https://storybook.js.org/docs/api/csf",
+    "https://storybook.js.org/docs/writing-tests/interaction-testing",
+    "https://storybook.js.org/docs/writing-tests/accessibility-testing",
+    "https://storybook.js.org/docs/writing-tests/integrations/vitest-addon",
+    "https://storybook.js.org/docs/api/portable-stories/portable-stories-vitest",
+    "https://storybook.js.org/docs/configure",
+    "https://storybook.js.org/docs/writing-stories/decorators",
+    "https://storybook.js.org/docs/essentials/toolbars-and-globals",
+    "https://github.com/storybookjs/storybook",
+    "https://www.chromatic.com/docs/",
+    "https://mswjs.io/docs/",
+    "https://www.deque.com/axe/core-documentation/api-documentation/",
+    "https://testing-library.com/docs/"
+  ]
+}
