@@ -143,6 +143,37 @@ else
   echo "  SKIP: components dir not found"
 fi
 
+# --- Asset reference resolution ---
+echo ""
+echo "Checking asset references..."
+if [[ ! -d "$COMPONENTS_FULL" ]]; then
+  echo "  SKIP: components dir not found"
+else
+  PROJECT_ROOT_VERIFY="$(cd "$OUTPUT_ROOT/.." 2>/dev/null && pwd || echo "$OUTPUT_ROOT/..")"
+  MISSING_ASSETS=$(COMPONENTS_FULL="$COMPONENTS_FULL" PROJECT_ROOT="$PROJECT_ROOT_VERIFY" OUTPUT_ROOT="$OUTPUT_ROOT" node -e "
+    const fs=require('fs'), path=require('path');
+    const dir=process.env.COMPONENTS_FULL;
+    const refs = new Set();
+    for (const f of fs.readdirSync(dir).filter(f=>f.endsWith('.tsx'))) {
+      const tsx=fs.readFileSync(path.join(dir,f),'utf8');
+      for (const m of tsx.matchAll(/src=\"\/([^\"]+)\"/g)) refs.add(m[1]);
+    }
+    let missing=0;
+    for (const r of refs) {
+      // Resolution order: <project>/public/<r>, then <output_root>/<r>
+      const candidates=[path.join(process.env.PROJECT_ROOT,'public',r), path.join(process.env.OUTPUT_ROOT, r)];
+      if (!candidates.some(p=>fs.existsSync(p))) {
+        if (missing<5) console.error('  missing asset: '+r);
+        missing++;
+      }
+    }
+    if (missing>=5) console.error('  ... and more');
+    console.error('  Total refs: '+refs.size+', unresolved: '+missing);
+    process.stdout.write(String(missing));
+  ")
+  assert_true "all asset src=\"/...\" references resolve" "$([[ $MISSING_ASSETS -eq 0 ]] && echo 1 || echo 0)"
+fi
+
 # --- Summary ---
 echo ""
 echo "Results: $PASS passed, $FAIL failed"
