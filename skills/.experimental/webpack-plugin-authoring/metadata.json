@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Webpack 5 Plugins",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Comprehensive guide for authoring correct, performant webpack 5 plugins, designed for AI agents and LLMs. Contains 44 rules across 8 categories (8 hook + 7 asset + 5 cache + 5 life + 4 schema + 5 diag + 5 perf + 5 compat), ordered by the plugin authoring lifecycle: hook selection (CRITICAL — wrong hook silently breaks plugins), asset pipeline (CRITICAL — bypassing emitAsset corrupts hashing and SRI), caching & watch mode (HIGH — missing dependencies cause stale builds), plugin lifecycle (HIGH — instance state leaks across rebuilds), schema validation, error/log reporting, performance & parallelism, and packaging/compatibility. Each rule includes incorrect vs correct code examples drawn from production plugins (mini-css-extract-plugin, terser-webpack-plugin, compression-webpack-plugin, copy-webpack-plugin, html-webpack-plugin, Next.js webpack plugins) and quantified impact descriptions.",
+  "references": [
+    "https://webpack.js.org/contribute/writing-a-plugin/",
+    "https://webpack.js.org/api/compiler-hooks/",
+    "https://webpack.js.org/api/compilation-hooks/",
+    "https://webpack.js.org/api/plugins/",
+    "https://webpack.js.org/contribute/plugin-patterns/",
+    "https://webpack.js.org/api/compilation-object/",
+    "https://webpack.js.org/blog/2020-10-10-webpack-5-release/",
+    "https://github.com/webpack/changelog-v5/blob/master/guides/persistent-caching.md",
+    "https://github.com/webpack/schema-utils",
+    "https://github.com/webpack/webpack-sources",
+    "https://github.com/webpack-contrib/mini-css-extract-plugin",
+    "https://github.com/webpack-contrib/terser-webpack-plugin",
+    "https://github.com/webpack-contrib/compression-webpack-plugin",
+    "https://github.com/webpack-contrib/copy-webpack-plugin",
+    "https://github.com/webpack-contrib/css-minimizer-webpack-plugin",
+    "https://github.com/jantimon/html-webpack-plugin",
+    "https://github.com/vercel/next.js/tree/canary/packages/next/src/build/webpack",
+    "https://github.com/jestjs/jest/tree/main/packages/jest-worker"
+  ]
+}
