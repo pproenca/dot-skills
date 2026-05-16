@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "Refactoring",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Code-review and refactoring guide focused on the judgment gaps that produce excess code volume — wrong abstraction frame, hidden semantic duplication, derived state stored as state, procedural rebuilds of declarative concepts, speculative generality, defensive checks against impossible states, and type-system underuse. Contains 40 rules across 8 categories, prioritized by cascade impact. Deliberately skips what linters and tools like knip, eslint, ruff, and tsc already catch; this is the second pass that operates on conceptual modelling rather than mechanical cleanup. Each rule includes a WHY explanation, incorrect-vs-correct code examples with minimal diffs, and clear 'when NOT to apply' guidance.",
+  "references": [
+    "https://web.stanford.edu/~ouster/cgi-bin/aposd.php",
+    "https://tidyfirst.substack.com/",
+    "https://refactoring.com/",
+    "https://blog.janestreet.com/effective-ml-revisited/",
+    "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
+    "https://martinfowler.com/bliki/Yagni.html",
+    "https://verraes.net/2019/12/speculative-generality/",
+    "https://react.dev/learn/you-might-not-need-an-effect",
+    "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+    "https://pragprog.com/titles/swdddf/domain-modeling-made-functional/",
+    "https://effectivetypescript.com/",
+    "https://en.wikipedia.org/wiki/Composition_over_inheritance"
+  ]
+}
