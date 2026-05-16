@@ -1,0 +1,16 @@
+{
+  "output_root": "src",
+  "components_dir": "components",
+  "icons_dir": "components/icons",
+  "assets_dir": "assets",
+  "tokens_path": "styles/tokens.module.css",
+  "sketchtool_path": "/Applications/Sketch.app/Contents/Resources/sketchtool/bin/sketchtool",
+  "_setup_instructions": {
+    "output_root": "Root directory for generated source files, relative to the project. Most React/TS projects use 'src'. The skill writes everything under this path.",
+    "components_dir": "Subdirectory under output_root where one .tsx + .module.css pair is written per artboard. Example: 'components' or 'features/landing'.",
+    "icons_dir": "Subdirectory under output_root for SVG-as-React components produced by SVGR. Example: 'components/icons'.",
+    "assets_dir": "Subdirectory under output_root for raster assets (PNG/JPG) exported from Sketch slices. Example: 'assets' or 'public/img'.",
+    "tokens_path": "Path under output_root for the generated CSS-Modules tokens file. The file contains :root custom properties and is imported once at the app root. Example: 'styles/tokens.module.css'.",
+    "sketchtool_path": "Absolute path to the sketchtool binary. Default works on macOS with a standard Sketch.app install. On Apple Silicon this path is the same. Sketchtool ships inside Sketch.app and has no separate installer."
+  }
+}
