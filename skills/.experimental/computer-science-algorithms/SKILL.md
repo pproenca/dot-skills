@@ -1,13 +1,13 @@
 ---
 name: computer-science-algorithms
-description: Use this skill whenever choosing or implementing an algorithm or data structure — covers asymptotic complexity, data-structure selection, sorting & searching, dynamic programming, graph algorithms, divide & conquer, greedy algorithms, and string/sequence algorithms. Trigger on tasks involving "what's the right algorithm for…", performance-critical code, code with nested loops over the same input, recursive solutions, shortest-path / scheduling / matching / DP problems, and code review for accidental O(n²) blowup — even if the user doesn't explicitly mention "algorithm" or "complexity."
+description: Use this skill whenever choosing or implementing an algorithm or data structure — covers asymptotic complexity, data-structure selection, sorting & searching, dynamic programming, graph algorithms, divide & conquer, greedy algorithms, string/sequence algorithms, and the at-scale toolbox (Bloom filters, HyperLogLog, Count-Min Sketch, reservoir sampling, consistent hashing, external merge sort, Aho-Corasick, MinHash/LSH). Trigger on tasks involving "what's the right algorithm for…", performance-critical code, code with nested loops over the same input, recursive solutions, shortest-path / scheduling / matching / DP problems, code review for accidental O(n²) blowup, and any "how do I do X at scale / on a stream / without enough RAM" question — even if the user doesn't explicitly mention "algorithm" or "complexity."
 ---
 
 # Community Classical Computer Science Algorithms Best Practices
 
 A practitioner-oriented reference for choosing and implementing classical algorithms and data structures correctly. Organized by execution-lifecycle impact: the earliest decisions (asymptotic class, data-structure choice) cascade through everything else, so the rules near the top of the table matter most.
 
-**Scope:** the patterns that show up in everyday production code review and reasonable interview / contest problems — not an exhaustive cover of CLRS. Topics intentionally outside v0.1.0: network flow, modular arithmetic, Bellman-Ford and Floyd-Warshall as standalone rules, SCC (Tarjan/Kosaraju), computational geometry, FFT, Manacher / Z-function as standalone rules. They're flagged inline in the relevant rules.
+**Scope:** the patterns that show up in everyday production code review, reasonable interview / contest problems, **and the at-scale toolbox** (sketches, streaming, distributed primitives) — not an exhaustive cover of CLRS. Topics intentionally outside the current version: network flow, modular arithmetic, Bellman-Ford and Floyd-Warshall as standalone rules, SCC (Tarjan/Kosaraju), computational geometry, FFT, Manacher / Z-function as standalone rules. They're flagged inline in the relevant rules.
 
 Distilled from CLRS (*Introduction to Algorithms*, 4th ed.), Sedgewick & Wayne (*Algorithms*, 4th ed., Princeton), Skiena's *Algorithm Design Manual*, Laaksonen's *Competitive Programmer's Handbook*, [cp-algorithms.com](https://cp-algorithms.com/), and the [USACO Guide](https://usaco.guide).
 
@@ -34,6 +34,7 @@ Use these rules when:
 | 6 | Divide & Conquer / Recursion | `divide-` | MEDIUM-HIGH | Logarithmic-factor speedups; stack-depth and recurrence traps |
 | 7 | Greedy Algorithms | `greedy-` | MEDIUM | Fast when correct, silently wrong when not |
 | 8 | String & Sequence Algorithms | `str-` | MEDIUM | Pattern matching, parsing, substring queries |
+| 9 | Scale & Probabilistic Algorithms | `scale-` | MEDIUM | Sketches, streaming, distributed primitives — situational, decisive when they apply |
 
 ## Quick Reference
 
@@ -104,6 +105,19 @@ Use these rules when:
 - [`str-rolling-hash-for-multiple-substring-comparisons`](references/str-rolling-hash-for-multiple-substring-comparisons.md) — Two independent hashes, please
 - [`str-suffix-array-or-automaton-for-substring-queries`](references/str-suffix-array-or-automaton-for-substring-queries.md) — Heavy-duty substring tooling
 
+### 9. Scale & Probabilistic Algorithms (MEDIUM)
+
+The "unusual but valuable at scale" toolbox — sketches that trade tiny accuracy loss for orders-of-magnitude memory wins, streaming primitives for inputs that don't fit in RAM, and distributed structures that survive sharding changes.
+
+- [`scale-bloom-filter-for-probabilistic-membership`](references/scale-bloom-filter-for-probabilistic-membership.md) — 1 bit/element vs 8 bytes, 1% false-positive rate
+- [`scale-hyperloglog-for-cardinality-estimation`](references/scale-hyperloglog-for-cardinality-estimation.md) — Count distinct over billions in ~12 KB
+- [`scale-count-min-sketch-for-frequency-estimation`](references/scale-count-min-sketch-for-frequency-estimation.md) — Heavy hitters and frequency queries in fixed memory
+- [`scale-reservoir-sampling-for-streams`](references/scale-reservoir-sampling-for-streams.md) — Uniform k-sample from a stream of unknown length
+- [`scale-consistent-hashing-for-distributed-sharding`](references/scale-consistent-hashing-for-distributed-sharding.md) — Remap k/n keys (not all keys) on node changes
+- [`scale-external-merge-sort-for-out-of-memory-data`](references/scale-external-merge-sort-for-out-of-memory-data.md) — Sort 1 TB on 8 GB of RAM
+- [`scale-aho-corasick-for-multi-pattern-search`](references/scale-aho-corasick-for-multi-pattern-search.md) — Find all of m patterns in one pass over text
+- [`scale-minhash-lsh-for-near-duplicate-detection`](references/scale-minhash-lsh-for-near-duplicate-detection.md) — Near-duplicate pairs in O(n), not O(n²)
+
 ## How to Use
 
 Start with the category that matches the question:
@@ -114,6 +128,7 @@ Start with the category that matches the question:
 - **"Shortest path / connectivity / ordering tasks"** → `graph-`
 - **"Choose items to maximize value"** → start with `greedy-prove-exchange-argument-before-using`; fall back to `dp-knapsack-pattern`
 - **"Find / match strings"** → `str-`
+- **"Memory is the constraint, not time"** / **"Sample / count / deduplicate at scale"** / **"Sharding"** → `scale-`
 
 Code examples are in Python (most readable across audiences). The reasoning generalizes to any language — equivalent stdlib primitives are listed where they differ.
 

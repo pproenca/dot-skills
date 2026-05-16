@@ -1,17 +1,18 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "Community",
   "technology": "classical computer science algorithms",
   "discipline": "distillation",
   "type": "library-reference",
   "date": "May 2026",
-  "abstract": "A practitioner-oriented reference of classical algorithms and data structures organized by execution-lifecycle impact. 43 rules across 8 categories — asymptotic complexity, data-structure selection, sorting & searching, dynamic programming, graph algorithms, divide & conquer, greedy algorithms, and string/sequence algorithms — each with incorrect/correct code examples, the cascade rationale, and pointers to canonical sources (CLRS, Sedgewick & Wayne, Skiena, cp-algorithms.com, USACO Guide). Designed for AI agents to consult when choosing or reviewing algorithmic code.",
+  "abstract": "A practitioner-oriented reference of classical algorithms and data structures organized by execution-lifecycle impact. 51 rules across 9 categories — asymptotic complexity, data-structure selection, sorting & searching, dynamic programming, graph algorithms, divide & conquer, greedy algorithms, string/sequence algorithms, and the at-scale toolbox (Bloom filters, HyperLogLog, Count-Min Sketch, reservoir sampling, consistent hashing, external merge sort, Aho-Corasick, MinHash/LSH) — each with incorrect/correct code examples, the cascade rationale, and pointers to canonical sources (CLRS, Sedgewick & Wayne, Skiena, cp-algorithms.com, USACO Guide, Mining of Massive Datasets). Designed for AI agents to consult when choosing or reviewing algorithmic code.",
   "references": [
     "https://mitpress.mit.edu/9780262046305/introduction-to-algorithms/",
     "https://algs4.cs.princeton.edu/",
     "http://www.algorist.com/",
     "https://cses.fi/book/book.pdf",
     "https://cp-algorithms.com/",
-    "https://usaco.guide/"
+    "https://usaco.guide/",
+    "http://www.mmds.org/"
   ]
 }

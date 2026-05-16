@@ -44,3 +44,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 **Impact:** MEDIUM  
 **Description:** Strings have specialized algorithms (KMP, Z-function, suffix arrays, rolling hash) that beat naive O(nm) pattern matching. Choosing the right one prevents quadratic blowup on adversarial inputs.
+
+## 9. Scale & Probabilistic Algorithms (scale)
+
+**Impact:** MEDIUM  
+**Description:** Unusual algorithms that are situational at small n but decisive at production scale: probabilistic sketches (Bloom, HyperLogLog, Count-Min) trade tiny accuracy loss for orders-of-magnitude memory wins; streaming and external algorithms (reservoir sampling, external merge sort) handle inputs that don't fit in RAM; distributed primitives (consistent hashing, MinHash/LSH) make sharding and similarity tractable at billion-item scale. Category impact is MEDIUM because most workloads never need them; individual rule wins are HIGH when applicable.

@@ -1,6 +1,6 @@
 # classical computer science algorithms
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 Community  
 May 2026
 
@@ -13,7 +13,7 @@ May 2026
 
 ## Abstract
 
-A practitioner-oriented reference of classical algorithms and data structures organized by execution-lifecycle impact. 43 rules across 8 categories — asymptotic complexity, data-structure selection, sorting & searching, dynamic programming, graph algorithms, divide & conquer, greedy algorithms, and string/sequence algorithms — each with incorrect/correct code examples, the cascade rationale, and pointers to canonical sources (CLRS, Sedgewick & Wayne, Skiena, cp-algorithms.com, USACO Guide). Designed for AI agents to consult when choosing or reviewing algorithmic code.
+A practitioner-oriented reference of classical algorithms and data structures organized by execution-lifecycle impact. 51 rules across 9 categories — asymptotic complexity, data-structure selection, sorting & searching, dynamic programming, graph algorithms, divide & conquer, greedy algorithms, string/sequence algorithms, and the at-scale toolbox (Bloom filters, HyperLogLog, Count-Min Sketch, reservoir sampling, consistent hashing, external merge sort, Aho-Corasick, MinHash/LSH) — each with incorrect/correct code examples, the cascade rationale, and pointers to canonical sources (CLRS, Sedgewick & Wayne, Skiena, cp-algorithms.com, USACO Guide, Mining of Massive Datasets). Designed for AI agents to consult when choosing or reviewing algorithmic code.
 
 ---
 
@@ -70,6 +70,15 @@ A practitioner-oriented reference of classical algorithms and data structures or
    - 8.2 [Use Rolling Hashes For Many Substring Comparisons](references/str-rolling-hash-for-multiple-substring-comparisons.md) — MEDIUM (O(m) per equality check to O(1) — enables O(n) algorithms for hard string problems)
    - 8.3 [Use Suffix Arrays Or Suffix Automata For Heavy Substring Queries](references/str-suffix-array-or-automaton-for-substring-queries.md) — LOW-MEDIUM (O(n²) substring enumeration to O(n log n) construction + O(m) per query)
    - 8.4 [Use The Stdlib Or KMP For Substring Search, Not Naive Matching](references/str-kmp-or-builtin-find-not-naive-search.md) — MEDIUM (O(n·m) worst case to O(n+m) — orders of magnitude on adversarial input)
+9. [Scale & Probabilistic Algorithms](references/_sections.md#9-scale-&-probabilistic-algorithms) — **MEDIUM**
+   - 9.1 [Use A Bloom Filter For Cheap Probabilistic Membership At Scale](references/scale-bloom-filter-for-probabilistic-membership.md) — MEDIUM-HIGH (64x memory reduction vs hash set — 1 bit per element with ~1% false-positive rate)
+   - 9.2 [Use Aho-Corasick For Searching Many Patterns Against The Same Text](references/scale-aho-corasick-for-multi-pattern-search.md) — MEDIUM-HIGH (O(P · |T|) to O(|T| + |P_total| + matches) — m patterns in one pass)
+   - 9.3 [Use Consistent Hashing For Sharding That Survives Node Changes](references/scale-consistent-hashing-for-distributed-sharding.md) — MEDIUM-HIGH (~(N-1)/N key remap on node add to ~1/N — 80% to 20% reshuffling for N=5)
+   - 9.4 [Use Count-Min Sketch For Frequency Estimation On Massive Streams](references/scale-count-min-sketch-for-frequency-estimation.md) — MEDIUM-HIGH (O(n) memory to O(log n) fixed — frequency estimates and heavy hitters in KBs)
+   - 9.5 [Use External Merge Sort When The Input Doesn't Fit In Memory](references/scale-external-merge-sort-for-out-of-memory-data.md) — MEDIUM-HIGH (OOM or thrashing to bounded O(M) memory — sort a 1 TB file on an 8 GB box)
+   - 9.6 [Use HyperLogLog For Cardinality Estimation On Massive Streams](references/scale-hyperloglog-for-cardinality-estimation.md) — MEDIUM-HIGH (O(n) memory to ~12 KB fixed — count distinct over billions with ~0.81% standard error)
+   - 9.7 [Use MinHash + LSH For Near-Duplicate Detection At Billion-Doc Scale](references/scale-minhash-lsh-for-near-duplicate-detection.md) — MEDIUM-HIGH (O(n²) pairwise Jaccard to O(n) — find similar pairs in 10⁹ documents)
+   - 9.8 [Use Reservoir Sampling To Take A Uniform Sample From A Stream Of Unknown Length](references/scale-reservoir-sampling-for-streams.md) — MEDIUM-HIGH (O(n) memory to O(k) — uniform k-sample without buffering n)
 
 ---
 
@@ -81,6 +90,7 @@ A practitioner-oriented reference of classical algorithms and data structures or
 4. [https://cses.fi/book/book.pdf](https://cses.fi/book/book.pdf)
 5. [https://cp-algorithms.com/](https://cp-algorithms.com/)
 6. [https://usaco.guide/](https://usaco.guide/)
+7. [http://www.mmds.org/](http://www.mmds.org/)
 
 ---
 
