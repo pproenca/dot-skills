@@ -98,7 +98,10 @@ Only edit files when the user uses an explicit edit verb: **implement, fix, opti
 ```bash
 python3 scripts/analyze_complexity.py /path/to/repo --format markdown
 python3 scripts/analyze_complexity.py /path/to/repo --format json
+python3 scripts/analyze_complexity.py /path/to/repo --changed-only --base origin/main
 ```
+
+`--changed-only` restricts the scan to files changed vs `--base` (default `HEAD~1`). Use it for PR-focused complexity review.
 
 **Language depth:**
 
@@ -107,7 +110,11 @@ python3 scripts/analyze_complexity.py /path/to/repo --format json
 
 If the scanner reports nothing, still inspect known hot paths manually. Rendering churn, database query patterns, and framework lifecycle issues often need repository-specific context the scanner cannot see.
 
-**Exit codes:** `0` = scanned successfully, `2` = bad input (non-existent path / file instead of directory), `3` = zero files matched, `130` = interrupted.
+**Exit codes:** `0` = scanned successfully, `2` = bad input (non-existent path / file instead of directory / git error), `3` = zero files matched, `130` = interrupted.
+
+**Triage before reporting:** consult `references/false-positives.md` to dismiss known noise patterns (single-call predicates, Redux selectors, SQL-builder fluent methods, render-derived work on small static arrays) before recommending fixes.
+
+**Testing the scanner:** `python3 scripts/test_analyze_complexity.py` runs 13 regression tests that pin the false-positive fixes. Run after modifying the scanner.
 
 ## Optimization Safety Checklist
 
@@ -150,4 +157,5 @@ If the optimization breaks a test or changes observable behavior:
 
 - `references/optimization-playbook.md` — common O(n^2) → O(n log n) / O(n) transformations, framework-specific patterns, and "What Not To Do".
 - `references/report-template.md` — structure for the final analysis or audit output.
-- `scripts/_sections.md` — scanner invocation, exit codes, and limitations.
+- `references/false-positives.md` — catalog of scanner findings that look real but aren't. Consult before recommending fixes.
+- `scripts/_sections.md` — scanner invocation, flags, exit codes, and limitations.

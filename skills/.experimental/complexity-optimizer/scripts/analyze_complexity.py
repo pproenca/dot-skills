@@ -8,6 +8,8 @@ import ast
 import json
 import os
 import re
+import subprocess
+import sys
 from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Iterable
@@ -66,9 +68,11 @@ MEMBERSHIP_RE = re.compile(
     r"(\.includes\s*\(|\.indexOf\s*\(|\bin_array\s*\(|\bcontains\s*\()"
 )
 SORT_RE = re.compile(r"(\.sort\s*\(|\bsorted\s*\(|\bsort\s*\()")
+# Distinctive I/O / ORM method names only. Dropped `query|execute|select|where` —
+# they collide with Redux selectors (selectFoo), React Testing Library (`screen.findBy`),
+# and SQL-builder DSLs used outside loops.
 QUERY_IN_LOOP_RE = re.compile(
-    r"\b(fetch|axios\.|request\s*\(|query\s*\(|execute\s*\(|findMany\s*\(|findOne\s*\(|findUnique\s*\()",
-    re.IGNORECASE,
+    r"\b(fetch\s*\(|axios\.|request\s*\(|findMany\s*\(|findOne\s*\(|findUnique\s*\(|prisma\.|knex\.|\.exec\s*\()"
 )
 # Require a lowercase letter in the second position so SCREAMING_SNAKE constants
 # (MAX_RETRIES, API_URL) do not trigger render-path detection.
@@ -97,6 +101,33 @@ def iter_files(root: Path, excludes: set[str]) -> Iterable[Path]:
             path = Path(dirpath) / filename
             if path.suffix in TEXT_EXTENSIONS:
                 yield path
+
+
+def git_changed_files(root: Path, base: str) -> list[Path] | None:
+    """Return files changed vs `base` (e.g. 'HEAD~1', 'origin/main'). None if not a git repo."""
+    try:
+        result = subprocess.run(
+            ["git", "-C", str(root), "diff", "--name-only", "--diff-filter=ACMR", base, "--"],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+    except FileNotFoundError:
+        print("error: git not found on PATH", file=sys.stderr)
+        return None
+    if result.returncode != 0:
+        stderr = result.stderr.strip()
+        print(f"error: git diff failed (base={base!r}): {stderr}", file=sys.stderr)
+        return None
+    paths: list[Path] = []
+    for line in result.stdout.splitlines():
+        line = line.strip()
+        if not line:
+            continue
+        path = (root / line).resolve()
+        if path.exists() and path.suffix in TEXT_EXTENSIONS:
+            paths.append(path)
+    return paths
 
 
 def read_text(path: Path) -> str | None:
@@ -178,16 +209,18 @@ class PythonVisitor(ast.NodeVisitor):
                 f"{name}() inside a loop may repeatedly scan a collection.",
                 "Consider precomputing an index/grouping or combining passes.",
             )
-        if self.loop_depth and name.lower() in {
+        # Distinctive ORM/HTTP method names only. `query`, `execute`, `select`, `where`,
+        # `find` are too common in non-DB contexts (Redux selectors, list utilities) to
+        # flag without surrounding evidence.
+        if self.loop_depth and name in {
             "fetch",
             "request",
-            "query",
-            "execute",
-            "find",
             "find_one",
             "find_many",
-            "select",
-            "where",
+            "findone",
+            "findmany",
+            "findunique",
+            "find_unique",
         }:
             self.add(
                 node,
@@ -366,26 +399,51 @@ def main() -> int:
     parser.add_argument("--format", choices=["markdown", "json"], default="markdown")
     parser.add_argument("--exclude", action="append", default=[], help="Additional directory name to exclude.")
     parser.add_argument("--max-findings", type=int, default=80)
+    parser.add_argument(
+        "--changed-only",
+        action="store_true",
+        help="Restrict scan to files changed vs --base. Requires a git repo at root.",
+    )
+    parser.add_argument(
+        "--base",
+        default="HEAD~1",
+        help="Git ref to diff against when --changed-only is set (default: HEAD~1).",
+    )
     args = parser.parse_args()
 
     root = Path(args.root).resolve()
     if not root.exists():
-        print(f"error: path does not exist: {root}", file=__import__("sys").stderr)
+        print(f"error: path does not exist: {root}", file=sys.stderr)
         return 2
     if not root.is_dir():
         print(
             f"error: root must be a directory (got file: {root}). Pass the enclosing directory instead.",
-            file=__import__("sys").stderr,
+            file=sys.stderr,
         )
         return 2
 
     excludes = DEFAULT_EXCLUDES | set(args.exclude)
+
+    if args.changed_only:
+        scoped = git_changed_files(root, args.base)
+        if scoped is None:
+            return 2
+        if not scoped:
+            print(
+                f"no changed files vs {args.base} in supported extensions",
+                file=sys.stderr,
+            )
+            return 0
+        file_iter: Iterable[Path] = scoped
+    else:
+        file_iter = iter_files(root, excludes)
+
     findings: list[Finding] = []
     files_scanned = 0
     files_failed = 0
 
     try:
-        for path in iter_files(root, excludes):
+        for path in file_iter:
             text = read_text(path)
             if text is None:
                 files_failed += 1
@@ -400,16 +458,16 @@ def main() -> int:
                 files_failed += 1
                 print(
                     f"warn: scan failed for {rel(path, root)}: {exc.__class__.__name__}: {exc}",
-                    file=__import__("sys").stderr,
+                    file=sys.stderr,
                 )
     except KeyboardInterrupt:
-        print("interrupted", file=__import__("sys").stderr)
+        print("interrupted", file=sys.stderr)
         return 130
 
     if files_scanned == 0:
         print(
             f"error: scanned 0 files under {root}. Check the path, supported extensions, or --exclude flags.",
-            file=__import__("sys").stderr,
+            file=sys.stderr,
         )
         return 3
 
