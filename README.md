@@ -15,7 +15,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [ios-taste](skills/.curated/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
 | [msw](skills/.curated/msw) | MSW (Mock Service Worker) best practices for API mocking in tests |
 | [mui-base](skills/.curated/mui-base) | MUI Base UI style guidelines for building headless React component libraries |
-| [nextjs](skills/.curated/nextjs) | Next.js 16 App Router performance optimization guidelines |
+| [nextjs](skills/.curated/nextjs) | Next.js 16 App Router performance, caching, server components, server actions, routing, and.. |
 | [nuqs-codemod-runner](skills/.curated/nuqs-codemod-runner) | Use this skill whenever a codebase has nuqs code that may be stuck on pre-v2.5 patterns —.. |
 | [nuqs-scaffolder](skills/.curated/nuqs-scaffolder) | Use this skill whenever you need to add URL-state filters to a Next.js page, build a typed.. |
 | [nuqs](skills/.curated/nuqs) | nuqs (type-safe URL query state) best practices for Next.js and other React frameworks |
@@ -43,6 +43,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [typescript](skills/.curated/typescript) | This skill should be used when the user asks to "optimize TypeScript performance", "speed up tsc.. |
 | [ui-design](skills/.curated/ui-design) | UI/UX and frontend design best practices guidelines |
 | [vitest](skills/.curated/vitest) | Vitest testing framework patterns for test setup, async testing, mocking with vi.*, snapshots,.. |
+| [web-taste](skills/.curated/web-taste) | Designs React 19 + Next.js 16 + Tailwind CSS experiences with real taste — starting from user.. |
 | [zod](skills/.curated/zod) | Zod schema validation best practices for type safety, parsing, and error handling |
 
 ### Experimental Skills
@@ -51,24 +52,33 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 |-------|-------------|
 | [12-factor-app](skills/.experimental/12-factor-app) | The Twelve-Factor App methodology for building scalable, maintainable cloud-native applications |
 | [37signals-rails](skills/.experimental/37signals-rails) | 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the.. |
+| [acceptance-pipeline-catalog](skills/.experimental/acceptance-pipeline-catalog) | Use when implementing, reviewing, or debugging a Gherkin acceptance-test pipeline with mutation.. |
+| [acceptance-pipeline-feature-design](skills/.experimental/acceptance-pipeline-feature-design) | Use this skill when designing new features, extensions, or modifications to Uncle Bob's.. |
 | [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
 | [audio-voice-recovery](skills/.experimental/audio-voice-recovery) | Audio forensics and voice recovery guidelines for CSI-level audio analysis |
 | [base-ui-migrator](skills/.experimental/base-ui-migrator) | Use this skill whenever the user wants to migrate React UI code to Base UI (`@base-ui/react`) —.. |
+| [better-auth-scaffold](skills/.experimental/better-auth-scaffold) | Use this skill whenever scaffolding a Better Auth setup in a Next.js (App Router) + Drizzle.. |
+| [better-auth](skills/.experimental/better-auth) | Use this skill whenever writing, reviewing, or migrating Better Auth code in TypeScript —.. |
 | [bug-review](skills/.experimental/bug-review) | Use this skill when a user asks to review a pull request for bugs, wants AI code review focused.. |
 | [build-mcp-server](skills/.experimental/build-mcp-server) | This skill should be used when the user asks to "build an MCP server", "create an MCP", "make an.. |
 | [chrome-extension-ui](skills/.experimental/chrome-extension-ui) | Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content.. |
 | [chrome-extension](skills/.experimental/chrome-extension) | Chrome Extensions (Manifest V3) performance and code quality guidelines |
 | [clean-architecture](skills/.experimental/clean-architecture) | Clean Architecture principles and best practices from Robert C |
+| [clean-code-ts-react](skills/.experimental/clean-code-ts-react) | Use when writing, reviewing, or refactoring TypeScript or React code for craftsmanship — naming,.. |
 | [clean-code](skills/.experimental/clean-code) | Use when writing, reviewing, or refactoring code for maintainability and readability |
 | [cli-for-agents](skills/.experimental/cli-for-agents) | Use this skill whenever designing, building, or reviewing a command-line tool that AI agents or.. |
 | [cli-review-runner](skills/.experimental/cli-review-runner) | Use this skill whenever reviewing, auditing, or grading a command-line tool for.. |
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
+| [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [diagram-quality](skills/.experimental/diagram-quality) | Use this skill whenever calling agent-uml MCP tools (design_create, diagram_upsert,.. |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
 | [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |
+| [drizzle-sqlite-scaffold](skills/.experimental/drizzle-sqlite-scaffold) | Use this skill whenever scaffolding Drizzle ORM + SQLite boilerplate — a new.. |
+| [drizzle-sqlite](skills/.experimental/drizzle-sqlite) | Use this skill whenever writing, reviewing, or refactoring Drizzle ORM code targeting SQLite.. |
+| [dx-harness](skills/.experimental/dx-harness) | Use this skill whenever the user mentions developer-experience friction, slow onboarding,.. |
 | [effect-ts](skills/.experimental/effect-ts) | Use this skill whenever writing, reviewing, debugging, or refactoring TypeScript code that uses.. |
 | [emilkowal-animations](skills/.experimental/emilkowal-animations) | Emil Kowalski's animation best practices for web interfaces |
 | [eval-mcp](skills/.experimental/eval-mcp) | Use this skill when the user asks to "evaluate MCP tools", "test tool selection", "improve tool.. |
@@ -80,6 +90,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [graph-schema](skills/.experimental/graph-schema) | Graph database schema design and data modeling expert |
 | [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
+| [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Use this skill whenever scaffolding Inngest event-driven functions in a Next.js (App Router).. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
 | [ios-chaos-monkey](skills/.experimental/ios-chaos-monkey) | Crash-hunter skill for iOS 26 / Swift 6.2 clinic-architecture codebases that finds and fixes.. |
 | [ios-design-system](skills/.experimental/ios-design-system) | Clinic-architecture-aligned iOS design system engineering for SwiftUI (iOS 26 / Swift 6.2).. |
@@ -97,6 +108,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [marketplace-pre-member-personalisation](skills/.experimental/marketplace-pre-member-personalisation) | Use this skill whenever designing, building, reviewing, or diagnosing the pre-member journey of.. |
 | [marketplace-recsys-feature-engineering](skills/.experimental/marketplace-recsys-feature-engineering) | Use this skill whenever deciding what features to extract from raw marketplace assets — listing.. |
 | [marketplace-search-recsys-planning](skills/.experimental/marketplace-search-recsys-planning) | Use this skill whenever planning, designing, reviewing, or improving search and recommendation.. |
+| [nextjs-bundle-optimizer](skills/.experimental/nextjs-bundle-optimizer) | Use this skill whenever a Next.js 16 app needs smaller bundles or faster builds — even if the.. |
 | [nginx-c-module-debug](skills/.experimental/nginx-c-module-debug) | nginx C module debugging guidelines based on the official nginx development guide |
 | [nginx-c-module-design](skills/.experimental/nginx-c-module-design) | nginx C module directive design guidelines for creating admin-friendly configuration interfaces |
 | [nginx-c-module-perf](skills/.experimental/nginx-c-module-perf) | nginx C module performance optimization and reliability guidelines based on the official nginx.. |
@@ -113,6 +125,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [react-refactor](skills/.experimental/react-refactor) | Architectural refactoring guide for React applications covering component architecture, state.. |
 | [react-testing-library](skills/.experimental/react-testing-library) | React Testing Library best practices for writing maintainable, user-centric tests |
 | [shell](skills/.experimental/shell) | Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts |
+| [storybook](skills/.experimental/storybook) | Use whenever creating, configuring, or extending Storybook for a TS/React component library —.. |
 | [swift-data](skills/.experimental/swift-data) | SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |
 | [swift-optimise](skills/.experimental/swift-optimise) | Swift 6.2 and SwiftUI performance optimization for iOS 26 clinic architecture codebases |
 | [swift-refactor](skills/.experimental/swift-refactor) | Swift and SwiftUI refactoring patterns aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C.. |
@@ -128,6 +141,9 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [unix-cli](skills/.experimental/unix-cli) | UNIX command-line interface guidelines for building tools that follow POSIX conventions, proper.. |
 | [vhs](skills/.experimental/vhs) | VHS terminal recording best practices from Charmbracelet |
 | [vite](skills/.experimental/vite) | Vite performance optimization guidelines |
+| [web-rules](skills/.experimental/web-rules) | Strict design and UX rules for React 19 + Next.js 16 (App Router) + Tailwind CSS 4 |
+| [webpack-plugin-authoring](skills/.experimental/webpack-plugin-authoring) | Use this skill whenever writing, reviewing, or debugging webpack 5 plugins — covers hook.. |
+| [webpack-plugin-recipes](skills/.experimental/webpack-plugin-recipes) | Use whenever you face a webpack-build problem that ends with needing to write a plugin — 26.. |
 | [wxt-browser-extensions](skills/.experimental/wxt-browser-extensions) | WXT browser extension performance optimization guidelines |
 | [zustand](skills/.experimental/zustand) | Zustand state management best practices for React applications |
 <!-- SKILLS-TABLE:END -->

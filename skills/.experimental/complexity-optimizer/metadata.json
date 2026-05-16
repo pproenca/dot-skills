@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "organization": "Community",
+  "technology": "polyglot static analysis",
+  "discipline": "composition",
+  "type": "quality",
+  "date": "May 2026",
+  "abstract": "Analyze a codebase for algorithmic complexity hotspots (nested loops, sort-in-loop, repeated membership checks, N+1 I/O, render-path recomputation) and propose safe optimizations that preserve behavior. Bundles a heuristic scanner (Python AST for .py, regex-based for JS/TS/JSX/TSX/Java/Go/Ruby/PHP/C#/C/C++/Swift/Vue/Svelte/Kotlin/Rust/Dart/Scala) plus a methodology that requires test coverage, an Optimization Safety Checklist, and explicit user consent before editing files. Report-only by default; destructive only when the user explicitly asks to implement, fix, apply, or refactor.",
+  "references": [
+    "https://en.wikipedia.org/wiki/Big_O_notation",
+    "https://docs.python.org/3/library/ast.html"
+  ]
+}

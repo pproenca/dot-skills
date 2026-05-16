@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write|MultiEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'complexity-optimizer: file modified. Run the project test command for the changed module before reporting success. If tests fail, revert with: git restore <file>'",
+            "timeout": 2
+          }
+        ]
+      }
+    ]
+  }
+}
