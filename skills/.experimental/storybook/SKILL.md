@@ -5,7 +5,7 @@ description: Use whenever creating, configuring, or extending Storybook for a TS
 
 # dot-skills Storybook Best Practices
 
-Comprehensive guide for using Storybook 9+ as the workshop *and* test bench for a TypeScript/React component library. **44 rules across 8 categories**, ordered by the lifecycle of a component in your design system: a wrong `.storybook/main.ts` cascades into every story; a malformed CSF Meta blocks autodocs, controls, tests, and the a11y panel for that file.
+Comprehensive guide for using Storybook 9+ as the workshop *and* test bench for a TypeScript/React component library. **52 rules across 8 categories**, ordered by the lifecycle of a component in your design system: a wrong `.storybook/main.ts` cascades into every story; a malformed CSF Meta blocks autodocs, controls, tests, and the a11y panel for that file.
 
 ## What this skill covers
 
@@ -39,14 +39,14 @@ Order reflects the **component lifecycle** (configure → author → wire → de
 
 | Priority | Category | Impact | Prefix | Rules |
 |----------|----------|--------|--------|-------|
-| 1 | Setup & Configuration | CRITICAL | `config-` | 6 |
-| 2 | Story Authoring (CSF3) | CRITICAL | `csf-` | 7 |
+| 1 | Setup & Configuration | CRITICAL | `config-` | 8 |
+| 2 | Story Authoring (CSF3) | CRITICAL | `csf-` | 8 |
 | 3 | Args, ArgTypes & Controls | HIGH | `args-` | 5 |
-| 4 | Decorators & Composition | HIGH | `deco-` | 5 |
+| 4 | Decorators & Composition | HIGH | `deco-` | 7 |
 | 5 | Interaction Testing | HIGH | `test-` | 7 |
 | 6 | Accessibility (axe) | HIGH | `axe-` | 5 |
 | 7 | Documentation & Design System | MEDIUM-HIGH | `docs-` | 5 |
-| 8 | Build, Performance & Deployment | MEDIUM | `build-` | 4 |
+| 8 | Build, Performance & Deployment | MEDIUM | `build-` | 7 |
 
 ## Quick Reference
 
@@ -58,6 +58,8 @@ Order reflects the **component lifecycle** (configure → author → wire → de
 - [`config-typed-preview`](references/config-typed-preview.md) — Type `preview.ts` with the framework's `Preview` type
 - [`config-add-addons-via-cli`](references/config-add-addons-via-cli.md) — Install addons with `npx storybook add`, never by hand
 - [`config-static-dirs-not-bundler-imports`](references/config-static-dirs-not-bundler-imports.md) — Serve assets via `staticDirs`, not bundler imports
+- [`config-tokens-css-vars-in-preview`](references/config-tokens-css-vars-in-preview.md) — Wire Style Dictionary / Tokens Studio output into `preview.ts` as CSS variables
+- [`config-story-sort-for-large-libraries`](references/config-story-sort-for-large-libraries.md) — `parameters.options.storySort` order for design-system sidebars (Foundations → Components → Patterns)
 
 ### 2. Story Authoring — CSF3 (CRITICAL)
 
@@ -68,6 +70,7 @@ Order reflects the **component lifecycle** (configure → author → wire → de
 - [`csf-tags-autodocs-on-meta`](references/csf-tags-autodocs-on-meta.md) — `tags: ['autodocs']` belongs on the meta, not per-story
 - [`csf-co-locate-stories-with-component`](references/csf-co-locate-stories-with-component.md) — Co-locate `Component.stories.tsx` next to `Component.tsx`
 - [`csf-default-export-is-the-meta`](references/csf-default-export-is-the-meta.md) — Default export = meta; named exports = stories
+- [`csf-title-hierarchy-for-design-systems`](references/csf-title-hierarchy-for-design-systems.md) — Meta `title: 'Components/Inputs/Button'` taxonomy (Foundations / Components / Patterns / Examples)
 
 ### 3. Args, ArgTypes & Controls (HIGH)
 
@@ -84,6 +87,8 @@ Order reflects the **component lifecycle** (configure → author → wire → de
 - [`deco-mock-modules-with-subpath-imports`](references/deco-mock-modules-with-subpath-imports.md) — Mock non-network modules via `package.json#imports`
 - [`deco-decorator-component-not-call`](references/deco-decorator-component-not-call.md) — Render decorators as `<Story />`, not `{story()}`
 - [`deco-context-aware-decorators`](references/deco-context-aware-decorators.md) — Read `globals` and `parameters` from `context` for reactive wrappers
+- [`deco-themes-addon-for-multi-brand`](references/deco-themes-addon-for-multi-brand.md) — Use `@storybook/addon-themes` `withThemeByClassName`/`withThemeByDataAttribute` for multi-brand switching
+- [`deco-rtl-direction-toggle`](references/deco-rtl-direction-toggle.md) — Toolbar `dir` toggle that wraps every story with `dir="rtl"` for bidi regression
 
 ### 5. Interaction Testing (HIGH)
 
@@ -117,6 +122,9 @@ Order reflects the **component lifecycle** (configure → author → wire → de
 - [`build-trim-test-bundle`](references/build-trim-test-bundle.md) — Trim the Vitest-addon test build via `main.ts` `build.test` config
 - [`build-deploy-static-build-to-shareable-host`](references/build-deploy-static-build-to-shareable-host.md) — Deploy `storybook build` to Chromatic/Vercel for every PR
 - [`build-cache-storybook-in-ci`](references/build-cache-storybook-in-ci.md) — Cache the Vite/Webpack and Playwright layers in CI
+- [`build-storybook-composition-refs`](references/build-storybook-composition-refs.md) — `refs` in `main.ts` to compose multi-package design systems into one host Storybook
+- [`build-manager-brand`](references/build-manager-brand.md) — `.storybook/manager.ts` with `create()` for logo, brand link, and sidebar palette
+- [`build-chromatic-modes-multi-theme`](references/build-chromatic-modes-multi-theme.md) — Snapshot every story across themes / viewports / direction via Chromatic `modes`
 
 ## How to use
 
@@ -125,6 +133,9 @@ Order reflects the **component lifecycle** (configure → author → wire → de
 - For "I'm writing a new story," read `csf-` and `args-`.
 - For "I want tests on my stories," read `test-` and `deco-msw-for-network-mocks`.
 - For "I want a11y to fail CI on violations," read all `axe-` rules.
+- For "I'm building a design system from scratch," read in this order: `config-tokens-css-vars-in-preview`, `config-story-sort-for-large-libraries`, `csf-title-hierarchy-for-design-systems`, `deco-themes-addon-for-multi-brand`, `build-manager-brand`, `build-chromatic-modes-multi-theme`. Then `docs-component-status-tags` and `docs-design-tokens-as-stories` for the governance + token-display layer.
+- For "I have a multi-package monorepo design system," read `build-storybook-composition-refs` first, then the design-system path above.
+- For "I need RTL / multi-direction coverage," read `deco-rtl-direction-toggle` then `build-chromatic-modes-multi-theme` to wire RTL into visual regression.
 - For [`gotchas.md`](gotchas.md): failure modes discovered over time; always check before debugging an obscure issue.
 - Add new rules using [`assets/templates/_template.md`](assets/templates/_template.md).
 

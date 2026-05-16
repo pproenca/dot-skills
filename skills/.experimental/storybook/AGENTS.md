@@ -13,19 +13,21 @@ May 2026
 
 ## Abstract
 
-Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with TypeScript/React component libraries. Contains 44 rules across 8 categories — setup & configuration, CSF3 story authoring, args/argTypes/controls, decorators & composition, interaction testing (play functions + Vitest addon), accessibility (axe-core via @storybook/addon-a11y), documentation & design system (autodocs/MDX/tokens/Figma), and build/deployment (Vite, on-demand bundling, Chromatic, CI caching). Each rule includes incorrect/correct examples in modern CSF3 + `satisfies Meta` form, plus When-NOT-to-use guidance for principle conflicts. Targets Storybook 9+ APIs (`storybook/test` import path, `parameters.a11y.test = 'error'`, destructured `canvas`/`userEvent` in play, `@storybook/addon-vitest` for CI).
+Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with TypeScript/React design systems and component libraries. Contains 52 rules across 8 categories — setup & configuration (incl. Style Dictionary / Tokens Studio pipeline and storySort), CSF3 story authoring (incl. design-system title taxonomy), args/argTypes/controls, decorators & composition (incl. @storybook/addon-themes multi-brand switching and RTL toggle), interaction testing (play functions + Vitest addon), accessibility (axe-core via @storybook/addon-a11y), documentation & design system (autodocs/MDX/tokens/Figma/status governance), and build/deployment (Vite, on-demand bundling, Chromatic modes for multi-theme visual regression, Composition `refs` for multi-package, manager.ts branding, CI caching). Each rule includes incorrect/correct examples in modern CSF3 + `satisfies Meta` form, plus When-NOT-to-use guidance for principle conflicts. Targets Storybook 9+ APIs (`storybook/test` import path, `parameters.a11y.test = 'error'`, destructured `canvas`/`userEvent` in play, `@storybook/addon-vitest` for CI, `@storybook/addon-themes` decorators).
 
 ---
 
 ## Table of Contents
 
 1. [Setup & Configuration](references/_sections.md#1-setup-&-configuration) — **CRITICAL**
-   - 1.1 [Install addons with `npx storybook add` instead of hand-editing](references/config-add-addons-via-cli.md) — CRITICAL (prevents missing peer-dependency installs and broken registration)
-   - 1.2 [Narrow the `stories` glob to story files only](references/config-narrow-stories-glob.md) — CRITICAL (2-10x faster cold start, prevents accidental story matching)
-   - 1.3 [Pick the framework package that matches your build](references/config-pick-the-right-framework-package.md) — CRITICAL (prevents broken RSC, image optimization, and routing in stories)
-   - 1.4 [Serve assets via `staticDirs`, not bundler imports](references/config-static-dirs-not-bundler-imports.md) — CRITICAL (prevents broken asset paths in static builds)
-   - 1.5 [Type main.ts with `satisfies StorybookConfig`](references/config-typed-main-config.md) — CRITICAL (prevents addon-name and framework-options typos from passing silently)
-   - 1.6 [Type preview.ts with the framework's `Preview` type](references/config-typed-preview.md) — CRITICAL (prevents silently-ignored typos in global decorators, parameters, and globalTypes)
+   - 1.1 [Configure `storySort` in `preview.ts` for large design systems](references/config-story-sort-for-large-libraries.md) — HIGH (keeps the sidebar navigable as the library grows past 30+ components)
+   - 1.2 [Install addons with `npx storybook add` instead of hand-editing](references/config-add-addons-via-cli.md) — CRITICAL (prevents missing peer-dependency installs and broken registration)
+   - 1.3 [Narrow the `stories` glob to story files only](references/config-narrow-stories-glob.md) — CRITICAL (2-10x faster cold start, prevents accidental story matching)
+   - 1.4 [Pick the framework package that matches your build](references/config-pick-the-right-framework-package.md) — CRITICAL (prevents broken RSC, image optimization, and routing in stories)
+   - 1.5 [Serve assets via `staticDirs`, not bundler imports](references/config-static-dirs-not-bundler-imports.md) — CRITICAL (prevents broken asset paths in static builds)
+   - 1.6 [Type main.ts with `satisfies StorybookConfig`](references/config-typed-main-config.md) — CRITICAL (prevents addon-name and framework-options typos from passing silently)
+   - 1.7 [Type preview.ts with the framework's `Preview` type](references/config-typed-preview.md) — CRITICAL (prevents silently-ignored typos in global decorators, parameters, and globalTypes)
+   - 1.8 [Wire design tokens into `preview.ts` as CSS variables, not story-local imports](references/config-tokens-css-vars-in-preview.md) — HIGH (makes every story render with the live token build and prevents per-story drift)
 2. [Story Authoring (CSF3)](references/_sections.md#2-story-authoring-(csf3)) — **CRITICAL**
    - 2.1 [Always set `component` on the meta](references/csf-set-meta-component-explicitly.md) — CRITICAL (enables autodocs, controls, prop-type inference, and arg autocompletion)
    - 2.2 [Name stories by the state they capture, not the prop they set](references/csf-name-stories-by-state.md) — CRITICAL (enables designers and PMs to scan the sidebar without reading args)
@@ -33,7 +35,8 @@ Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with Type
    - 2.4 [Prefer `args` over `render` for single-component stories](references/csf-prefer-args-over-render.md) — CRITICAL (enables controls, autodocs, and play-function arg injection)
    - 2.5 [Put `tags: ['autodocs']` on the meta, not on individual stories](references/csf-tags-autodocs-on-meta.md) — CRITICAL (prevents missing or duplicated docs pages)
    - 2.6 [The default export is the `meta`, never a story](references/csf-default-export-is-the-meta.md) — CRITICAL (prevents silent story-discovery breakage)
-   - 2.7 [Use `satisfies Meta<typeof Component>`, not a type annotation](references/csf-satisfies-meta-not-typed.md) — CRITICAL (preserves narrow arg types so `StoryObj<typeof meta>` autocompletes)
+   - 2.7 [Title each meta with a design-system taxonomy, not just the component name](references/csf-title-hierarchy-for-design-systems.md) — HIGH (makes the sidebar self-organizing as the library grows)
+   - 2.8 [Use `satisfies Meta<typeof Component>`, not a type annotation](references/csf-satisfies-meta-not-typed.md) — CRITICAL (preserves narrow arg types so `StoryObj<typeof meta>` autocompletes)
 3. [Args, ArgTypes & Controls](references/_sections.md#3-args,-argtypes-&-controls) — **HIGH**
    - 3.1 [Avoid JSX in `args` defaults — compose JSX in `render` instead](references/args-no-jsx-in-args.md) — HIGH (prevents broken docs source code and Chromatic snapshot diffs)
    - 3.2 [Declare `control` and `options` for prop types Storybook can't infer](references/args-explicit-control-for-unions.md) — HIGH (prevents invalid string inputs and enables proper select/radio controls)
@@ -41,11 +44,13 @@ Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with Type
    - 3.4 [Pick the right knob — `args` vs `parameters` vs `globals`](references/args-pick-args-vs-parameters-vs-globals.md) — HIGH (prevents misuse that breaks controls, addons, or toolbar state)
    - 3.5 [Use `fn()` from `storybook/test` for callback args](references/args-use-fn-for-callbacks.md) — HIGH (enables Actions tab logging and spy-based assertions in one line)
 4. [Decorators & Composition](references/_sections.md#4-decorators-&-composition) — **HIGH**
-   - 4.1 [Decorators receive a `Story` component — render it as `<Story />`, not `{story()}`](references/deco-decorator-component-not-call.md) — HIGH (prevents lost story context (args, parameters, decorator chain))
-   - 4.2 [Mock network with MSW handlers, not by stubbing the SDK](references/deco-msw-for-network-mocks.md) — HIGH (prevents stories from breaking when the data-fetching layer is refactored)
-   - 4.3 [Mock non-network modules with subpath imports, not runtime patching](references/deco-mock-modules-with-subpath-imports.md) — HIGH (enables typed, shared mocks instead of brittle per-decorator vi.spyOn calls)
-   - 4.4 [Put global providers in `preview.ts` decorators, not in every story](references/deco-global-providers-in-preview.md) — HIGH (prevents per-story drift and silent provider gaps)
-   - 4.5 [Read `context` in decorators to make them story-reactive](references/deco-context-aware-decorators.md) — HIGH (enables one decorator to handle theme, locale, and viewport changes)
+   - 4.1 [Add a toolbar `dir` toggle and verify every component in RTL](references/deco-rtl-direction-toggle.md) — MEDIUM-HIGH (catches LTR-only assumptions (margin-left, padding-right, raw arrows) before they ship)
+   - 4.2 [Decorators receive a `Story` component — render it as `<Story />`, not `{story()}`](references/deco-decorator-component-not-call.md) — HIGH (prevents lost story context (args, parameters, decorator chain))
+   - 4.3 [Mock network with MSW handlers, not by stubbing the SDK](references/deco-msw-for-network-mocks.md) — HIGH (prevents stories from breaking when the data-fetching layer is refactored)
+   - 4.4 [Mock non-network modules with subpath imports, not runtime patching](references/deco-mock-modules-with-subpath-imports.md) — HIGH (enables typed, shared mocks instead of brittle per-decorator vi.spyOn calls)
+   - 4.5 [Put global providers in `preview.ts` decorators, not in every story](references/deco-global-providers-in-preview.md) — HIGH (prevents per-story drift and silent provider gaps)
+   - 4.6 [Read `context` in decorators to make them story-reactive](references/deco-context-aware-decorators.md) — HIGH (enables one decorator to handle theme, locale, and viewport changes)
+   - 4.7 [Use `@storybook/addon-themes` for multi-brand theme switching](references/deco-themes-addon-for-multi-brand.md) — HIGH (replaces 30 lines of hand-rolled globalTypes with one decorator and integrates with Chromatic modes)
 5. [Interaction Testing](references/_sections.md#5-interaction-testing) — **HIGH**
    - 5.1 [Always `await` every `userEvent` call in `play` functions](references/test-await-every-userevent-call.md) — HIGH (eliminates flaky CI runs from race conditions)
    - 5.2 [Destructure `canvas` and `userEvent` from the `play` argument](references/test-use-canvas-from-play-arg.md) — HIGH (eliminates 2 lines of boilerplate per play function and aligns with v9+ test API)
@@ -67,10 +72,13 @@ Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with Type
    - 7.4 [Surface component lifecycle with status tags and sidebar badges](references/docs-component-status-tags.md) — MEDIUM-HIGH (prevents consumers from adopting experimental APIs or depending on deprecated ones)
    - 7.5 [Use `autodocs` for component pages, MDX for cross-cutting docs](references/docs-autodocs-vs-mdx.md) — MEDIUM-HIGH (prevents handwritten prop-table drift while preserving MDX for cross-cutting docs)
 8. [Build, Performance & Deployment](references/_sections.md#8-build,-performance-&-deployment) — **MEDIUM**
-   - 8.1 [Cache the Vite/Webpack and node_modules layers in CI](references/build-cache-storybook-in-ci.md) — MEDIUM (reduces CI Storybook build from 4 minutes to 20 seconds typical)
-   - 8.2 [Deploy `storybook build` output to a shareable host on every PR](references/build-deploy-static-build-to-shareable-host.md) — MEDIUM (enables designer and PM review without local dev setup)
-   - 8.3 [Prefer Vite-based framework packages over Webpack](references/build-prefer-vite-over-webpack.md) — MEDIUM (5-10x faster cold start and HMR vs Webpack-based frameworks)
-   - 8.4 [Trim the test-build bundle for the Vitest addon](references/build-trim-test-bundle.md) — MEDIUM (reduces Vitest addon bundle by skipping docs/a11y/MDX during play runs)
+   - 8.1 [Brand `.storybook/manager.ts` so Storybook IS the design-system site](references/build-manager-brand.md) — MEDIUM (a recognizable Storybook gets visited; an unbranded one gets ignored)
+   - 8.2 [Cache the Vite/Webpack and node_modules layers in CI](references/build-cache-storybook-in-ci.md) — MEDIUM (reduces CI Storybook build from 4 minutes to 20 seconds typical)
+   - 8.3 [Deploy `storybook build` output to a shareable host on every PR](references/build-deploy-static-build-to-shareable-host.md) — MEDIUM (enables designer and PM review without local dev setup)
+   - 8.4 [Prefer Vite-based framework packages over Webpack](references/build-prefer-vite-over-webpack.md) — MEDIUM (5-10x faster cold start and HMR vs Webpack-based frameworks)
+   - 8.5 [Snapshot every story across themes and viewports with Chromatic `modes`](references/build-chromatic-modes-multi-theme.md) — MEDIUM-HIGH (catches regressions in light × dark × RTL × responsive that single-mode snapshots miss)
+   - 8.6 [Trim the test-build bundle for the Vitest addon](references/build-trim-test-bundle.md) — MEDIUM (reduces Vitest addon bundle by skipping docs/a11y/MDX during play runs)
+   - 8.7 [Use Storybook Composition (`refs`) to unify multi-package design systems](references/build-storybook-composition-refs.md) — MEDIUM-HIGH (one Storybook to consume design system + app components without merging codebases)
 
 ---
 
@@ -91,6 +99,15 @@ Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with Type
 13. [https://mswjs.io/docs/](https://mswjs.io/docs/)
 14. [https://www.deque.com/axe/core-documentation/api-documentation/](https://www.deque.com/axe/core-documentation/api-documentation/)
 15. [https://testing-library.com/docs/](https://testing-library.com/docs/)
+16. [https://storybook.js.org/docs/essentials/themes](https://storybook.js.org/docs/essentials/themes)
+17. [https://github.com/storybookjs/storybook/blob/next/code/addons/themes/docs/api.md](https://github.com/storybookjs/storybook/blob/next/code/addons/themes/docs/api.md)
+18. [https://storybook.js.org/docs/sharing/storybook-composition/](https://storybook.js.org/docs/sharing/storybook-composition/)
+19. [https://storybook.js.org/docs/configure/user-interface/theming](https://storybook.js.org/docs/configure/user-interface/theming)
+20. [https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy](https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy)
+21. [https://storybook.js.org/blog/structuring-your-storybook/](https://storybook.js.org/blog/structuring-your-storybook/)
+22. [https://amzn.github.io/style-dictionary/](https://amzn.github.io/style-dictionary/)
+23. [https://tokens.studio/](https://tokens.studio/)
+24. [https://www.chromatic.com/docs/modes/](https://www.chromatic.com/docs/modes/)
 
 ---
 

@@ -5,7 +5,7 @@
   "discipline": "distillation",
   "type": "library-reference",
   "date": "May 2026",
-  "abstract": "Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with TypeScript/React component libraries. Contains 44 rules across 8 categories — setup & configuration, CSF3 story authoring, args/argTypes/controls, decorators & composition, interaction testing (play functions + Vitest addon), accessibility (axe-core via @storybook/addon-a11y), documentation & design system (autodocs/MDX/tokens/Figma), and build/deployment (Vite, on-demand bundling, Chromatic, CI caching). Each rule includes incorrect/correct examples in modern CSF3 + `satisfies Meta` form, plus When-NOT-to-use guidance for principle conflicts. Targets Storybook 9+ APIs (`storybook/test` import path, `parameters.a11y.test = 'error'`, destructured `canvas`/`userEvent` in play, `@storybook/addon-vitest` for CI).",
+  "abstract": "Comprehensive Storybook 9+/10 reference for AI agents and LLMs working with TypeScript/React design systems and component libraries. Contains 52 rules across 8 categories — setup & configuration (incl. Style Dictionary / Tokens Studio pipeline and storySort), CSF3 story authoring (incl. design-system title taxonomy), args/argTypes/controls, decorators & composition (incl. @storybook/addon-themes multi-brand switching and RTL toggle), interaction testing (play functions + Vitest addon), accessibility (axe-core via @storybook/addon-a11y), documentation & design system (autodocs/MDX/tokens/Figma/status governance), and build/deployment (Vite, on-demand bundling, Chromatic modes for multi-theme visual regression, Composition `refs` for multi-package, manager.ts branding, CI caching). Each rule includes incorrect/correct examples in modern CSF3 + `satisfies Meta` form, plus When-NOT-to-use guidance for principle conflicts. Targets Storybook 9+ APIs (`storybook/test` import path, `parameters.a11y.test = 'error'`, destructured `canvas`/`userEvent` in play, `@storybook/addon-vitest` for CI, `@storybook/addon-themes` decorators).",
   "references": [
     "https://storybook.js.org/docs",
     "https://storybook.js.org/blog",
@@ -21,6 +21,15 @@
     "https://www.chromatic.com/docs/",
     "https://mswjs.io/docs/",
     "https://www.deque.com/axe/core-documentation/api-documentation/",
-    "https://testing-library.com/docs/"
+    "https://testing-library.com/docs/",
+    "https://storybook.js.org/docs/essentials/themes",
+    "https://github.com/storybookjs/storybook/blob/next/code/addons/themes/docs/api.md",
+    "https://storybook.js.org/docs/sharing/storybook-composition/",
+    "https://storybook.js.org/docs/configure/user-interface/theming",
+    "https://storybook.js.org/docs/writing-stories/naming-components-and-hierarchy",
+    "https://storybook.js.org/blog/structuring-your-storybook/",
+    "https://amzn.github.io/style-dictionary/",
+    "https://tokens.studio/",
+    "https://www.chromatic.com/docs/modes/"
   ]
 }
