@@ -1,0 +1,10 @@
+{
+  "name": "react-hook-form-audit-scripts",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Internal dependencies for the react-hook-form-audit skill scripts. Installed on first run by audit.sh.",
+  "dependencies": {
+    "ts-morph": "^23.0.0"
+  }
+}

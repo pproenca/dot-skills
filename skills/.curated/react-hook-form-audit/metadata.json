@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "React Hook Form on Next.js App Router",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "May 2026",
+  "abstract": "Audits Next.js App Router (14/15+) codebases for violations of React Hook Form best practices. Runs ripgrep for regex-detectable patterns and a ts-morph AST pass for structural ones, then emits a markdown report grouped by severity with file:line citations and links back to the companion `react-hook-form` distillation skill. Read-only; produces a single report file. Exits non-zero on CRITICAL/HIGH findings for CI integration.",
+  "references": [
+    "https://react-hook-form.com/docs",
+    "https://nextjs.org/docs/app",
+    "https://ts-morph.com/",
+    "https://github.com/BurntSushi/ripgrep"
+  ]
+}
