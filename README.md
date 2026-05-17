@@ -24,6 +24,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [rails-dev](skills/.curated/rails-dev) | Ruby on Rails performance and maintainability optimization guidelines for building backend APIs.. |
 | [rails-testing](skills/.curated/rails-testing) | Ruby on Rails testing best practices for writing effective, maintainable test suites with RSpec |
 | [react-19-component-scaffolder](skills/.curated/react-19-component-scaffolder) | Use this skill whenever scaffolding new React 19 / React 19.2 code in TypeScript — components,.. |
+| [react-hook-form-audit](skills/.curated/react-hook-form-audit) | Use this skill to audit a Next.js (App Router, 14/15+) codebase for React Hook Form.. |
 | [react-hook-form](skills/.curated/react-hook-form) | React Hook Form performance optimization for client-side form validation using useForm,.. |
 | [react](skills/.curated/react) | React 19/19.2 modern patterns for concurrent rendering, Server Components, actions, ref-as-prop,.. |
 | [refactor](skills/.curated/refactor) | Code refactoring best practices based on Martin Fowler's catalog and Clean Code principles |
