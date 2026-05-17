@@ -72,6 +72,8 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
 | [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
+| [computer-science-algorithms](skills/.experimental/computer-science-algorithms) | Use this skill whenever choosing or implementing an algorithm or data structure — covers.. |
+| [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Use this skill whenever reverse-engineering a Sketch file (or Figma export with similar shape).. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [diagram-quality](skills/.experimental/diagram-quality) | Use this skill whenever calling agent-uml MCP tools (design_create, diagram_upsert,.. |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
@@ -89,6 +91,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [framer-motion](skills/.experimental/framer-motion) | Framer Motion performance optimization guidelines |
 | [graph-schema](skills/.experimental/graph-schema) | Graph database schema design and data modeling expert |
 | [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
+| [human-copywrite](skills/.experimental/human-copywrite) | Use this skill whenever writing, editing, or reviewing user-facing copy — UI strings,.. |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Use this skill whenever scaffolding Inngest event-driven functions in a Next.js (App Router).. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
@@ -124,6 +127,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [react-optimise](skills/.experimental/react-optimise) | Application-level React performance optimization covering React Compiler mastery, bundle.. |
 | [react-refactor](skills/.experimental/react-refactor) | Architectural refactoring guide for React applications covering component architecture, state.. |
 | [react-testing-library](skills/.experimental/react-testing-library) | React Testing Library best practices for writing maintainable, user-centric tests |
+| [same-results-less-code](skills/.experimental/same-results-less-code) | Use this skill whenever reviewing, refactoring, or simplifying code with the goal of producing.. |
 | [shell](skills/.experimental/shell) | Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts |
 | [storybook](skills/.experimental/storybook) | Use whenever creating, configuring, or extending Storybook for a TS/React component library —.. |
 | [swift-data](skills/.experimental/swift-data) | SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |

@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Design-to-React Conversion",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Mathematical and computer-science algorithms for converting Sketch files into pixel-perfect React + CSS code. 46 rules across 8 categories ordered by cascade impact: from the iteration strategy and regression-gate mental model, through tree reconstruction, layout inference (flex/grid/freeform), geometry, visual-regression diffing (SSIM, pHash, pixelmatch), to style/typography/path translation. The skill is designed for AI agents building or improving design-to-code pipelines and emphasizes regression-safe incremental improvement.",
+  "references": [
+    "https://developer.sketch.com/file-format/",
+    "https://www.w3.org/TR/css-flexbox-1/",
+    "https://www.w3.org/TR/css-grid-1/",
+    "https://www.w3.org/TR/css-color-4/",
+    "https://www.w3.org/TR/css-transforms-1/",
+    "https://www.w3.org/TR/css-masking-1/",
+    "https://www.w3.org/TR/css-backgrounds-3/",
+    "https://www.w3.org/TR/SVG2/paths.html",
+    "https://ece.uwaterloo.ca/~z70wang/publications/ssim.pdf",
+    "https://github.com/mapbox/pixelmatch",
+    "https://www.hackerfactor.com/blog/index.php?/archives/432-Looks-Like-It.html",
+    "https://www.figma.com/blog/desperately-seeking-squircles/",
+    "https://bottosson.github.io/posts/oklab/",
+    "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "https://storybook.js.org/docs/writing-tests/visual-testing"
+  ]
+}
