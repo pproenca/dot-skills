@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "Apple",
+  "technology": "Editorial / Copywriting",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Editorial style and usage guidance distilled from the Apple Style Guide (June 2025) for writing clear, consistent, human-grade copy. Organized by topic for selective loading: voice & tone, punctuation, capitalization, hyphenation, numbers, units, word choice, UI element vocabulary, Apple product terminology, technical notation, and international style.",
+  "references": [
+    "https://support.apple.com/guide/applestyleguide/welcome/web",
+    "Apple Style Guide, June 2025 (PDF)"
+  ]
+}
