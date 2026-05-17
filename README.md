@@ -121,6 +121,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [openai-codex-rust-patterns](skills/.experimental/openai-codex-rust-patterns) | OpenAI Codex Rust coding patterns distilled from the codex-rs workspace |
 | [opencode-ts](skills/.experimental/opencode-ts) | Write and refactor TypeScript code in repos that use Effect-TS services, Zod schemas,.. |
 | [opensearch-function-scoring-algorithms](skills/.experimental/opensearch-function-scoring-algorithms) | Use this skill when designing, tuning, reviewing, or evaluating search relevance and ranking for.. |
+| [opensearch-personalize-caching-strategies](skills/.experimental/opensearch-personalize-caching-strategies) | Use this skill when designing, tuning, reviewing, or debugging caching in front of AWS.. |
 | [orval](skills/.experimental/orval) | Orval OpenAPI TypeScript client generation best practices |
 | [pulumi](skills/.experimental/pulumi) | Pulumi infrastructure as code performance and reliability guidelines |
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
