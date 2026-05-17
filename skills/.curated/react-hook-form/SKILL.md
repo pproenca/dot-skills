@@ -1,21 +1,28 @@
 ---
 name: react-hook-form
-description: React Hook Form performance optimization for client-side form validation using useForm, useWatch, useController, and useFieldArray. This skill should be used when building client-side controlled forms with React Hook Form library. This skill does NOT cover React 19 Server Actions, useActionState, or server-side form handling (use react-19 skill for those).
+description: React Hook Form performance optimization for client-side form validation using useForm, useWatch, useController, useFieldArray, and the v7.55+ subscribe() API. This skill should be used when building client-side controlled forms with React Hook Form library. This skill does NOT cover React 19 Server Actions, useActionState, or server-side form handling (use react-19 skill for those).
 ---
 
-# React Hook Form Best Practices
+# React Hook Form Best Practices by Community
 
-Comprehensive performance optimization guide for React Hook Form applications. Contains 41 rules across 8 categories, prioritized by impact to guide form development, automated refactoring, and code generation.
+Comprehensive performance optimization guide for React Hook Form applications. Contains 45 rules across 8 categories, prioritized by impact to guide form development, automated refactoring, and code generation.
 
 ## When to Apply
 
 Reference these guidelines when:
 - Writing new forms with React Hook Form
 - Configuring useForm options (mode, defaultValues, validation)
-- Subscribing to form values with watch/useWatch
+- Subscribing to form values with watch / useWatch / subscribe
 - Integrating controlled UI components (MUI, shadcn, Ant Design)
 - Managing dynamic field arrays with useFieldArray
+- Handling async submit, server errors, and submit lifecycle state
 - Reviewing forms for performance issues
+
+## When NOT to Use This Skill
+
+- **React 19 Server Actions / `useActionState`** — use the `react-19` skill instead
+- **Deeply nested, fully type-safe forms** — TanStack Form may be a better fit for forms with complex nested schemas; this skill assumes you've already chosen RHF
+- **Single-input or trivial forms** — uncontrolled `<form>` + `FormData` is often simpler than pulling in any library
 
 ## Rule Categories by Priority
 
@@ -35,16 +42,18 @@ Reference these guidelines when:
 ### 1. Form Configuration (CRITICAL)
 
 - `formcfg-validation-mode` - Use onSubmit mode for optimal performance
-- `formcfg-revalidate-mode` - Set reValidateMode to onBlur for post-submit performance
+- `formcfg-revalidate-mode` - Consider reValidateMode for expensive validation
 - `formcfg-default-values` - Always provide defaultValues for form initialization
 - `formcfg-async-default-values` - Use async defaultValues for server data
 - `formcfg-should-unregister` - Enable shouldUnregister for dynamic form memory efficiency
 - `formcfg-useeffect-dependency` - Avoid useForm return object in useEffect dependencies
+- `formcfg-disabled-prop` - Understand that register's disabled prop clears the value
 
 ### 2. Field Subscription (CRITICAL)
 
 - `sub-usewatch-over-watch` - Use useWatch instead of watch for isolated re-renders
 - `sub-watch-specific-fields` - Watch specific fields instead of entire form
+- `sub-subscribe-outside-react` - Use subscribe() for non-UI side-effects (analytics, autosave)
 - `sub-usewatch-with-getvalues` - Combine useWatch with getValues for timing safety
 - `sub-deep-subscription` - Subscribe deep in component tree where data is needed
 - `sub-avoid-watch-in-render` - Avoid calling watch() in render for one-time reads
@@ -53,7 +62,7 @@ Reference these guidelines when:
 
 ### 3. Controlled Components (HIGH)
 
-- `ctrl-usecontroller-isolation` - Use useController for re-render isolation
+- `ctrl-usecontroller-isolation` - Isolate controlled inputs in dedicated child components
 - `ctrl-avoid-double-registration` - Avoid double registration with useController
 - `ctrl-controller-field-props` - Wire Controller field props correctly for UI libraries
 - `ctrl-single-usecontroller-per-component` - Use single useController per component
@@ -62,6 +71,7 @@ Reference these guidelines when:
 ### 4. Validation Patterns (HIGH)
 
 - `valid-resolver-caching` - Define schema outside component for resolver caching
+- `valid-server-errors` - Surface server errors via setError('root.serverError', ...)
 - `valid-dynamic-schema-factory` - Use schema factory for dynamic validation
 - `valid-error-message-strategy` - Access errors via optional chaining or lodash get
 - `valid-inline-vs-resolver` - Prefer resolver over inline validation for complex rules
@@ -78,6 +88,7 @@ Reference these guidelines when:
 
 ### 6. State Management (MEDIUM)
 
+- `formstate-async-submit-lifecycle` - Wrap async submit handlers in try/catch and reset on isSubmitSuccessful
 - `formstate-destructure-formstate` - Destructure formState properties before render
 - `formstate-useformstate-isolation` - Use useFormState for isolated state subscriptions
 - `formstate-getfieldstate-for-single-field` - Use getFieldState for single field state access

@@ -1,19 +1,19 @@
 # React Hook Form
 
-**Version 0.1.0**  
+**Version 1.2.0**  
 Community  
-January 2026
+May 2026
 
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
-> but guidance here is optimized for automation and consistency by AI-assisted workflows.
+> **Note:** This document targets React Hook Form codebases.
+> It is mainly for agents and LLMs to follow when maintaining, generating, or refactoring forms.
+> Humans may also find it useful, but guidance here is optimized for automation and consistency
+> by AI-assisted workflows.
 
 ---
 
 ## Abstract
 
-Comprehensive performance optimization guide for React Hook Form applications, designed for AI agents and LLMs. Contains 41 rules across 8 categories, prioritized by impact from critical (form configuration, field subscriptions) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
+Comprehensive performance optimization guide for React Hook Form applications, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact from critical (form configuration, field subscriptions, async submit lifecycle) to incremental (advanced patterns). Covers the v7.55+ `subscribe()` API, server error handling via `setError('root.*')`, and the `disabled` register option. Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
 
 ---
 
@@ -23,30 +23,33 @@ Comprehensive performance optimization guide for React Hook Form applications, d
    - 1.1 [Always Provide defaultValues for Form Initialization](references/formcfg-default-values.md) — CRITICAL (prevents undefined state bugs and enables reset() functionality)
    - 1.2 [Avoid useForm Return Object in useEffect Dependencies](references/formcfg-useeffect-dependency.md) — CRITICAL (prevents infinite render loops)
    - 1.3 [Enable shouldUnregister for Dynamic Form Memory Efficiency](references/formcfg-should-unregister.md) — HIGH (reduces memory usage for forms with frequently mounted/unmounted fields)
-   - 1.4 [Set reValidateMode to onBlur for Post-Submit Performance](references/formcfg-revalidate-mode.md) — CRITICAL (reduces re-renders after initial submission by 80%+)
-   - 1.5 [Use Async defaultValues for Server Data](references/formcfg-async-default-values.md) — CRITICAL (eliminates manual useEffect reset patterns)
-   - 1.6 [Use onSubmit Mode for Optimal Performance](references/formcfg-validation-mode.md) — CRITICAL (prevents re-renders on every keystroke)
+   - 1.4 [Consider reValidateMode for Expensive Validation](references/formcfg-revalidate-mode.md) — MEDIUM (trade-off between immediate corrective feedback and validation cost)
+   - 1.5 [Understand That register's disabled Prop Clears the Value](references/formcfg-disabled-prop.md) — MEDIUM (prevents lost field values and silently skipped validation)
+   - 1.6 [Use Async defaultValues for Server Data](references/formcfg-async-default-values.md) — CRITICAL (eliminates manual useEffect reset patterns)
+   - 1.7 [Use onSubmit Mode for Optimal Performance](references/formcfg-validation-mode.md) — CRITICAL (prevents re-renders on every keystroke)
 2. [Field Subscription](references/_sections.md#2-field-subscription) — **CRITICAL**
    - 2.1 [Avoid Calling watch() in Render for One-Time Reads](references/sub-avoid-watch-in-render.md) — HIGH (prevents unnecessary subscriptions and re-renders)
    - 2.2 [Combine useWatch with getValues for Timing Safety](references/sub-usewatch-with-getvalues.md) — HIGH (prevents missed updates due to subscription timing)
    - 2.3 [Provide defaultValue to useWatch for Initial Render](references/sub-usewatch-default-value.md) — MEDIUM-HIGH (prevents undefined flash on initial render)
    - 2.4 [Subscribe Deep in Component Tree Where Data Is Needed](references/sub-deep-subscription.md) — CRITICAL (prevents parent re-renders from propagating to unrelated children)
-   - 2.5 [Use useFormContext Sparingly for Deep Nesting](references/sub-useformcontext-sparingly.md) — MEDIUM (reduces prop drilling but increases implicit dependencies)
-   - 2.6 [Use useWatch Instead of watch for Isolated Re-renders](references/sub-usewatch-over-watch.md) — CRITICAL (reduces re-renders by 10-50× in complex forms with multiple watchers)
-   - 2.7 [Watch Specific Fields Instead of Entire Form](references/sub-watch-specific-fields.md) — CRITICAL (reduces re-renders from N fields to 1 field change)
+   - 2.5 [Use subscribe() to React to Form Changes Outside the React Lifecycle](references/sub-subscribe-outside-react.md) — HIGH (zero re-renders for non-UI consumers like analytics, autosave, telemetry)
+   - 2.6 [Use useFormContext Sparingly for Deep Nesting](references/sub-useformcontext-sparingly.md) — MEDIUM (reduces prop drilling but increases implicit dependencies)
+   - 2.7 [Use useWatch Instead of watch for Isolated Re-renders](references/sub-usewatch-over-watch.md) — CRITICAL (reduces re-renders by 10-50× in complex forms with multiple watchers)
+   - 2.8 [Watch Specific Fields Instead of Entire Form](references/sub-watch-specific-fields.md) — CRITICAL (reduces re-renders from N fields to 1 field change)
 3. [Controlled Components](references/_sections.md#3-controlled-components) — **HIGH**
    - 3.1 [Avoid Double Registration with useController](references/ctrl-avoid-double-registration.md) — HIGH (prevents duplicate state management and validation bugs)
    - 3.2 [Combine Local State with useController for UI-Only State](references/ctrl-local-state-combination.md) — MEDIUM (reduces form re-renders by 50%+ when UI state changes don't affect form data)
    - 3.3 [Use Single useController Per Component](references/ctrl-single-usecontroller-per-component.md) — MEDIUM-HIGH (prevents prop name collisions and simplifies component logic)
-   - 3.4 [Use useController for Re-render Isolation in Controlled Components](references/ctrl-usecontroller-isolation.md) — HIGH (reduces re-renders from O(n) to O(1) per field change)
+   - 3.4 [Isolate Controlled Inputs in Dedicated Child Components](references/ctrl-usecontroller-isolation.md) — HIGH (reduces re-renders from O(n) to O(1) per field change)
    - 3.5 [Wire Controller Field Props Correctly for UI Libraries](references/ctrl-controller-field-props.md) — HIGH (prevents form binding bugs and eliminates silent failures in 100% of UI library integrations)
 4. [Validation Patterns](references/_sections.md#4-validation-patterns) — **HIGH**
    - 4.1 [Access Errors via Optional Chaining or Lodash Get](references/valid-error-message-strategy.md) — MEDIUM-HIGH (prevents runtime errors from undefined nested properties)
    - 4.2 [Consider Native Validation for Simple Forms](references/valid-native-validation.md) — MEDIUM (reduces JavaScript validation overhead for basic constraints)
    - 4.3 [Define Schema Outside Component for Resolver Caching](references/valid-resolver-caching.md) — HIGH (prevents schema recreation on every render)
    - 4.4 [Prefer Resolver Over Inline Validation for Complex Rules](references/valid-inline-vs-resolver.md) — HIGH (centralizes validation logic and enables type inference)
-   - 4.5 [Use delayError to Debounce Rapid Error Display](references/valid-delay-error.md) — MEDIUM (reduces UI flicker during fast typing validation)
-   - 4.6 [Use Schema Factory for Dynamic Validation](references/valid-dynamic-schema-factory.md) — HIGH (enables context-dependent validation without render-time schema creation)
+   - 4.5 [Surface Server Errors via setError('root.serverError', ...)](references/valid-server-errors.md) — HIGH (prevents lost server-side validation errors and unrecoverable form state)
+   - 4.6 [Use delayError to Debounce Rapid Error Display](references/valid-delay-error.md) — MEDIUM (reduces UI flicker during fast typing validation)
+   - 4.7 [Use Schema Factory for Dynamic Validation](references/valid-dynamic-schema-factory.md) — HIGH (enables context-dependent validation without render-time schema creation)
 5. [Field Arrays](references/_sections.md#5-field-arrays) — **MEDIUM-HIGH**
    - 5.1 [Provide Complete Default Objects for Field Array Operations](references/array-complete-default-objects.md) — HIGH (prevents partial data and validation failures)
    - 5.2 [Separate Sequential Field Array Operations](references/array-separate-crud-operations.md) — MEDIUM-HIGH (prevents state corruption from batched mutations)
@@ -59,6 +62,7 @@ Comprehensive performance optimization guide for React Hook Form applications, d
    - 6.3 [Subscribe to Specific Field Names in useFormState](references/formstate-subscribe-to-specific-fields.md) — MEDIUM (reduces re-renders to only relevant field changes)
    - 6.4 [Use getFieldState for Single Field State Access](references/formstate-getfieldstate-for-single-field.md) — MEDIUM (avoids subscription overhead for one-time state reads)
    - 6.5 [Use useFormState for Isolated State Subscriptions](references/formstate-useformstate-isolation.md) — MEDIUM (prevents parent re-renders from state access in children)
+   - 6.6 [Wrap Async Submit Handlers in try/catch and Reset on isSubmitSuccessful](references/formstate-async-submit-lifecycle.md) — HIGH (prevents stuck isSubmitting state and missing post-success reset)
 7. [Integration Patterns](references/_sections.md#7-integration-patterns) — **MEDIUM**
    - 7.1 [Transform Values at Controller Level for Type Coercion](references/integ-value-transform.md) — MEDIUM (prevents type coercion bugs in 100% of numeric/date form fields)
    - 7.2 [Use Controller for Material-UI Components](references/integ-mui-controller-pattern.md) — MEDIUM (maintains controlled component behavior with proper event handling)
@@ -76,12 +80,15 @@ Comprehensive performance optimization guide for React Hook Form applications, d
 1. [https://react-hook-form.com/docs](https://react-hook-form.com/docs)
 2. [https://react-hook-form.com/advanced-usage](https://react-hook-form.com/advanced-usage)
 3. [https://react-hook-form.com/docs/useform](https://react-hook-form.com/docs/useform)
-4. [https://react-hook-form.com/docs/usewatch](https://react-hook-form.com/docs/usewatch)
-5. [https://react-hook-form.com/docs/usecontroller](https://react-hook-form.com/docs/usecontroller)
-6. [https://react-hook-form.com/docs/usefieldarray](https://react-hook-form.com/docs/usefieldarray)
-7. [https://react-hook-form.com/docs/useformstate](https://react-hook-form.com/docs/useformstate)
-8. [https://github.com/react-hook-form/resolvers](https://github.com/react-hook-form/resolvers)
-9. [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
+4. [https://react-hook-form.com/docs/useform/subscribe](https://react-hook-form.com/docs/useform/subscribe)
+5. [https://react-hook-form.com/docs/useform/seterror](https://react-hook-form.com/docs/useform/seterror)
+6. [https://react-hook-form.com/docs/useform/formstate](https://react-hook-form.com/docs/useform/formstate)
+7. [https://react-hook-form.com/docs/usewatch](https://react-hook-form.com/docs/usewatch)
+8. [https://react-hook-form.com/docs/usecontroller](https://react-hook-form.com/docs/usecontroller)
+9. [https://react-hook-form.com/docs/usefieldarray](https://react-hook-form.com/docs/usefieldarray)
+10. [https://react-hook-form.com/docs/useformstate](https://react-hook-form.com/docs/useformstate)
+11. [https://github.com/react-hook-form/resolvers](https://github.com/react-hook-form/resolvers)
+12. [https://ui.shadcn.com/docs/components/form](https://ui.shadcn.com/docs/components/form)
 
 ---
 

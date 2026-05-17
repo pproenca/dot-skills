@@ -22,8 +22,8 @@ function CheckoutPage() {
       <BillingSection register={register} />  {/* Re-renders on paymentMethod change */}
       <PaymentSection
         register={register}
-        paymentMethod={paymentMethod}  {/* Prop drilling */}
-      />
+        paymentMethod={paymentMethod}
+      />  {/* Prop drilling */}
     </form>
   )
 }

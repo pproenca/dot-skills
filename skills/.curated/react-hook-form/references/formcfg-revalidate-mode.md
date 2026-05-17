@@ -1,48 +1,58 @@
 ---
-title: Set reValidateMode to onBlur for Post-Submit Performance
-impact: CRITICAL
-impactDescription: reduces re-renders after initial submission by 80%+
-tags: formcfg, revalidate-mode, re-renders, useForm
+title: Keep Default reValidateMode Unless Validation Is Expensive
+impact: MEDIUM
+impactDescription: maintains immediate corrective feedback after first submit
+tags: formcfg, revalidate-mode, validation, useForm
 ---
 
-## Set reValidateMode to onBlur for Post-Submit Performance
+## Keep Default reValidateMode Unless Validation Is Expensive
 
-After form submission, `reValidateMode` controls when fields re-validate. The default `onChange` causes validation on every keystroke after first submit. Use `onBlur` or `onSubmit` for better post-submission performance.
+After the first submit, `reValidateMode` controls when fields re-validate. The default is `onChange`, which gives users immediate positive feedback the moment they fix an error — this is the recommended UX in most cases ("don't eagerly scold, but eagerly reward"). Only switch to `onBlur` or `onSubmit` when validation is genuinely expensive (async checks, large schemas, heavy regex on long inputs).
 
-**Incorrect (re-validates on every keystroke after submit):**
+**Incorrect (switching reValidateMode to onBlur for a cheap synchronous schema):**
 
 ```typescript
-const { register, handleSubmit } = useForm({
-  mode: 'onSubmit',
-  reValidateMode: 'onChange',  // Default: after first submit, validates on EVERY keystroke
-})
+function CheckoutForm() {
+  const { register, handleSubmit } = useForm<CheckoutFormData>({
+    mode: 'onSubmit',
+    reValidateMode: 'onBlur',  // Hurts UX: user fixes a wrong CVV and gets no feedback until blur
+    resolver: zodResolver(cheapSyncSchema),
+  })
 
-function PaymentForm() {
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('cardNumber', { required: true })} />
-      <input {...register('cvv', { required: true, maxLength: 4 })} />
+    <form onSubmit={handleSubmit(placeOrder)}>
+      <input {...register('cardNumber')} />
+      <input {...register('cvv')} />
     </form>
   )
 }
 ```
 
-**Correct (re-validates only when leaving field):**
+**Correct (default onChange revalidation; switch only when validation is genuinely expensive):**
 
 ```typescript
-const { register, handleSubmit } = useForm({
-  mode: 'onSubmit',
-  reValidateMode: 'onBlur',  // After first submit, validates only on blur
-})
+function CheckoutForm() {
+  const { register, handleSubmit } = useForm<CheckoutFormData>({
+    mode: 'onSubmit',
+    // reValidateMode: 'onChange' is the default — leave it for immediate feedback on correction.
+    // Switch to 'onBlur' only if you have an async check or >16ms-per-keystroke validation cost.
+    resolver: zodResolver(cheapSyncSchema),
+  })
 
-function PaymentForm() {
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('cardNumber', { required: true })} />
-      <input {...register('cvv', { required: true, maxLength: 4 })} />
+    <form onSubmit={handleSubmit(placeOrder)}>
+      <input {...register('cardNumber')} />
+      <input {...register('cvv')} />
     </form>
   )
 }
 ```
+
+**When to deviate from the default:**
+- Validation involves a network call or expensive computation (>16ms per keystroke)
+- The form has dozens of fields and post-submit re-render cost is measurable in profiling
+- The error message is purely informational, not correctable in real time
+
+Otherwise keep `onChange` — users who just fixed an error get instant validation success, which is the UX the RHF defaults are tuned for.
 
 Reference: [useForm - reValidateMode](https://react-hook-form.com/docs/useform)
