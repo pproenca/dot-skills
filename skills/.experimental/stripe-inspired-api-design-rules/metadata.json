@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "organization": "Stripe-Inspired",
+  "technology": "API Design",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Comprehensive API design guide distilled from the Stripe API — the industry's most-copied reference for JSON HTTP APIs. Contains 52 rules across 8 categories, prioritised by design-propagation impact from critical (resource modeling, URL structure) to medium-high (naming, operational surface). Each rule includes a quantified impact, the reason it matters, incorrect-vs-correct code examples, and links to canonical sources. Suitable as the source of truth for an automated API design inspector that emits structured findings (Critical / Warning / Suggestion / Positive) and cites a specific rule per finding.",
+  "references": [
+    "https://github.com/stripe/openapi",
+    "https://docs.stripe.com/api",
+    "https://docs.stripe.com/upgrades",
+    "https://docs.stripe.com/api/pagination",
+    "https://docs.stripe.com/api/errors",
+    "https://docs.stripe.com/api/expanding_objects",
+    "https://docs.stripe.com/api/metadata",
+    "https://docs.stripe.com/webhooks",
+    "https://docs.stripe.com/webhooks/signatures",
+    "https://docs.stripe.com/search",
+    "https://docs.stripe.com/api/authentication",
+    "https://stripe.com/blog/api-versioning",
+    "https://stripe.com/blog/idempotency",
+    "https://brandur.org/idempotency-keys",
+    "https://brandur.org/api-versioning"
+  ]
+}
