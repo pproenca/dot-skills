@@ -1,0 +1,22 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Algorithmic Complexity (Big-O)",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Language-agnostic algorithmic complexity review guide for AI agents. Contains 39 rules across 8 categories covering accidental quadratic patterns, N+1 I/O, data-structure mismatch, exponential recursion, redundant computation, collection-building anti-patterns, search/sort selection, and space-complexity traps. Each rule includes a minimal-diff incorrect/correct code example, an explanation of the cascade effect, and exceptions. Designed to help agents find, classify, and fix Big-O issues in code reviews, refactors, and performance investigations across Python, JavaScript/TypeScript, Java, Go, and similar languages.",
+  "references": [
+    "https://wiki.python.org/moin/TimeComplexity",
+    "https://en.cppreference.com/w/cpp/algorithm",
+    "https://docs.oracle.com/javase/8/docs/technotes/guides/collections/overview.html",
+    "https://xlinux.nist.gov/dads/",
+    "https://algs4.cs.princeton.edu/",
+    "https://www.bigocheatsheet.com/",
+    "https://use-the-index-luke.com/",
+    "https://v8.dev/blog/elements-kinds",
+    "https://web.dev/articles/avoid-large-complex-layouts-and-layout-thrashing",
+    "https://docs.djangoproject.com/en/stable/ref/models/querysets/#select-related",
+    "https://github.com/graphql/dataloader"
+  ]
+}
