@@ -5,9 +5,10 @@ dot-skills
 May 2026
 
 > **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
-> but guidance here is optimized for automation and consistency by AI-assisted workflows.
+> This document covers Algorithmic Complexity (Big-O) analysis and remediation.  
+> It is mainly for agents and LLMs to follow when maintaining, generating, or  
+> refactoring codebases. Humans may also find it useful, but guidance here is  
+> optimized for automation and consistency by AI-assisted workflows.
 
 ---
 
