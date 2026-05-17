@@ -5,7 +5,9 @@ Community
 May 2026
 
 > **Note:**  
-> This document is mainly for agents and LLMs to follow when applying codebase comprehension and domain mapping algorithms — choosing the right graph, clustering algorithm, lexical preprocessing, topic model, and validation strategy when grokking an unfamiliar codebase. Humans may also find it useful, but guidance here is optimized for automation and consistency by AI-assisted workflows.
+> This document is mainly for agents and LLMs to follow when maintaining,  
+> generating, or refactoring codebases. Humans may also find it useful,  
+> but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
 
@@ -26,8 +28,8 @@ A practitioner-oriented reference of 47 algorithms across 9 categories for mappi
    - 1.6 [Weight Edges By Information Content, Not Raw Frequency](references/graph-weight-edges-by-information-content.md) — CRITICAL (2–5x MoJoFM improvement over unweighted graphs by suppressing high-fan-in noise)
 2. [Community Detection & Clustering](references/_sections.md#2-community-detection-&-clustering) — **CRITICAL**
    - 2.1 [Use HDBSCAN For Density-Based Clustering On File Embeddings](references/clust-hdbscan-density-based.md) — MEDIUM-HIGH (handles varying cluster densities; eliminates the need to pick K; 10-15 NMI points over k-means on file embeddings)
-   - 2.2 [Use Infomap When You Want To Compress Flow, Not Maximize Modularity](references/clust-infomap-mdl-on-random-walks.md) — CRITICAL (10-25% NMI improvement over Leiden on directed flow-meaningful graphs)
-   - 2.3 [Use Leiden, Not Louvain — Louvain Produces Disconnected Communities](references/clust-leiden-not-louvain.md) — CRITICAL (Louvain returns mathematically guaranteed-broken clusters on 5-25% of nodes; Leiden fixes this with no extra cost)
+   - 2.2 [Use Infomap When You Want To Compress Flow, Not Maximize Modularity](references/clust-infomap-mdl-on-random-walks.md) — CRITICAL (5-15% NMI improvement over Leiden on directed flow-meaningful graphs; comparable on undirected)
+   - 2.3 [Use Leiden, Not Louvain — Louvain Produces Disconnected Communities](references/clust-leiden-not-louvain.md) — CRITICAL (Louvain returns badly-connected clusters on up to 25% of nodes; Leiden eliminates the defect)
    - 2.4 [Use MCL (Markov Clustering) For Flow Simulation On Sparse Graphs](references/clust-mcl-markov-clustering.md) — MEDIUM-HIGH (15-30% improvement on noise-injected networks (Brohée-van Helden 2006); eliminates K hyperparameter)
    - 2.5 [Use Spectral Clustering When Cuts And Algebraic Connectivity Matter](references/clust-spectral-laplacian-fiedler.md) — MEDIUM (computes optimal k-way normalized cut in O(N²) eigendecomp; reveals algebraic connectivity λ₂)
    - 2.6 [Use Stochastic Block Models For Principled Bayesian Decomposition](references/clust-stochastic-block-model.md) — HIGH (NMI 0.7-0.9 vs 0.1 for modularity on non-assortative structure (Peixoto 2014); eliminates resolution limit)
@@ -50,7 +52,7 @@ A practitioner-oriented reference of 47 algorithms across 9 categories for mappi
    - 5.1 [Use ACDC's Subgraph Patterns To Recover Subsystem And Skeleton Structure](references/arch-acdc-subgraph-patterns.md) — HIGH (recovers MoJoFM 75+ vs 40-55% for statistical methods on standard SAR benchmarks)
    - 5.2 [Use Bunch's Modularization Quality As A Software-Specific Fitness Function](references/arch-bunch-with-mq-fitness.md) — HIGH (improves MoJoFM by 5-15% over Q-maximization on standard SAR benchmarks (Mitchell-Mancoridis TSE 2006))
    - 5.3 [Use Design Structure Matrix Partitioning To Find Block-Diagonal Architecture](references/arch-dsm-partitioning.md) — MEDIUM-HIGH (reduces architecture analysis to block-diagonal matrix inspection in O(V+E); reveals cycles and layers)
-   - 5.4 [Use Limbo To Cluster Files By Preserving Information About Their Features](references/arch-limbo-information-bottleneck.md) — HIGH (2-5× faster than Bunch with comparable MoJoFM; applies Information Bottleneck principle to clustering)
+   - 5.4 [Use Limbo To Cluster Files By Preserving Information About Their Features](references/arch-limbo-information-bottleneck.md) — HIGH (2-5× faster than Bunch's genetic-algorithm variant with comparable MoJoFM; applies Information Bottleneck principle)
    - 5.5 [Use The Reflexion Model To Compare Hypothesized vs Actual Architecture](references/arch-reflexion-model.md) — HIGH (reduces architecture recovery from months to days; reveals 80% of debt in 4-6 hours (Murphy-Notkin FSE 1995))
 6. [Topic Modelling on Source Code](references/_sections.md#6-topic-modelling-on-source-code) — **HIGH**
    - 6.1 [Pick The Number Of Topics By Coherence, Not Perplexity](references/topic-pick-topic-count-by-coherence-not-perplexity.md) — HIGH (perplexity is 43% anti-correlated with human topic quality; C_V coherence correlates 79% (Röder 2015))
@@ -78,7 +80,7 @@ A practitioner-oriented reference of 47 algorithms across 9 categories for mappi
 
 ## References
 
-1. [https://mitpress.mit.edu/9780262048828/networks/](https://mitpress.mit.edu/9780262048828/networks/)
+1. [https://global.oup.com/academic/product/networks-9780198805090](https://global.oup.com/academic/product/networks-9780198805090)
 2. [http://www.mmds.org/](http://www.mmds.org/)
 3. [https://link.springer.com/book/10.1007/978-3-540-25910-3](https://link.springer.com/book/10.1007/978-3-540-25910-3)
 4. [https://www.nature.com/articles/s41598-019-41695-z](https://www.nature.com/articles/s41598-019-41695-z)
@@ -88,7 +90,7 @@ A practitioner-oriented reference of 47 algorithms across 9 categories for mappi
 8. [https://www.jmlr.org/papers/v3/blei03a.html](https://www.jmlr.org/papers/v3/blei03a.html)
 9. [https://www.jmlr.org/papers/v11/vinh10a.html](https://www.jmlr.org/papers/v11/vinh10a.html)
 10. [https://dl.acm.org/doi/10.1145/222124.222147](https://dl.acm.org/doi/10.1145/222124.222147)
-11. [https://ieeexplore.ieee.org/document/1463238](https://ieeexplore.ieee.org/document/1463238)
+11. [https://ieeexplore.ieee.org/document/1463228](https://ieeexplore.ieee.org/document/1463228)
 12. [https://ieeexplore.ieee.org/document/1357809](https://ieeexplore.ieee.org/document/1357809)
 13. [https://ieeexplore.ieee.org/document/6227135](https://ieeexplore.ieee.org/document/6227135)
 14. [https://www.cs.yorku.ca/~bil/papers/wcre00.pdf](https://www.cs.yorku.ca/~bil/papers/wcre00.pdf)

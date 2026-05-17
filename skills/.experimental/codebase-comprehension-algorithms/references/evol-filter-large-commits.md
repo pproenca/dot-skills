@@ -139,4 +139,4 @@ def sweep_size_threshold(repo, thresholds=(10, 20, 30, 50, 100, 200, None)):
 
 **Production:** GitLens "co-changed files" applies a 100-file cap by default; the Sourcegraph code-intel co-change index uses 50. JetBrains' "Files changed together" feature filters at 30. The convention is consistent across tools.
 
-Reference: [Mining Version Histories to Guide Software Changes (Zimmermann et al., IEEE TSE 2005)](https://ieeexplore.ieee.org/document/1463238)
+Reference: [Mining Version Histories to Guide Software Changes (Zimmermann et al., IEEE TSE 2005)](https://ieeexplore.ieee.org/document/1463228)

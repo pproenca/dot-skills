@@ -141,4 +141,4 @@ The above handles pairs. For *triples or larger* (e.g. "every time A and B chang
 
 **Production:** Zimmermann's original `ROSE` is a Java Eclipse plugin (retired). The pattern is implemented in many places: GitLens' "co-changed files" display, JetBrains' "files changed together" indicator, and the open-source `cochange_miner` Python tool. JIRA-aware variants associate co-change with story/ticket IDs.
 
-Reference: [Mining Version Histories to Guide Software Changes (Zimmermann, Weißgerber, Diehl, Zeller, IEEE TSE 2005)](https://ieeexplore.ieee.org/document/1463238)
+Reference: [Mining Version Histories to Guide Software Changes (Zimmermann, Weißgerber, Diehl, Zeller, IEEE TSE 2005)](https://ieeexplore.ieee.org/document/1463228)
