@@ -54,6 +54,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [37signals-rails](skills/.experimental/37signals-rails) | 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the.. |
 | [acceptance-pipeline-catalog](skills/.experimental/acceptance-pipeline-catalog) | Use when implementing, reviewing, or debugging a Gherkin acceptance-test pipeline with mutation.. |
 | [acceptance-pipeline-feature-design](skills/.experimental/acceptance-pipeline-feature-design) | Use this skill when designing new features, extensions, or modifications to Uncle Bob's.. |
+| [algorithmic-complexity-review](skills/.experimental/algorithmic-complexity-review) | Use this skill whenever writing, reviewing, or refactoring code where algorithmic complexity.. |
 | [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
 | [audio-voice-recovery](skills/.experimental/audio-voice-recovery) | Audio forensics and voice recovery guidelines for CSI-level audio analysis |
@@ -70,6 +71,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [cli-for-agents](skills/.experimental/cli-for-agents) | Use this skill whenever designing, building, or reviewing a command-line tool that AI agents or.. |
 | [cli-review-runner](skills/.experimental/cli-review-runner) | Use this skill whenever reviewing, auditing, or grading a command-line tool for.. |
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
+| [codebase-comprehension-algorithms](skills/.experimental/codebase-comprehension-algorithms) | Use this skill whenever mapping an unfamiliar codebase into feature/business domains — answering.. |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
 | [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
 | [computer-science-algorithms](skills/.experimental/computer-science-algorithms) | Use this skill whenever choosing or implementing an algorithm or data structure — covers.. |
@@ -130,6 +132,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [same-results-less-code](skills/.experimental/same-results-less-code) | Use this skill whenever reviewing, refactoring, or simplifying code with the goal of producing.. |
 | [shell](skills/.experimental/shell) | Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts |
 | [storybook](skills/.experimental/storybook) | Use whenever creating, configuring, or extending Storybook for a TS/React component library —.. |
+| [stripe-inspired-api-design-rules](skills/.experimental/stripe-inspired-api-design-rules) | Use this skill whenever designing, reviewing, or refactoring a JSON HTTP API — covers resource.. |
 | [swift-data](skills/.experimental/swift-data) | SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |
 | [swift-optimise](skills/.experimental/swift-optimise) | Swift 6.2 and SwiftUI performance optimization for iOS 26 clinic architecture codebases |
 | [swift-refactor](skills/.experimental/swift-refactor) | Swift and SwiftUI refactoring patterns aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C.. |
