@@ -1,0 +1,30 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "codebase comprehension and domain mapping algorithms",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "A practitioner-oriented reference of 47 algorithms across 9 categories for mapping a codebase into understandable feature/business domains — graph construction (omnipresent filter, multilayer, SCC condensation, edge weighting), lexical preprocessing (Samurai identifier splitting, abbreviation expansion, TF-IDF/BM25, stemming, V-O parsing), community detection (Leiden over Louvain, Infomap, Stochastic Block Models, MCL, Walktrap, spectral, HDBSCAN), software-specific architecture recovery (Bunch + MQ, ACDC, Limbo, Reflexion, DSM), topic modelling on source (LDA, LSI/SVD, NMF, HDP, coherence-based K selection), evolutionary coupling from version history (lift/support/confidence, large-commit filtering, temporal decay, logical coupling), information-theoretic methods (Normalized Compression Distance, Mutual Information, MDL, code naturalness), centrality and labelling (PageRank, HITS, betweenness, TextRank/YAKE), and validation (MoJoFM, Adjusted Rand Index, Normalized Mutual Information, resolution-limit awareness, consensus clustering, co-change prediction as ground-truth proxy, ablation). Every rule cites peer-reviewed sources (ICSE / FSE / TSE / JMLR / PNAS) or canonical books. Designed for AI agents asked to grok an unfamiliar codebase and report what each part of it actually does.",
+  "references": [
+    "https://mitpress.mit.edu/9780262048828/networks/",
+    "http://www.mmds.org/",
+    "https://link.springer.com/book/10.1007/978-3-540-25910-3",
+    "https://www.nature.com/articles/s41598-019-41695-z",
+    "https://www.pnas.org/doi/10.1073/pnas.0706851105",
+    "https://www.pnas.org/doi/10.1073/pnas.0605965104",
+    "https://arxiv.org/abs/1705.10225",
+    "https://www.jmlr.org/papers/v3/blei03a.html",
+    "https://www.jmlr.org/papers/v11/vinh10a.html",
+    "https://dl.acm.org/doi/10.1145/222124.222147",
+    "https://ieeexplore.ieee.org/document/1463238",
+    "https://ieeexplore.ieee.org/document/1357809",
+    "https://ieeexplore.ieee.org/document/6227135",
+    "https://www.cs.yorku.ca/~bil/papers/wcre00.pdf",
+    "https://www.cs.toronto.edu/~periklis/pubs/wcre03.pdf",
+    "https://ieeexplore.ieee.org/document/1412045",
+    "https://link.springer.com/article/10.1007/s10664-012-9220-1",
+    "https://www.sciencedirect.com/science/article/pii/S0020025519308588",
+    "https://www.hindawi.com/journals/ase/2012/792024/"
+  ]
+}
