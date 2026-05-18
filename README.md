@@ -97,6 +97,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [human-copywrite](skills/.experimental/human-copywrite) | Use this skill whenever writing, editing, or reviewing user-facing copy — UI strings,.. |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Use this skill whenever scaffolding Inngest event-driven functions in a Next.js (App Router).. |
+| [io-bound-data-processing](skills/.experimental/io-bound-data-processing) | Use this skill when processing, transforming, or moving datasets that may exceed RAM on a single.. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
 | [ios-chaos-monkey](skills/.experimental/ios-chaos-monkey) | Crash-hunter skill for iOS 26 / Swift 6.2 clinic-architecture codebases that finds and fixes.. |
 | [ios-design-system](skills/.experimental/ios-design-system) | Clinic-architecture-aligned iOS design system engineering for SwiftUI (iOS 26 / Swift 6.2).. |
