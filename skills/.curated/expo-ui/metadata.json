@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "Expo",
+  "technology": "@expo/ui (SwiftUI for iOS)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Library reference for @expo/ui SwiftUI components — covers Host boundaries, modifier composition, iOS 26 Liquid Glass and Human Interface Guidelines composition rules, layout/input/navigation/display catalogues, and ObservableState patterns. Rules are derived from the expo-ui source (v56.0.8) and Apple's iOS 26 HIG, prioritised by cascade impact for agents building Expo apps that bridge to native SwiftUI views.",
+  "references": [
+    "https://github.com/expo/expo/tree/main/packages/expo-ui",
+    "https://docs.expo.dev/versions/latest/sdk/ui/",
+    "https://developer.apple.com/design/human-interface-guidelines",
+    "https://developer.apple.com/documentation/TechnologyOverviews/adopting-liquid-glass",
+    "https://developer.apple.com/documentation/swiftui/glasseffectcontainer",
+    "https://developer.apple.com/design/human-interface-guidelines/modality",
+    "https://developer.apple.com/design/human-interface-guidelines/materials",
+    "https://developer.apple.com/documentation/swiftui/view/presentationdetents(_:)"
+  ]
+}
