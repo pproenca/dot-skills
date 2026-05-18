@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "I/O-bound data processing on constrained resources",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "A practitioner reference for processing datasets larger than RAM on a single low-compute box. 41 rules across 9 categories — memory discipline, I/O access patterns, data format & encoding, chunking & batching, spill-to-disk, pipelining & backpressure, compression & serialization, concurrency for I/O-bound workloads, and observability — organized by execution-lifecycle impact and the cascade effect, with incorrect/correct Python examples and pointers to canonical sources (Apache Arrow/Parquet, Polars, DuckDB, pandas, Linux man pages, Brendan Gregg's Systems Performance, Designing Data-Intensive Applications, zstd/lz4 benchmarks). Designed to complement the algorithmic primitives in computer-science-algorithms with the I/O-pragmatic patterns needed to actually move bytes through a constrained box.",
+  "references": [
+    "https://arrow.apache.org/docs/",
+    "https://parquet.apache.org/docs/",
+    "https://docs.pola.rs/",
+    "https://duckdb.org/docs/",
+    "https://pandas.pydata.org/docs/user_guide/scale.html",
+    "https://docs.python.org/3/library/mmap.html",
+    "https://docs.python.org/3/library/asyncio.html",
+    "https://man7.org/linux/man-pages/",
+    "https://www.brendangregg.com/usemethod.html",
+    "https://dataintensive.net/",
+    "https://github.com/facebook/zstd",
+    "https://jsonlines.org/"
+  ]
+}
