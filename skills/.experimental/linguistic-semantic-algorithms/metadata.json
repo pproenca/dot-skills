@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "organization": "pproenca",
+  "technology": "Codebase Analysis Algorithms",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Reference of 40 linguistic, semantic, statistical, and graph algorithms an AI agent should reach for when mapping an unfamiliar codebase, hunting bugs, scoping features, or analyzing commit history. Organized into 8 categories ordered by insight-per-effort — from concept and domain extraction (LDA, noun-phrase mining, TF-IDF rare-term extraction, entity resolution, bounded-context detection) and semantic similarity (CodeBERT embeddings, PDG isomorphism for Type-4 clones, call-pattern n-grams, doc-code alignment) through architectural topology (PageRank, betweenness, Louvain, SCC, feedback-arc-set), co-change mining (change coupling, hotspots, bus factor, commit-topic modeling), clone detection (MinHash, SimHash, suffix-array CPD, GumTree, Zhang-Shasha), bug-localization IR (TF-IDF, BM25, history priors, embedding re-rank), identifier-linguistic preprocessing (camel/snake split, abbreviation expansion, Porter stemming, POS tagging) to complexity metrics (cyclomatic, cognitive, Halstead, Shannon entropy on naming). Each rule contrasts the naive grep-or-eyeball approach with the algorithmic alternative, with production-realistic code in Python and references to canonical papers.",
+  "references": [
+    "https://www.jmlr.org/papers/v3/blei03a.html",
+    "https://pragprog.com/titles/atcrime2/your-code-as-a-crime-scene-second-edition/",
+    "https://arxiv.org/abs/2002.08155",
+    "https://arxiv.org/abs/2203.03850",
+    "https://hal.science/hal-01054552/document",
+    "https://epubs.siam.org/doi/10.1137/0218082",
+    "http://www.cs.princeton.edu/courses/archive/spring13/cos598C/broder97resemblance.pdf",
+    "https://www.cs.princeton.edu/courses/archive/spr04/cos598B/bib/CharikarEstim.pdf",
+    "https://arxiv.org/abs/0803.0476",
+    "https://epubs.siam.org/doi/10.1137/0201010",
+    "https://ieeexplore.ieee.org/document/1702388",
+    "https://www.sonarsource.com/resources/cognitive-complexity/",
+    "https://nlp.stanford.edu/IR-book/pdf/06vect.pdf",
+    "https://miltos.allamanis.com/publications/2014idioms/",
+    "https://aclanthology.org/J90-1003/",
+    "https://github.com/adamtornhill/code-maat",
+    "https://pmd.github.io/pmd/pmd_userdocs_cpd.html",
+    "https://www.cs.toronto.edu/~frank/csc2501/Readings/R2_Porter/Porter-1980.pdf"
+  ]
+}
