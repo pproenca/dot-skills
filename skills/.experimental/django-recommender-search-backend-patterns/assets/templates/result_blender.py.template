@@ -1,0 +1,242 @@
+"""
+Result blender for heterogeneous recommender sources.
+
+Embedded patterns:
+    - Score normalization across sources ([[blend-normalize-scores-across-sources]])
+    - Canonical-ID dedup ([[blend-dedup-across-sources]])
+    - MMR diversity ([[blend-mmr-for-diversity]])
+    - Cold-start fallback ([[blend-cold-start-fallback]])
+    - Cross-source corroboration bonus
+
+Adapt:
+    - SCORE_FIELDS: which field to read for each source's score
+    - CANONICAL_ID_FIELDS: which field is the item ID in each source's response
+    - DIVERSITY_FIELD: the field used for diversity (category, tag, brand)
+    - DEFAULT_WEIGHTS: weights per source — tune offline with eval data
+"""
+from __future__ import annotations
+
+import logging
+from typing import Any, Callable
+
+logger = logging.getLogger(__name__)
+
+# Configuration — adapt to your domain
+SCORE_FIELDS = {
+    "personalize": "score",
+    "affinity":    "affinity",
+    "databricks":  "prediction",
+    "opensearch":  "_score",
+}
+
+CANONICAL_ID_FIELDS = {
+    "personalize": "itemId",
+    "affinity":    "item_id",
+    "databricks":  "id",
+    "opensearch":  "_id",
+}
+
+DEFAULT_WEIGHTS = {
+    "personalize": 0.4,
+    "affinity":    0.2,
+    "databricks":  0.3,
+    "opensearch":  0.1,
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Canonicalization + normalization
+# ─────────────────────────────────────────────────────────────────────────────
+
+def canonical_id(item: dict, source: str) -> str:
+    """Extract canonical item ID from a per-source response shape."""
+    field = CANONICAL_ID_FIELDS.get(source, "id")
+    raw = item.get(field)
+    if raw is None:
+        return ""
+    s = str(raw)
+    # Normalize known prefixes — adapt to your data
+    if s.startswith("item_"):
+        s = s[5:]
+    return s.strip()
+
+
+def get_score(item: dict, source: str) -> float:
+    field = SCORE_FIELDS.get(source, "score")
+    return float(item.get(field, 0.0))
+
+
+def min_max_normalize(items: list[dict], source: str) -> dict[str, float]:
+    """Min-max normalize scores to [0, 1] within a source's results."""
+    scores = [get_score(item, source) for item in items]
+    if not scores:
+        return {}
+    lo, hi = min(scores), max(scores)
+    span = hi - lo
+    if span == 0:
+        return {canonical_id(item, source): 1.0 for item in items}
+    return {
+        canonical_id(item, source): (get_score(item, source) - lo) / span
+        for item in items
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Blend
+# ─────────────────────────────────────────────────────────────────────────────
+
+def blend(
+    by_source: dict[str, list[dict]],
+    *,
+    weights: dict[str, float] | None = None,
+    corroboration_bonus_per_extra_source: float = 0.15,
+) -> list[dict]:
+    """Blend results from multiple sources into a single ranked list.
+
+    Returns items shaped as:
+        {"id": str, "score": float, "primary_source": str, "all_sources": list[str], ...}
+    """
+    weights = weights or DEFAULT_WEIGHTS
+    normalized = {
+        source: min_max_normalize(items, source)
+        for source, items in by_source.items()
+    }
+    # Index original items by canonical id (keep the richest-detail copy)
+    item_details: dict[str, dict] = {}
+    for source, items in by_source.items():
+        for item in items:
+            cid = canonical_id(item, source)
+            if not cid:
+                continue
+            if cid not in item_details or len(item) > len(item_details[cid]):
+                item_details[cid] = item
+
+    # Compute blended scores
+    all_ids = set().union(*(d.keys() for d in normalized.values()))
+    blended = []
+    for cid in all_ids:
+        score = 0.0
+        contributions: dict[str, float] = {}
+        for source in normalized:
+            if cid in normalized[source]:
+                w = weights.get(source, 0.0)
+                contribution = normalized[source][cid] * w
+                score += contribution
+                contributions[source] = contribution
+
+        # Corroboration bonus
+        n_sources = len(contributions)
+        if n_sources > 1:
+            score *= 1.0 + corroboration_bonus_per_extra_source * (n_sources - 1)
+
+        item = dict(item_details.get(cid, {"id": cid}))
+        item.update({
+            "id": cid,
+            "score": score,
+            "sources": list(contributions.keys()),
+            "contributions": contributions,
+        })
+        blended.append(item)
+
+    blended.sort(key=lambda x: (-x["score"], x["id"]))  # stable tiebreak
+    return blended
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MMR diversity re-rank
+# ─────────────────────────────────────────────────────────────────────────────
+
+def mmr_rerank(
+    candidates: list[dict],
+    *,
+    k: int,
+    lambda_: float = 0.7,
+    diversity_field: str = "category",
+    similarity_fn: Callable[[Any, Any], float] | None = None,
+) -> list[dict]:
+    """Maximal Marginal Relevance — balance relevance with diversity.
+
+    lambda_ ∈ [0, 1]: 1 = pure relevance, 0 = pure diversity.
+    """
+    if not candidates:
+        return []
+    sim = similarity_fn or _default_similarity
+
+    pool = list(candidates)
+    pool.sort(key=lambda c: -c.get("score", 0.0))
+    selected = [pool[0]]
+    pool.pop(0)
+
+    while len(selected) < k and pool:
+        best = None
+        best_mmr = -float("inf")
+        for cand in pool:
+            max_sim = max(
+                sim(cand.get(diversity_field), s.get(diversity_field))
+                for s in selected
+            )
+            mmr_score = lambda_ * cand.get("score", 0.0) - (1 - lambda_) * max_sim
+            if mmr_score > best_mmr:
+                best_mmr = mmr_score
+                best = cand
+        if best is None:
+            break  # degenerate input — break to avoid infinite loop
+        selected.append(best)
+        pool.remove(best)
+    return selected
+
+
+def _default_similarity(a, b) -> float:
+    if a is None or b is None:
+        return 0.0
+    if isinstance(a, str) and isinstance(b, str):
+        return 1.0 if a == b else 0.0
+    if isinstance(a, (list, set)) and isinstance(b, (list, set)):
+        sa, sb = set(a), set(b)
+        if not sa or not sb:
+            return 0.0
+        return len(sa & sb) / len(sa | sb)
+    return 0.0
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Cold-start strategy
+# ─────────────────────────────────────────────────────────────────────────────
+
+def get_personalization_strategy(interaction_count: int) -> dict[str, float]:
+    """Return source weights based on user maturity."""
+    if interaction_count < 3:
+        return {"popular": 1.0}
+    if interaction_count < 20:
+        return {"popular": 0.6, "personalize": 0.4}
+    if interaction_count < 100:
+        return {"personalize": 0.7, "affinity": 0.2, "popular": 0.1}
+    return {"personalize": 0.4, "affinity": 0.2, "databricks": 0.3, "opensearch": 0.1}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Reciprocal Rank Fusion — alternative blend when scores aren't comparable
+# ─────────────────────────────────────────────────────────────────────────────
+
+def rrf_blend(by_source: dict[str, list[dict]], *, k: int = 60) -> list[dict]:
+    """Reciprocal Rank Fusion — robust to incompatible score scales."""
+    scores: dict[str, float] = {}
+    sources: dict[str, list[str]] = {}
+    item_details: dict[str, dict] = {}
+
+    for source, items in by_source.items():
+        for rank, item in enumerate(items, start=1):
+            cid = canonical_id(item, source)
+            if not cid:
+                continue
+            scores[cid] = scores.get(cid, 0.0) + 1.0 / (k + rank)
+            sources.setdefault(cid, []).append(source)
+            item_details.setdefault(cid, item)
+
+    blended = []
+    for cid, score in scores.items():
+        item = dict(item_details[cid])
+        item.update({"id": cid, "score": score, "sources": sources[cid]})
+        blended.append(item)
+    blended.sort(key=lambda x: (-x["score"], x["id"]))
+    return blended

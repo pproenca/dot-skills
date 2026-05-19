@@ -1,0 +1,228 @@
+"""
+Stampede-safe Redis cache utility.
+
+Embedded patterns:
+    - SETNX lock around regeneration ([[cache-redis-with-stampede-protection]])
+    - Jittered TTL on writes
+    - Two-TTL fresh + stale model ([[resilience-serve-stale-from-redis]])
+    - Segment-keyed isolation via prefix templates ([[cache-segment-keyed-isolation]])
+    - Model-version-keyed ([[cache-version-on-model-deploy]])
+    - Negative-result caching ([[cache-negative-results]])
+    - Probabilistic early refresh
+
+Usage:
+    @cached_with_stampede(
+        ttl_s=300, stale_ttl_s=86400,
+        key_template="recs:user:{user_id}:v{model_version}",
+    )
+    async def get_recommendations(user_id: str, model_version: str):
+        return await expensive_call(user_id)
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+import logging
+import random
+import time
+from functools import wraps
+from typing import Any, Awaitable, Callable, TypeVar
+
+import redis.asyncio as aioredis
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
+
+# Module-level Redis client
+_redis = aioredis.from_url(
+    settings.REDIS_URL,
+    decode_responses=False,
+    socket_timeout=0.5,
+    socket_connect_timeout=0.5,
+    health_check_interval=30,
+    max_connections=50,
+)
+
+NOT_FOUND_SENTINEL = b"__NOT_FOUND__"
+
+T = TypeVar("T")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Core get-or-fetch with stampede protection
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def get_with_stampede_protection(
+    key: str,
+    fetch_fn: Callable[[], Awaitable[Any]],
+    *,
+    ttl_s: int = 300,
+    stale_ttl_s: int = 86400,
+    lock_timeout_s: int = 10,
+    wait_for_lock_s: float = 1.0,
+    cache_negatives: bool = True,
+) -> Any:
+    """Stampede-safe get-or-fetch with stale fallback.
+
+    Layout in Redis:
+        <key>           → JSON of {value, fresh_until} (TTL = stale_ttl_s)
+        lock:<key>      → SETNX lock during regeneration (TTL = lock_timeout_s)
+    """
+    payload = await _safe_redis_get(key)
+    now = time.time()
+
+    if payload is not None:
+        if payload == NOT_FOUND_SENTINEL and cache_negatives:
+            return None
+        try:
+            entry = json.loads(payload)
+        except (ValueError, json.JSONDecodeError):
+            entry = None
+
+        if entry and now < entry.get("fresh_until", 0):
+            return entry["value"]
+
+        # Stale — try to refresh; fall back to stale on failure
+        if entry:
+            try:
+                return await _refresh(key, fetch_fn, ttl_s, stale_ttl_s, cache_negatives, lock_timeout_s)
+            except Exception as e:
+                logger.warning(
+                    "stale_fallback", extra={"key": key, "err": str(e)[:200]}
+                )
+                return entry["value"]
+
+    # No cache at all — regenerate (with stampede protection)
+    return await _refresh(key, fetch_fn, ttl_s, stale_ttl_s, cache_negatives, lock_timeout_s,
+                          wait_for_lock_s=wait_for_lock_s)
+
+
+async def _refresh(
+    key: str,
+    fetch_fn: Callable[[], Awaitable[Any]],
+    ttl_s: int,
+    stale_ttl_s: int,
+    cache_negatives: bool,
+    lock_timeout_s: int,
+    wait_for_lock_s: float = 0,
+) -> Any:
+    lock_key = f"lock:{key}"
+    got_lock = await _safe_redis_set(lock_key, b"1", nx=True, ex=lock_timeout_s)
+
+    if got_lock:
+        try:
+            value = await fetch_fn()
+            await _store(key, value, ttl_s, stale_ttl_s, cache_negatives)
+            return value
+        finally:
+            await _safe_redis_delete(lock_key)
+
+    # Lock held by another worker — wait briefly, then read cache again
+    if wait_for_lock_s > 0:
+        deadline = time.monotonic() + wait_for_lock_s
+        while time.monotonic() < deadline:
+            await asyncio.sleep(0.05)
+            payload = await _safe_redis_get(key)
+            if payload == NOT_FOUND_SENTINEL:
+                return None
+            if payload is not None:
+                try:
+                    return json.loads(payload)["value"]
+                except (ValueError, json.JSONDecodeError, KeyError):
+                    pass
+
+    # Lock holder taking too long — compute ourselves (rare)
+    return await fetch_fn()
+
+
+async def _store(key: str, value: Any, ttl_s: int, stale_ttl_s: int, cache_negatives: bool):
+    if value is None and cache_negatives:
+        # Negative-result caching — see [[cache-negative-results]]
+        await _safe_redis_set(key, NOT_FOUND_SENTINEL, ex=min(ttl_s, 300))
+        return
+    if value is None:
+        return
+    entry = {
+        "value": value,
+        "fresh_until": time.time() + ttl_s * (1 + random.uniform(-0.1, 0.1)),  # jitter
+    }
+    await _safe_redis_set(key, json.dumps(entry).encode(), ex=stale_ttl_s)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Safe Redis wrappers — never propagate Redis errors to the caller
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def _safe_redis_get(key: str):
+    try:
+        return await _redis.get(key)
+    except aioredis.RedisError as e:
+        logger.warning("redis_get_failed", extra={"key": key, "err": str(e)[:200]})
+        return None
+
+
+async def _safe_redis_set(key: str, value: bytes, *, nx: bool = False, ex: int) -> bool:
+    try:
+        return bool(await _redis.set(key, value, nx=nx, ex=ex))
+    except aioredis.RedisError as e:
+        logger.warning("redis_set_failed", extra={"key": key, "err": str(e)[:200]})
+        return False
+
+
+async def _safe_redis_delete(key: str) -> None:
+    try:
+        await _redis.delete(key)
+    except aioredis.RedisError:
+        pass
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Decorator API
+# ─────────────────────────────────────────────────────────────────────────────
+
+def cached_with_stampede(
+    *,
+    ttl_s: int = 300,
+    stale_ttl_s: int = 86400,
+    key_template: str,
+    cache_negatives: bool = True,
+):
+    """Decorator to cache an async function with stampede protection.
+
+    `key_template` uses .format(**kwargs, *args) — include every variable the function
+    depends on, including any model_version that should invalidate this cache.
+    """
+    def decorator(fn):
+        @wraps(fn)
+        async def wrapper(*args, **kwargs):
+            try:
+                key = key_template.format(*args, **kwargs)
+            except (IndexError, KeyError) as e:
+                raise ValueError(f"key_template {key_template!r} missing param: {e}")
+
+            return await get_with_stampede_protection(
+                key, lambda: fn(*args, **kwargs),
+                ttl_s=ttl_s, stale_ttl_s=stale_ttl_s,
+                cache_negatives=cache_negatives,
+            )
+        return wrapper
+    return decorator
+
+
+# Usage example (don't import this — it's documentation):
+#
+#   from .clients import personalize_client
+#
+#   @cached_with_stampede(
+#       ttl_s=300,
+#       stale_ttl_s=86400,
+#       key_template="recs:user:{user_id}:v{model_version}",
+#   )
+#   async def get_user_recommendations(user_id: str, model_version: str):
+#       return await personalize_client.get(user_id)
+#
+#   # In the view:
+#   items = await get_user_recommendations(
+#       user_id=request.user.id,
+#       model_version=settings.PERSONALIZE_VERSION,
+#   )

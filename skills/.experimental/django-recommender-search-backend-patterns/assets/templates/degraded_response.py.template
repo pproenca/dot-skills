@@ -1,0 +1,168 @@
+"""
+Degraded response envelope helpers.
+
+Embedded patterns:
+    - Partial-results envelope with per-source status ([[resilience-partial-response-envelope]])
+    - Default-ranking fallback when all sources fail ([[resilience-default-ranking-fallback]])
+    - Per-source observability emission ([[resilience-per-source-observability]])
+    - Cache-Control headers reflecting partiality ([[api-etag-and-cache-control-headers]])
+
+Usage from a view:
+    envelope = build_envelope(
+        raw_results={
+            "personalize": personalize_result,
+            "affinity":    affinity_result,
+            "databricks":  databricks_result,
+        },
+        blend_fn=blend,
+        fallback_fn=lambda: get_default_ranking("default"),
+    )
+    return JsonResponse(envelope.body, status=envelope.status,
+                        headers=envelope.headers)
+"""
+from __future__ import annotations
+
+import logging
+from dataclasses import dataclass
+from typing import Any, Awaitable, Callable
+
+logger = logging.getLogger(__name__)
+
+
+@dataclass
+class Envelope:
+    body: dict
+    status: int = 200
+    headers: dict[str, str] | None = None
+
+
+async def build_envelope(
+    raw_results: dict[str, Any | BaseException],
+    *,
+    blend_fn: Callable[[dict[str, list[dict]]], list[dict]],
+    fallback_fn: Callable[[], Awaitable[list[dict]]],
+    model_version: str = "unknown",
+    metrics_emitter: Callable[[str, dict], None] | None = None,
+) -> Envelope:
+    """Build a partial-results envelope from a fan-out's gather output.
+
+    `raw_results` keys are source names; values are either lists of items or Exception instances
+    (from asyncio.gather(return_exceptions=True)).
+    """
+    sources_used: list[str] = []
+    failed_sources: list[dict] = []
+    by_source: dict[str, list[dict]] = {}
+
+    for name, result in raw_results.items():
+        if isinstance(result, BaseException):
+            error_class = type(result).__name__
+            failed_sources.append({
+                "source": name,
+                "error_class": error_class,
+                "message": str(result)[:120],
+            })
+            logger.warning("source_failed", extra={"source": name, "error_class": error_class})
+            if metrics_emitter:
+                metrics_emitter("downstream.outcome",
+                                {"source": name, "outcome": "error", "error_class": error_class})
+        else:
+            sources_used.append(name)
+            by_source[name] = result if isinstance(result, list) else []
+            if metrics_emitter:
+                metrics_emitter("downstream.outcome",
+                                {"source": name, "outcome": "ok"})
+
+    partial = bool(failed_sources)
+
+    if not sources_used:
+        # Total ML failure — invoke the default-ranking fallback
+        try:
+            fallback_items = await fallback_fn()
+            logger.warning("fallback_applied", extra={"reason": "all_sources_failed"})
+            body = {
+                "items": fallback_items,
+                "sources_used": ["fallback"],
+                "failed_sources": failed_sources,
+                "partial": True,
+                "degraded": True,
+                "model_version": model_version,
+            }
+            return Envelope(
+                body=body,
+                status=200,
+                headers={"Cache-Control": "private, max-age=30, stale-while-revalidate=120",
+                         "X-Recommender-Degraded": "true"},
+            )
+        except Exception as e:
+            logger.error("fallback_failed", extra={"err": str(e)[:200]})
+            return Envelope(
+                body={"items": [], "sources_used": [], "failed_sources": failed_sources,
+                      "partial": True, "degraded": True,
+                      "message": "Recommendations temporarily unavailable"},
+                status=200,  # 200 not 503 — see [[resilience-partial-response-envelope]]
+                headers={"Cache-Control": "private, no-cache",
+                         "X-Recommender-Degraded": "true"},
+            )
+
+    items = blend_fn(by_source)
+    body = {
+        "items": items,
+        "sources_used": sources_used,
+        "failed_sources": failed_sources,
+        "partial": partial,
+        "model_version": model_version,
+    }
+    headers = {
+        "Cache-Control": (
+            "private, max-age=30, stale-while-revalidate=60"
+            if partial else
+            "private, max-age=300, stale-while-revalidate=600"
+        ),
+        "X-Recommender-Partial": "true" if partial else "false",
+        "X-Recommender-Sources": ",".join(sources_used),
+    }
+    return Envelope(body=body, status=200, headers=headers)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Convenience helper for emitting structured metrics
+# ─────────────────────────────────────────────────────────────────────────────
+
+def default_metrics_emitter(name: str, tags: dict) -> None:
+    """Override this with your metrics backend (Datadog, Prometheus, etc.).
+
+    Example with Datadog:
+        from datadog import statsd
+        def default_metrics_emitter(name, tags):
+            statsd.increment(name, tags=[f"{k}:{v}" for k, v in tags.items()])
+    """
+    logger.info("metric", extra={"name": name, **tags})
+
+
+# Example wiring in a view — copy and adapt:
+#
+#   from .clients import fetch_personalize, fetch_affinity, fetch_databricks
+#   from .result_blender import blend
+#   from .fallback import get_default_ranking
+#   from django.http import JsonResponse
+#
+#   async def recommendations_view(request):
+#       raw = await asyncio.gather(
+#           fetch_personalize(request.user.id),
+#           fetch_affinity(request.user.id),
+#           fetch_databricks(request.user.id),
+#           return_exceptions=True,
+#       )
+#       envelope = await build_envelope(
+#           raw_results={
+#               "personalize": raw[0], "affinity": raw[1], "databricks": raw[2],
+#           },
+#           blend_fn=blend,
+#           fallback_fn=lambda: get_default_ranking(segment="default"),
+#           model_version=settings.RECOMMENDER_MODEL_VERSION,
+#           metrics_emitter=default_metrics_emitter,
+#       )
+#       response = JsonResponse(envelope.body, status=envelope.status)
+#       for k, v in (envelope.headers or {}).items():
+#           response[k] = v
+#       return response

@@ -1,0 +1,306 @@
+"""
+Async fan-out client to mixed recommender sources.
+
+Embedded patterns:
+    - asyncio.gather with return_exceptions ([[orch-return-exceptions-on-fanout]])
+    - Deadline propagation across hops ([[orch-propagate-request-deadline]])
+    - Per-downstream circuit breakers ([[protect-circuit-breaker-per-downstream]])
+    - Per-downstream timeouts ([[protect-per-downstream-timeout-budget]])
+    - Full-jitter retry ([[protect-jittered-retry-backoff]])
+    - Reused module-level async clients ([[orch-reuse-async-clients]])
+    - Per-source observability tags ([[resilience-per-source-observability]])
+    - Partial-results envelope ([[resilience-partial-response-envelope]])
+    - Default-ranking fallback ([[resilience-default-ranking-fallback]])
+
+Adapt the SourceConfig entries for your downstream URLs, timeouts, and retry budgets.
+"""
+from __future__ import annotations
+
+import asyncio
+import json
+import logging
+import random
+import time
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any, Awaitable, Callable
+
+import httpx
+from django.conf import settings
+
+logger = logging.getLogger(__name__)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Circuit breaker (one per downstream)
+# ─────────────────────────────────────────────────────────────────────────────
+
+class CircuitState(Enum):
+    CLOSED = "closed"
+    OPEN = "open"
+    HALF_OPEN = "half-open"
+
+
+@dataclass
+class CircuitBreaker:
+    name: str
+    failure_threshold: int = 5
+    cooldown_s: float = 30.0
+    state: CircuitState = CircuitState.CLOSED
+    failures: int = 0
+    opened_at: float = 0.0
+    _lock: asyncio.Lock = field(default_factory=asyncio.Lock)
+
+    async def call(self, fn: Callable[[], Awaitable]):
+        async with self._lock:
+            if self.state == CircuitState.OPEN:
+                if time.monotonic() - self.opened_at < self.cooldown_s:
+                    raise CircuitOpenError(self.name)
+                self.state = CircuitState.HALF_OPEN
+        try:
+            result = await fn()
+        except Exception:
+            async with self._lock:
+                self.failures += 1
+                if self.state == CircuitState.HALF_OPEN or self.failures >= self.failure_threshold:
+                    self.state = CircuitState.OPEN
+                    self.opened_at = time.monotonic()
+                    logger.warning("circuit_opened", extra={"downstream": self.name})
+            raise
+        async with self._lock:
+            self.failures = 0
+            self.state = CircuitState.CLOSED
+        return result
+
+
+class CircuitOpenError(Exception):
+    def __init__(self, downstream: str):
+        self.downstream = downstream
+        super().__init__(f"circuit open for {downstream}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Retry with full jitter
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def with_retry(
+    fn: Callable[[], Awaitable],
+    *,
+    max_attempts: int = 2,
+    base_s: float = 0.2,
+    cap_s: float = 5.0,
+    idempotent: bool = True,
+):
+    """Retry with full jitter — see [[protect-jittered-retry-backoff]] and
+    [[protect-no-retry-on-4xx]] for the retriability matrix."""
+    for attempt in range(max_attempts):
+        try:
+            return await fn()
+        except BaseException as err:
+            if attempt == max_attempts - 1 or not _is_retriable(err, idempotent=idempotent):
+                raise
+            delay = random.uniform(0, min(cap_s, base_s * (2 ** attempt)))
+            await asyncio.sleep(delay)
+
+
+def _is_retriable(err: BaseException, *, idempotent: bool) -> bool:
+    # 4xx = client error, never retriable (except 429 with Retry-After)
+    if isinstance(err, httpx.HTTPStatusError):
+        status = err.response.status_code
+        if status == 429:
+            return True
+        if 400 <= status < 500:
+            return False
+        if 500 <= status < 600:
+            return idempotent  # 5xx may have side-effected — only retry idempotent
+        return False
+    # Connect-side errors — request never reached the server, safe to retry
+    if isinstance(err, (httpx.ConnectError, httpx.ConnectTimeout, httpx.WriteError)):
+        return True
+    # Read-side errors — server may have processed; only retry idempotent
+    if isinstance(err, (httpx.ReadTimeout, httpx.ReadError, httpx.RemoteProtocolError)):
+        return idempotent
+    if isinstance(err, asyncio.TimeoutError):
+        return idempotent
+    return False
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Downstream client config — adapt per environment
+# ─────────────────────────────────────────────────────────────────────────────
+
+@dataclass
+class SourceConfig:
+    name: str
+    timeout: httpx.Timeout
+    max_connections: int
+    breaker: CircuitBreaker
+    retry_attempts: int = 2
+
+
+# Module-level shared clients (one per downstream) — [[orch-reuse-async-clients]]
+_PERSONALIZE = SourceConfig(
+    name="personalize",
+    timeout=httpx.Timeout(connect=0.3, read=0.6, write=0.3, pool=0.2),
+    max_connections=50,
+    breaker=CircuitBreaker(name="personalize", failure_threshold=5, cooldown_s=30.0),
+)
+_AFFINITY = SourceConfig(
+    name="affinity",
+    timeout=httpx.Timeout(connect=0.2, read=0.4, write=0.2, pool=0.2),
+    max_connections=50,
+    breaker=CircuitBreaker(name="affinity", failure_threshold=10, cooldown_s=15.0),
+)
+_DATABRICKS = SourceConfig(
+    name="databricks",
+    timeout=httpx.Timeout(connect=0.5, read=3.0, write=0.5, pool=0.5),
+    max_connections=20,
+    breaker=CircuitBreaker(name="databricks", failure_threshold=3, cooldown_s=60.0),
+)
+
+
+def _build_client(cfg: SourceConfig, base_url: str) -> httpx.AsyncClient:
+    return httpx.AsyncClient(
+        base_url=base_url,
+        timeout=cfg.timeout,
+        limits=httpx.Limits(
+            max_connections=cfg.max_connections,
+            max_keepalive_connections=cfg.max_connections // 2,
+            keepalive_expiry=30.0,
+        ),
+        http2=True,
+    )
+
+
+_clients = {
+    "personalize": _build_client(_PERSONALIZE, settings.PERSONALIZE_URL),
+    "affinity":    _build_client(_AFFINITY, settings.AFFINITY_URL),
+    "databricks":  _build_client(_DATABRICKS, settings.DATABRICKS_URL),
+}
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Per-source fetchers
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def _call(cfg: SourceConfig, fn: Callable[[], Awaitable]) -> Any:
+    """Wrap a downstream call with breaker + retry + observability."""
+    start = time.monotonic()
+    outcome = "ok"
+    try:
+        return await cfg.breaker.call(
+            lambda: with_retry(fn, max_attempts=cfg.retry_attempts, idempotent=True)
+        )
+    except CircuitOpenError:
+        outcome = "circuit_open"
+        raise
+    except asyncio.TimeoutError:
+        outcome = "timeout"
+        raise
+    except Exception:
+        outcome = "error"
+        raise
+    finally:
+        logger.info(
+            "downstream_call",
+            extra={
+                "source": cfg.name,
+                "outcome": outcome,
+                "duration_ms": int((time.monotonic() - start) * 1000),
+            },
+        )
+
+
+async def fetch_personalize(user_id: str) -> list[dict]:
+    async def _do():
+        r = await _clients["personalize"].post("/recommend", json={"user_id": user_id})
+        r.raise_for_status()
+        return r.json()["items"]
+    return await _call(_PERSONALIZE, _do)
+
+
+async def fetch_affinity(user_id: str) -> list[dict]:
+    async def _do():
+        r = await _clients["affinity"].get(f"/affinity/{user_id}")
+        r.raise_for_status()
+        return r.json()["items"]
+    return await _call(_AFFINITY, _do)
+
+
+async def fetch_databricks(user_id: str) -> list[dict]:
+    async def _do():
+        r = await _clients["databricks"].post(
+            "/serving-endpoints/ranker/invocations",
+            json={"inputs": {"user_id": [user_id]}},
+            headers={"Authorization": f"Bearer {settings.DATABRICKS_TOKEN}"},
+        )
+        r.raise_for_status()
+        # Databricks response shape varies by model — adapt this
+        return r.json()["predictions"][0]["items"]
+    return await _call(_DATABRICKS, _do)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Fan-out + partial-response envelope
+# ─────────────────────────────────────────────────────────────────────────────
+
+REQUEST_BUDGET_S = 0.6  # whole-request SLO
+
+
+async def get_blended_recommendations(user_id: str) -> dict:
+    """Fan out to all three sources in parallel; return partial-results envelope."""
+    deadline = time.monotonic() + REQUEST_BUDGET_S
+
+    async def _bounded(coro):
+        remaining = max(0.01, deadline - time.monotonic())
+        try:
+            return await asyncio.wait_for(coro, timeout=remaining)
+        except asyncio.TimeoutError:
+            raise
+
+    raw = await asyncio.gather(
+        _bounded(fetch_personalize(user_id)),
+        _bounded(fetch_affinity(user_id)),
+        _bounded(fetch_databricks(user_id)),
+        return_exceptions=True,
+    )
+
+    sources_used = []
+    failed_sources = []
+    by_source: dict[str, list[dict]] = {}
+    for name, result in zip(["personalize", "affinity", "databricks"], raw):
+        if isinstance(result, BaseException):
+            failed_sources.append({
+                "source": name,
+                "error_class": type(result).__name__,
+                "message": str(result)[:120],
+            })
+        else:
+            sources_used.append(name)
+            by_source[name] = result
+
+    if not sources_used:
+        # All sources failed — see [[resilience-default-ranking-fallback]]
+        return {
+            "items": await get_default_ranking(user_id),
+            "sources_used": ["fallback"],
+            "failed_sources": failed_sources,
+            "partial": True,
+            "degraded": True,
+        }
+
+    return {
+        "items": blend(by_source),                # TODO: import your blender
+        "sources_used": sources_used,
+        "failed_sources": failed_sources,
+        "partial": bool(failed_sources),
+    }
+
+
+# Stubs — replace with your implementations
+async def get_default_ranking(user_id: str) -> list[dict]:
+    raise NotImplementedError("import from a precomputed Redis key")
+
+
+def blend(by_source: dict[str, list[dict]]) -> list[dict]:
+    raise NotImplementedError("import from result_blender.py.template")

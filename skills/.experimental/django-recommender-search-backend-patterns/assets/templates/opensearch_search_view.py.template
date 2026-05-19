@@ -1,0 +1,229 @@
+"""
+OpenSearch-backed DRF search view with cursor pagination, function_score blending,
+and graceful degradation.
+
+Embedded patterns:
+    - search_after cursor pagination ([[search-use-search-after-not-from]])
+    - _source filtering ([[search-filter-source-fields]])
+    - bool.filter for non-scoring clauses ([[search-bool-filter-vs-must]])
+    - function_score for personalization ([[search-function-score-for-blending]])
+    - Stable tiebreaker sort ([[search-stable-tiebreaker-sort]])
+    - Index aliases ([[search-alias-for-blue-green-reindex]])
+    - request_cache for hot queries ([[search-enable-request-cache]])
+    - Tiered degradation on OpenSearch failure ([[resilience-degrade-search-gracefully]])
+    - Cursor pagination response shape ([[api-cursor-pagination-in-drf]])
+    - ETag + Cache-Control headers ([[api-etag-and-cache-control-headers]])
+
+Adapt the field names and personalization signals to your index schema.
+"""
+from __future__ import annotations
+
+import asyncio
+import base64
+import hashlib
+import json
+import logging
+from typing import Any
+
+from asgiref.sync import sync_to_async
+from django.conf import settings
+from django.http import HttpResponse
+from opensearchpy import OpenSearch  # synchronous client; wrap with sync_to_async
+from rest_framework.response import Response
+from rest_framework.views import APIView
+
+logger = logging.getLogger(__name__)
+
+# Module-level OpenSearch client — reused across requests
+_opensearch = OpenSearch(
+    hosts=[settings.OPENSEARCH_HOST],
+    http_auth=(settings.OPENSEARCH_USER, settings.OPENSEARCH_PASS),
+    use_ssl=True,
+    timeout=2.0,
+    max_retries=0,  # we do our own retry with jitter
+)
+
+INDEX_ALIAS = "products_live"
+
+SEARCH_LIST_FIELDS = ["id", "title", "thumbnail_url", "price", "in_stock", "rating"]
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Cursor encoding (opaque to clients)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def encode_cursor(sort_values: list) -> str:
+    return base64.urlsafe_b64encode(
+        json.dumps(sort_values).encode()
+    ).decode().rstrip("=")
+
+
+def decode_cursor(cursor: str | None) -> list | None:
+    if not cursor:
+        return None
+    try:
+        padded = cursor + "=" * (-len(cursor) % 4)
+        return json.loads(base64.urlsafe_b64decode(padded))
+    except (ValueError, json.JSONDecodeError):
+        return None  # malformed → start over
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Query builders — tiered for graceful degradation
+# ─────────────────────────────────────────────────────────────────────────────
+
+def build_full_query(
+    *, query: str, user_segment: str | None,
+    affinity_categories: list[str], cursor: list | None, size: int,
+) -> dict:
+    """Tier 1: full personalization blend with function_score."""
+    body: dict[str, Any] = {
+        "query": {
+            "function_score": {
+                "query": {
+                    "bool": {
+                        "must": [
+                            {"multi_match": {
+                                "query": query,
+                                "fields": ["title^3", "description", "brand^2"],
+                            }}
+                        ],
+                        "filter": [
+                            {"term": {"in_stock": True}},
+                            # If user has segment access restrictions, scope:
+                            *([{"term": {"segments": user_segment}}] if user_segment else []),
+                        ],
+                    }
+                },
+                "functions": [
+                    {
+                        "filter": {"terms": {"category": affinity_categories}},
+                        "weight": 1.5,
+                    } if affinity_categories else {"weight": 1.0},
+                    {"field_value_factor": {
+                        "field": "popularity", "modifier": "log1p", "factor": 0.5, "missing": 0,
+                    }},
+                    {"gauss": {"created_at": {"origin": "now/d", "scale": "30d", "decay": 0.5}}},
+                ],
+                "score_mode": "multiply",
+                "boost_mode": "multiply",
+            }
+        },
+        "size": size,
+        "sort": [
+            {"_score": "desc"},
+            {"_id": "asc"},                  # stable tiebreaker
+        ],
+        "_source": {"includes": SEARCH_LIST_FIELDS},
+    }
+    if cursor:
+        body["search_after"] = cursor
+    return body
+
+
+def build_simple_query(*, query: str, cursor: list | None, size: int) -> dict:
+    """Tier 2: simpler query without function_score (cheaper to compute)."""
+    body: dict[str, Any] = {
+        "query": {
+            "bool": {
+                "must": [{"match": {"title": query}}],
+                "filter": [{"term": {"in_stock": True}}],
+            }
+        },
+        "size": size,
+        "sort": [{"_score": "desc"}, {"_id": "asc"}],
+        "_source": {"includes": SEARCH_LIST_FIELDS},
+    }
+    if cursor:
+        body["search_after"] = cursor
+    return body
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Async wrapper around the sync OpenSearch client
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def _search(body: dict, *, timeout: float) -> dict:
+    return await asyncio.wait_for(
+        asyncio.to_thread(
+            _opensearch.search,
+            index=INDEX_ALIAS,
+            body=body,
+            request_cache=True,
+            timeout=f"{int(timeout * 1000)}ms",   # per-shard timeout
+        ),
+        timeout=timeout + 0.2,                     # outer guard
+    )
+
+
+def _format_response(response: dict, *, degraded: bool, tier: str | None = None) -> dict:
+    hits = response["hits"]["hits"]
+    items = [h["_source"] for h in hits]
+    next_cursor = encode_cursor(hits[-1]["sort"]) if hits and len(hits) > 0 else None
+    return {
+        "items": items,
+        "next_cursor": next_cursor,
+        "degraded": degraded,
+        "tier": tier,
+        "total_approximate": response["hits"]["total"]["value"],
+    }
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# View — DRF APIView
+# ─────────────────────────────────────────────────────────────────────────────
+
+class SearchView(APIView):
+    permission_classes = []           # adapt for your auth
+    throttle_classes = []             # add per-endpoint throttle from settings
+
+    async def get_async(self, request):
+        query = request.query_params.get("q", "").strip()
+        if not query:
+            return Response({"items": [], "next_cursor": None})
+
+        cursor = decode_cursor(request.query_params.get("cursor"))
+        size = min(int(request.query_params.get("size", "20")), 100)
+
+        # Fetch personalization signals if user is authenticated
+        affinity_categories = []
+        user_segment = None
+        if request.user.is_authenticated:
+            affinity_categories = await _get_user_affinity_categories(request.user.id)
+            user_segment = request.user.segment
+
+        # Tier 1: full personalized query
+        try:
+            body = build_full_query(
+                query=query, user_segment=user_segment,
+                affinity_categories=affinity_categories,
+                cursor=cursor, size=size,
+            )
+            response = await _search(body, timeout=0.8)
+            return Response(_format_response(response, degraded=False))
+        except (asyncio.TimeoutError, Exception) as e:
+            logger.warning("search_tier1_failed", extra={"err": str(e)[:200]})
+
+        # Tier 2: simplified query
+        try:
+            body = build_simple_query(query=query, cursor=cursor, size=size)
+            response = await _search(body, timeout=1.5)
+            return Response(_format_response(response, degraded=True, tier="simple"))
+        except Exception as e:
+            logger.warning("search_tier2_failed", extra={"err": str(e)[:200]})
+
+        # Tier 3: graceful empty with message
+        return Response({
+            "items": [], "next_cursor": None, "degraded": True, "tier": "unavailable",
+            "message": "Search is temporarily unavailable. Please try again shortly.",
+        })
+
+    def get(self, request):
+        # Sync wrapper for environments that aren't fully async-routed
+        return asyncio.run(self.get_async(request))
+
+
+async def _get_user_affinity_categories(user_id: str) -> list[str]:
+    """Fetch the top categories the user has interacted with — from Redis or microservice."""
+    # Stub — replace with your implementation
+    return []

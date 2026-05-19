@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "organization": "Experimental",
+  "technology": "Django Recommender + Search Backend",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Implementation patterns for a Django backend API that serves mixed-results recommendations (fan-out to AWS Personalize, Databricks Model Serving endpoints, and internal microservices) and OpenSearch-backed search/feed endpoints. 48 rules across 8 categories ordered by execution lifecycle impact: Fan-out Orchestration (asyncio.gather, return_exceptions, deadline propagation, async client reuse, bounded concurrency, no-blocking-in-async, no-await-in-loop, DataLoader batching), External Service Protection (per-downstream timeouts, per-downstream circuit breakers, full-jitter retry, 4xx/non-idempotent retry policy, bulkhead pools, client-side rate limits, Retry-After parsing), OpenSearch Query Patterns (search_after vs from/size, _source filtering, bool.filter vs must, function_score for blending, stable tiebreaker sort, blue-green index aliases, request_cache, shard-aware routing), Result Blending & Personalization (score normalization, MMR diversity, canonical-ID dedup, cold-start fallback, anonymous-vs-personalized paths), Caching Strategy (Redis stampede protection via SETNX, model-version-keyed cache, segment-keyed isolation, two-tier process+Redis, negative result caching), Resilience & Partial Results (partial-response envelope, stale-on-error from Redis, default ranking fallback, per-source observability tags, tiered search degradation), Async & Concurrency (async ORM and sync_to_async, uvicorn/UvicornWorker deployment, create_task fire-and-forget, contextvars for request scope, cancel on client disconnect), and API Response Design (cursor pagination in DRF, select_related/prefetch_related/only, ETag + Cache-Control + Vary, gzip/brotli compression and payload shaping, throttling per user and endpoint). Bundled with 5 Python scaffolding templates: fanout_recommender_service, opensearch_search_view, result_blender, redis_cache_with_stampede, degraded_response. Backend peer to react-fetch-cache-patterns.",
+  "references": [
+    "https://docs.djangoproject.com/en/5.0/topics/async/",
+    "https://www.django-rest-framework.org/api-guide/pagination/",
+    "https://opensearch.org/docs/latest/search-plugins/searching-data/paginate/",
+    "https://opensearch.org/docs/latest/query-dsl/compound/function-score/",
+    "https://docs.aws.amazon.com/personalize/latest/dg/getting-real-time-recommendations.html",
+    "https://docs.databricks.com/en/machine-learning/model-serving/index.html",
+    "https://www.python-httpx.org/async/",
+    "https://docs.python.org/3/library/asyncio-task.html",
+    "https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/",
+    "https://redis.io/docs/manual/patterns/distributed-locks/",
+    "https://datatracker.ietf.org/doc/html/rfc5861",
+    "https://github.com/danielfm/pybreaker",
+    "https://www.uvicorn.org/deployment/"
+  ]
+}
