@@ -154,6 +154,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [threat-model](skills/.experimental/threat-model) | Use this skill whenever performing security threat modeling, attack surface mapping, or trust.. |
 | [threat-patch](skills/.experimental/threat-patch) | Use this skill to remediate security findings by producing minimal, surgical code patches |
 | [ts-google](skills/.experimental/ts-google) | Google TypeScript style guide for writing clean, consistent, type-safe code |
+| [typescript-advanced-patterns](skills/.experimental/typescript-advanced-patterns) | Advanced TypeScript: type-level programming, library/DSL APIs, declaration merging, modern features at depth, feature implementation patterns |
 | [typescript-refactor](skills/.experimental/typescript-refactor) | TypeScript refactoring and modernization guidelines from a principal specialist perspective |
 | [uniwind](skills/.experimental/uniwind) | Uniwind best practices for React Native styling with Tailwind CSS |
 | [unix-cli](skills/.experimental/unix-cli) | UNIX command-line interface guidelines for building tools that follow POSIX conventions, proper.. |

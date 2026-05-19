@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "TypeScript Advanced Patterns",
+  "technology": "TypeScript",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Advanced TypeScript patterns for library/DSL authors and app developers building on top of the type system. Contains 40 rules across 5 categories, prioritised by impact from critical (library/DSL API design) to incremental (declaration & module system). Each rule includes detailed explanations, production-realistic incorrect vs. correct examples, when-NOT-to-apply guidance, and scope deltas relative to overlapping rules in `typescript-refactor` and `.curated/typescript`. Covers type-level programming (recursive conditionals, tail-recursion accumulator, infer-extends, key remapping, variadic tuples, type-level strings, type-level tests, HKT emulation), library/DSL patterns (fluent builders with phantom state, typed event emitters, route param extraction, schema-first inference, type-safe query builders), modern TS 5.x features at depth (Stage 3 decorators, using disposal ordering, const-T in overloads, NoInfer disambiguation, variance debugging, method-vs-property bivariance, phantom capabilities), feature implementation patterns (tagged Result, FSM transitions, schema-derived API clients, form builders, assertNever), and declaration/module system topics (module augmentation, declaration merging, ambient asset modules, library publishing via exports/typesVersions).",
+  "references": [
+    "https://www.typescriptlang.org/docs/handbook/2/",
+    "https://www.typescriptlang.org/docs/handbook/release-notes/",
+    "https://www.totaltypescript.com",
+    "https://github.com/sindresorhus/type-fest",
+    "https://effectivetypescript.com",
+    "https://zod.dev",
+    "https://github.com/tc39/proposal-decorators",
+    "https://nodejs.org/api/packages.html#exports",
+    "https://arethetypeswrong.github.io/"
+  ],
+  "category": "Lang"
+}
