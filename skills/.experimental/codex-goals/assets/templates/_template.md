@@ -1,0 +1,54 @@
+---
+title: {{RULE_TITLE}}
+impact: {{IMPACT_LEVEL}}
+impactDescription: {{QUANTIFIED_IMPACT}}
+tags: {{CATEGORY_PREFIX}}, {{TECHNIQUE}}, {{TOOLS}}, {{RELATED_CONCEPTS}}
+---
+
+## {{RULE_TITLE}}
+
+{{EXPLANATION_1_TO_3_SENTENCES}}
+
+**Incorrect ({{WHAT_IS_WRONG}}):**
+
+```{{LANGUAGE}}
+{{BAD_CODE_EXAMPLE}}
+```
+
+{{OPTIONAL_BAD_EXPLANATION}}
+
+**Correct ({{WHAT_IS_RIGHT}}):**
+
+```{{LANGUAGE}}
+{{GOOD_CODE_EXAMPLE}}
+```
+
+{{OPTIONAL_GOOD_EXPLANATION}}
+
+{{#IF ALTERNATIVE_APPROACHES}}
+**Alternative ({{CONTEXT}}):**
+
+```{{LANGUAGE}}
+{{ALTERNATIVE_CODE}}
+```
+
+{{ALTERNATIVE_EXPLANATION}}
+{{/IF}}
+
+{{#IF EXCEPTIONS}}
+**When NOT to use this pattern:**
+
+{{FOR_EACH EXCEPTION}}
+- {{EXCEPTION}}
+{{END_FOR_EACH}}
+{{/IF}}
+
+{{#IF WARNINGS}}
+**Warning ({{WARNING_CONTEXT}}):**
+
+{{WARNING_CONTENT}}
+{{/IF}}
+
+{{#IF REFERENCE}}
+Reference: [{{REFERENCE_TITLE}}]({{REFERENCE_URL}})
+{{/IF}}

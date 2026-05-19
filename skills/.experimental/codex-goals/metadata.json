@@ -1,0 +1,12 @@
+{
+  "version": "0.1.0",
+  "organization": "OpenAI",
+  "technology": "Codex (CLI) — Goals feature",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Patterns and anti-patterns for using OpenAI Codex Goals — the persistent objective feature introduced in Codex 0.128.0 that turns a thread from a sequence of isolated prompts into a stateful work loop with evidence-based completion. Contains 31 rules across 8 categories covering Goal fit decisions, outcome definition, verification surfaces, boundaries and iteration policy, lifecycle commands, evidence-based completion, crafting strong Goals, and research-Goal special cases. Each rule includes a 2-4 sentence rationale and a weak-vs-strong example pair derived from the official OpenAI cookbook article.",
+  "references": [
+    "https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex"
+  ]
+}
