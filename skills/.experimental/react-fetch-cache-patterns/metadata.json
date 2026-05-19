@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "organization": "Experimental",
+  "technology": "React Data Fetching & Caching",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Implementation patterns for React applications that fetch and cache many API requests without overwhelming the backend. 48 rules across 8 categories ordered by execution lifecycle impact: Request Orchestration (parallelism, batching, deduplication, route loaders), Cache Strategy (deterministic keys, normalization, staleTime, stale-while-revalidate, key factories, tiered freshness), Backend Protection (concurrency caps, request collapsing, debounce/throttle, jittered retries, circuit breakers, rate-limit awareness), Prefetch & Hydration (hover/intent prefetch, parallel loader queries, server hydration, idle prefetch, viewport-triggered, budget tiers), Failure Resilience (AbortController, bounded timeouts, scoped error boundaries, stale fallback, mutation idempotency, graceful degradation), Feed & Carousel Patterns (virtualization, cursor pagination, summary/detail split, multi-carousel failure isolation, stable keys, lazy images, bounded working set), Mutation & Invalidation (optimistic updates with rollback, surgical invalidation, setQueryData, cancel-on-mutate), and Component Patterns (stable query keys, fan-out caps, Suspense per section, colocation). Bundled with 6 scaffolding templates including both library-based (TanStack Query) and library-free (pure React + AbortController) implementations: resource query hook, no-deps resource query hook, carousel data loader (single + multi-carousel feed with failure isolation), infinite feed, prefetch link, request collapser.",
+  "references": [
+    "https://react.dev/reference/react/Suspense",
+    "https://tanstack.com/query/latest/docs/framework/react/overview",
+    "https://swr.vercel.app/",
+    "https://nextjs.org/docs/app/building-your-application/data-fetching",
+    "https://tanstack.com/router/latest/docs/framework/react/guide/data-loading",
+    "https://tanstack.com/virtual/latest",
+    "https://vercel.com/blog/everything-about-data-fetching-in-nextjs",
+    "https://github.com/graphql/dataloader",
+    "https://developer.mozilla.org/en-US/docs/Web/API/AbortController",
+    "https://datatracker.ietf.org/doc/html/rfc5861",
+    "https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/",
+    "https://tkdodo.eu/blog/practical-react-query"
+  ]
+}
