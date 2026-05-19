@@ -75,6 +75,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codebase-comprehension-algorithms](skills/.experimental/codebase-comprehension-algorithms) | Use this skill whenever mapping an unfamiliar codebase into feature/business domains — answering.. |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
+| [codex-goals](skills/.experimental/codex-goals) | Patterns and anti-patterns for using OpenAI Codex Goals — the persistent objectives feature.. |
 | [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
 | [computer-science-algorithms](skills/.experimental/computer-science-algorithms) | Use this skill whenever choosing or implementing an algorithm or data structure — covers.. |
 | [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Use this skill whenever reverse-engineering a Sketch file (or Figma export with similar shape).. |
