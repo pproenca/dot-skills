@@ -10,6 +10,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | Skill | Description |
 |-------|-------------|
 | [debug](skills/.curated/debug) | Comprehensive debugging methodology for finding and fixing bugs |
+| [expo-ui](skills/.curated/expo-ui) | Library reference for @expo/ui SwiftUI components on iOS — covers Host boundaries, modifier.. |
 | [expo](skills/.curated/expo) | Expo React Native performance optimization guidelines |
 | [feature-arch](skills/.curated/feature-arch) | React feature-based architecture guidelines for scalable applications |
 | [ios-taste](skills/.curated/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
@@ -111,11 +112,13 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [js-google](skills/.experimental/js-google) | JavaScript style and best practices based on Google's official JavaScript Style Guide |
 | [jscodeshift](skills/.experimental/jscodeshift) | jscodeshift codemod development best practices from Facebook/Meta |
 | [knip-deadcode](skills/.experimental/knip-deadcode) | Knip dead code detection best practices for JavaScript and TypeScript projects |
+| [linguistic-semantic-algorithms](skills/.experimental/linguistic-semantic-algorithms) | Use this skill whenever mapping out an unfamiliar codebase, hunting bugs across many files,.. |
 | [marketplace-personalisation](skills/.experimental/marketplace-personalisation) | Use this skill whenever designing, building, debugging, reviewing, or improving a.. |
 | [marketplace-pre-member-personalisation](skills/.experimental/marketplace-pre-member-personalisation) | Use this skill whenever designing, building, reviewing, or diagnosing the pre-member journey of.. |
 | [marketplace-recsys-feature-engineering](skills/.experimental/marketplace-recsys-feature-engineering) | Use this skill whenever deciding what features to extract from raw marketplace assets — listing.. |
 | [marketplace-search-recsys-planning](skills/.experimental/marketplace-search-recsys-planning) | Use this skill whenever planning, designing, reviewing, or improving search and recommendation.. |
 | [nextjs-bundle-optimizer](skills/.experimental/nextjs-bundle-optimizer) | Use this skill whenever a Next.js 16 app needs smaller bundles or faster builds — even if the.. |
+| [nextjs-supabase-saas-patterns](skills/.experimental/nextjs-supabase-saas-patterns) | Use this skill whenever writing, reviewing, or refactoring Next.js + Supabase SaaS code that.. |
 | [nginx-c-module-debug](skills/.experimental/nginx-c-module-debug) | nginx C module debugging guidelines based on the official nginx development guide |
 | [nginx-c-module-design](skills/.experimental/nginx-c-module-design) | nginx C module directive design guidelines for creating admin-friendly configuration interfaces |
 | [nginx-c-module-perf](skills/.experimental/nginx-c-module-perf) | nginx C module performance optimization and reliability guidelines based on the official nginx.. |
