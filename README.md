@@ -80,6 +80,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Use this skill whenever reverse-engineering a Sketch file (or Figma export with similar shape).. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [diagram-quality](skills/.experimental/diagram-quality) | Use this skill whenever calling agent-uml MCP tools (design_create, diagram_upsert,.. |
+| [django-recommender-search-backend-patterns](skills/.experimental/django-recommender-search-backend-patterns) | Use this skill when building, reviewing, or refactoring a Django backend that fan-outs to.. |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
 | [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |
 | [drizzle-sqlite-scaffold](skills/.experimental/drizzle-sqlite-scaffold) | Use this skill whenever scaffolding Drizzle ORM + SQLite boilerplate — a new.. |
@@ -97,6 +98,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
 | [human-copywrite](skills/.experimental/human-copywrite) | Use this skill whenever writing, editing, or reviewing user-facing copy — UI strings,.. |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
+| [implementation-design-patterns](skills/.experimental/implementation-design-patterns) | Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from.. |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Use this skill whenever scaffolding Inngest event-driven functions in a Next.js (App Router).. |
 | [io-bound-data-processing](skills/.experimental/io-bound-data-processing) | Use this skill when processing, transforming, or moving datasets that may exceed RAM on a single.. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
@@ -132,6 +134,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
 | [rails-design-system](skills/.experimental/rails-design-system) | Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal.. |
 | [rails-hotwire](skills/.experimental/rails-hotwire) | Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive,.. |
+| [react-fetch-cache-patterns](skills/.experimental/react-fetch-cache-patterns) | Use this skill whenever building, reviewing, or refactoring React components that fetch data.. |
 | [react-native-elements](skills/.experimental/react-native-elements) | React Native Elements UI component library best practices for performance, theming, and proper.. |
 | [react-optimise](skills/.experimental/react-optimise) | Application-level React performance optimization covering React Compiler mastery, bundle.. |
 | [react-refactor](skills/.experimental/react-refactor) | Architectural refactoring guide for React applications covering component architecture, state.. |
