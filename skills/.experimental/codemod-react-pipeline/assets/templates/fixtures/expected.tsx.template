@@ -1,0 +1,13 @@
+// tests/basic/expected.__EXT__ — code AFTER the __NAME__ transform.
+// JSSG compares the transform's output to this file. Update intentionally with `-u` only when
+// the new output is genuinely correct (scripts/02-inner-loop.sh __NAME__ -u).
+import React from "react";
+
+export function ContactForm() {
+  return (
+    <Fieldset className="contact" disabled={false}>
+      <label>Email</label>
+      <input name="email" />
+    </Fieldset>
+  );
+}

@@ -1,0 +1,32 @@
+{
+  "src_globs": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
+  "language": "tsx",
+  "package_manager": "pnpm",
+  "typecheck_cmd": "pnpm exec tsc --noEmit",
+  "lint_cmd": "pnpm exec eslint",
+  "format_cmd": "pnpm exec prettier --check",
+  "test_cmd": "pnpm exec vitest run",
+  "batch_size": 500,
+  "max_threads": 0,
+  "state_dir": ".codemod-pipeline",
+  "gates": {
+    "idempotency": true,
+    "typecheck": true,
+    "lint": true,
+    "format": true,
+    "tests": true
+  },
+  "_setup_instructions": {
+    "src_globs": "Globs matching the files the codemod may touch (one per extension; passed to git as :(glob) pathspecs, which support ** across directories but NOT brace expansion). Used to count blast radius and scope lint/format/test gates. Narrow to the migration's real surface area.",
+    "language": "JSSG --language value for the dominant file type: 'tsx' for React + TypeScript, 'jsx' for React + JS, 'typescript'/'javascript' for non-React. Mixed trees: run the pipeline once per language.",
+    "package_manager": "pnpm | npm | yarn | bun. Used only to interpret the *_cmd fields below; set the *_cmd fields directly if your scripts differ.",
+    "typecheck_cmd": "Command that fails (non-zero) on a type error. Leave empty to disable. Scoped automatically to affected files where the tool supports it; otherwise runs project-wide.",
+    "lint_cmd": "ESLint invocation. The pipeline appends the affected file list. Leave empty to disable.",
+    "format_cmd": "Formatter check invocation (Prettier --check or equivalent). The pipeline appends the affected file list. Leave empty to disable.",
+    "test_cmd": "Unit test runner. The pipeline appends affected files / related patterns where the runner supports it. Leave empty to disable.",
+    "batch_size": "Files per batch in the outer loop. Each batch is verified and committed atomically. 200-1000 is typical; smaller = more checkpoints, larger = fewer commits.",
+    "max_threads": "Parallel threads for `codemod jssg run` (--max-threads). 0 = let codemod choose.",
+    "state_dir": "Directory (relative to the target repo root) where the pipeline records progress, the dry-run sentinel, and findings reports. Add it to .gitignore.",
+    "gates": "Toggle individual validation gates run by 04-validate-findings.sh and per batch in 05-run-batched.sh. Disable a gate only when the project genuinely lacks that tooling."
+  }
+}

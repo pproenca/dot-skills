@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "discipline": "composition",
+  "type": "automation",
+  "organization": "Codemod Community",
+  "technology": "Codemod (JSSG, ast-grep, workflows)",
+  "date": "May 2026",
+  "abstract": "Guided, scripted pipeline for running JSX/TSX/React codemods safely across large legacy codebases. Walks a developer through the full inner/outer loop: define the transformation goal, scaffold a JSSG/ast-grep codemod, iterate in a tight inner loop with fixture tests, dry-run to inspect findings, validate findings against type-check/lint/test/idempotency gates, then apply at scale in resumable batches with per-batch checkpoint commits. Built for transformations that touch anywhere from 50 to several hundred thousand files. Pairs with the 'codemod' best-practices reference, which explains the why behind each step.",
+  "references": [
+    "https://docs.codemod.com/cli",
+    "https://docs.codemod.com/jssg/reference",
+    "https://docs.codemod.com/jssg/testing",
+    "https://docs.codemod.com/workflows/reference",
+    "https://github.com/codemod/codemod",
+    "https://ast-grep.github.io"
+  ],
+  "category": "DevEx",
+  "relatedSkills": [
+    "codemod"
+  ]
+}

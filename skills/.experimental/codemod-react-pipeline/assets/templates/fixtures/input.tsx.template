@@ -1,0 +1,13 @@
+// tests/basic/input.__EXT__ — code BEFORE the __NAME__ transform.
+// One fixture = one before/after pair. Add a sibling case dir per edge case (already-migrated,
+// nested, with-spread-props, …). Run them with: scripts/02-inner-loop.sh __NAME__
+import React from "react";
+
+export function ContactForm() {
+  return (
+    <FieldGroup className="contact" disabled={false}>
+      <label>Email</label>
+      <input name="email" />
+    </FieldGroup>
+  );
+}
