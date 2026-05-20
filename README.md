@@ -95,7 +95,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [expo-react-native-performance](skills/.experimental/expo-react-native-performance) | Expo React Native performance optimization guidelines |
 | [feature-spec](skills/.experimental/feature-spec) | Feature specification and planning guidelines for software engineers |
 | [framer-motion](skills/.experimental/framer-motion) | Framer Motion performance optimization guidelines |
-| [geohash-spatial-code-maps](skills/.experimental/geohash-spatial-code-maps) | Use this skill when implementing or debugging geohashes in TypeScript/Rust — encoding, neighbours, proximity queries, indexing — or projecting a codebase into a navigable 2D.. |
+| [geohash-spatial-code-maps](skills/.experimental/geohash-spatial-code-maps) | Use this skill whenever implementing, reviewing, or debugging geohash encoding/decoding in.. |
 | [graph-schema](skills/.experimental/graph-schema) | Graph database schema design and data modeling expert |
 | [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
 | [human-copywrite](skills/.experimental/human-copywrite) | Use this skill whenever writing, editing, or reviewing user-facing copy — UI strings,.. |
