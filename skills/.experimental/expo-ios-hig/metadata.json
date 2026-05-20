@@ -1,0 +1,31 @@
+{
+  "version": "0.1.0",
+  "organization": "Expo iOS HIG",
+  "technology": "Expo (React Native) for iOS 26",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Human Interface Guidelines and native-experience design rules for building iOS 26 apps in Expo (React Native). Contains 46 rules across 8 categories — native navigation, component fidelity, layout and adaptivity, touch and haptics, visual system and Liquid Glass, motion, accessibility, and system integration — each with TSX examples comparing a non-native implementation against a native one, prioritized by impact on native feel and HIG compliance. Designed to guide AI agents writing or reviewing Expo iOS code in TypeScript. Complements the expo-ui component-API reference and the native-Swift ios-hig skill.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://developer.apple.com/documentation/TechnologyOverviews/liquid-glass",
+    "https://docs.expo.dev/router/advanced/stack/",
+    "https://docs.expo.dev/router/advanced/native-tabs/",
+    "https://docs.expo.dev/develop/user-interface/color-themes/",
+    "https://docs.expo.dev/develop/user-interface/safe-areas/",
+    "https://docs.expo.dev/versions/latest/sdk/glass-effect/",
+    "https://docs.expo.dev/versions/latest/sdk/symbols/",
+    "https://docs.expo.dev/versions/latest/sdk/haptics/",
+    "https://docs.expo.dev/versions/latest/sdk/status-bar/",
+    "https://docs.expo.dev/develop/user-interface/splash-screen-and-app-icon/",
+    "https://expo.dev/blog/how-to-create-apple-maps-style-liquid-glass-sheets",
+    "https://reactnative.dev/docs/accessibility",
+    "https://reactnative.dev/docs/platformcolor",
+    "https://reactnative.dev/docs/pressable",
+    "https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/",
+    "https://docs.swmansion.com/react-native-gesture-handler/docs/",
+    "https://shopify.github.io/flash-list/docs/",
+    "https://github.com/react-native-datetimepicker/datetimepicker",
+    "https://tanstack.com/query/latest/docs/framework/react/guides/optimistic-updates"
+  ]
+}

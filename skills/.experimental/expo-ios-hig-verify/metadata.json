@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Expo iOS HIG",
+  "technology": "Expo (React Native) for iOS 26",
+  "discipline": "composition",
+  "type": "verification",
+  "date": "May 2026",
+  "abstract": "Read-only static verifier that scans an Expo (React Native) project for violations of the expo-ios-hig rules — Material component kits, JavaScript navigators instead of native stack/tabs, PanResponder, disabled font scaling, useNativeDriver:false, hardcoded hex colors, custom fonts, hardcoded status bar, and unvirtualized lists. Reports each finding with severity, file:line, and a link to the rule that explains the fix. Uses ripgrep when available with a grep fallback; safe to run unsupervised.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines/",
+    "https://docs.expo.dev/router/advanced/stack/",
+    "https://reactnative.dev/docs/platformcolor",
+    "https://reactnative.dev/docs/accessibility"
+  ]
+}

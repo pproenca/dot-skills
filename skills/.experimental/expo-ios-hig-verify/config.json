@@ -1,0 +1,8 @@
+{
+  "search_roots": "app src components",
+  "skill_rules_dir": "../expo-ios-hig/references",
+  "_setup_instructions": {
+    "search_roots": "Space-separated source directories to scan, relative to the project being checked (default: 'app src components'). If none exist, the whole project is scanned.",
+    "skill_rules_dir": "Path used in report links pointing to the expo-ios-hig rule files (default: '../expo-ios-hig/references'). Set to the location where the expo-ios-hig skill is installed so links resolve."
+  }
+}

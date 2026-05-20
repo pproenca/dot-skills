@@ -1,0 +1,10 @@
+{
+  "app_dir": "app",
+  "components_dir": "components",
+  "list_component": "FlashList",
+  "_setup_instructions": {
+    "app_dir": "Expo Router routes directory where scaffolded screens are written (default: 'app').",
+    "components_dir": "Directory for shared components the screens import (default: 'components').",
+    "list_component": "List component used by the list-screen template: 'FlashList' (recommended) or 'FlatList'."
+  }
+}

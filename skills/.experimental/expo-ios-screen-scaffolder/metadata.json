@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Expo iOS HIG",
+  "technology": "Expo (React Native) for iOS 26",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Parameterized templates that scaffold HIG-compliant Expo Router screens for iOS — list, detail, form, modal sheet, native tabs layout, and settings. Each template is native-by-construction (native navigation, FlashList, safe-area insets, semantic colors via PlatformColor, SF Symbols, haptics, empty states) and cites the expo-ios-hig rules it satisfies, so generated screens pass expo-ios-hig-verify without rework. Output is TSX for Expo Router, not Swift.",
+  "references": [
+    "https://docs.expo.dev/router/introduction/",
+    "https://docs.expo.dev/router/advanced/stack/",
+    "https://docs.expo.dev/router/advanced/native-tabs/",
+    "https://shopify.github.io/flash-list/docs/",
+    "https://developer.apple.com/design/human-interface-guidelines/"
+  ]
+}

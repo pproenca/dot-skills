@@ -93,6 +93,9 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [emilkowal-animations](skills/.experimental/emilkowal-animations) | Emil Kowalski's animation best practices for web interfaces |
 | [eval-mcp](skills/.experimental/eval-mcp) | Use this skill when the user asks to "evaluate MCP tools", "test tool selection", "improve tool.. |
 | [exec-plan](skills/.experimental/exec-plan) | Manage the lifecycle of ExecPlans — self-contained, living specifications for multi-step work |
+| [expo-ios-hig-verify](skills/.experimental/expo-ios-hig-verify) | Use this skill to verify that an Expo / React Native iOS app follows Apple Human Interface.. |
+| [expo-ios-hig](skills/.experimental/expo-ios-hig) | Use this skill whenever building, reviewing, or refactoring an Expo / React Native app's iOS.. |
+| [expo-ios-screen-scaffolder](skills/.experimental/expo-ios-screen-scaffolder) | Use this skill to scaffold new Expo (React Native) iOS screens that follow Apple Human Interface.. |
 | [expo-react-native-coder](skills/.experimental/expo-react-native-coder) | Comprehensive Expo React Native feature development guide |
 | [expo-react-native-performance](skills/.experimental/expo-react-native-performance) | Expo React Native performance optimization guidelines |
 | [feature-spec](skills/.experimental/feature-spec) | Feature specification and planning guidelines for software engineers |
