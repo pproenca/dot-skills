@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "Geohash & Spatial Code Maps",
+  "technology": "Geohash (TypeScript & Rust)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Geohash implementation and applied spatial-indexing guide for TypeScript and Rust, plus a novel 'codebase as a navigable 2D map' pattern. Contains 42 rules across 8 categories, prioritised by impact from critical (encoding correctness and precision/cell geometry) through neighbours, proximity queries, and the codebase-map projection, down to decoding, storage indexing, and slippy-map navigation. Each rule explains why it matters and shows production-realistic incorrect vs. correct examples in TypeScript or Rust, with explicit when-NOT-to-apply guidance. The geohash fundamentals are drawn from authoritative sources (the geohash spec, the davetroy/geohash-js neighbour tables, Redis, Elasticsearch); the codebase-map categories synthesise established techniques (deterministic graph layout, Morton/Z-order keys, slippy-map tiling, software cartography) into an architectural pattern for navigating a codebase like Google Maps.",
+  "references": [
+    "https://en.wikipedia.org/wiki/Geohash",
+    "https://github.com/davetroy/geohash-js",
+    "https://github.com/georust/geohash",
+    "https://github.com/sunng87/node-geohash",
+    "https://redis.io/docs/latest/develop/data-types/geospatial/",
+    "https://www.elastic.co/guide/en/elasticsearch/reference/current/search-aggregations-bucket-geohashgrid-aggregation.html",
+    "https://en.wikipedia.org/wiki/Z-order_curve",
+    "https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames",
+    "https://wettel.github.io/codecity.html",
+    "https://use-the-index-luke.com/"
+  ]
+}
