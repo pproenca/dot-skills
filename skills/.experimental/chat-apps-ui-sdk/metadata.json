@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "organization": "Chat Apps UI SDK",
+  "technology": "Chat Apps UI — OpenAI Apps SDK, MCP Apps & MCP-UI",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Architecture and design guide for building beautiful, review-ready apps that render interactive UI directly inside ChatGPT and Claude. Covers the shared MCP Apps standard (@modelcontextprotocol/ext-apps), the OpenAI Apps SDK window.openai bridge, and the MCP-UI SDK, with a Next.js/React backend. Contains 46 rules across 8 categories ordered by impact: from critical MCP tool design and UI-resource wiring (the data contract and the tool-to-component link that decide whether anything renders), through the host-component bridge, display modes, widget state, and sandbox/CSP security, down to visual-design polish and cross-host distribution. Each rule explains why it matters and shows production-realistic incorrect-vs-correct examples in TypeScript, TSX, or CSS, with explicit when-not-to-apply guidance. Sourced from the official OpenAI Apps SDK documentation, the Model Context Protocol MCP Apps specification, and the MCP-UI SDK.",
+  "references": [
+    "https://developers.openai.com/apps-sdk",
+    "https://developers.openai.com/apps-sdk/reference",
+    "https://developers.openai.com/apps-sdk/build/mcp-server",
+    "https://developers.openai.com/apps-sdk/build/chatgpt-ui",
+    "https://developers.openai.com/apps-sdk/plan/components",
+    "https://developers.openai.com/apps-sdk/concepts/ui-guidelines",
+    "https://developers.openai.com/apps-sdk/app-submission-guidelines",
+    "https://blog.modelcontextprotocol.io/posts/2026-01-26-mcp-apps/",
+    "https://modelcontextprotocol.io/",
+    "https://mcpui.dev/",
+    "https://mcpui.dev/guide/server/typescript/overview",
+    "https://mcpui.dev/guide/client/overview",
+    "https://github.com/MCP-UI-Org/mcp-ui"
+  ]
+}

@@ -65,6 +65,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [better-auth](skills/.experimental/better-auth) | Use this skill whenever writing, reviewing, or migrating Better Auth code in TypeScript —.. |
 | [bug-review](skills/.experimental/bug-review) | Use this skill when a user asks to review a pull request for bugs, wants AI code review focused.. |
 | [build-mcp-server](skills/.experimental/build-mcp-server) | This skill should be used when the user asks to "build an MCP server", "create an MCP", "make an.. |
+| [chat-apps-ui-sdk](skills/.experimental/chat-apps-ui-sdk) | Use this skill whenever building, reviewing, or designing apps that render interactive UI.. |
 | [chrome-extension-ui](skills/.experimental/chrome-extension-ui) | Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content.. |
 | [chrome-extension](skills/.experimental/chrome-extension) | Chrome Extensions (Manifest V3) performance and code quality guidelines |
 | [clean-architecture](skills/.experimental/clean-architecture) | Clean Architecture principles and best practices from Robert C |
