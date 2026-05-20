@@ -1,0 +1,33 @@
+{
+  "version": "0.1.0",
+  "organization": "Code Map Visualization",
+  "technology": "Code-as-Geohash-Map Rendering (TypeScript, Canvas2D + WebGL/deck.gl)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Rendering and perception guide for visualising a codebase that has been projected and geohashed into a navigable 2D map. Contains 47 rules across 9 categories, prioritised by impact from critical (visual-channel encoding and perceptually honest colour scales) through the GPU render pipeline and frame-budget performance, down to label placement, interaction and picking, camera animation, accessibility, and a situational toolbox of nature- and cell-inspired layout (Voronoi tessellation, centroidal relaxation, circle packing, golden-angle phyllotaxis, metaball membranes, hierarchical edge bundling, flow-field animation). Each rule explains why it matters and shows production-realistic incorrect vs. correct TypeScript examples (Canvas2D + WebGL/deck.gl, d3-scale/d3-color), with explicit when-NOT-to-apply guidance. It draws on established visualisation and rendering knowledge — graphical-perception research (Cleveland & McGill, Bertin, Munzner, Tufte), perceptual colour science (viridis, ColorBrewer, OKLCH, the rainbow-considered-harmful literature), cartographic label placement, the WebGL/Canvas rendering pipeline, biologically-inspired layout (Voronoi treemaps and edge bundling, both invented for software visualisation), and WCAG — and is the rendering layer on top of the geohash-spatial-code-maps skill, which owns the geohash encoding, projection, tiling, and navigation math.",
+  "references": [
+    "https://www.cs.ubc.ca/~tmm/vadbook/",
+    "https://www.jstor.org/stable/2288400",
+    "https://doi.org/10.1109/MCG.2007.323435",
+    "https://bids.github.io/colormap/",
+    "https://colorbrewer2.org/",
+    "https://www.w3.org/TR/css-color-4/",
+    "https://jfly.uni-koeln.de/color/",
+    "https://d3js.org/",
+    "https://deck.gl/",
+    "https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/WebGL_best_practices",
+    "https://developer.mozilla.org/en-US/docs/Web/API/Canvas_API/Tutorial/Optimizing_canvas",
+    "https://vanwijk.win.tue.nl/zoompan.pdf",
+    "https://maplibre.org/",
+    "https://www.w3.org/WAI/WCAG22/",
+    "https://wiki.openstreetmap.org/wiki/Slippy_map_tilenames",
+    "https://wettel.github.io/codecity.html",
+    "https://dl.acm.org/doi/10.1145/1056018.1056041",
+    "https://github.com/d3/d3-delaunay",
+    "https://d3js.org/d3-hierarchy/pack",
+    "https://github.com/d3/d3-contour",
+    "https://www.cs.jhu.edu/~misha/ReadingSeminar/Papers/Holten06.pdf",
+    "https://www.red3d.com/cwr/boids/"
+  ]
+}
