@@ -44,15 +44,14 @@ function SearchResults({ query }: { query: string }) {
 }
 ```
 
-**Correct (deferred value for expensive child):**
+**Correct (the child defers the prop it receives):**
 
 ```typescript
-import { useState, useDeferredValue } from 'react'
+import { useState } from 'react'
+import { useDeferredValue, useMemo } from 'react'
 
 function SearchPage() {
   const [query, setQuery] = useState('')
-  const deferredQuery = useDeferredValue(query)
-  const isStale = query !== deferredQuery
 
   return (
     <div>
@@ -60,13 +59,24 @@ function SearchPage() {
         value={query}
         onChange={e => setQuery(e.target.value)}
       />
-      <div style={{ opacity: isStale ? 0.7 : 1 }}>
-        <SearchResults query={deferredQuery} />
-      </div>
+      <SearchResults query={query} />
     </div>
   )
 }
-// Input updates immediately, results update when React is idle
+
+function SearchResults({ query }: { query: string }) {
+  // `query` is a prop this component doesn't own — defer it here, not at the source
+  const deferredQuery = useDeferredValue(query)
+  const isStale = query !== deferredQuery
+  const results = useMemo(() => searchDatabase(deferredQuery), [deferredQuery])
+
+  return (
+    <div style={{ opacity: isStale ? 0.7 : 1 }}>
+      <ResultsList results={results} />
+    </div>
+  )
+}
+// Input updates immediately; the expensive child catches up when React is idle
 ```
 
 **When to use useDeferredValue vs useTransition:**

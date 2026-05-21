@@ -322,7 +322,7 @@ const DatabaseTest = Layer.succeed(Database, {
 })
 ```
 
-### Recipe 4: try/finally → Effect.acquireRelease
+### Recipe 4: try/finally → Effect.acquireUseRelease
 
 **Incorrect (manual cleanup that can leak on interruption):**
 
@@ -337,7 +337,7 @@ const withConnection = Effect.gen(function* () {
 })
 ```
 
-**Correct (acquireRelease with guaranteed cleanup):**
+**Correct (acquireUseRelease with guaranteed cleanup):**
 
 ```ts
 const withConnection = Effect.acquireUseRelease(

@@ -4,6 +4,8 @@
 // Placeholder rules:
 // - {react_type_imports}: comma-separated React type imports needed by props.
 //   Examples: "Ref", "ReactNode", "Ref, ReactNode". Leave empty if none.
+// - {type_imports_block}: the assembled `import type { ... } from 'react'` line built
+//   from {react_type_imports}, ending in \n. Expands to "" when no React types are needed.
 // - {additional_type_imports}: import lines for project types referenced in props.
 //   Each line ends with \n. Example: "import type { User } from '@/types'\n".
 //   Leave empty if no custom types.

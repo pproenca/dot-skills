@@ -92,19 +92,22 @@ done
 # --- For manual-debounce, the regex over-matches: filter to files that ALSO contain a useQueryState call.
 # We do this in jq by listing the candidate paths and reading them.
 CANDIDATES=$(jq -r '.[] | select(.codemod == "manual-debounce") | .path' "$TMP_JSON" | sort -u)
-KEEP_FILE=$(mktemp); trap 'rm -f "$KEEP_FILE"' EXIT
-: > "$KEEP_FILE"
-for rel_path in $CANDIDATES; do
-  abs="$REPO_ROOT/$rel_path"
-  if rg -q 'useQueryState\s*\(' "$abs" 2>/dev/null; then
-    echo "$rel_path" >> "$KEEP_FILE"
+KEEP_PATHS=()
+while IFS= read -r rel_path; do
+  [[ -z "$rel_path" ]] && continue
+  if rg -q 'useQueryState\s*\(' "$REPO_ROOT/$rel_path" 2>/dev/null; then
+    KEEP_PATHS+=("$rel_path")
   fi
-done
+done <<< "$CANDIDATES"
 
-jq --slurpfile keep "$KEEP_FILE" '
+# Pass the keep list to jq as a JSON array (--argjson). Writing plain-text paths and
+# reading them with --slurpfile is invalid JSON and crashes jq whenever a path is kept.
+KEEP_JSON=$(printf '%s\n' "${KEEP_PATHS[@]:-}" | jq -R . | jq -s 'map(select(length > 0))')
+
+jq --argjson keep "$KEEP_JSON" '
   map(
     if .codemod == "manual-debounce"
-    then if ([.path] | inside($keep[0] // [])) then . else empty end
+    then (if (.path as $p | $keep | index($p)) then . else empty end)
     else . end
   )
 ' "$TMP_JSON" > "${TMP_JSON}.filtered"

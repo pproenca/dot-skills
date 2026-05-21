@@ -6,13 +6,22 @@
 #          This script adjusts category_weights in config.json based on actual
 #          resolution data, so future reviews deprioritize noisy categories.
 #
-# Usage: $0 [config-path]
+# Usage: $0 [--dry-run] [config-path]
+#   --dry-run:   show the proposed weight changes without modifying config.json
 #   config-path: path to config.json (default: auto-detect from skill dir)
 # Exit codes: 0 = success, 1 = error, 2 = insufficient data
 set -euo pipefail
 
 SCRIPT_DIR=$(dirname "$0")
-CONFIG_PATH="${1:-$SCRIPT_DIR/../config.json}"
+DRY_RUN=0
+CONFIG_PATH=""
+for arg in "$@"; do
+  case "$arg" in
+    --dry-run) DRY_RUN=1 ;;
+    *) CONFIG_PATH="$arg" ;;
+  esac
+done
+CONFIG_PATH="${CONFIG_PATH:-$SCRIPT_DIR/../config.json}"
 
 if [[ ! -f "$CONFIG_PATH" ]]; then
   echo "Error: config.json not found at $CONFIG_PATH" >&2
@@ -56,12 +65,30 @@ CATEGORY_WEIGHTS=$(echo "$REPORT" | jq '
 echo "Category weights computed from $TOTAL_FINDINGS findings across $PRS_ANALYZED PRs:"
 echo "$CATEGORY_WEIGHTS" | jq -r 'to_entries[] | "  \(.key): \(.value)"'
 
-# Update config.json with new weights
+# Show the change (current -> proposed) so the effect is reviewable before applying.
+echo ""
+echo "Proposed category_weights change (current -> new):"
+jq -n \
+  --argjson cur "$(jq '.category_weights // {}' "$CONFIG_PATH")" \
+  --argjson new "$CATEGORY_WEIGHTS" '
+    (($cur + $new) | keys_unsorted)
+    | map({ key: ., value: { old: ($cur[.] // "default"), new: ($new[.] // "unchanged") } })
+    | from_entries' \
+  | jq -r 'to_entries[] | "  \(.key): \(.value.old) -> \(.value.new)"'
+
+if [[ "$DRY_RUN" -eq 1 ]]; then
+  echo ""
+  echo "Dry run — no changes written. Re-run without --dry-run to apply."
+  exit 0
+fi
+
+# Back up before overwriting, then update config.json with new weights.
+cp "$CONFIG_PATH" "${CONFIG_PATH}.bak"
 jq --argjson weights "$CATEGORY_WEIGHTS" '.category_weights = $weights' "$CONFIG_PATH" > "${CONFIG_PATH}.tmp" \
   && mv "${CONFIG_PATH}.tmp" "$CONFIG_PATH"
 
 echo ""
-echo "Updated $CONFIG_PATH with learned category weights."
+echo "Updated $CONFIG_PATH with learned category weights (backup: ${CONFIG_PATH}.bak)."
 
 # Flag suppressed categories
 SUPPRESSED=$(echo "$CATEGORY_WEIGHTS" | jq -r 'to_entries[] | select(.value <= 0.1) | .key')
