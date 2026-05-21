@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "Airbnb DLS / React Native Community",
+  "technology": "Expo React Native design system components",
+  "discipline": "extraction",
+  "type": "scaffolding",
+  "date": "May 2026",
+  "abstract": "Parameterized templates that scaffold Expo / React Native design system components which obey the expo-design-system rules by construction — Unistyles v3 variants instead of style props, no raw style escape hatch, ref-as-prop, design tokens, and built-in accessibility. Covers a variant pressable primitive, a slot-based card surface, a typed text primitive, a labeled form field, a FlashList entity screen, a theme token group, and a Storybook variant catalog. Each template cites the expo-design-system rule IDs it satisfies, so generated components match the rule pack without rework.",
+  "references": [
+    "https://www.unistyl.es/v3/references/variants/",
+    "https://www.unistyl.es/v3/guides/theming/",
+    "https://react.dev/blog/2024/12/05/react-19",
+    "https://shopify.github.io/flash-list/",
+    "https://www.infoq.com/news/2020/02/airbnb-design-system-react-conf/"
+  ]
+}

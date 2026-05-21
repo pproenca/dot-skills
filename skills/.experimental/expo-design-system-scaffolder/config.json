@@ -1,0 +1,8 @@
+{
+  "design_system_dir": "packages/design-system/src",
+  "app_dir": "app",
+  "_setup_instructions": {
+    "design_system_dir": "Source directory of the @clinic/design-system package where primitives, the theme, and stories live (default packages/design-system/src)",
+    "app_dir": "Expo Router routes directory used by the list-screen template (default app)"
+  }
+}

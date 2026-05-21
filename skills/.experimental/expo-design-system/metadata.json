@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "Airbnb DLS / React Native Community",
+  "technology": "Expo React Native design system",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Airbnb-DLS-aligned design system engineering for Expo / React Native apps built on Unistyles v3, Reanimated, Skia, and FlashList. Contains 54 rules across 9 categories, prioritized by impact from critical (token architecture, theming, component API contracts) to incremental (governance). Each rule pairs an incorrect and correct TSX example with quantified impact to guide design system code generation and review for a clinic management mobile app with calendar, treatment-note, and body-chart drawing surfaces.",
+  "references": [
+    "https://www.unistyl.es/v3/start/introduction",
+    "https://www.unistyl.es/v3/guides/theming/",
+    "https://www.infoq.com/news/2020/02/airbnb-design-system-react-conf/",
+    "https://docs.swmansion.com/react-native-reanimated/docs/guides/performance/",
+    "https://docs.swmansion.com/react-native-gesture-handler/",
+    "https://shopify.github.io/react-native-skia/",
+    "https://shopify.github.io/flash-list/",
+    "https://docs.expo.dev/router/introduction/",
+    "https://docs.expo.dev/versions/latest/sdk/image/",
+    "https://reactnative.dev/docs/accessibility"
+  ]
+}
