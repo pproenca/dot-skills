@@ -1,0 +1,15 @@
+{
+  "goal_metric": "",
+  "value_stream_stages": [],
+  "wip_probes": {},
+  "stage_time_commands": {},
+  "investigation_log": "${CLAUDE_PLUGIN_DATA:-$HOME/.claude}/toc-investigations.log",
+  "_setup_instructions": {
+    "goal_metric": "The single global throughput metric you are maximizing for this system. ToC is meaningless without one. Examples: 'PRs merged/week', 'requests/sec at p99<300ms', 'builds/hour', 'agent task completions/session', 'tokens spent per completion'. If empty, ask the user before measuring anything.",
+    "value_stream_stages": "Ordered list of the stages work flows through, first to last. Example: [\"plan\", \"code\", \"review\", \"ci\", \"deploy\"]. The constraint is one of these.",
+    "wip_probes": "Map of stage name -> shell command that lists items waiting at that stage, one per line (its line count is the WIP). Passed to queries/measure-wip.sh. Example: {\"review\": \"gh pr list --state open --search review:required\", \"ci\": \"gh run list --status queued\"}.",
+    "stage_time_commands": "Map of stage name -> shell command that performs that stage, for queries/measure-stage-times.sh. The commands ARE EXECUTED. Example: {\"build\": \"npm run build\", \"test\": \"npm test\"}.",
+    "investigation_log": "Append-only log of investigations (one line each). Defaults under ${CLAUDE_PLUGIN_DATA} so it survives skill upgrades. No secrets are stored here."
+  },
+  "_notes": "This skill works without config: if goal_metric or value_stream_stages are empty, ask the user inline (AskUserQuestion) and measure stages manually. Never block on missing config. Secrets are never stored here — reference environment variables from the commands instead."
+}

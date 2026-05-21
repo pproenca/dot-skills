@@ -162,6 +162,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [tailwind-refactor](skills/.experimental/tailwind-refactor) | Tailwind CSS code refactoring patterns for v4 migration and anti-pattern cleanup |
 | [tailwind-responsive-ui](skills/.experimental/tailwind-responsive-ui) | Responsive UI transformation patterns for Tailwind CSS applications |
 | [tailwind-ui-refactor](skills/.experimental/tailwind-ui-refactor) | Refactoring UI design patterns for Tailwind CSS applications |
+| [theory-of-constraints](skills/.experimental/theory-of-constraints) | Apply the Theory of Constraints (Goldratt's Five Focusing Steps) to find and fix the single.. |
 | [threat-model](skills/.experimental/threat-model) | Use this skill whenever performing security threat modeling, attack surface mapping, or trust.. |
 | [threat-patch](skills/.experimental/threat-patch) | Use this skill to remediate security findings by producing minimal, surgical code patches |
 | [ts-google](skills/.experimental/ts-google) | Google TypeScript style guide for writing clean, consistent, type-safe code |

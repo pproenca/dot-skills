@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "process / workflow optimization (Theory of Constraints)",
+  "discipline": "investigation",
+  "type": "runbook",
+  "date": "May 2026",
+  "abstract": "A diagnostic runbook that applies Eliyahu Goldratt's Theory of Constraints to optimizing processes and workflows — CI/build pipelines, dev value streams, Agent Skills/plugins, and runtime code paths. Maps eight throughput symptoms to decision trees that locate the single binding constraint, then prescribe the Five Focusing Steps (exploit, subordinate, elevate, repeat) while guarding against optimizing non-constraints. Ships six runnable measurement queries (stage timing, WIP, throughput accounting, skill context cost, utilization vs throughput, a POOGI checklist) and a constraint-analysis report template.",
+  "references": [
+    "https://www.goldratt.com/",
+    "https://www.tocico.org/",
+    "https://en.wikipedia.org/wiki/Theory_of_constraints",
+    "https://en.wikipedia.org/wiki/The_Goal_(novel)",
+    "https://en.wikipedia.org/wiki/Drum-buffer-rope",
+    "https://en.wikipedia.org/wiki/Evaporating_Cloud",
+    "https://itrevolution.com/product/the-phoenix-project/",
+    "https://itrevolution.com/product/the-devops-handbook/"
+  ]
+}
