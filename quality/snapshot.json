@@ -1,9 +1,9 @@
 {
-  "generated_from": "09c66fa67fd19bdb2b0473ef4802d5dd004daff1",
+  "generated_from": "6f030a57bc44f12f62044276a4983f7dc856fa5a",
   "metrics_spec": "quality/METRICS.md",
   "summary": {
     "count": 158,
-    "mean_sqs": 90.3,
+    "mean_sqs": 90.4,
     "median_sqs": 91.7,
     "verdicts": {
       "SHIP": 156,
@@ -12,7 +12,7 @@
     "by_tier": {
       "experimental": {
         "count": 120,
-        "mean_sqs": 89.6
+        "mean_sqs": 89.8
       },
       "curated": {
         "count": 38,
@@ -26,7 +26,7 @@
       },
       "composition": {
         "count": 20,
-        "mean_sqs": 84.4
+        "mean_sqs": 85.2
       },
       "guidance": {
         "count": 9,
@@ -34,7 +34,7 @@
       },
       "extraction": {
         "count": 6,
-        "mean_sqs": 84.3
+        "mean_sqs": 84.2
       }
     }
   },
@@ -680,7 +680,7 @@
       "skill": "bug-review",
       "tier": "experimental",
       "discipline": "composition",
-      "sqs": 76.4,
+      "sqs": 91.4,
       "verdict": "SHIP",
       "hard_fails": [],
       "dimensions": {
@@ -688,7 +688,7 @@
         "context_economy": 0.9,
         "structural_integrity": 0.833,
         "instructional_calibration": 0.808,
-        "discipline_score": 0.667
+        "discipline_score": 1
       },
       "metrics": {
         "discoverability": {
@@ -724,12 +724,12 @@
           "script_syntax": 1,
           "strict_mode": 1,
           "input_validation": 1,
-          "guardrails": 0,
-          "dryrun_doc": 0,
+          "guardrails": 1,
+          "dryrun_doc": 1,
           "script_count": 10
         }
       },
-      "meta_version": "1.0.3",
+      "meta_version": "1.0.4",
       "maintenance": "OK"
     },
     {
@@ -2357,7 +2357,7 @@
           "critical_share": 0.25
         }
       },
-      "meta_version": "1.0.4",
+      "meta_version": "1.0.5",
       "maintenance": "OK"
     },
     {
@@ -5337,7 +5337,7 @@
           "script_count": 10
         }
       },
-      "meta_version": "1.0.4",
+      "meta_version": "1.0.5",
       "maintenance": "OK"
     },
     {
@@ -6195,7 +6195,7 @@
           "agents_md": 1
         },
         "instructional_calibration": {
-          "low_vagueness": 0.934,
+          "low_vagueness": 0.935,
           "no_fluff": 1,
           "has_rationale": 1,
           "vague_count": 11,
@@ -6213,14 +6213,14 @@
           "critical_share": 0.082
         }
       },
-      "meta_version": "1.2.3",
+      "meta_version": "1.2.4",
       "maintenance": "OK"
     },
     {
       "skill": "react-19-component-scaffolder",
       "tier": "curated",
       "discipline": "extraction",
-      "sqs": 86.8,
+      "sqs": 86.5,
       "verdict": "SHIP",
       "hard_fails": [],
       "dimensions": {
@@ -6228,7 +6228,7 @@
         "context_economy": 1,
         "structural_integrity": 1,
         "instructional_calibration": 0.944,
-        "discipline_score": 0.83
+        "discipline_score": 0.822
       },
       "metrics": {
         "discoverability": {
@@ -6262,13 +6262,13 @@
         },
         "discipline": {
           "template_present": 1,
-          "params_documented": 0.423,
+          "params_documented": 0.396,
           "convention_rationale": 1,
           "no_hardcoded": 1,
-          "template_count": 13
+          "template_count": 14
         }
       },
-      "meta_version": "1.0.6",
+      "meta_version": "1.0.7",
       "maintenance": "OK"
     },
     {

@@ -1,11 +1,11 @@
 # dot-skills Quality Report
 
-_Generated from `09c66fa67` · 158 skills · metrics: [METRICS.md](METRICS.md) · credibility: [calibration/correlation.md](calibration/correlation.md)_
+_Generated from `6f030a57b` · 158 skills · metrics: [METRICS.md](METRICS.md) · credibility: [calibration/correlation.md](calibration/correlation.md)_
 
 ## TL;DR
 
-- **Current mean SQS 90.3** (median 91.7). Verdicts: 156 SHIP, 2 NEEDS-WORK.
-- **The corpus is structurally mature and improving slowly.** Monthly mean SQS: 26-01 90.2 → 26-02 91.1 → 26-03 89.5 → 26-04 89.3 → 26-05 90.3. A dip in Mar–Apr coincides with bulk experimental additions; May recovers.
+- **Current mean SQS 90.4** (median 91.7). Verdicts: 156 SHIP, 2 NEEDS-WORK.
+- **The corpus is structurally mature and improving slowly.** Monthly mean SQS: 26-01 90.2 → 26-02 91.1 → 26-03 89.5 → 26-04 89.3 → 26-05 90.4. A dip in Mar–Apr coincides with bulk experimental additions; May recovers.
 - **SQS measures structure, NOT usefulness.** Calibration found SQS↔functional-lift ≈ −0.5: the highest-SQS sampled skill (`react`, 95.7) added **0%** over a no-skill baseline, while two low-SQS prose skills added **+50–75%**. Read SQS as an authoring/regression signal only — see [calibration](calibration/correlation.md).
 - **Content bugs are common even in high-SQS skills** — the rubric review found a real, fixable defect in ~8 of 12 sampled skills (e.g. a `jq --slurpfile` crash, a `Justfile` detection bug, an API misname). Static scoring cannot see these.
 
@@ -25,7 +25,7 @@ SQS is a weighted composite over **Discoverability, Context economy, Structural 
 
 | Tier | Count | Mean SQS |
 |------|------:|---------:|
-| experimental | 120 | 89.6 |
+| experimental | 120 | 89.8 |
 | curated | 38 | 92.4 |
 
 ### By discipline
@@ -33,9 +33,9 @@ SQS is a weighted composite over **Discoverability, Context economy, Structural 
 | Discipline | Count | Mean SQS |
 |------------|------:|---------:|
 | distillation | 123 | 91.9 |
-| composition | 20 | 84.4 |
+| composition | 20 | 85.2 |
 | guidance | 9 | 85.3 |
-| extraction | 6 | 84.3 |
+| extraction | 6 | 84.2 |
 
 ### Top 10 by SQS
 
@@ -60,12 +60,12 @@ SQS is a weighted composite over **Discoverability, Context economy, Structural 
 | 70.4 | NEEDS-WORK | dev-rfc | composition | experimental |
 | 75.0 | SHIP | effect-ts | distillation | experimental |
 | 75.2 | SHIP | rails-application-ui-blocks | composition | experimental |
-| 76.4 | SHIP | bug-review | composition | experimental |
 | 76.4 | SHIP | dx-harness | composition | experimental |
 | 77.5 | SHIP | ios-xcode | distillation | experimental |
 | 77.6 | SHIP | drizzle-sqlite-scaffold | extraction | experimental |
 | 77.6 | SHIP | expo-ios-screen-scaffolder | extraction | experimental |
 | 78.7 | SHIP | complexity-optimizer | composition | experimental |
+| 79.0 | SHIP | acceptance-pipeline-feature-design | composition | experimental |
 
 ## Quality over time (longitudinal)
 
@@ -77,7 +77,7 @@ Scored against the actual tree at each month-end (skills later removed still cou
 | 2026-02 | 93 | 91.1 | 92 | 1 | 0 |
 | 2026-03 | 105 | 89.5 | 101 | 4 | 0 |
 | 2026-04 | 113 | 89.3 | 107 | 6 | 0 |
-| 2026-05 | 158 | 90.3 | 156 | 2 | 0 |
+| 2026-05 | 158 | 90.4 | 156 | 2 | 0 |
 
 ### Biggest improvers (per-skill SQS delta across its own versions)
 

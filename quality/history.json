@@ -1,5 +1,5 @@
 {
-  "generated_from": "09c66fa67fd19bdb2b0473ef4802d5dd004daff1",
+  "generated_from": "6f030a57bc44f12f62044276a4983f7dc856fa5a",
   "metrics_spec": "quality/METRICS.md",
   "monthly": [
     {
@@ -136,9 +136,9 @@
     },
     {
       "month": "2026-05",
-      "sha": "09c66fa67",
+      "sha": "6f030a57b",
       "skill_count": 158,
-      "mean_sqs": 90.3,
+      "mean_sqs": 90.4,
       "verdicts": {
         "SHIP": 156,
         "NEEDS-WORK": 2
@@ -150,7 +150,7 @@
         },
         "experimental": {
           "count": 120,
-          "mean_sqs": 89.6
+          "mean_sqs": 89.8
         }
       },
       "by_discipline": {
@@ -160,11 +160,11 @@
         },
         "composition": {
           "count": 20,
-          "mean_sqs": 84.8
+          "mean_sqs": 85.5
         },
         "extraction": {
           "count": 6,
-          "mean_sqs": 84.3
+          "mean_sqs": 84.2
         },
         "guidance": {
           "count": 9,
@@ -1290,10 +1290,10 @@
     "bug-review": {
       "tier": "experimental",
       "discipline": "composition",
-      "versions": 5,
+      "versions": 6,
       "first_sqs": 76.4,
-      "last_sqs": 76.4,
-      "delta": 0,
+      "last_sqs": 91.4,
+      "delta": 15,
       "points": [
         {
           "sha": "f62afafd7",
@@ -1379,6 +1379,23 @@
             "discipline_score": 0.667
           },
           "changed": false
+        },
+        {
+          "sha": "6f030a57b",
+          "date": "2026-05-21",
+          "sqs": 91.4,
+          "verdict": "SHIP",
+          "discipline": "composition",
+          "version": "1.0.4",
+          "rule_count": null,
+          "dimensions": {
+            "discoverability": 0.833,
+            "context_economy": 0.9,
+            "structural_integrity": 0.833,
+            "instructional_calibration": 0.808,
+            "discipline_score": 1
+          },
+          "changed": true
         }
       ]
     },
@@ -3661,7 +3678,7 @@
     "effect-ts": {
       "tier": "experimental",
       "discipline": "distillation",
-      "versions": 6,
+      "versions": 7,
       "first_sqs": 66.5,
       "last_sqs": 75,
       "delta": 8.5,
@@ -3758,6 +3775,23 @@
           "verdict": "SHIP",
           "discipline": "distillation",
           "version": "1.0.4",
+          "rule_count": 20,
+          "dimensions": {
+            "discoverability": 0.667,
+            "context_economy": 0.9,
+            "structural_integrity": 0.833,
+            "instructional_calibration": 0.622,
+            "discipline_score": 0.733
+          },
+          "changed": false
+        },
+        {
+          "sha": "6f030a57b",
+          "date": "2026-05-21",
+          "sqs": 75,
+          "verdict": "SHIP",
+          "discipline": "distillation",
+          "version": "1.0.5",
           "rule_count": 20,
           "dimensions": {
             "discoverability": 0.667,
@@ -9407,7 +9441,7 @@
     "nuqs-codemod-runner": {
       "tier": "curated",
       "discipline": "composition",
-      "versions": 6,
+      "versions": 7,
       "first_sqs": 80.5,
       "last_sqs": 86.5,
       "delta": 6,
@@ -9504,6 +9538,23 @@
           "verdict": "SHIP",
           "discipline": "composition",
           "version": "1.0.4",
+          "rule_count": null,
+          "dimensions": {
+            "discoverability": 0.667,
+            "context_economy": 0.833,
+            "structural_integrity": 1,
+            "instructional_calibration": 0.833,
+            "discipline_score": 0.893
+          },
+          "changed": false
+        },
+        {
+          "sha": "6f030a57b",
+          "date": "2026-05-21",
+          "sqs": 86.5,
+          "verdict": "SHIP",
+          "discipline": "composition",
+          "version": "1.0.5",
           "rule_count": null,
           "dimensions": {
             "discoverability": 0.667,
@@ -11172,7 +11223,7 @@
     "react": {
       "tier": "curated",
       "discipline": "distillation",
-      "versions": 14,
+      "versions": 15,
       "first_sqs": 94.4,
       "last_sqs": 95.7,
       "delta": 1.3,
@@ -11414,16 +11465,33 @@
             "discipline_score": 0.945
           },
           "changed": false
+        },
+        {
+          "sha": "6f030a57b",
+          "date": "2026-05-21",
+          "sqs": 95.7,
+          "verdict": "SHIP",
+          "discipline": "distillation",
+          "version": "1.2.4",
+          "rule_count": 49,
+          "dimensions": {
+            "discoverability": 1,
+            "context_economy": 0.867,
+            "structural_integrity": 1,
+            "instructional_calibration": 0.978,
+            "discipline_score": 0.945
+          },
+          "changed": false
         }
       ]
     },
     "react-19-component-scaffolder": {
       "tier": "curated",
       "discipline": "extraction",
-      "versions": 8,
+      "versions": 9,
       "first_sqs": 80.7,
-      "last_sqs": 86.8,
-      "delta": 6.1,
+      "last_sqs": 86.5,
+      "delta": 5.8,
       "points": [
         {
           "sha": "a7e00e956",
@@ -11560,6 +11628,23 @@
             "discipline_score": 0.83
           },
           "changed": false
+        },
+        {
+          "sha": "6f030a57b",
+          "date": "2026-05-21",
+          "sqs": 86.5,
+          "verdict": "SHIP",
+          "discipline": "extraction",
+          "version": "1.0.7",
+          "rule_count": null,
+          "dimensions": {
+            "discoverability": 0.667,
+            "context_economy": 1,
+            "structural_integrity": 1,
+            "instructional_calibration": 0.944,
+            "discipline_score": 0.822
+          },
+          "changed": true
         }
       ]
     },
