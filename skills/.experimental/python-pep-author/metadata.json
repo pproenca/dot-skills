@@ -1,0 +1,13 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Python / PEP process",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "May 2026",
+  "abstract": "Guides an author end-to-end through writing a Python Enhancement Proposal: vetting the idea, choosing the PEP type, scaffolding a valid reStructuredText pep-NNNN file, drafting each section to the acceptance bar, linting the headers against PEP 1 / PEP 12 rules, and navigating the sponsor, submission, and Steering Council review process.",
+  "references": [
+    "https://peps.python.org/pep-0001/",
+    "https://peps.python.org/pep-0012/"
+  ]
+}

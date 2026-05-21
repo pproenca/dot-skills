@@ -140,6 +140,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [opensearch-personalize-caching-strategies](skills/.experimental/opensearch-personalize-caching-strategies) | Use this skill when designing, tuning, reviewing, or debugging caching in front of AWS.. |
 | [orval](skills/.experimental/orval) | Orval OpenAPI TypeScript client generation best practices |
 | [pulumi](skills/.experimental/pulumi) | Pulumi infrastructure as code performance and reliability guidelines |
+| [python-pep-author](skills/.experimental/python-pep-author) | Use this skill whenever the user wants to write, draft, or structure a Python Enhancement.. |
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
 | [rails-design-system](skills/.experimental/rails-design-system) | Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal.. |
 | [rails-hotwire](skills/.experimental/rails-hotwire) | Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive,.. |
