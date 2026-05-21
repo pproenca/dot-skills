@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "Refactoring Guru",
+  "technology": "Python Design Patterns",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Implementation guide for the 22 Gang of Four design patterns in idiomatic modern Python, distilled from refactoring.guru and adapted to current Python (3.10+) idioms. Each reference leads with the Pythonic form — first-class functions and Callable, dataclasses, typing.Protocol, functools.singledispatch, structural pattern matching (match), generators, copy/dataclasses.replace, __slots__, weakref, descriptors, decorators — and falls back to the class-based GoF structure only where identity, registration, or polymorphic dispatch genuinely require it. Each pattern covers intent, the problem it solves, the structural solution, applicability (when to use and when not to), a runnable Python example with output, implementation steps, pros/cons, and relations to sibling patterns. Patterns are grouped by purpose: 5 Creational (Factory Method, Abstract Factory, Builder, Prototype, Singleton), 7 Structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy), and 10 Behavioral (Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor). Use this skill when you recognize a pattern-shaped problem in Python — class explosion via inheritance, scattered conditionals branching on type, tight coupling between caller and concrete class, tree-shaped models, runtime algorithm selection, undo/redo, state-dependent behavior — and want a vetted, idiomatic recipe instead of porting a Java-shaped class hierarchy.",
+  "references": [
+    "https://refactoring.guru/design-patterns/catalog",
+    "https://refactoring.guru/design-patterns/python",
+    "https://refactoring.guru/design-patterns/creational-patterns",
+    "https://refactoring.guru/design-patterns/structural-patterns",
+    "https://refactoring.guru/design-patterns/behavioral-patterns"
+  ],
+  "category": "Design Patterns"
+}

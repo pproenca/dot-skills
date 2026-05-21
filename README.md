@@ -106,6 +106,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
 | [human-copywrite](skills/.experimental/human-copywrite) | Use this skill whenever writing, editing, or reviewing user-facing copy — UI strings,.. |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
+| [implementation-design-patterns-python](skills/.experimental/implementation-design-patterns-python) | Implementation guide for the 22 Gang of Four design patterns in idiomatic modern Python (3.10+),.. |
 | [implementation-design-patterns](skills/.experimental/implementation-design-patterns) | Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from.. |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Use this skill whenever scaffolding Inngest event-driven functions in a Next.js (App Router).. |
 | [io-bound-data-processing](skills/.experimental/io-bound-data-processing) | Use this skill when processing, transforming, or moving datasets that may exceed RAM on a single.. |
