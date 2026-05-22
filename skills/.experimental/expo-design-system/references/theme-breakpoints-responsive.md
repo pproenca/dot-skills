@@ -35,4 +35,4 @@ const styles = StyleSheet.create((theme) => ({
 // Rotating an iPad re-resolves the breakpoint natively; no Dimensions listener needed.
 ```
 
-Reference: [Unistyles breakpoints](https://www.unistyl.es/v3/guides/breakpoints/)
+Reference: [Unistyles breakpoints](https://www.unistyl.es/v3/references/breakpoints/)

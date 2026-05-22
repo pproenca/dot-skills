@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "organization": "Expo iOS HIG",
   "technology": "Expo (React Native) for iOS 26",
   "discipline": "distillation",
   "type": "code-quality",
   "date": "May 2026",
-  "abstract": "Human Interface Guidelines and native-experience design rules for building iOS 26 apps in Expo (React Native). Contains 46 rules across 8 categories — native navigation, component fidelity, layout and adaptivity, touch and haptics, visual system and Liquid Glass, motion, accessibility, and system integration — each with TSX examples comparing a non-native implementation against a native one, prioritized by impact on native feel and HIG compliance. Designed to guide AI agents writing or reviewing Expo iOS code in TypeScript. Complements the expo-ui component-API reference and the native-Swift ios-hig skill.",
+  "abstract": "Human Interface Guidelines and native-experience design rules for building iOS 26 apps in Expo (React Native). Contains 46 rules across 8 categories — native navigation, component fidelity, layout and adaptivity, touch and haptics, visual system and Liquid Glass, motion, accessibility, and system integration — each with TSX examples comparing a non-native implementation against a native one, prioritized by impact on native feel and HIG compliance. Designed to guide AI agents writing or reviewing Expo iOS code in TypeScript. Complements the expo-ui component-API reference, the cross-platform expo-design-system skill (shared tokens, component APIs, and web/iOS parity), and the native-Swift ios-hig skill.",
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines/",
     "https://developer.apple.com/documentation/TechnologyOverviews/liquid-glass",

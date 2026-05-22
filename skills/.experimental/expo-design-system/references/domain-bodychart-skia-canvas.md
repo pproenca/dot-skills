@@ -25,15 +25,20 @@ Rendering each touch point of a body-chart annotation as an absolutely positione
 ```typescript
 import { Canvas, Path } from '@shopify/react-native-skia'
 import type { SkPath } from '@shopify/react-native-skia'
+import { StyleSheet, useUnistyles } from 'react-native-unistyles'
+
+const styles = StyleSheet.create(() => ({ canvas: { flex: 1 } }))
 
 function BodyChartLayer({ strokePath }: { strokePath: SkPath }) {
+  const { theme } = useUnistyles()
   return (
-    <Canvas style={{ flex: 1 }}>
-      <Path path={strokePath} style="stroke" strokeWidth={3} color="#DC2626" />
+    <Canvas style={styles.canvas}>
+      <Path path={strokePath} style="stroke" strokeWidth={3} color={theme.colors.danger} />
     </Canvas>
   )
 }
-// One Skia Path renders the entire stroke on the GPU, off the JS thread.
+// One Skia Path renders the whole stroke on the GPU, off the JS thread; the
+// stroke color resolves from a theme token instead of a hardcoded hex.
 ```
 
 Reference: [React Native Skia](https://shopify.github.io/react-native-skia/)

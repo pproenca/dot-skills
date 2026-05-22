@@ -1,11 +1,11 @@
 ---
 name: expo-design-system
-description: Airbnb-DLS-aligned design system engineering for Expo / React Native apps built on Unistyles v3, Reanimated, Skia, and FlashList. Use whenever building, reviewing, or refactoring shared UI for the clinic mobile app — design tokens, theming, primitive and composite components, variant-driven component APIs, typography, spacing, native-feel performance, or the calendar, treatment-note, and body-chart drawing surfaces. Covers token architecture, theming and adaptivity, component API contracts (variants over style props), the Unistyles styling engine, and governance. Trigger even when the user does not say "design system" but is creating or changing reusable React Native components, tokens, or theme code. This skill teaches how to BUILD the design system; pair it with expo-react-native-coder for feature work.
+description: Airbnb-DLS-aligned design system engineering for Expo / React Native apps targeting both web and native iOS, built on Unistyles v3, Reanimated, Skia, and FlashList. Use whenever building, reviewing, or refactoring shared UI — design tokens, theming, variant-driven component APIs, typography, spacing, cross-platform web/iOS parity, native-feel performance, or complex surfaces like calendars and drawing canvases (examples use a clinic app). Covers token architecture, theming, component API contracts (variants over style props), web/iOS parity (Unistyles `_web` hover/focus/cursor, Platform splits, one shared theme), the Unistyles styling engine, and governance. Trigger even when the user does not say "design system" but is creating or changing reusable React Native components, tokens, theme code, or making a component behave natively on both web and iOS. Teaches how to BUILD the design system; pair with expo-react-native-coder for features and expo-ios-hig for iOS native-feel decisions.
 ---
 
 # Airbnb DLS Expo React Native Design System Best Practices
 
-Opinionated, strict design system engineering for Expo / React Native apps on the New Architecture. Contains 54 rules across 9 categories, prioritized by impact. Derived from Airbnb's Design Language System (DLS), the Unistyles v3 documentation, and the React Native ecosystem (Reanimated, Gesture Handler, Skia, FlashList, Expo SDK). The styling engine is Unistyles v3; the component API follows the Airbnb DLS pattern of variant props over style escape hatches.
+Opinionated, strict design system engineering for Expo / React Native apps on the New Architecture, targeting both web and native iOS. Contains 63 rules across 11 categories, prioritized by impact. Derived from Airbnb's Design Language System (DLS), the Unistyles v3 documentation, and the React Native ecosystem (Reanimated, Gesture Handler, Skia, FlashList, Expo SDK). The styling engine is Unistyles v3; the component API follows the Airbnb DLS pattern of variant props over style escape hatches.
 
 ## Mandated Architecture Alignment
 
@@ -13,9 +13,11 @@ This skill is the **infrastructure layer** — it teaches how to BUILD the desig
 
 - Feature modules import `@clinic/design-system` + `domain`; never another feature's internals
 - The design system owns the Unistyles theme (tokens, breakpoints) and exports a curated public surface
+- Reuse before you build: read the index, extend a variant, promote on the second use — never a parallel local component
 - Components expose variant and slot props (Airbnb DLS); no raw `style` escape hatch
 - Animation and gestures run on the UI thread (Reanimated worklets + Gesture Handler)
 - Lists use FlashList; the body-chart drawing surface uses React Native Skia
+- One source feels native on both web and iOS: Unistyles `_web` pseudo-states and `Platform` splits, never a forked web stylesheet
 - Targets the New Architecture (Fabric/JSI), Expo SDK 53+ / React Native 0.81+
 
 ## Scope & Relationship to Sibling Skills
@@ -26,6 +28,7 @@ This skill is the **infrastructure layer** — it teaches how to BUILD the desig
 | `expo-react-native-coder` | **Feature development** (screens, navigation, data fetching) | **Design system infrastructure** (tokens, components, theming) |
 | `expo-react-native-performance` | **App-wide performance** optimization | **Native-feel performance inside the design system** |
 | `react` | General **React** patterns | **Expo / React Native** design system specifics |
+| `expo-ios-hig` | **iOS native-feel** decisions (navigation, system controls, Liquid Glass) | **Cross-platform** token/component architecture + **web/iOS parity** |
 
 ## Clinic Architecture Contract (Expo / React Native)
 
@@ -48,6 +51,8 @@ Reference these guidelines when:
 - Migrating ad-hoc styles to a governed token system
 - Reviewing PRs for raw colors, inline styles, leaked `style` props, or feature-local tokens
 - Tuning native feel — list virtualization, UI-thread animation, gestures, haptics, safe areas
+- Making a component render and feel native on both web and iOS — hover/focus/cursor, `Platform` splits, and safe-area/haptics divergences
+- Deciding whether to build new or reuse — checking the design system index, extending vs forking, or using a native/`@expo/ui` control instead of reimplementing one
 
 ## Rule Categories by Priority
 
@@ -56,12 +61,14 @@ Reference these guidelines when:
 | 1 | Token Architecture | CRITICAL | `token-` | 6 |
 | 2 | Theming & Adaptivity | CRITICAL | `theme-` | 5 |
 | 3 | Component API Contracts | CRITICAL | `api-` | 8 |
-| 4 | Styling Engine (Unistyles) | HIGH | `style-` | 6 |
-| 5 | Typography & Iconography | HIGH | `type-` | 5 |
-| 6 | Spacing, Layout & Safe Areas | HIGH | `space-` | 5 |
-| 7 | Native-Feel & Performance | HIGH | `perf-` | 7 |
-| 8 | Complex Domain Components | MEDIUM-HIGH | `domain-` | 6 |
-| 9 | Governance & Consistency | MEDIUM | `govern-` | 6 |
+| 4 | Cross-Platform Parity | CRITICAL | `platform-` | 5 |
+| 5 | Reuse & System Fit | HIGH | `reuse-` | 4 |
+| 6 | Styling Engine (Unistyles) | HIGH | `style-` | 6 |
+| 7 | Typography & Iconography | HIGH | `type-` | 5 |
+| 8 | Spacing, Layout & Safe Areas | HIGH | `space-` | 5 |
+| 9 | Native-Feel & Performance | HIGH | `perf-` | 7 |
+| 10 | Complex Domain Components | MEDIUM-HIGH | `domain-` | 6 |
+| 11 | Governance & Consistency | MEDIUM | `govern-` | 6 |
 
 ## Quick Reference
 
@@ -93,7 +100,22 @@ Reference these guidelines when:
 - [`api-accessibility-in-contract`](references/api-accessibility-in-contract.md) - Require accessibility props in the contract
 - [`api-aschild-polymorphism`](references/api-aschild-polymorphism.md) - Offer asChild instead of wrapper nesting
 
-### 4. Styling Engine (Unistyles) (HIGH)
+### 4. Cross-Platform Parity (CRITICAL)
+
+- [`platform-web-pseudo-states`](references/platform-web-pseudo-states.md) - Add web hover, focus, and cursor to interactive components
+- [`platform-guard-native-only`](references/platform-guard-native-only.md) - Guard native-only APIs behind Platform checks with web fallbacks
+- [`platform-divergence-split`](references/platform-divergence-split.md) - Isolate platform differences behind one component API
+- [`platform-input-model`](references/platform-input-model.md) - Design for pointer and touch, never hover-only
+- [`platform-shared-theme-parity`](references/platform-shared-theme-parity.md) - One theme for web and native, with a known divergence map
+
+### 5. Reuse & System Fit (HIGH)
+
+- [`reuse-inventory-first`](references/reuse-inventory-first.md) - Read the design system index before writing any style
+- [`reuse-extend-not-fork`](references/reuse-extend-not-fork.md) - Extend a shared component with a variant, don't fork a local one
+- [`reuse-promote-on-second-use`](references/reuse-promote-on-second-use.md) - Promote a pattern to the system on its second use
+- [`reuse-platform-component-first`](references/reuse-platform-component-first.md) - Reach for a native control before reimplementing one
+
+### 6. Styling Engine (Unistyles) (HIGH)
 
 - [`style-stylesheet-create`](references/style-stylesheet-create.md) - StyleSheet.create over inline objects
 - [`style-variants-api`](references/style-variants-api.md) - Variants over ternary style arrays
@@ -102,7 +124,7 @@ Reference these guidelines when:
 - [`style-withunistyles-third-party`](references/style-withunistyles-third-party.md) - Theme third-party components with withUnistyles
 - [`style-press-states-from-variants`](references/style-press-states-from-variants.md) - Press and disabled states as variants
 
-### 5. Typography & Iconography (HIGH)
+### 7. Typography & Iconography (HIGH)
 
 - [`type-scale-tokens`](references/type-scale-tokens.md) - Define a named typography scale
 - [`type-respect-font-scaling`](references/type-respect-font-scaling.md) - Respect OS font scaling
@@ -110,7 +132,7 @@ Reference these guidelines when:
 - [`type-font-loading-expo-font`](references/type-font-loading-expo-font.md) - Load fonts before first paint
 - [`type-icon-registry`](references/type-icon-registry.md) - Centralize icons in a typed registry
 
-### 6. Spacing, Layout & Safe Areas (HIGH)
+### 8. Spacing, Layout & Safe Areas (HIGH)
 
 - [`space-spacing-scale`](references/space-spacing-scale.md) - Use a spacing scale on a 4pt grid
 - [`space-safe-area-insets`](references/space-safe-area-insets.md) - Apply safe-area insets at screen edges
@@ -118,7 +140,7 @@ Reference these guidelines when:
 - [`space-gap-over-margins`](references/space-gap-over-margins.md) - Use gap over per-child margins
 - [`space-radius-tokens`](references/space-radius-tokens.md) - Tokenize corner radius by role
 
-### 7. Native-Feel & Performance (HIGH)
+### 9. Native-Feel & Performance (HIGH)
 
 - [`perf-flashlist-for-lists`](references/perf-flashlist-for-lists.md) - FlashList over ScrollView lists
 - [`perf-reanimated-ui-thread`](references/perf-reanimated-ui-thread.md) - Animate on the UI thread
@@ -128,7 +150,7 @@ Reference these guidelines when:
 - [`perf-haptics-key-actions`](references/perf-haptics-key-actions.md) - Add haptics on confirmations and toggles
 - [`perf-defer-offscreen-work`](references/perf-defer-offscreen-work.md) - Defer work past transitions
 
-### 8. Complex Domain Components (MEDIUM-HIGH)
+### 10. Complex Domain Components (MEDIUM-HIGH)
 
 - [`domain-calendar-virtualization`](references/domain-calendar-virtualization.md) - Virtualize the appointment calendar by day
 - [`domain-note-editor-autosave`](references/domain-note-editor-autosave.md) - Offline-first debounced note autosave
@@ -137,7 +159,7 @@ Reference these guidelines when:
 - [`domain-compose-from-primitives`](references/domain-compose-from-primitives.md) - Build domain components from primitives
 - [`domain-optimistic-writes`](references/domain-optimistic-writes.md) - Render optimistic UI for writes
 
-### 9. Governance & Consistency (MEDIUM)
+### 11. Governance & Consistency (MEDIUM)
 
 - [`govern-design-system-package`](references/govern-design-system-package.md) - Package the design system with one entry
 - [`govern-lint-no-raw-values`](references/govern-lint-no-raw-values.md) - Lint against raw colors and inline styles

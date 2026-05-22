@@ -46,4 +46,6 @@ function AppButton({ disabled }: { disabled?: boolean }) {
 }
 ```
 
+**Web:** press variants give no hover or keyboard-focus state on web, so the button feels inert to pointer and Tab users — add a `_web` block with `_hover`/`_focus`/`cursor`. See [`platform-web-pseudo-states`](platform-web-pseudo-states.md).
+
 Reference: [Unistyles variants](https://www.unistyl.es/v3/references/variants/)

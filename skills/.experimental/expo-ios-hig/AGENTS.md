@@ -1,19 +1,18 @@
 # Expo (React Native) for iOS 26
 
-**Version 0.1.0**  
+**Version 0.1.1**  
 Expo iOS HIG  
 May 2026
 
 > **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
+> This document is mainly for agents and LLMs maintaining, generating, or reviewing Expo (React Native) for iOS 26 code. Humans may also find it useful,  
 > but guidance here is optimized for automation and consistency by AI-assisted workflows.
 
 ---
 
 ## Abstract
 
-Human Interface Guidelines and native-experience design rules for building iOS 26 apps in Expo (React Native). Contains 46 rules across 8 categories — native navigation, component fidelity, layout and adaptivity, touch and haptics, visual system and Liquid Glass, motion, accessibility, and system integration — each with TSX examples comparing a non-native implementation against a native one, prioritized by impact on native feel and HIG compliance. Designed to guide AI agents writing or reviewing Expo iOS code in TypeScript. Complements the expo-ui component-API reference and the native-Swift ios-hig skill.
+Human Interface Guidelines and native-experience design rules for building iOS 26 apps in Expo (React Native). Contains 46 rules across 8 categories — native navigation, component fidelity, layout and adaptivity, touch and haptics, visual system and Liquid Glass, motion, accessibility, and system integration — each with TSX examples comparing a non-native implementation against a native one, prioritized by impact on native feel and HIG compliance. Designed to guide AI agents writing or reviewing Expo iOS code in TypeScript. Complements the expo-ui component-API reference, the cross-platform expo-design-system skill (shared tokens, component APIs, and web/iOS parity), and the native-Swift ios-hig skill.
 
 ---
 

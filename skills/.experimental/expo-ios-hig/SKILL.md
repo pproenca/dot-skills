@@ -23,6 +23,7 @@ Reference these guidelines when:
 ## When NOT to Use This Skill
 
 - **The `@expo/ui` component API** — for how to use `@expo/ui/swift-ui` components, Host boundaries, and modifiers, use the **`expo-ui`** skill. This skill says *which decisions* make an app native and points to `@expo/ui` when dropping to SwiftUI is the right call; it does not re-document that API.
+- **The cross-platform design system itself** — for the shared Unistyles theme, design tokens, variant-driven component APIs, and making components feel native on **web** as well as iOS, use the **`expo-design-system`** skill. This skill governs iOS native feel; that one governs the token and component architecture that the two frontends share.
 - **Native Swift / SwiftUI** — for HIG in a native Swift codebase, use **`ios-hig`** or **`ios-design`**. This skill's examples are all React Native/TSX.
 - **Android** — these rules target iOS conventions. Use platform-adaptive code so Android gets Material; don't apply iOS idioms there.
 

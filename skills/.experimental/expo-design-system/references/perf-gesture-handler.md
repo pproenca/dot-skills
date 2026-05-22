@@ -35,4 +35,6 @@ function DraggableMarker() {
 }
 ```
 
+**Web:** Gesture Handler maps to pointer events, so the same `Gesture.Pan()` works on web — but pointer users also expect hover and a cursor, which gestures alone don't provide. See [`platform-web-pseudo-states`](platform-web-pseudo-states.md).
+
 Reference: [React Native Gesture Handler](https://docs.swmansion.com/react-native-gesture-handler/)

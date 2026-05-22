@@ -44,4 +44,8 @@ function PatientCard({ tone = 'default', inset = 'comfortable', children }: Card
 // Callers choose from sanctioned options; padding and color stay token-driven.
 ```
 
+**When NOT to use this pattern:**
+
+- Layout-only props on a composition wrapper (a `flex`, `gap`, or `width` to fit the parent) are fine to expose. What stays closed is visual styling — color, padding, radius, typography — that the tokens own.
+
 Reference: [Building the Airbnb Design System](https://www.infoq.com/news/2020/02/airbnb-design-system-react-conf/)

@@ -33,4 +33,6 @@ async function confirmCancel(id: string) {
 // The warning haptic marks a consequential action, matching native platform behavior.
 ```
 
+**Web:** `expo-haptics` is a no-op on web, so this feedback silently disappears there — pair it with a visible cue. See [`platform-guard-native-only`](platform-guard-native-only.md).
+
 Reference: [expo-haptics](https://docs.expo.dev/versions/latest/sdk/haptics/)

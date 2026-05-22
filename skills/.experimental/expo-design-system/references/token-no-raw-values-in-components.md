@@ -37,4 +37,8 @@ const styles = StyleSheet.create((theme) => ({
 // and an ESLint rule can ban color-literal strings inside feature files.
 ```
 
+**When NOT to use this pattern:**
+
+- The token definition files themselves — the raw palette and the Unistyles theme — necessarily hold literal hex and numbers; that is where they are sanctioned. The ban applies to component and feature code.
+
 Reference: [Unistyles theming](https://www.unistyl.es/v3/guides/theming/)

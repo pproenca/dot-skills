@@ -35,4 +35,6 @@ function ScheduleScreen() {
 // rt.insets adapts per device and re-resolves natively if the safe area changes.
 ```
 
+**Web:** `rt.insets` are `0` on web (no notch or home indicator), so floor inset padding with a token — `Math.max(rt.insets.top, theme.space.md)`. See [`platform-shared-theme-parity`](platform-shared-theme-parity.md).
+
 Reference: [Unistyles runtime insets](https://www.unistyl.es/v3/references/mini-runtime/)

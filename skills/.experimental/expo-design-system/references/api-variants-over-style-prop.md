@@ -47,4 +47,8 @@ function AppButton({ title, variant = 'primary', onPress }: ButtonProps) {
 // "primary" renders identically everywhere because callers pick a variant, not a style.
 ```
 
+**When NOT to use this pattern:**
+
+- A genuinely one-off surface that will never be reused (a single marketing splash) can take a local style. The moment a second instance appears, promote it to a variant.
+
 Reference: [Building the Airbnb Design System](https://www.infoq.com/news/2020/02/airbnb-design-system-react-conf/), [Unistyles variants](https://www.unistyl.es/v3/references/variants/)
