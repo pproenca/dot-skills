@@ -45,7 +45,7 @@ function printAll(words: WordsCollection) {
  * underlying representation (list, stack, tree, etc.).
  */
 
-interface Iterator<T> {
+interface CollectionIterator<T> {
     // Return the current element.
     current(): T;
 
@@ -64,14 +64,14 @@ interface Iterator<T> {
 
 interface Aggregator {
     // Retrieve an external iterator.
-    getIterator(): Iterator<string>;
+    getIterator(): CollectionIterator<string>;
 }
 
 /**
  * Concrete Iterators implement various traversal algorithms. These classes
  * store the current traversal position at all times.
  */
-class AlphabeticalOrderIterator implements Iterator<string> {
+class AlphabeticalOrderIterator implements CollectionIterator<string> {
     private collection: WordsCollection;
 
     private position: number = 0;
@@ -135,11 +135,11 @@ class WordsCollection implements Aggregator {
         this.items.push(item);
     }
 
-    public getIterator(): Iterator<string> {
+    public getIterator(): CollectionIterator<string> {
         return new AlphabeticalOrderIterator(this);
     }
 
-    public getReverseIterator(): Iterator<string> {
+    public getReverseIterator(): CollectionIterator<string> {
         return new AlphabeticalOrderIterator(this, true);
     }
 }

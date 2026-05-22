@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "organization": "Refactoring Guru",
   "technology": "TypeScript Design Patterns",
   "discipline": "distillation",
   "type": "library-reference",
   "date": "May 2026",
-  "abstract": "Implementation guide for the 22 Gang of Four design patterns with TypeScript examples, distilled from refactoring.guru. Each pattern reference covers intent, the problem it solves, the structural solution, applicability (when to use and when not to), a complete runnable TypeScript example with output, implementation steps, pros/cons, and relations to sibling patterns. Patterns are grouped by purpose: 5 Creational (Factory Method, Abstract Factory, Builder, Prototype, Singleton), 7 Structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy), and 10 Behavioral (Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor). Use this skill when you recognize a pattern-shaped problem — class explosion via inheritance, scattered conditionals branching on type, tight coupling between caller and concrete class, tree-shaped models, runtime algorithm selection, undo/redo, state-dependent behavior — and need a vetted structural recipe instead of inventing one.",
+  "abstract": "Implementation guide for the 22 Gang of Four design patterns with TypeScript examples, distilled from refactoring.guru. Each pattern reference covers intent, the problem it solves, the structural solution, applicability (when to use and when not to), a runnable TypeScript example with output, implementation steps, pros/cons, and relations to sibling patterns. Patterns are grouped by purpose: 5 Creational (Factory Method, Abstract Factory, Builder, Prototype, Singleton), 7 Structural (Adapter, Bridge, Composite, Decorator, Facade, Flyweight, Proxy), and 10 Behavioral (Chain of Responsibility, Command, Iterator, Mediator, Memento, Observer, State, Strategy, Template Method, Visitor). Use this skill when you recognize a pattern-shaped problem — class explosion via inheritance, scattered conditionals branching on type, tight coupling between caller and concrete class, tree-shaped models, runtime algorithm selection, undo/redo, state-dependent behavior — and need a vetted structural recipe.",
   "references": [
     "https://refactoring.guru/design-patterns/catalog",
     "https://refactoring.guru/design-patterns/typescript",

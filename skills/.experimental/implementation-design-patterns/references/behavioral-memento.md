@@ -78,8 +78,7 @@ class Originator {
         const charSet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
 
         return Array
-            .apply(null, { length })
-            .map(() => charSet.charAt(Math.floor(Math.random() * charSet.length)))
+            .from({ length }, () => charSet.charAt(Math.floor(Math.random() * charSet.length)))
             .join('');
     }
 
@@ -168,6 +167,9 @@ class Caretaker {
             return;
         }
         const memento = this.mementos.pop();
+        if (!memento) {
+            return;
+        }
 
         console.log(`Caretaker: Restoring state to: ${memento.getName()}`);
         this.originator.restore(memento);

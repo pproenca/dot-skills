@@ -69,7 +69,7 @@ class RealSubject implements Subject {
 /**
  * The Proxy has an interface identical to the RealSubject.
  */
-class Proxy implements Subject {
+class ProtectionProxy implements Subject {
     private realSubject: RealSubject;
 
     /**
@@ -122,7 +122,7 @@ clientCode(realSubject);
 console.log('');
 
 console.log('Client: Executing the same client code with a proxy:');
-const proxy = new Proxy(realSubject);
+const proxy = new ProtectionProxy(realSubject);
 clientCode(proxy);
 ```
 

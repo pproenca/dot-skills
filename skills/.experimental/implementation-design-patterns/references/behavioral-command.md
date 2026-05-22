@@ -116,9 +116,9 @@ class Receiver {
  * the command.
  */
 class Invoker {
-    private onStart: Command;
+    private onStart?: Command;
 
-    private onFinish: Command;
+    private onFinish?: Command;
 
     public setOnStart(command: Command): void {
         this.onStart = command;
@@ -147,8 +147,8 @@ class Invoker {
         }
     }
 
-    private isCommand(object): object is Command {
-        return object.execute !== undefined;
+    private isCommand(object: Command | undefined): object is Command {
+        return object?.execute !== undefined;
     }
 }
 

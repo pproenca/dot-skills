@@ -56,7 +56,7 @@ interface Handler<Request = string, Result = string> {
  */
 abstract class AbstractHandler implements Handler
 {
-    private nextHandler: Handler;
+    private nextHandler?: Handler;
 
     public setNext(handler: Handler): Handler {
         this.nextHandler = handler;
@@ -71,7 +71,7 @@ abstract class AbstractHandler implements Handler
             return this.nextHandler.handle(request);
         }
 
-        return null;
+        return '';
     }
 }
 

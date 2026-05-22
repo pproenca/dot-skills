@@ -62,7 +62,7 @@ interface Subject {
  * changes.
  */
 class ConcreteSubject implements Subject {
-    public state: number;
+    public state!: number;
 
     private observers: Observer[] = [];
 

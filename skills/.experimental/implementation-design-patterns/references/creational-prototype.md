@@ -52,8 +52,8 @@ function copyProfile(profile: UserProfile): UserProfile {
  */
 class Prototype {
     public primitive: any;
-    public component: object;
-    public circularReference: ComponentWithBackReference;
+    public component!: object;
+    public circularReference!: ComponentWithBackReference;
 
     public clone(): this {
         const clone = Object.create(this);

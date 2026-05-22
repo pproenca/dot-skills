@@ -59,7 +59,7 @@ class Document {
  * state of the Context.
  */
 class Context {
-    private state: State;
+    private state!: State;
 
     constructor(state: State) {
         this.transitionTo(state);
@@ -93,7 +93,7 @@ class Context {
  * Context to another State.
  */
 abstract class State {
-    protected context: Context;
+    protected context!: Context;
 
     public setContext(context: Context) {
         this.context = context;

@@ -60,7 +60,7 @@ interface Builder {
  * variations of Builders, implemented differently.
  */
 class ConcreteBuilder1 implements Builder {
-    private product: Product1;
+    private product!: Product1;
 
     constructor() {
         this.reset();
@@ -110,7 +110,7 @@ class Product1 {
  * builders directly.
  */
 class Director {
-    private builder: Builder;
+    private builder!: Builder;
 
     public setBuilder(builder: Builder): void {
         this.builder = builder;
