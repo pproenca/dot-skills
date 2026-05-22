@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "TypeScript Migration Specialist",
+  "technology": "TypeScript",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Guide for migrating JavaScript codebases to strict, modern TypeScript without a big-bang rewrite, designed for AI agents and LLMs. Contains 42 rules across 7 categories, prioritized by impact from critical (migration setup and strictness ratcheting) to incremental (tooling and build). Each rule includes the reasoning, a production-realistic JavaScript anti-pattern, and the modern TypeScript fix, so an agent can drive an incremental, file-by-file migration that keeps the build green. Covers tsconfig and allowJs strategy, ordered strict-flag enablement, typing public surfaces, replacing any and unsafe casts, runtime boundary validation, JS-to-TS idiom conversion, and build/CI changes.",
+  "references": [
+    "https://www.typescriptlang.org/docs/handbook/migrating-from-javascript.html",
+    "https://www.typescriptlang.org/tsconfig/",
+    "https://github.com/microsoft/TypeScript/wiki/Performance",
+    "https://google.github.io/styleguide/tsguide.html",
+    "https://effectivetypescript.com/",
+    "https://www.totaltypescript.com/",
+    "https://zod.dev/"
+  ]
+}
