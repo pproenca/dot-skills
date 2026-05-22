@@ -10,7 +10,7 @@
 // - {file_path}:     destination path, written into this header
 //
 // Rules enforced: perf-flashlist-for-lists, perf-memoize-list-items,
-// space-safe-area-insets, domain-compose-from-primitives
+// space-safe-area-insets, platform-web-pseudo-states, domain-compose-from-primitives
 import { memo, useCallback } from 'react'
 import { Pressable, View } from 'react-native'
 import { FlashList } from '@shopify/flash-list'
@@ -25,7 +25,7 @@ import type { {Entity} } from '../domain/{entity}'
 type RowProps = { item: {Entity}; onPress: (id: string) => void }
 
 const {Entity}Row = memo(({ item, onPress }: RowProps) => (
-  <Pressable onPress={() => onPress(item.id)} accessibilityRole="button">
+  <Pressable style={styles.row} onPress={() => onPress(item.id)} accessibilityRole="button">
     <Card tone="default" inset="comfortable">
       <AppText variant="title">{item.title}</AppText>
       <AppText variant="caption" tone="muted">{item.subtitle}</AppText>
@@ -52,5 +52,6 @@ export function {ScreenName}() {
 
 const styles = StyleSheet.create((theme, rt) => ({
   content: { padding: theme.space.md, paddingBottom: rt.insets.bottom + theme.space.md },
+  row: { _web: { cursor: 'pointer', _hover: { opacity: 0.9 } } },
   separator: { height: theme.space.sm },
 }))

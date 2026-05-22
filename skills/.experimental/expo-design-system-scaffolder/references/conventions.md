@@ -51,12 +51,32 @@ padding from `rt.insets`. **Why:** a `ScrollView` mounts every row; an un-memoiz
 every parent update; hardcoded insets collide with the home indicator. Rules:
 `perf-flashlist-for-lists`, `perf-memoize-list-items`, `space-safe-area-insets`.
 
+## Cross-platform: web parity by construction
+
+Interactive templates emit a Unistyles `_web` block so the same component feels native on web as
+well as iOS: the pressable primitive and the list row get `cursor: 'pointer'`, a `_hover` state, and
+a `_focus` ring; the form field gets a `_focus` ring (its text cursor is already native on web).
+Non-interactive surfaces — the card and the text primitive — deliberately get **no** cursor, since a
+pointer hand on something you cannot click misleads web users. **Why:** Unistyles v3 is a
+first-class web engine, so styling for touch alone leaves a button inert on the web frontend (no
+hover, no cursor, no focus ring). Rule: `platform-web-pseudo-states`.
+
 ## Tokens: three layers in the theme
 
 The token-group template adds raw → semantic → component layers to the Unistyles theme and names
 tokens by role, never by value. **Why:** role names stay honest through a rebrand, and one theme is
 the single source of truth. Rules: `token-three-layer-scale`, `token-semantic-naming`,
 `token-define-in-unistyles-theme`.
+
+## Reuse: read and maintain the index
+
+The `component-index.ts.template` is the design system's single public entry **and** its inventory:
+a barrel of exports plus a one-line catalog of every component, the native controls to prefer, and
+the token namespaces. Agents read it **before** styling so they reuse or extend what already exists
+instead of forking a local near-duplicate, and append to it whenever they scaffold a component.
+**Why:** the local-styling bias comes from not seeing what the system already provides; a single
+cheap-to-read index makes "look first" the path of least resistance. Rules: `reuse-inventory-first`,
+`reuse-extend-not-fork`, `govern-design-system-package`.
 
 ## Placeholder syntax
 

@@ -5,7 +5,7 @@
 // - {ComponentName}: PascalCase component name, e.g. AppTextField
 // - {file_path}:     destination path, written into this header
 //
-// Rules enforced: api-controlled-uncontrolled, api-forward-ref,
+// Rules enforced: api-controlled-uncontrolled, api-forward-ref, platform-web-pseudo-states,
 // api-accessibility-in-contract, type-respect-font-scaling, token-no-raw-values-in-components
 import { useState } from 'react'
 import type { Ref } from 'react'
@@ -71,6 +71,10 @@ const styles = StyleSheet.create((theme) => ({
         true: { borderColor: theme.colors.danger },
         false: { borderColor: theme.colors.border },
       },
+    },
+    // Web keyboard-focus ring; the text cursor is already native on web inputs.
+    _web: {
+      _focus: { outlineColor: theme.colors.accent, outlineStyle: 'solid', outlineWidth: 2 },
     },
   },
   error: { color: theme.colors.danger, fontSize: theme.typography.caption.fontSize },

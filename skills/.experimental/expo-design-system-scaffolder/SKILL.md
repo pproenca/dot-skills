@@ -1,13 +1,14 @@
 ---
 name: expo-design-system-scaffolder
-description: Use this skill to scaffold new Expo / React Native design system components that obey the expo-design-system rules by construction — a variant-driven pressable primitive, a slot-based card surface, a typed text primitive, a labeled form field, a FlashList entity screen, a theme token group, and a Storybook variant catalog. Trigger whenever the user wants to create, add, generate, or scaffold a new shared UI component, primitive, design token group, or screen for the clinic mobile app, even if they don't mention the design system — the generated code uses Unistyles v3 variants instead of style props, ref-as-prop, design tokens, and built-in accessibility, so it follows expo-design-system without rework. Output is TSX/TS using react-native-unistyles.
+description: Use this skill to scaffold new Expo / React Native design system components that obey the expo-design-system rules by construction — a variant-driven pressable primitive, a slot-based card surface, a typed text primitive, a labeled form field, a FlashList entity screen, a theme token group, and a Storybook variant catalog. Trigger whenever the user wants to create, add, generate, or scaffold a new shared UI component, primitive, design token group, or screen for the clinic mobile app, even if they don't mention the design system — the generated code uses Unistyles v3 variants instead of style props, ref-as-prop, design tokens, built-in accessibility, and web/iOS parity (`_web` hover/focus/cursor on interactive primitives), so it follows expo-design-system without rework. Output is TSX/TS using react-native-unistyles.
 ---
 
 # Expo Design System Scaffolder
 
 Parameterized templates that generate Expo / React Native design system components which start
 correct instead of being retrofitted. Every template uses Unistyles v3 variants (never a `style`
-escape hatch), `ref`-as-prop, design tokens, and built-in accessibility, and cites the
+escape hatch), `ref`-as-prop, design tokens, built-in accessibility, and web/iOS parity (`_web`
+hover/focus/cursor on interactive primitives), and cites the
 [`expo-design-system`](../../expo-design-system/SKILL.md) rule IDs it satisfies.
 
 ## When to Apply
@@ -19,6 +20,7 @@ Use this skill when the user wants to:
 - Add a **new design token group** (colors, etc.) to the Unistyles theme
 - Add a **Storybook story** that catalogs a component's variants
 - Start a new feature and want its components to follow the design system from the first commit
+- Set up or update the design system **index** so agents discover and reuse existing components before building new ones
 
 ## Available Templates
 
@@ -29,13 +31,14 @@ stay as-is.
 
 | Template | Generates | Placeholders |
 |----------|-----------|--------------|
-| [`variant-component.tsx.template`](assets/templates/variant-component.tsx.template) | Pressable primitive with `variant`/`size` variants, press/disabled states, accessibility, `ref` prop | `{ComponentName}` `{file_path}` |
+| [`variant-component.tsx.template`](assets/templates/variant-component.tsx.template) | Pressable primitive with `variant`/`size` variants, press/disabled states, web hover/focus/cursor, accessibility, `ref` prop | `{ComponentName}` `{file_path}` |
 | [`card-surface.tsx.template`](assets/templates/card-surface.tsx.template) | Composite surface with `leading`/`trailing`/children slots, `tone`/`inset` variants, elevation token | `{ComponentName}` `{file_path}` |
 | [`text-primitive.tsx.template`](assets/templates/text-primitive.tsx.template) | Typed text component with `variant`/`tone`, no raw style, capped font scaling | `{ComponentName}` `{file_path}` |
-| [`form-field.tsx.template`](assets/templates/form-field.tsx.template) | Labeled input: controlled/uncontrolled, `ref` prop, error variant, accessibility | `{ComponentName}` `{file_path}` |
-| [`list-screen.tsx.template`](assets/templates/list-screen.tsx.template) | Entity list composed from primitives: FlashList, memoized row, safe-area insets | `{ScreenName}` `{Entity}` `{entity}` `{entity_plural}` `{route_path}` `{file_path}` |
+| [`form-field.tsx.template`](assets/templates/form-field.tsx.template) | Labeled input: controlled/uncontrolled, `ref` prop, error variant, web focus ring, accessibility | `{ComponentName}` `{file_path}` |
+| [`list-screen.tsx.template`](assets/templates/list-screen.tsx.template) | Entity list composed from primitives: FlashList, memoized row, web row hover/cursor, safe-area insets | `{ScreenName}` `{Entity}` `{entity}` `{entity_plural}` `{route_path}` `{file_path}` |
 | [`token-group.ts.template`](assets/templates/token-group.ts.template) | Raw → semantic → component token group to merge into the Unistyles theme | `{token_group}` `{file_path}` |
 | [`component-story.tsx.template`](assets/templates/component-story.tsx.template) | Storybook story rendering every variant side by side | `{ComponentName}` `{file_path}` |
+| [`component-index.ts.template`](assets/templates/component-index.ts.template) | The design system's single public entry **and** inventory catalog — agents read it before styling to reuse what exists (reuse-first) | `{file_path}` |
 
 Common placeholders:
 
@@ -52,9 +55,11 @@ Common placeholders:
 2. Choose values for its placeholders (see the table and each template's header comment).
 3. Substitute the tokens and write the file under `design_system_dir` (or `app_dir` for the screen).
 4. Generate a matching story with `component-story.tsx.template` so the variants are cataloged.
-5. Fill in the data layer the screen imports (`use{Entity}List`, the `domain` type) — the scaffold
+5. Append the new component to the design system index (`component-index.ts.template`) — an `export`
+   plus a one-line catalog entry — so the next agent finds and reuses it instead of rebuilding it.
+6. Fill in the data layer the screen imports (`use{Entity}List`, the `domain` type) — the scaffold
    owns the view; you own the data.
-6. Read [references/conventions.md](references/conventions.md) for the rules each template enforces
+7. Read [references/conventions.md](references/conventions.md) for the rules each template enforces
    and when to deviate.
 
 ## Setup
