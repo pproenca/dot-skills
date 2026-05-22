@@ -1,0 +1,9 @@
+{
+  "docs_root": "",
+  "audit_log": "${CLAUDE_PLUGIN_DATA:-$HOME/.claude}/diataxis-audits.log",
+  "_setup_instructions": {
+    "docs_root": "Local path to the documentation set this skill audits or edits. Examples: 'docs/', './website/content'. The bundled scan-docs.sh scans local files only — for remote docs, fetch or clone them locally first. If empty and you are auditing an existing corpus, ask the user (AskUserQuestion) before scanning. Not needed when authoring a single new doc from scratch.",
+    "audit_log": "Append-only log of documentation audits (one line each). Defaults under ${CLAUDE_PLUGIN_DATA} so it survives skill upgrades. No secrets are stored here."
+  },
+  "_notes": "This skill works without config: if docs_root is empty, ask the user inline (AskUserQuestion) or operate on the file(s) already in context. Never block on missing config. Secrets are never stored here."
+}

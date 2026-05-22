@@ -84,6 +84,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Use this skill whenever reverse-engineering a Sketch file (or Figma export with similar shape).. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [diagram-quality](skills/.experimental/diagram-quality) | Use this skill whenever calling agent-uml MCP tools (design_create, diagram_upsert,.. |
+| [diataxis](skills/.experimental/diataxis) | Use whenever writing, editing, restructuring, or reviewing technical documentation — READMEs,.. |
 | [django-recommender-search-backend-patterns](skills/.experimental/django-recommender-search-backend-patterns) | Use this skill when building, reviewing, or refactoring a Django backend that fan-outs to.. |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
 | [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |

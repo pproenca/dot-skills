@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "technical documentation (Diátaxis framework)",
+  "discipline": "investigation",
+  "type": "runbook",
+  "date": "May 2026",
+  "abstract": "A documentation runbook that applies the Diátaxis framework to writing, restructuring, and auditing technical documentation. Classifies any content into one of four modes — tutorials, how-to guides, reference, explanation — using the Diátaxis compass (a master decision tree on the action/cognition and acquisition/application axes), maps common documentation symptoms (beginners can't get started, tasks go unanswered, facts are unfindable, users lack a mental model, pages are bloated and type-mixed) to decision trees that diagnose the missing or misplaced mode, and prescribes the small-step choose-assess-decide-do workflow. Ships per-mode writing guides, functional/deep quality criteria, and a documentation-audit report template.",
+  "references": [
+    "https://diataxis.fr/",
+    "https://diataxis.fr/application/",
+    "https://diataxis.fr/how-to-use-diataxis/",
+    "https://diataxis.fr/compass/",
+    "https://diataxis.fr/tutorials/",
+    "https://diataxis.fr/how-to-guides/",
+    "https://diataxis.fr/reference/",
+    "https://diataxis.fr/explanation/",
+    "https://diataxis.fr/quality/"
+  ]
+}
