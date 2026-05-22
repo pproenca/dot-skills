@@ -103,6 +103,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [expo-react-native-coder](skills/.experimental/expo-react-native-coder) | Comprehensive Expo React Native feature development guide |
 | [expo-react-native-performance](skills/.experimental/expo-react-native-performance) | Expo React Native performance optimization guidelines |
 | [feature-spec](skills/.experimental/feature-spec) | Feature specification and planning guidelines for software engineers |
+| [fog-of-war-js-ts](skills/.experimental/fog-of-war-js-ts) | Use this skill whenever implementing, reviewing, or optimizing fog of war, field of view, line.. |
 | [framer-motion](skills/.experimental/framer-motion) | Framer Motion performance optimization guidelines |
 | [geohash-spatial-code-maps](skills/.experimental/geohash-spatial-code-maps) | Use this skill whenever implementing, reviewing, or debugging geohash encoding/decoding in.. |
 | [graph-schema](skills/.experimental/graph-schema) | Graph database schema design and data modeling expert |

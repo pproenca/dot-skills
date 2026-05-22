@@ -1,0 +1,20 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Fog of War (JavaScript/TypeScript)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Performance and correctness guide for implementing fog of war and field of view in JavaScript/TypeScript games, designed for AI agents and LLMs. Contains 44 rules across 8 categories, ordered by impact from critical (visibility algorithm choice, update scheduling) through high (state representation, fog rendering) to incremental (hot-loop geometry, visual-artifact correctness). Each rule explains why it matters and pairs a production-realistic incorrect example with a minimal-diff correct one in TypeScript. Covers recursive and symmetric shadowcasting, single-ray and DDA line of sight, 2D visibility polygons, recompute-on-move and refcounted multi-viewer updates, typed-array/bitset/generation-stamp state, offscreen-canvas and WebGL dirty-rect rendering, chunked large-map and team-shared scaling, and a consistent visibility model that avoids flicker and light leaks.",
+  "references": [
+    "https://www.albertford.com/shadowcasting/",
+    "https://www.roguebasin.com/index.php/FOV_using_recursive_shadowcasting",
+    "http://www.adammil.net/blog/v125_Roguelike_Vision_Algorithms.html",
+    "https://www.redblobgames.com/articles/visibility/",
+    "https://www.redblobgames.com/grids/line-drawing/",
+    "https://ondras.github.io/rot.js/manual/#fov",
+    "https://developer.mozilla.org/en-US/docs/Web/API/OffscreenCanvas",
+    "https://webgl2fundamentals.org/webgl/lessons/webgl-data-textures.html"
+  ],
+  "category": "Game Development"
+}
