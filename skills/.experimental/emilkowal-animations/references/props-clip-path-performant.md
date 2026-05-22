@@ -1,7 +1,7 @@
 ---
 title: Use clip-path for Layout-Free Reveals
 impact: MEDIUM-HIGH
-impactDescription: hardware-accelerated, no layout shifts, no extra DOM
+impactDescription: prevents layout shift and runs on the GPU
 tags: props, clip-path, reveal, performance, hardware
 ---
 
@@ -40,4 +40,4 @@ Clip-path creates reveal animations without layout shifts—elements occupy thei
 - `inset(0 100% 0 0)` - Hide right
 - `inset(0 0 0 100%)` - Hide left
 
-Reference: [The Magic of clip-path](https://emilkowal.ski/ui/the-magic-of-clip-path)
+Reference: [Animating with clip-path](https://emilkowal.ski/ui/the-magic-of-clip-path)

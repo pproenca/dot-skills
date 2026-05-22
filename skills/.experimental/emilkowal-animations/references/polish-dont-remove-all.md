@@ -1,11 +1,11 @@
 ---
-title: Don't Remove All Animation for Reduced Motion
+title: Keep Gentle Animation for Reduced Motion
 impact: MEDIUM
-impactDescription: some animation aids accessibility and comprehension
+impactDescription: prevents loss of essential feedback like spinners and state changes
 tags: polish, accessibility, reduced-motion, ux, feedback
 ---
 
-## Don't Remove All Animation for Reduced Motion
+## Keep Gentle Animation for Reduced Motion
 
 Going nuclear and removing all animation hurts usability. Some animations help accessibility—like loading indicators and state change feedback. Provide gentler alternatives instead.
 

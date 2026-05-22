@@ -1,7 +1,7 @@
 ---
 title: Use Spring Animations for Natural Motion
 impact: HIGH
-impactDescription: spring physics creates organic, lifelike movement
+impactDescription: prevents the instant value jump that reads as artificial
 tags: ease, spring, framer-motion, motion, physics, natural
 ---
 

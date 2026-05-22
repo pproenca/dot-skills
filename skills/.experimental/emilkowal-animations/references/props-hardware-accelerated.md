@@ -1,7 +1,7 @@
 ---
 title: Use Hardware-Accelerated Animations When Main Thread Is Busy
 impact: HIGH
-impactDescription: CSS/WAAPI animations stay smooth during JavaScript execution
+impactDescription: maintains 60fps while the main thread is busy
 tags: props, hardware, gpu, waapi, css, performance
 ---
 

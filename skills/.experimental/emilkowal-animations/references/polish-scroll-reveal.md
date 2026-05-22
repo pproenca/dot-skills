@@ -39,4 +39,4 @@ const { ref, inView } = useInView({
 
 The `once: true` option ensures the animation only plays on first visibility.
 
-Reference: [The Magic of clip-path](https://emilkowal.ski/ui/the-magic-of-clip-path)
+Reference: [Animating with clip-path](https://emilkowal.ski/ui/the-magic-of-clip-path)

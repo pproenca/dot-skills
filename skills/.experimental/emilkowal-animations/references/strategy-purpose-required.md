@@ -1,7 +1,7 @@
 ---
 title: Every Animation Must Have a Purpose
 impact: MEDIUM
-impactDescription: purposeless animation degrades rather than enhances experience
+impactDescription: prevents purposeless motion that degrades the experience
 tags: strategy, purpose, intentional, design
 ---
 

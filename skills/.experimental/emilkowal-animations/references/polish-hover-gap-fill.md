@@ -1,7 +1,7 @@
 ---
 title: Fill Gaps Between Hoverable Elements
 impact: LOW-MEDIUM
-impactDescription: prevents hover state from dropping when crossing gaps
+impactDescription: prevents hover dropping in inter-element gaps
 tags: polish, hover, pseudo-element, gap, toast
 ---
 

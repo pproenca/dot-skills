@@ -1,7 +1,7 @@
 ---
 title: Use Asymmetric Timing for Press and Release
 impact: HIGH
-impactDescription: slow press for confirmation, fast release for feedback
+impactDescription: press 2s for confirmation, release 200ms for snappy feedback
 tags: timing, duration, press, release, asymmetric, hold
 ---
 

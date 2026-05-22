@@ -1,11 +1,11 @@
 ---
-title: Use clip-path for Seamless Tab Transitions
+title: Use clip-path for Aligned Tab Transitions
 impact: MEDIUM
 impactDescription: eliminates timing misalignment between highlight and text color
 tags: polish, clip-path, tabs, transition, highlight
 ---
 
-## Use clip-path for Seamless Tab Transitions
+## Use clip-path for Aligned Tab Transitions
 
 Instead of animating a highlight bar separately from text color changes, duplicate the tab list with different styling and use clip-path to reveal the active state.
 
@@ -44,6 +44,6 @@ Instead of animating a highlight bar separately from text color changes, duplica
 /* On tab change, update clip-path to reveal active tab */
 ```
 
-This creates seamless transitions because highlight and text change as a single unit.
+This keeps the highlight and text in perfect sync because they change as a single unit.
 
-Reference: [The Magic of clip-path](https://emilkowal.ski/ui/the-magic-of-clip-path)
+Reference: [Animating with clip-path](https://emilkowal.ski/ui/the-magic-of-clip-path)

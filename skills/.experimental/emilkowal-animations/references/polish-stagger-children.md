@@ -1,7 +1,7 @@
 ---
 title: Stagger Child Animations for Orchestration
 impact: LOW-MEDIUM
-impactDescription: staggered reveals feel more polished than simultaneous
+impactDescription: 30–80ms stagger reads as orchestrated, not chaotic
 tags: polish, stagger, orchestration, children, framer-motion
 ---
 

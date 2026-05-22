@@ -1,7 +1,7 @@
 ---
 title: Use Pointer Capture for Drag Operations
 impact: MEDIUM
-impactDescription: drag continues even when pointer leaves element bounds
+impactDescription: prevents drag breaking when the pointer exits element bounds
 tags: interact, pointer-capture, drag, swipe, gesture
 ---
 

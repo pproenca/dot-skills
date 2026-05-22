@@ -1,7 +1,7 @@
 ---
 title: Make Animations Interruptible
 impact: HIGH
-impactDescription: interruptible animations feel responsive, locked animations feel broken
+impactDescription: prevents the jump when a user reverses an animation mid-flight
 tags: interact, interruptible, css, transitions, framer-motion
 ---
 

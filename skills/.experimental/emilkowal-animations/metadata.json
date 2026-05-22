@@ -1,10 +1,10 @@
 {
   "name": "emilkowal-animations",
-  "version": "1.0.6",
+  "version": "1.1.0",
   "organization": "Emil Kowalski",
   "technology": "Web Animations",
-  "date": "January 2026",
-  "abstract": "Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), and his animations.dev course. Contains 43 rules across 7 categories, prioritized by impact from critical (easing selection, timing) to polish (blur bridging, stagger orchestration). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific values to guide animation decisions.",
+  "date": "May 2026",
+  "abstract": "Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), his animations.dev course, and his official emil-design-eng skill. Contains 50 rules across 7 categories, prioritized by impact from critical (easing selection, timing) to polish (blur bridging, stagger orchestration). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific values to guide animation decisions.",
   "references": [
     "https://emilkowal.ski/ui/great-animations",
     "https://emilkowal.ski/ui/good-vs-great-animations",
@@ -17,6 +17,7 @@
     "https://emilkowal.ski/ui/you-dont-need-animations",
     "https://animations.dev/",
     "https://github.com/emilkowalski/vaul",
-    "https://github.com/emilkowalski/sonner"
+    "https://github.com/emilkowalski/sonner",
+    "https://github.com/emilkowalski/skill"
   ]
 }
