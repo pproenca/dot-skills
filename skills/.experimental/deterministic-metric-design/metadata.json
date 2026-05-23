@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Deterministic Metric Design",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Methodology for inventing rigorous, deterministic software metrics for AI agents and LLMs. Contains 44 rules across 8 categories that take a metric from a fuzzy construct to an adoptable, machine-checkable number: construct definition and operationalization; computability and tractability (designing sound proxies when the ideal is uncomputable — Kolmogorov, Rice — or NP-hard); measurement-theoretic foundations (scales, units, admissible statistics); proof of metric properties (monotonicity, invariance, the Weyuker/Briand axioms); determinism and reproducibility; construct validity and calibration; optimization safety and anti-gaming (Goodhart variants, guardrails, hard gates); and aggregation, reporting, and adoption. Each rule includes a minimal-diff incorrect/correct example and an authoritative reference. A running example — a deterministic, behavior-preserving codebase-size-reduction metric — threads through every category. It is the measurement layer the *-algorithms skills apply but don't teach.",
+  "references": [
+    "https://psychclassics.yorku.ca/Cronbach/construct.htm",
+    "https://www.routledge.com/Software-Metrics-A-Rigorous-and-Practical-Approach-Third-Edition/Fenton-Bieman/p/book/9781439838228",
+    "https://www.science.org/doi/10.1126/science.103.2684.677",
+    "https://doi.org/10.1109/32.6178",
+    "https://doi.org/10.1109/32.481535",
+    "https://link.springer.com/book/10.1007/978-3-030-11298-1",
+    "https://www.ams.org/journals/tran/1953-074-02/S0002-9947-1953-0053041-6/",
+    "https://dl.acm.org/doi/10.1145/512950.512973",
+    "https://mitpress.mit.edu/9780262072816/the-minimum-description-length-principle/",
+    "https://psycnet.apa.org/doi/10.1037/h0046016",
+    "https://doi.org/10.1109/ICSM.2010.5609747",
+    "https://arxiv.org/abs/1803.04585",
+    "https://arxiv.org/abs/1606.06565",
+    "https://www.acm.org/publications/policies/artifact-review-and-badging-current",
+    "https://semver.org/"
+  ]
+}
