@@ -1,0 +1,16 @@
+{
+  "metric_cmd": "",
+  "baseline_cmd": "",
+  "corpus_dir": "",
+  "labels_csv": "",
+  "declared_min": "",
+  "declared_max": "",
+  "_setup_instructions": {
+    "metric_cmd": "Command that computes YOUR candidate metric. It receives a file/dir path as its last argument and must print exactly ONE number to stdout (e.g. 'python3 /abs/path/mymetric.py'). Leave empty to use the bundled AST-node example metric. No spaces in the path or command.",
+    "baseline_cmd": "Trivial baseline for the discriminant and predictive checks. Same contract as metric_cmd. Empty = bundled LOC counter.",
+    "corpus_dir": "Directory of artifacts the property checks (determinism, invariance, monotonicity) iterate over. Empty = bundled fixtures.",
+    "labels_csv": "CSV with header 'path[,outcome][,accepted]'. 'path' is relative to the CSV's own directory; 'outcome' is 0/1 for predictive validity; 'accepted' is an existing trusted measure for convergent validity. Empty = bundled corpus.csv.",
+    "declared_min": "Optional lower bound the metric claims; the robustness check enforces it on edge inputs. Empty = unchecked.",
+    "declared_max": "Optional upper bound the metric claims. Empty = unchecked."
+  }
+}

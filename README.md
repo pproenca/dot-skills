@@ -133,6 +133,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [marketplace-pre-member-personalisation](skills/.experimental/marketplace-pre-member-personalisation) | Use this skill whenever designing, building, reviewing, or diagnosing the pre-member journey of.. |
 | [marketplace-recsys-feature-engineering](skills/.experimental/marketplace-recsys-feature-engineering) | Use this skill whenever deciding what features to extract from raw marketplace assets — listing.. |
 | [marketplace-search-recsys-planning](skills/.experimental/marketplace-search-recsys-planning) | Use this skill whenever planning, designing, reviewing, or improving search and recommendation.. |
+| [metric-validation-harness](skills/.experimental/metric-validation-harness) | Use this skill to empirically validate a software metric before trusting or optimizing it —.. |
 | [migrate-js-to-modern-typescript](skills/.experimental/migrate-js-to-modern-typescript) | Use this skill whenever migrating a JavaScript codebase to TypeScript, converting .js files to.. |
 | [nextjs-bundle-optimizer](skills/.experimental/nextjs-bundle-optimizer) | Use this skill whenever a Next.js 16 app needs smaller bundles or faster builds — even if the.. |
 | [nextjs-supabase-saas-patterns](skills/.experimental/nextjs-supabase-saas-patterns) | Use this skill whenever writing, reviewing, or refactoring Next.js + Supabase SaaS code that.. |

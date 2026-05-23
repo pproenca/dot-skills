@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Metric Validation Harness",
+  "discipline": "composition",
+  "type": "verification",
+  "date": "May 2026",
+  "abstract": "Read-only verification harness that empirically tests a candidate software metric against the properties the deterministic-metric-design skill says to prove. Point it at any metric (a command that takes a path and prints one number) plus a corpus, and it runs experiments: determinism across runs and hash seeds, invariance to cosmetic edits (which doubles as an anti-gaming probe), monotonicity under construct-increasing edits plus discrimination, robustness and range on edge inputs, near-linear tractability, and construct validity (Spearman convergent, discriminant vs LOC, predictive AUC, and lift over a baseline) using pure-stdlib statistics. Reports PASS/FAIL per property, each mapped to the design-skill category it checks. Ships an example metric, fixtures, and a self-test; safe to run unsupervised.",
+  "references": [
+    "https://psycnet.apa.org/doi/10.1037/h0046016",
+    "https://doi.org/10.1016/j.patrec.2005.10.010",
+    "https://doi.org/10.1109/32.6178",
+    "https://arxiv.org/abs/1803.04585",
+    "https://www.acm.org/publications/policies/artifact-review-and-badging-current"
+  ]
+}

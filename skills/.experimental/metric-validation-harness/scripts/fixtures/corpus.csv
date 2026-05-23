@@ -1,0 +1,7 @@
+path,outcome,accepted
+corpus/f6_tiny.py,0,1
+corpus/f2_commented.py,0,2
+corpus/f3_medium.py,1,5
+corpus/f4_loops.py,1,7
+corpus/f5_class.py,1,8
+corpus/f1_dense.py,1,9
