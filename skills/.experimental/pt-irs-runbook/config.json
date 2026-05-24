@@ -1,0 +1,21 @@
+{
+  "income_year": "2025",
+  "residence_status": "",
+  "residence_country": "",
+  "has_fiscal_representative": "",
+  "adheres_to_electronic_notifications": "",
+  "applicable_tax_treaty": "",
+  "nif_last_digits": "",
+  "portal_modelo3_url": "https://www.portaldasfinancas.gov.pt/at/html/index.html",
+  "portal_efatura_url": "https://faturas.portaldasfinancas.gov.pt/",
+  "cirs_index_url": "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/codigo-do-irs-indice.aspx",
+  "_setup_instructions": {
+    "income_year": "Tax year being filed (income earned). 2025 income is filed between 1 Apr and 30 Jun 2026.",
+    "residence_status": "resident | non-resident | partial-year — determined via references/residency-tree.md (Art. 16 CIRS).",
+    "residence_country": "Country of tax residence (ISO name). Drives the applicable double-taxation treaty and the EU/EEA option to be taxed as a resident (Art. 17-A).",
+    "has_fiscal_representative": "true|false — whether a representante fiscal is appointed in PT (Art. 19 LGT). Optional if electronic notifications are active, or for EU/EEA residents.",
+    "adheres_to_electronic_notifications": "true|false — adhesion to the public electronic notification service / ViaCTT, which exempts the fiscal-representative requirement.",
+    "applicable_tax_treaty": "Name of the relevant Convenção para Evitar a Dupla Tributação (e.g., 'Portugal-United Kingdom DTT'). Used by foreign-income-tree.md.",
+    "nif_last_digits": "Last 3 digits of the NIF for disambiguation only — never store the full NIF or any password here."
+  }
+}

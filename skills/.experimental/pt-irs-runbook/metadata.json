@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Portugal Personal Income Tax (IRS / CIRS) and Modelo 3 filing",
+  "discipline": "investigation",
+  "type": "runbook",
+  "date": "May 2026",
+  "abstract": "A diagnostic runbook for filing the Portuguese IRS (Modelo 3). Maps filing situations — residency status, rental income (Cat F), capital gains (Cat G), employment/pensions (Cat A/H), self-employment (Cat B), and foreign income (Anexo J) — to decision trees that resolve the correct annex, the current Art. 72 autonomous rate, deductions, and Portal das Finanças deadlines. Covers residents and non-residents, including non-resident landlords and double-taxation relief. Verified against the CIRS and OE2025/OE2026 as of May 2026.",
+  "references": [
+    "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/codigo-do-irs-indice.aspx",
+    "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/irs72.aspx",
+    "https://info.portaldasfinancas.gov.pt/pt/informacao_fiscal/codigos_tributarios/cirs_rep/Pages/irs68.aspx",
+    "https://info.portaldasfinancas.gov.pt/pt/apoio_ao_contribuinte/Cidadaos/Rendimentos/Declaracao/Modelo_3/Paginas/default.aspx",
+    "https://info.portaldasfinancas.gov.pt/pt/apoio_ao_contribuinte/Cidadaos/Rendimentos/Declaracao/IRS_automatico/Paginas/default.aspx",
+    "https://info.portaldasfinancas.gov.pt/pt/apoio_contribuinte/Folhetos_informativos/Documents/Folheto_IRS_jovem_2025.pdf"
+  ]
+}
