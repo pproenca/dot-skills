@@ -7,7 +7,7 @@ tags: modern, verbatim-module-syntax, imports, tree-shaking
 
 ## Enable verbatimModuleSyntax for Explicit Import Types
 
-`verbatimModuleSyntax` (TS 5.0+) requires `import type` for type-only imports and emits imports exactly as written. This eliminates accidental runtime imports of type-only modules, improves tree-shaking, and makes the intent of every import explicit.
+`verbatimModuleSyntax` (TS 5.0+) requires `import type` for type-only imports and emits imports exactly as written. This eliminates accidental runtime imports of type-only modules, improves tree-shaking, and makes the intent of every import explicit. It also keeps type-only imports cleanly erasable, which matters under Node.js type-stripping and TypeScript 6.0's `module: esnext` / strict-by-default posture.
 
 **Incorrect (type import looks like value import):**
 

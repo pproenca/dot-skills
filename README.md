@@ -174,7 +174,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [threat-patch](skills/.experimental/threat-patch) | Use this skill to remediate security findings by producing minimal, surgical code patches |
 | [ts-google](skills/.experimental/ts-google) | Google TypeScript style guide for writing clean, consistent, type-safe code |
 | [typescript-advanced-patterns](skills/.experimental/typescript-advanced-patterns) | Use this skill when writing, reviewing, or designing advanced TypeScript code — type-level.. |
-| [typescript-refactor](skills/.experimental/typescript-refactor) | TypeScript refactoring and modernization guidelines from a principal specialist perspective |
+| [typescript-refactor](skills/.experimental/typescript-refactor) | TypeScript and TSX refactoring and modernization guidelines from a principal specialist.. |
 | [uniwind](skills/.experimental/uniwind) | Uniwind best practices for React Native styling with Tailwind CSS |
 | [unix-cli](skills/.experimental/unix-cli) | UNIX command-line interface guidelines for building tools that follow POSIX conventions, proper.. |
 | [vhs](skills/.experimental/vhs) | VHS terminal recording best practices from Charmbracelet |

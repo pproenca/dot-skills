@@ -1,15 +1,15 @@
 ---
-title: Use Variance Annotations for Generic Interfaces
+title: Use Variance Annotations to Document Generic Intent
 impact: LOW-MEDIUM
-impactDescription: 10-30% faster type-checking on generic-heavy interfaces
+impactDescription: documents and enforces intended variance on type parameters
 tags: quirk, variance, covariance, contravariance, generics
 ---
 
-## Use Variance Annotations for Generic Interfaces
+## Use Variance Annotations to Document Generic Intent
 
-TypeScript 4.7+ supports `in` and `out` variance annotations on type parameters. These document whether a type parameter is covariant (produced), contravariant (consumed), or invariant (both) — and help the compiler skip expensive structural comparisons.
+TypeScript 4.7+ supports `in` and `out` variance annotations on type parameters. Their value is **documentation and correctness**, not speed: they state whether a parameter is covariant (produced, `out`), contravariant (consumed, `in`), or invariant, and the compiler errors if a later edit violates the declared variance. Do not add them for performance — the official guidance is that they help only "in extraordinarily complex types" and only after profiling proves a bottleneck.
 
-**Incorrect (no variance annotation, compiler checks structurally):**
+**Without annotation (variance is inferred, intent undocumented):**
 
 ```typescript
 interface Producer<T> {
@@ -23,10 +23,10 @@ interface Consumer<T> {
 interface Transformer<TInput, TOutput> {
   transform(input: TInput): TOutput
 }
-// Compiler must structurally verify variance on every comparison
+// Variance is inferred; a future edit could change it unnoticed
 ```
 
-**Correct (variance annotations document intent, faster checks):**
+**With annotation (intent documented and enforced):**
 
 ```typescript
 interface Producer<out T> {
@@ -40,9 +40,9 @@ interface Consumer<in T> {
 interface Transformer<in TInput, out TOutput> {
   transform(input: TInput): TOutput
 }
-// Compiler uses annotations instead of structural verification
+// A method that violates `in`/`out` now fails to compile
 ```
 
-**Note:** If you add a method that violates the declared variance, the compiler reports an error — catching design mistakes early.
+**When NOT to use:** Most generic interfaces — TypeScript infers variance correctly and annotations add noise. Reach for them only on widely-shared library interfaces where the intended variance is a contract, or after profiling identifies a genuinely expensive type.
 
 Reference: [TypeScript 4.7 - Variance Annotations](https://www.typescriptlang.org/docs/handbook/release-notes/typescript-4-7.html)

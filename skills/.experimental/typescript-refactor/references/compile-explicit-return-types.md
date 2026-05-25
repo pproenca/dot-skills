@@ -7,7 +7,7 @@ tags: compile, return-types, incremental-builds, declaration-files
 
 ## Add Explicit Return Types to Exported Functions
 
-Without explicit return types, the compiler must re-infer return types from function bodies on every compilation and when generating declaration files. Explicit return types on public API boundaries enable faster incremental builds and make `.d.ts` output predictable.
+Without explicit return types, the compiler must re-infer return types from function bodies on every compilation and when generating declaration files. Explicit return types on public API boundaries make `.d.ts` output predictable and speed up incremental builds — and they are mandatory once you adopt `isolatedDeclarations` (see [`compile-isolated-declarations`](compile-isolated-declarations.md)), which generates declarations per file without checking the whole program.
 
 **Incorrect (compiler re-infers on every build):**
 

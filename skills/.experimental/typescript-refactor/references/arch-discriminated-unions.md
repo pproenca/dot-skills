@@ -63,7 +63,7 @@ function processOrder(order: Order) {
 ```
 
 **When NOT to use this pattern:**
-- Simple enumerations with no variant-specific data (e.g., log levels)
-- When you need runtime iteration over all values
+- Simple enumerations with no variant-specific data (e.g., log levels) — use a union literal type
+- When you need runtime iteration over all values — use an erasable `as const` object, not an `enum` (see [`perf-union-literals-over-enums`](perf-union-literals-over-enums.md))
 
 Reference: [TypeScript Handbook - Narrowing](https://www.typescriptlang.org/docs/handbook/2/narrowing.html)

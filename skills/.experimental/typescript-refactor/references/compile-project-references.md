@@ -14,7 +14,7 @@ Project references split a monorepo into independently compilable units. Each pr
 ```json
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2024",
     "strict": true,
     "outDir": "dist"
   },
@@ -27,7 +27,7 @@ Project references split a monorepo into independently compilable units. Each pr
 ```json
 {
   "compilerOptions": {
-    "target": "ES2022",
+    "target": "ES2024",
     "strict": true
   },
   "references": [
@@ -54,5 +54,7 @@ Project references split a monorepo into independently compilable units. Each pr
 - `tsc --build` only recompiles changed projects
 - Parallel compilation across independent projects
 - IDE navigation works across project boundaries with declaration maps
+
+Combine with [`compile-isolated-declarations`](compile-isolated-declarations.md) so each project's `.d.ts` files emit per file without checking the whole program.
 
 Reference: [TypeScript Handbook - Project References](https://www.typescriptlang.org/docs/handbook/project-references.html)

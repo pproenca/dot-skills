@@ -42,4 +42,6 @@ function processFee(method: PaymentMethod): number {
 }
 ```
 
+The same `assertNever` guard works for `if`/`else if` chains: end the chain with `assertNever(value)` so an added union member becomes a compile error instead of a silent fallthrough.
+
 Reference: [TypeScript Handbook - Exhaustiveness Checking](https://www.typescriptlang.org/docs/handbook/2/narrowing.html#exhaustiveness-checking)
