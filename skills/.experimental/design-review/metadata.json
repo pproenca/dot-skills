@@ -1,0 +1,21 @@
+{
+  "name": "design-review",
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "UI Design Review (React / CSS / Tailwind)",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "A read-only design review for UI code (React/JSX, CSS, Tailwind) that reports findings as a prioritised Before/After/Why table across visual hierarchy, spacing, typography, colour and contrast, component states, motion, responsiveness, and accessibility — grounded in Refactoring UI and Emil Kowalski's design-engineering principles.",
+  "references": [
+    "https://www.refactoringui.com/",
+    "https://medium.com/refactoring-ui/7-practical-tips-for-cheating-at-design-40c736799886",
+    "https://emilkowal.ski/ui/great-animations",
+    "https://emilkowal.ski/ui/good-vs-great-animations",
+    "https://emilkowal.ski/ui/you-dont-need-animations",
+    "https://practicaltypography.com/",
+    "https://www.w3.org/WAI/WCAG22/",
+    "https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible",
+    "https://developer.apple.com/design/human-interface-guidelines/layout"
+  ]
+}
