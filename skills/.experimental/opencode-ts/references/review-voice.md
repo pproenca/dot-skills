@@ -130,7 +130,7 @@ And again on the same PR:
 
 **Rule**: Before writing a custom utility, check if a community primitive already exists. The project uses `@solid-primitives/*` heavily. Do not add custom hooks that duplicate them.
 
-**REJECT IF:** A new `use-*.ts` hook or utility function duplicates functionality available in `@solid-primitives/*`, `@/util/*`, or `@/effect/*`. Check before writing.
+**REJECT IF:** A new `use-*.ts` hook or utility function duplicates functionality available in `@solid-primitives/*`, `@opencode-ai/core/*` (framework-agnostic utilities like `util/log`, `util/wildcard`), `@/util/*` (app-only utilities like `@/util/media`), or `@/effect/*`. Check before writing.
 
 ---
 
@@ -332,7 +332,7 @@ const serverDefault = "https://web-14275-d60e67f5-pyqs0590.onporter.run"
 
 **Rule**: Effect services follow a specific pattern in this codebase. Look at existing services (`account/effect.ts`, `account/index.ts`) before writing new ones. Use `Effect.cached` for deduplication. Use existing Effect services rather than raw calls.
 
-**REJECT IF:** A new service doesn't follow the 5-layer pattern (Interface → Service class → Layer → makeRuntime → facade). Also reject if code uses raw `await` calls to a module that already has an Effect Service (use `yield* ServiceName` instead).
+**REJECT IF:** A new service doesn't follow the service pattern (Interface → `Context.Service` → Layer (+ `defaultLayer`) → optional `makeRuntime` facade). The `makeRuntime` + async facade is only added where imperative (non-Effect) callers exist; pure Effect-land services (Question, Permission) skip it and are consumed via `yield* X.Service`. Also reject if code uses raw `await` calls to a module that already has an Effect Service (use `yield* ServiceName` instead).
 
 ---
 

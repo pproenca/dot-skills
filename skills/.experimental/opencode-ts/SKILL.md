@@ -1,6 +1,6 @@
 ---
 name: opencode-ts
-description: Write and refactor TypeScript code in repos that use Effect-TS services, Zod schemas, event-sourced persistence, and namespace-driven architecture. Use this skill when implementing features, fixing bugs, writing tests, or refactoring in opencode or any TypeScript codebase built on the same stack (Effect DI, Drizzle ORM, Hono routes, Bun runtime). Triggers on tasks involving Effect services, namespace modules, Zod schema definitions, SyncEvent patterns, tool implementations, test writing, or code review in Effect-based TypeScript projects.
+description: Write and refactor TypeScript code in repos that use Effect-TS services, Effect Schema, event-sourced persistence, and barrel-module architecture. Use this skill when implementing features, fixing bugs, writing tests, or refactoring in opencode or any TypeScript codebase built on the same stack (Effect DI via Context.Service, Drizzle ORM, Hono routes, Bun runtime). Triggers on tasks involving Effect services, Context.Service / Layer modules, Effect Schema definitions, SyncEvent patterns, tool implementations, test writing, or code review in Effect-based TypeScript projects.
 ---
 
 # Opencode TypeScript
@@ -49,8 +49,10 @@ Load [style-dna.md](references/style-dna.md). **If ANY of the following fail, fi
 - [ ] Single-word variable names where clear
 - [ ] No `try`/`catch`, no `else`, no `any`, no unnecessary destructuring
 - [ ] `const` + ternary over `let` + mutation
-- [ ] snake_case Drizzle fields, `.meta({ref})` on boundary schemas
+- [ ] snake_case Drizzle fields, `.annotate({ identifier })` on boundary schemas, `.annotate({ description })` on fields
+- [ ] Effect Schema (`Schema.Struct`/`Schema.Schema.Type`) for DTOs, events, tool params — not Zod
 - [ ] Effect is used for services, not plain async classes
+- [ ] Module ends with `export * as X from "."` — no in-file `export namespace X {}`
 - [ ] No patterns from Section 7 ("Things That Compile But Get Rejected") present in the diff
 
 **DO NOT proceed if any check fails.** Go back to phase 3 and fix.
@@ -98,9 +100,9 @@ Same as implement phases 4-5: [style-dna.md](references/style-dna.md) then [revi
 
 ## Key decisions (always apply)
 
-- **Effect is mandatory** — all services use `ServiceMap.Service` / `Layer` / `makeRuntime`. No plain async classes.
-- **Namespace ownership** — one `export namespace X {}` per feature, one file until real split pressure.
-- **Zod for boundaries, Effect Schema for internals** — Zod + `z.infer` for DTOs/tool params. `Schema.TaggedErrorClass` for Effect errors. `Newtype` for branded IDs.
+- **Effect is mandatory** — all services use `Context.Service` / `Layer` / `makeRuntime`. No plain async classes.
+- **One module, one self-barrel** — write flat top-level exports (schemas, `Interface`, `Service`, `layer`, `defaultLayer`), then close the file with `export * as X from "."`. Consumers still write `import { X } from "@/x"` → `X.Service`; the barrel *is* the namespace. opencode dropped in-file `export namespace X {}`.
+- **Effect Schema everywhere** — `Schema.Struct` + `Schema.Schema.Type<typeof X>` for DTOs, events, and tool params; `.annotate({ identifier })` on boundary schemas, `.annotate({ description })` on fields. `Schema.TaggedErrorClass` for Effect errors. `Newtype<Self>()("Name", Schema.String.check(...))` (from `@opencode-ai/core/schema`) for branded IDs. Zod is no longer the boundary tool.
 - **Event-sourced writes** — mutations go through `SyncEvent.run` → projectors → SQLite. Direct DB writes only for non-event-sourced features.
 - **No mocks in tests** — use `tmpdir` + `Instance.provide` + real services. Mocks only for external SDKs.
 - **Single-word variables** — `state`, `pending`, `info`, `row`, `cfg`, `tx`. Multi-word only when genuinely ambiguous.
@@ -118,7 +120,7 @@ Same as implement phases 4-5: [style-dna.md](references/style-dna.md) then [revi
 | [service-module.md](references/service-module.md) | 27K | Complete Question + Permission implementations |
 | [tool-module.md](references/tool-module.md) | 28K | Full tool implementations, registry, prompt loop |
 | [test-writing.md](references/test-writing.md) | 42K | 5 complete test files with all fixture patterns |
-| [schemas-and-state.md](references/schemas-and-state.md) | 36K | SQL tables, Zod/Effect schemas, SyncEvent flow, errors |
+| [schemas-and-state.md](references/schemas-and-state.md) | 36K | SQL tables, Effect Schema (Struct/annotate/Newtype), SyncEvent flow, errors |
 | [server-and-routes.md](references/server-and-routes.md) | 32K | Routes, config, plugins, project lifecycle |
 | [review-voice.md](references/review-voice.md) | ~25K | Real PR review comments from Dax + Aiden |
 | [refactoring-patterns.md](references/refactoring-patterns.md) | ~25K | Real before/after diffs from cleanup commits |

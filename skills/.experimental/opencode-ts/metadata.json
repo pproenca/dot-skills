@@ -1,12 +1,13 @@
 {
-  "version": "1.0.6",
+  "version": "1.1.0",
   "organization": "Opencode",
-  "technology": "TypeScript (Effect + Zod)",
-  "date": "March 2026",
-  "abstract": "Coding distillation skill for the opencode TypeScript codebase. Contains 352KB of real code extracted from the sst/opencode repo — complete service implementations, tool modules, test suites, SQL schemas, server routes, architecture maps, PR review patterns, and refactoring diffs from the core team. 11 reference files organized as a workflow: orient (architecture) → gather (helpers) → build (task-specific reference) → check (style DNA) → review (reviewer voice). Evaluated: +33% skill advantage on test writing tasks vs no-skill baseline.",
+  "technology": "TypeScript (Effect v4-beta + Effect Schema)",
+  "date": "May 2026",
+  "abstract": "Coding distillation skill for the opencode TypeScript codebase, re-aligned to opencode's Effect v4-beta migration as of May 2026: Context.Service DI (was ServiceMap.Service), Effect Schema for boundaries/events/tool params (was Zod), and flat module + self-barrel (export * as X) exports (was in-file export namespace). Contains real code extracted from the sst/opencode dev branch — complete service implementations, tool modules, test suites, SQL schemas, server routes, architecture maps, PR review patterns, and refactoring diffs from the core team. 11 reference files organized as a workflow: orient (architecture) → gather (helpers) → build (task-specific reference) → check (style DNA) → review (reviewer voice). Evaluated: +33% skill advantage on test writing tasks vs no-skill baseline.",
   "references": [
     "https://github.com/sst/opencode",
     "https://effect.website",
-    "https://zod.dev"
+    "https://effect.website/blog/releases/effect/40-beta/",
+    "https://github.com/Effect-TS/effect-smol/blob/main/MIGRATION.md"
   ]
 }

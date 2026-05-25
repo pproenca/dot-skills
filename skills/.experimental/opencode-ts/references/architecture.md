@@ -1,8 +1,34 @@
 # CODE ATLAS -- opencode TypeScript Architecture
 
-> Root: `packages/opencode/src/`
+> Root: `packages/opencode/src/` (app wiring, alias `@/`)
 > Entry: `index.ts` (yargs CLI), `server/server.ts` (Hono HTTP)
 > Runtime: Bun, Effect-TS for DI/services, Drizzle for SQLite
+
+---
+
+## 0. PACKAGE LAYOUT
+
+Shared, framework-agnostic logic was extracted into a separate package; app wiring
+stays in the opencode package. Two source roots:
+
+```
+packages/core/src/        @opencode-ai/core -- shared, framework-agnostic
+  |-- util/log            Log.create({ service })
+  |-- util/wildcard       Wildcard.match
+  |-- schema              NonNegativeInt, Newtype (branded-ID base class)
+  |-- filesystem          AppFileSystem
+  |-- permission          PermissionV2 (Action / evaluate / merge / disabled)
+  |-- effect/service-use  serviceUse() accessor
+  |-- event, git, model, provider, session, agent  (shared pieces)
+
+packages/opencode/src/    alias `@/` -- app wiring, the module map below
+  bus, question, tool, server, storage/db, lsp, reference, project, config, ...
+```
+
+The import split is SELECTIVE -- it is NOT a blanket `@/util/` -> `@opencode-ai/core/util/`
+rename. Some `@/util/*` paths stayed under `@/` (e.g. `@/util/media`). Only treat a path
+as moved if it is one of the shared pieces listed above (it lives in `packages/core/src`).
+The module map in section 1 describes `packages/opencode/src/` (`@/`).
 
 ---
 
@@ -644,10 +670,10 @@ RULE 2: Foundation modules have ZERO domain imports
   These can be imported by anything.
 
 RULE 3: Storage layer imports only Foundation
-  storage/db.ts imports: util/context, util/lazy, global, flag, id, installation
+  storage/db.ts imports: util/local-context, util/lazy, global, flag, id, installation
 
 RULE 4: Bus layer imports only Storage + Foundation
-  bus/ imports: util/log, project/instance (for directory key)
+  bus/ imports: @opencode-ai/core/util/log, project/instance (for directory key)
   sync/ imports: storage/db, bus/bus-event, flag
 
 RULE 5: Config imports Storage + Foundation + Auth
@@ -741,7 +767,8 @@ AVOID: tool/*.ts should not import session/index.ts directly
 ```
 Directory modules use index.ts when:
   - The module IS the namespace (bus/, session/, file/, permission/, etc.)
-  - index.ts re-exports or IS the main namespace definition
+  - index.ts holds the flat top-level exports and closes with the self-barrel
+    (`export * as X from "."`) that backs the namespace
   - Other files in the dir are internal implementation details
 
 Examples:
@@ -836,39 +863,44 @@ These stay as single files because they have no sub-components.
 
 ## 7. EFFECT-TS SERVICE PATTERN
 
-Every major module follows this pattern:
+Every major module follows this pattern. There is NO in-file `export namespace`:
+the file declares flat top-level exports, then re-exports itself as a namespace via
+a self-barrel on the last line. Consumers still write `import { Module } from "@/module"`
+then `Module.Service` / `Module.layer` / `Module.Info` -- the barrel IS the namespace.
 
 ```typescript
-export namespace Module {
-  // 1. Zod schemas
-  export const Info = z.object({ ... })
+// 1. Effect Schema data (Zod is no longer the schema tool for service data)
+export const Info = Schema.Struct({ ... }).annotate({ identifier: "Info" })
+export type Info = Schema.Schema.Type<typeof Info>
 
-  // 2. Effect Service class
-  export interface Interface {
-    readonly method: (input: X) => Effect.Effect<Y>
-  }
-  export class Service extends ServiceMap.Service<Service, Interface>()("@opencode/Module") {}
-
-  // 3. Layer (DI wiring)
-  export const layer = Layer.effect(Service, Effect.gen(function* () {
-    const dep = yield* DependencyService  // pull deps from context
-    const state = yield* InstanceState.make(...)  // per-instance state
-    return Service.of({ method: ... })
-  }))
-
-  // 4. Default layer (self-contained, provides all deps)
-  export const defaultLayer = layer.pipe(
-    Layer.provide(Dep1.defaultLayer),
-    Layer.provide(Dep2.defaultLayer),
-  )
-
-  // 5. Runtime bridge (async wrappers for non-Effect code)
-  const { runPromise } = makeRuntime(Service, defaultLayer)
-
-  export async function method(input: X): Promise<Y> {
-    return runPromise((svc) => svc.method(input))
-  }
+// 2. Effect Service class
+export interface Interface {
+  readonly method: (input: X) => Effect.Effect<Y>
 }
+export class Service extends Context.Service<Service, Interface>()("@opencode/Module") {}
+
+// 3. Layer (DI wiring)
+export const layer = Layer.effect(Service, Effect.gen(function* () {
+  const dep = yield* DependencyService  // pull deps from context
+  const state = yield* InstanceState.make(...)  // per-instance state
+  return Service.of({ method: ... })
+}))
+
+// 4. Default layer (self-contained, provides all deps)
+export const defaultLayer = layer.pipe(
+  Layer.provide(Dep1.defaultLayer),
+  Layer.provide(Dep2.defaultLayer),
+)
+
+// 5. Runtime bridge (async wrappers for non-Effect code)
+const { runPromise } = makeRuntime(Service, defaultLayer)
+
+export async function method(input: X): Promise<Y> {
+  return runPromise((svc) => svc.method(input))
+}
+
+// 6. Self-barrel (last line) -- this re-export IS the `Module` namespace
+export * as Module from "."
 ```
 
 Modules using this pattern:

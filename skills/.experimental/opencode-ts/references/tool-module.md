@@ -6,122 +6,204 @@ How tools are defined, registered, wired into the prompt loop, and executed in o
 
 ## 1. Tool Anatomy
 
-Every tool follows the `Tool.define` pattern: an `id` string and an `init` that returns `{ parameters, description, execute }`.
+`Tool.define(id, init)` takes an `id` and an **Effect** that yields the tool def (`{ parameters, description, execute }`). Parameters are an Effect `Schema` (`Schema.Decoder<unknown>`); `wrap` compiles the decoder once per init and validates every call with `Schema.decodeUnknownEffect`. Verbatim from `tool/tool.ts` (lightly trimmed):
 
 ```typescript
-export function define<Parameters extends z.ZodType, Result extends Metadata>(
-  id: string,
-  init: Info<Parameters, Result>["init"] | Awaited<ReturnType<Info<Parameters, Result>["init"]>>,
-): Info<Parameters, Result> {
-  return {
-    id,
-    init: async (initCtx) => {
-      // WHY: init can be a function (lazy, receives agent context) or a static object
-      const toolInfo = init instanceof Function ? await init(initCtx) : init
-      const execute = toolInfo.execute
-      toolInfo.execute = async (args, ctx) => {
-        // WHY: every tool gets automatic Zod validation before execute runs
-        try {
-          toolInfo.parameters.parse(args)
-        } catch (error) {
-          if (error instanceof z.ZodError && toolInfo.formatValidationError) {
-            throw new Error(toolInfo.formatValidationError(error), { cause: error })
-          }
-          throw new Error(
-            `The ${id} tool was called with invalid arguments: ${error}.\nPlease rewrite the input so it satisfies the expected schema.`,
-            { cause: error },
-          )
-        }
-        const result = await execute(args, ctx)
-        // WHY: auto-truncate output unless tool explicitly set metadata.truncated
-        if (result.metadata.truncated !== undefined) return result
-        const truncated = await Truncate.output(result.output, {}, initCtx?.agent)
-        return { ...result, output: truncated.content, metadata: { ...result.metadata, truncated: truncated.truncated } }
-      }
-      return toolInfo
-    },
+import { Effect, Schema } from "effect"
+import type { JSONSchema7 } from "@ai-sdk/provider"
+import * as Truncate from "./truncate"
+import { Agent } from "@/agent/agent"
+
+// Raised when the LLM calls a tool with arguments that fail the parameter
+// schema. The typed error class makes it matchable upstream; its `message`
+// getter is the model-facing "rewrite the input" prose the AI SDK feeds back.
+export class InvalidArgumentsError extends Schema.TaggedErrorClass<InvalidArgumentsError>()(
+  "ToolInvalidArgumentsError",
+  { tool: Schema.String, detail: Schema.String },
+) {
+  override get message() {
+    return `The ${this.tool} tool was called with invalid arguments: ${this.detail}.\nPlease rewrite the input so it satisfies the expected schema.`
   }
 }
+
+export interface Def<
+  Parameters extends Schema.Decoder<unknown> = Schema.Decoder<unknown>,
+  M extends Metadata = Metadata,
+> {
+  id: string
+  description: string
+  parameters: Parameters
+  jsonSchema?: JSONSchema7
+  execute(args: Schema.Schema.Type<Parameters>, ctx: Context): Effect.Effect<ExecuteResult<M>>
+  formatValidationError?(error: unknown): string
+}
+
+export interface Info<
+  Parameters extends Schema.Decoder<unknown> = Schema.Decoder<unknown>,
+  M extends Metadata = Metadata,
+> {
+  id: string
+  init: () => Effect.Effect<DefWithoutID<Parameters, M>>
+}
+
+function wrap<Parameters extends Schema.Decoder<unknown>, Result extends Metadata>(
+  id: string,
+  init: Init<Parameters, Result>,
+  truncate: Truncate.Interface,
+  agents: Agent.Interface,
+) {
+  return () =>
+    Effect.gen(function* () {
+      const toolInfo = typeof init === "function" ? { ...(yield* init()) } : { ...init }
+      // Compile the parser closure once per tool init; `decodeUnknownEffect`
+      // allocates a new closure per call, so hoisting avoids re-closing it.
+      const decode = Schema.decodeUnknownEffect(toolInfo.parameters)
+      const execute = toolInfo.execute
+      toolInfo.execute = (args, ctx) =>
+        Effect.gen(function* () {
+          const decoded = yield* decode(args).pipe(
+            Effect.mapError(
+              (error) =>
+                new InvalidArgumentsError({
+                  tool: id,
+                  detail: toolInfo.formatValidationError ? toolInfo.formatValidationError(error) : String(error),
+                }),
+            ),
+          )
+          const result = yield* execute(decoded as Schema.Schema.Type<Parameters>, ctx)
+          // auto-truncate output unless the tool explicitly set metadata.truncated
+          if (result.metadata.truncated !== undefined) return result
+          const agent = yield* agents.get(ctx.agent)
+          const truncated = yield* truncate.output(result.output, {}, agent)
+          return {
+            ...result,
+            output: truncated.content,
+            metadata: { ...result.metadata, truncated: truncated.truncated },
+          }
+        }).pipe(Effect.orDie, Effect.withSpan("Tool.execute", { attributes: { "tool.name": id } }))
+      return toolInfo
+    })
+}
+
+export function define<
+  Parameters extends Schema.Decoder<unknown>,
+  Result extends Metadata,
+  R,
+  ID extends string = string,
+>(
+  id: ID,
+  init: Effect.Effect<Init<Parameters, Result>, never, R>,
+): Effect.Effect<Info<Parameters, Result>, never, R | Truncate.Service | Agent.Service> & { id: ID } {
+  return Object.assign(
+    Effect.gen(function* () {
+      const resolved = yield* init
+      const truncate = yield* Truncate.Service
+      const agents = yield* Agent.Service
+      return { id, init: wrap(id, resolved, truncate, agents) }
+    }),
+    { id },
+  )
+}
+
+export * as Tool from "./tool"
 ```
 
 The wrapping gives every tool three guarantees for free:
-1. Input validated against Zod schema; model gets a corrective error message on failure
+1. Input validated against the Effect `Schema`; on failure the model gets `InvalidArgumentsError` whose `message` tells it to rewrite the input
 2. Output auto-truncated to 2000 lines / 50 KB (whichever hits first)
 3. Tools that handle their own truncation opt out by setting `metadata.truncated`
+
+`define` returns an `Effect` (it needs `Truncate.Service` + `Agent.Service`), so a tool is itself a value in the layer graph — not a plain object.
 
 ---
 
 ## 2. Complete Tool: read.ts
 
-The Read tool demonstrates all standard patterns: parameters schema, permission checking via `ctx.ask`, binary detection, dual truncation (lines + bytes), and instruction auto-discovery.
+The Read tool demonstrates all standard patterns: an Effect `Schema` parameters object, dependencies acquired in `define`'s `Effect.gen`, permission checking via `ctx.ask` (yielded), binary detection, dual truncation (lines + bytes), and instruction auto-discovery. Parameters and `define` shape are verbatim; the `execute` body is sketched.
 
 ```typescript
+import { Effect, Option, Schema, Scope, Stream } from "effect"
+import { NonNegativeInt } from "@opencode-ai/core/schema"
+import * as Tool from "./tool"
+import { AppFileSystem } from "@opencode-ai/core/filesystem"
+import { LSP } from "@/lsp/lsp"
+import DESCRIPTION from "./read.txt"
+import { Instruction } from "../session/instruction"
+import { Reference } from "@/reference/reference"
+
 const DEFAULT_READ_LIMIT = 2000
 const MAX_LINE_LENGTH = 2000
-const MAX_BYTES = 50 * 1024  // 50 KB
+const MAX_BYTES = 50 * 1024 // 50 KB
 
-// WHY: binary detection uses two-pass check -- extension list first, then byte sampling
-async function isBinaryFile(filepath, fileSize) {
-  // Known binary extensions: .zip, .tar, .gz, .exe, .dll, .so, .wasm, .pyc, etc.
-  // Sample first 4KB: any null byte = binary, >30% non-printable = binary
-}
-
-export const ReadTool = Tool.define("read", {
-  description: "Read file contents with line numbers",
-  parameters: z.object({
-    file_path: z.string(),
-    offset: z.number().optional(),    // line number to start from
-    limit: z.number().optional(),     // max lines to read
+// `offset`/`limit` were `z.coerce.number()`; coercion is pointless on the LLM
+// tool-call path (the model emits typed JSON), so they're now plain
+// NonNegativeInt. JSON Schema output is identical (`type: "number"`).
+export const Parameters = Schema.Struct({
+  filePath: Schema.String.annotate({ description: "The absolute path to the file or directory to read" }),
+  offset: Schema.optional(NonNegativeInt).annotate({
+    description: "The line number to start reading from (1-indexed)",
   }),
-  async execute(params, ctx) {
-    // 1. Permission check for paths outside workspace
-    //    ctx.ask throws Permission.RejectedError if denied
-    await ctx.ask({ permission: "read", patterns: [params.file_path] })
+  limit: Schema.optional(NonNegativeInt).annotate({
+    description: "The maximum number of lines to read (defaults to 2000)",
+  }),
+})
 
-    // 2. Binary detection -- return early with message, don't blow up context
-    if (await isBinaryFile(params.file_path, stat.size)) {
-      return {
-        output: `File is binary (${stat.size} bytes). Use bash to process binary files.`,
-        metadata: { truncated: false },
-      }
-    }
-
-    // 3. Read with dual truncation
-    const lines = content.split("\n")
-    const offset = params.offset ?? 0
-    const limit = params.limit ?? DEFAULT_READ_LIMIT
-    const slice = lines.slice(offset, offset + limit)
-
-    let totalBytes = 0
-    const output = []
-    for (let i = 0; i < slice.length; i++) {
-      // WHY: each line individually capped at MAX_LINE_LENGTH to handle minified files
-      const line = slice[i].length > MAX_LINE_LENGTH
-        ? slice[i].substring(0, MAX_LINE_LENGTH) + "... (line truncated)"
-        : slice[i]
-      totalBytes += Buffer.byteLength(line)
-      if (totalBytes > MAX_BYTES) break
-      // WHY: output format is "lineNumber: content" for model to reference specific lines
-      output.push(`${i + offset}: ${line}`)
-    }
-
-    // 4. Auto-discover AGENTS.md in parent directories
-    //    WHY: reading a file triggers instruction resolution so context-specific
-    //    rules load automatically without the model needing to know about them
-    await InstructionPrompt.resolve(ctx.messages, params.file_path, ctx.messageID)
+export const ReadTool = Tool.define(
+  "read",
+  Effect.gen(function* () {
+    // Dependencies are services, acquired once when the tool initializes.
+    const fs = yield* AppFileSystem.Service
+    const instruction = yield* Instruction.Service
+    const lsp = yield* LSP.Service
+    const reference = yield* Reference.Service
 
     return {
-      output: output.join("\n"),
-      metadata: { truncated: output.length < slice.length || slice.length < lines.length },
+      description: DESCRIPTION,
+      parameters: Parameters,
+      execute: Effect.fn("ReadTool.execute")(function* (params, ctx) {
+        // 1. Permission check for paths outside workspace.
+        //    yield* ctx.ask fails with Permission.RejectedError if denied.
+        yield* ctx.ask({ permission: "read", patterns: [params.filePath] })
+
+        // 2. Binary detection -- return early, don't blow up context.
+        const stat = yield* fs.stat(params.filePath)
+        if (yield* isBinary(fs, params.filePath, stat.size)) {
+          return {
+            title: params.filePath,
+            output: `File is binary (${stat.size} bytes). Use bash to process binary files.`,
+            metadata: { truncated: false },
+          }
+        }
+
+        // 3. Read with dual truncation (lines + bytes); each line capped at
+        //    MAX_LINE_LENGTH to handle minified files. Output is
+        //    "lineNumber: content" so the model can reference lines for edits.
+        const content = yield* fs.readText(params.filePath)
+        const lines = content.split("\n")
+        const offset = params.offset ?? 0
+        const slice = lines.slice(offset, offset + (params.limit ?? DEFAULT_READ_LIMIT))
+        // ...byte-accumulation loop omitted...
+
+        // 4. Auto-discover AGENTS.md up the tree so context-specific rules load
+        //    without the model knowing about them (claimed per-messageID).
+        yield* instruction.resolve(ctx.messages, params.filePath, ctx.messageID)
+
+        return {
+          title: params.filePath,
+          output: slice.map((line, i) => `${i + offset}: ${line}`).join("\n"),
+          metadata: { truncated: slice.length < lines.length },
+        }
+      }),
     }
-  },
-})
+  }),
+)
 ```
 
 Key non-obvious decisions:
-- `metadata.truncated` is set explicitly, so the `Tool.define` wrapper skips its own truncation pass
-- Line numbers in output start from `offset`, not 0 -- the model uses these for edit operations
-- `InstructionPrompt.resolve` walks parent directories to find AGENTS.md files, claimed per-messageID to prevent duplicates within a single turn
+- `define` takes an `Effect.gen` that yields service dependencies, then returns `{ description, parameters, execute }`. `execute` is an Effect-returning function (`Effect.fn`), not `async`.
+- `metadata.truncated` is set explicitly, so the `Tool.define` wrapper skips its own truncation pass.
+- Line numbers in output start from `offset`, not 0 — the model uses these for edit operations.
+- Parameter names are camelCase (`filePath`), matching the Effect Schema field names emitted into the JSON Schema the model sees.
 
 ---
 
@@ -168,9 +250,10 @@ export const layer = Layer.effect(Service, Effect.gen(function* () {
       return true
     })
 
-    // WHY: all tools initialized concurrently -- init can be async (e.g., loading agent list)
+    // WHY: all tools initialized concurrently -- Tool.init is an Effect that
+    // runs the wrapped init() (no args; agent context is read inside execute)
     return yield* Effect.forEach(filtered, tool => {
-      const next = yield* Effect.promise(() => tool.init({ agent }))
+      const next = yield* Tool.init(tool)
       // WHY: plugin hook can modify tool description/parameters after init
       yield* plugin.trigger("tool.definition", { toolID: tool.id }, output)
       return { id: tool.id, ...next }
@@ -182,17 +265,20 @@ export const layer = Layer.effect(Service, Effect.gen(function* () {
 The Invalid Tool acts as an error sink for unrecognized tool calls:
 
 ```typescript
-export const InvalidTool = Tool.define("invalid", {
-  description: "Do not use",
-  parameters: z.object({ tool: z.string(), error: z.string() }),
-  async execute(params) {
-    return {
-      title: "Invalid Tool",
-      output: `The arguments provided to the tool are invalid: ${params.error}`,
-      metadata: {},
-    }
-  },
-})
+export const InvalidTool = Tool.define(
+  "invalid",
+  Effect.succeed({
+    description: "Do not use",
+    parameters: Schema.Struct({ tool: Schema.String, error: Schema.String }),
+    execute: Effect.fn("InvalidTool.execute")(function* (params) {
+      return {
+        title: "Invalid Tool",
+        output: `The arguments provided to the tool are invalid: ${params.error}`,
+        metadata: {},
+      }
+    }),
+  }),
+)
 ```
 
 This is wired into `experimental_repairToolCall` in the LLM stream -- when a tool call cannot be repaired by lowercasing its name, it gets routed here instead of throwing.
@@ -205,29 +291,23 @@ Every tool's `execute` receives `(args, ctx)`. The `ctx` shape:
 
 ```typescript
 export type Context<M extends Metadata = Metadata> = {
-  sessionID: SessionID          // current session
-  messageID: MessageID          // current assistant message
-  agent: string                 // agent name (e.g., "code", "explore")
-  abort: AbortSignal            // cancellation signal
-  callID?: string               // unique ID for this tool invocation
-  extra?: { [key: string]: any } // grab-bag: model info, bypass flags
-  messages: MessageV2.WithParts[] // full conversation history
-  metadata(input: {             // live-update tool part for streaming UI
-    title?: string;
-    metadata?: M
-  }): void
-  ask(input: Omit<               // permission gate -- throws RejectedError if denied
-    Permission.Request,
-    "id" | "sessionID" | "tool"
-  >): Promise<void>
+  sessionID: SessionID                 // current session
+  messageID: MessageID                 // current assistant message
+  agent: string                        // agent name (e.g., "code", "explore")
+  abort: AbortSignal                   // cancellation signal
+  callID?: string                      // unique ID for this tool invocation
+  extra?: { [key: string]: unknown }   // grab-bag: model info, bypass flags
+  messages: MessageV2.WithParts[]      // full conversation history
+  metadata(input: { title?: string; metadata?: M }): Effect.Effect<void> // live-update tool part for streaming UI
+  ask(input: Omit<Permission.Request, "id" | "sessionID" | "tool">): Effect.Effect<void> // permission gate -- fails RejectedError if denied
 }
 ```
 
-Usage patterns:
-- `ctx.metadata({ title: "Reading file..." })` -- updates the tool card in the UI in real-time
-- `ctx.ask({ permission: "bash", patterns: ["npm install"] })` -- checks permission rules, prompts user if needed, throws `Permission.RejectedError` on deny
+`metadata` and `ask` return `Effect`s — yield them inside `execute`. Usage patterns:
+- `yield* ctx.metadata({ title: "Reading file..." })` -- updates the tool card in the UI in real-time
+- `yield* ctx.ask({ permission: "bash", patterns: ["npm install"] })` -- checks permission rules, prompts user if needed, fails with `Permission.RejectedError` on deny
 - `ctx.abort.throwIfAborted()` -- check cancellation during long operations
-- `ctx.extra.model` -- access the current model info for provider-specific behavior
+- `ctx.extra?.model` -- access the current model info for provider-specific behavior
 - `ctx.messages` -- full conversation history for tools that need context (e.g., compaction)
 
 ---
@@ -238,16 +318,19 @@ The prompt loop in `prompt.ts` wires tools into the LLM conversation. Three key 
 
 ### 5.1 Tool Resolution: resolveTools
 
-Builds the `Record<string, AITool>` passed to the LLM stream. Each registered tool gets wrapped with context construction, permission checking, and plugin hooks.
+Builds the `Record<string, AITool>` passed to the LLM stream. Each registered tool gets wrapped with context construction, permission checking, and plugin hooks. This is an Effect-based sketch (the real `prompt.ts` is longer); note that `ctx.metadata`/`ctx.ask` return Effects and dependencies like `Permission`/`Plugin` are acquired via `yield*`.
 
 ```typescript
-export async function resolveTools(input: {
+export const resolveTools = Effect.fn("resolveTools")(function* (input: {
   agent, model, session, tools?, processor, bypassAgentCheck, messages
 }) {
   const tools: Record<string, AITool> = {}
+  const permission = yield* Permission.Service
+  const plugin = yield* Plugin.Service
 
   // WHY: context factory closes over session/processor state so each tool call
-  // gets the right messageID, callID, and live-update capability
+  // gets the right messageID, callID, and live-update capability.
+  // metadata/ask return Effects (yielded inside the tool's execute).
   const context = (args, options): Tool.Context => ({
     sessionID: input.session.id,
     abort: options.abortSignal!,
@@ -256,48 +339,52 @@ export async function resolveTools(input: {
     extra: { model: input.model, bypassAgentCheck: input.bypassAgentCheck },
     agent: input.agent.name,
     messages: input.messages,
-    metadata: async (val) => {
+    metadata: (val) =>
       // WHY: live-update the tool part via processor tracking for streaming UI
-      const match = input.processor.partFromToolCall(options.toolCallId)
-      if (match && match.state.status === "running") {
-        await Session.updatePart({ ...match, state: { title: val.title, metadata: val.metadata } })
-      }
-    },
-    ask: async (req) => {
+      Effect.gen(function* () {
+        const match = input.processor.partFromToolCall(options.toolCallId)
+        if (match && match.state.status === "running") {
+          yield* Session.updatePart({ ...match, state: { title: val.title, metadata: val.metadata } })
+        }
+      }),
+    ask: (req) =>
       // WHY: permission rules merged from agent config + session overrides
-      await Permission.ask({
+      permission.ask({
         ...req,
         sessionID: input.session.id,
         tool: { messageID: input.processor.message.id, callID: options.toolCallId },
         ruleset: Permission.merge(input.agent.permission, input.session.permission ?? []),
-      })
-    },
+      }),
   })
 
   // Wrap each registered tool with plugin before/after hooks
-  for (const item of await ToolRegistry.tools(model, agent)) {
-    const schema = ProviderTransform.schema(input.model, z.toJSONSchema(item.parameters))
+  for (const item of yield* ToolRegistry.tools(model, agent)) {
+    // JsonSchema.fromTool converts the Effect Schema parameters to JSON Schema
+    const schema = ProviderTransform.schema(input.model, JsonSchema.fromTool(item))
     tools[item.id] = tool({
       id: item.id,
       description: item.description,
       inputSchema: jsonSchema(schema),
+      // AI SDK's execute is a Promise; the tool Effect (item.execute returns an
+      // Effect) is run through the session runtime here, bridging back to async.
       async execute(args, options) {
         const ctx = context(args, options)
         // WHY: plugin hooks can modify args before execution and output after
-        await Plugin.trigger("tool.execute.before", { tool: item.id, sessionID: ctx.sessionID, callID: ctx.callID }, { args })
-        const result = await item.execute(args, ctx)
+        yield* plugin.trigger("tool.execute.before", { tool: item.id, sessionID: ctx.sessionID, callID: ctx.callID }, { args })
+        const result = yield* item.execute(args, ctx)
         const output = {
           ...result,
           attachments: result.attachments?.map(a => ({
             ...a, id: PartID.ascending(), sessionID, messageID
           })),
         }
-        await Plugin.trigger("tool.execute.after", { tool: item.id, sessionID: ctx.sessionID, callID: ctx.callID, args }, output)
+        yield* plugin.trigger("tool.execute.after", { tool: item.id, sessionID: ctx.sessionID, callID: ctx.callID, args }, output)
         return output
       },
     })
   }
-}
+  return tools
+})
 ```
 
 ### 5.2 The Main Loop: While-True with 4-Path Dispatch
@@ -628,7 +715,7 @@ const providerOptions = {
 ### 6.4 Token Cost: Provider-Specific Accounting
 
 ```typescript
-export const getUsage = fn(z.object({ model, usage, metadata }), (input) => {
+export const getUsage = fn(Schema.Struct({ model, usage, metadata }), (input) => {
   // WHY: Anthropic does NOT include cached tokens in inputTokens
   // Other providers (OpenRouter, OpenAI, Gemini) DO include them
   const excludesCachedTokens = !!(input.metadata?.["anthropic"] || input.metadata?.["bedrock"])

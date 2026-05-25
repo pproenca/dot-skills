@@ -15,6 +15,8 @@
 
 ## util/ Utilities
 
+> NOTE: Several shared, framework-agnostic utilities have been extracted out of `@/util/` into the `@opencode-ai/core` package (`packages/core/src/`) -- e.g. `log`, `wildcard`, `schema`, `filesystem`, `permission`, and `effect/service-use`. App-only wiring stays under `@/`. Where a helper below has moved, its import path is now `@opencode-ai/core/...`; the public API (`Log.create`, `Wildcard.match`, etc.) is unchanged. Always check the actual import path before assuming `@/util/`.
+
 ### `abort.ts` -- Timeout-aware AbortController creation
 
 **What it does:** Creates AbortControllers that auto-abort after a timeout, with optional signal composition.
@@ -55,18 +57,20 @@ export function abortAfterAny(ms: number, ...signals: AbortSignal[]) {
 
 **Implementation:**
 ```typescript
-export namespace Archive {
-  export async function extractZip(zipPath: string, destDir: string) {
-    if (process.platform === "win32") {
-      const winZipPath = path.resolve(zipPath)
-      const winDestDir = path.resolve(destDir)
-      const cmd = `$global:ProgressPreference = 'SilentlyContinue'; Expand-Archive -Path '${winZipPath}' -DestinationPath '${winDestDir}' -Force`
-      await Process.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", cmd])
-      return
-    }
-    await Process.run(["unzip", "-o", "-q", zipPath, "-d", destDir])
+export async function extractZip(zipPath: string, destDir: string) {
+  if (process.platform === "win32") {
+    const winZipPath = path.resolve(zipPath)
+    const winDestDir = path.resolve(destDir)
+    const cmd = `$global:ProgressPreference = 'SilentlyContinue'; Expand-Archive -Path '${winZipPath}' -DestinationPath '${winDestDir}' -Force`
+    await Process.run(["powershell", "-NoProfile", "-NonInteractive", "-Command", cmd])
+    return
   }
+  await Process.run(["unzip", "-o", "-q", zipPath, "-d", destDir])
 }
+
+// Self-barrel at file bottom -- this barrel IS the `Archive` namespace.
+// Consumers still write `import { Archive } from "@/util/archive"` then `Archive.extractZip(...)`.
+export * as Archive from "."
 ```
 
 **Used by:** No direct imports in `src/` (available for plugin/installation scenarios).
@@ -81,25 +85,26 @@ export namespace Archive {
 
 **Implementation:**
 ```typescript
-export namespace Color {
-  export function isValidHex(hex?: string): hex is string {
-    if (!hex) return false
-    return /^#[0-9a-fA-F]{6}$/.test(hex)
-  }
-
-  export function hexToRgb(hex: string): { r: number; g: number; b: number } {
-    const r = parseInt(hex.slice(1, 3), 16)
-    const g = parseInt(hex.slice(3, 5), 16)
-    const b = parseInt(hex.slice(5, 7), 16)
-    return { r, g, b }
-  }
-
-  export function hexToAnsiBold(hex?: string): string | undefined {
-    if (!isValidHex(hex)) return undefined
-    const { r, g, b } = hexToRgb(hex)
-    return `\x1b[38;2;${r};${g};${b}m\x1b[1m`
-  }
+export function isValidHex(hex?: string): hex is string {
+  if (!hex) return false
+  return /^#[0-9a-fA-F]{6}$/.test(hex)
 }
+
+export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return { r, g, b }
+}
+
+export function hexToAnsiBold(hex?: string): string | undefined {
+  if (!isValidHex(hex)) return undefined
+  const { r, g, b } = hexToRgb(hex)
+  return `\x1b[38;2;${r};${g};${b}m\x1b[1m`
+}
+
+// Self-barrel at file bottom -- the barrel IS the `Color` namespace.
+export * as Color from "."
 ```
 
 **Used by:** No direct imports found (TUI theming infrastructure).
@@ -108,37 +113,40 @@ export namespace Color {
 
 ---
 
-### `context.ts` -- AsyncLocalStorage-based context propagation
+### `local-context.ts` -- AsyncLocalStorage-based context propagation
 
 **What it does:** Creates typed async context values using Node.js `AsyncLocalStorage`. Provides `use()` to read and `provide()` to set context.
 
 **Implementation:**
 ```typescript
-export namespace Context {
-  export class NotFound extends Error {
-    constructor(public override readonly name: string) {
-      super(`No context found for ${name}`)
-    }
-  }
-
-  export function create<T>(name: string) {
-    const storage = new AsyncLocalStorage<T>()
-    return {
-      use() {
-        const result = storage.getStore()
-        if (!result) throw new NotFound(name)
-        return result
-      },
-      provide<R>(value: T, fn: () => R) {
-        return storage.run(value, fn)
-      },
-    }
+export class NotFound extends Error {
+  constructor(public override readonly name: string) {
+    super(`No context found for ${name}`)
   }
 }
+
+export function create<T>(name: string) {
+  const storage = new AsyncLocalStorage<T>()
+  return {
+    use() {
+      const result = storage.getStore()
+      if (!result) throw new NotFound(name)
+      return result
+    },
+    provide<R>(value: T, fn: () => R) {
+      return storage.run(value, fn)
+    },
+  }
+}
+
+// Self-barrel at file bottom -- the barrel IS the `LocalContext` namespace.
+// It was renamed from `Context` to `LocalContext` precisely so it no longer
+// collides with Effect's `Context` / `Context.Service` (the DI namespace).
+export * as LocalContext from "."
 ```
 
 **Used by:**
-- `storage/db.ts` -- Database transaction context (`Context.create<{ tx: TxOrDb, effects: ... }>("database")`)
+- `storage/db.ts` -- Database transaction context (`LocalContext.create<{ tx: TxOrDb, effects: ... }>("database")`)
 - `cli/cmd/tui/thread.ts` -- TUI thread context
 - `cli/cmd/tui/plugin/runtime.ts` -- Plugin runtime context
 - `cli/cmd/tui/component/textarea-keybindings.ts` -- Keybinding context
@@ -146,16 +154,16 @@ export namespace Context {
 **Real call pattern:**
 ```typescript
 // Define context
-const ctx = Context.create<{ tx: TxOrDb; effects: (() => void)[] }>("database")
+const ctx = LocalContext.create<{ tx: TxOrDb; effects: (() => void)[] }>("database")
 
 // Provide context
 ctx.provide({ tx, effects }, () => callback(tx))
 
-// Use context (throws Context.NotFound if not in scope)
+// Use context (throws LocalContext.NotFound if not in scope)
 const { tx } = ctx.use()
 ```
 
-**When NOT to use:** This is for vanilla JS/TS contexts. The Effect-based modules use Effect's own `Context` / `Layer` / `ServiceMap` system instead. Do NOT use `Context.create` inside Effect service code -- use `ServiceMap.Service` and layers.
+**When NOT to use:** This is for vanilla JS/TS contexts. The Effect-based modules use Effect's own `Context` / `Layer` system instead. Do NOT use this `LocalContext.create` (the `@/util/local-context` AsyncLocalStorage wrapper) inside Effect service code -- use Effect's `Context.Service` and layers. (Effect's `Context.Service` is the DI namespace; `@/util/local-context` is opencode's separate AsyncLocalStorage helper.)
 
 ---
 
@@ -236,24 +244,9 @@ export const withTransientReadRetry = <E, R>(client: HttpClient.HttpClient.With<
 
 ---
 
-### `effect-zod.ts` -- Effect Schema to Zod conversion
+### `effect-zod.ts` -- (removed in the Effect Schema migration)
 
-**What it does:** Walks an Effect `Schema.AST` and produces an equivalent Zod schema. Handles strings, numbers, booleans, literals, unions, objects, arrays, optionals, and declarations.
-
-**Implementation:** ~95 lines. Recursive AST walker that maps Effect schema nodes to Zod equivalents. Supports discriminated unions via `annotations.discriminator`.
-
-**Used by:**
-- `account/index.ts` -- Converting Effect schemas for API validation
-- `installation/index.ts` -- Schema conversion for installation data
-- `skill/discovery.ts` -- Schema conversion for skill discovery
-
-**Real call pattern:**
-```typescript
-import { zod } from "@/util/effect-zod"
-const zodSchema = zod(effectSchema)
-```
-
-**When NOT to use:** Throws on unsupported schema features (tuples with elements, multiple index signatures, multi-param declarations). If your Effect schema uses those features, you need a manual Zod equivalent.
+This Effect-Schema-to-Zod bridge was **removed**. The codebase no longer round-trips through Zod. Where a non-Effect representation is needed (tool/provider definitions), JSON Schema is generated **directly** from the Effect Schema via `tool/json-schema.ts` (`JsonSchema.fromSchema` / `JsonSchema.fromTool`). Do not reach for an Effect→Zod converter.
 
 ---
 
@@ -304,7 +297,7 @@ try { /* ... */ } catch (e) {
 }
 ```
 
-**When NOT to use:** For Effect-based code, use Effect's own error handling (`Effect.catchTag`, `Effect.catchAll`). The `errorMessage`/`errorFormat` helpers are for vanilla JS try/catch boundaries.
+**When NOT to use:** For Effect-based code, use Effect's own error handling (`Effect.catchTag`, `Effect.catch`). The `errorMessage`/`errorFormat` helpers are for vanilla JS try/catch boundaries.
 
 ---
 
@@ -382,27 +375,16 @@ await Flock.withLock("config-write", async () => {
 
 ---
 
-### `fn.ts` -- Zod-validated function wrapper
+### `fn.ts` -- Schema-validated function wrapper
 
-**What it does:** Wraps a function with Zod input validation. Provides `.schema` accessor and `.force()` bypass.
+**What it does:** Wraps a function with Effect `Schema` input validation. Provides `.schema` accessor and `.force()` bypass.
 
 **Implementation:**
 ```typescript
-export function fn<T extends z.ZodType, Result>(schema: T, cb: (input: z.infer<T>) => Result) {
-  const result = (input: z.infer<T>) => {
-    let parsed
-    try {
-      parsed = schema.parse(input)
-    } catch (e) {
-      console.trace("schema validation failure stack trace:")
-      if (e instanceof z.ZodError) {
-        console.error("schema validation issues:", JSON.stringify(e.issues, null, 2))
-      }
-      throw e
-    }
-    return cb(parsed)
-  }
-  result.force = (input: z.infer<T>) => cb(input)
+export function fn<T extends Schema.Top, Result>(schema: T, cb: (input: Schema.Schema.Type<T>) => Result) {
+  const decode = Schema.decodeUnknownSync(schema)
+  const result = (input: Schema.Schema.Type<T>) => cb(decode(input))
+  result.force = (input: Schema.Schema.Type<T>) => cb(input)
   result.schema = schema
   return result
 }
@@ -519,19 +501,20 @@ const [id] = result.text().split("\n").filter(Boolean).map(x => x.trim()).toSort
 
 **Implementation:**
 ```typescript
-export namespace Glob {
-  export async function scan(pattern: string, options: Options = {}): Promise<string[]> {
-    return glob(pattern, toGlobOptions(options)) as Promise<string[]>
-  }
-
-  export function scanSync(pattern: string, options: Options = {}): string[] {
-    return globSync(pattern, toGlobOptions(options)) as string[]
-  }
-
-  export function match(pattern: string, filepath: string): boolean {
-    return minimatch(filepath, pattern, { dot: true })
-  }
+export async function scan(pattern: string, options: Options = {}): Promise<string[]> {
+  return glob(pattern, toGlobOptions(options)) as Promise<string[]>
 }
+
+export function scanSync(pattern: string, options: Options = {}): string[] {
+  return globSync(pattern, toGlobOptions(options)) as string[]
+}
+
+export function match(pattern: string, filepath: string): boolean {
+  return minimatch(filepath, pattern, { dot: true })
+}
+
+// Self-barrel at file bottom -- the barrel IS the `Glob` namespace.
+export * as Glob from "."
 ```
 
 **Used by:** 31 files (one of the most used utilities). Internal users include `filesystem.ts`, `log.ts`. External users span nearly every module: tool, storage, snapshot, skill, session, server, provider, mcp, lsp, file, config, cli, bus, bun, auth, worktree, index.ts.
@@ -558,11 +541,13 @@ const files = Glob.scanSync("*.json", { cwd: configDir })
 
 **Implementation:**
 ```typescript
-export namespace Hash {
-  export function fast(input: string | Buffer): string {
-    return createHash("sha1").update(input).digest("hex")
-  }
+export function fast(input: string | Buffer): string {
+  return createHash("sha1").update(input).digest("hex")
 }
+
+// Self-barrel at file bottom -- the barrel IS the `Hash` namespace, so
+// consumers still write `Hash.fast(...)`.
+export * as Hash from "."
 ```
 
 **Used by:**
@@ -711,23 +696,25 @@ Client.reset()
 
 **Implementation:**
 ```typescript
-export namespace Lock {
-  export async function read(key: string): Promise<Disposable> {
-    const lock = get(key)
-    return new Promise((resolve) => {
-      if (!lock.writer && lock.waitingWriters.length === 0) {
-        lock.readers++
-        resolve({ [Symbol.dispose]: () => { lock.readers--; process(key) } })
-      } else {
-        lock.waitingReaders.push(() => { /* ... */ })
-      }
-    })
-  }
-
-  export async function write(key: string): Promise<Disposable> {
-    // Similar, but exclusive access
-  }
+export async function read(key: string): Promise<Disposable> {
+  const lock = get(key)
+  return new Promise((resolve) => {
+    if (!lock.writer && lock.waitingWriters.length === 0) {
+      lock.readers++
+      resolve({ [Symbol.dispose]: () => { lock.readers--; process(key) } })
+    } else {
+      lock.waitingReaders.push(() => { /* ... */ })
+    }
+  })
 }
+
+export async function write(key: string): Promise<Disposable> {
+  // Similar, but exclusive access
+}
+
+// Self-barrel at file bottom -- the barrel IS the `Lock` namespace, so
+// consumers still write `Lock.read(...)` / `Lock.write(...)`.
+export * as Lock from "."
 ```
 
 **Used by:**
@@ -761,6 +748,8 @@ await Filesystem.writeJson(target, content)
 - `log.time(msg)` returns disposable timer for measuring operations
 
 **Used by:** 70 files (the single most-used utility). Every module in the codebase uses logging.
+
+**Import path:** Now lives in `@opencode-ai/core` -- `import * as Log from "@opencode-ai/core/util/log"` (moved out of `@/util/log`). The `Log.create` API is unchanged.
 
 **Real call pattern:**
 ```typescript
@@ -937,6 +926,8 @@ client.on("progress", (data) => { /* ... */ })
 
 ### `schema.ts` -- Effect Schema helpers (withStatics, Newtype)
 
+**Import path:** These schema helpers now live in `@opencode-ai/core` -- `import { Newtype } from "@opencode-ai/core/schema"` (also `NonNegativeInt` and friends). They moved out of `@/util/schema`.
+
 **What it does:** Two helpers for Effect Schema:
 1. `withStatics` -- Attaches static methods to a schema via `.pipe()`
 2. `Newtype` -- Creates nominal/branded scalar types that are also valid schemas
@@ -951,7 +942,7 @@ export const withStatics =
 export function Newtype<Self>() {
   return <const Tag extends string, S extends Schema.Top>(tag: Tag, schema: S) => {
     abstract class Base {
-      static makeUnsafe(value: Schema.Schema.Type<S>): Self { return value as unknown as Self }
+      static make(value: Schema.Schema.Type<S>): Self { return value as unknown as Self }
     }
     Object.setPrototypeOf(Base, schema)
     return Base as unknown as /* ... branded type ... */
@@ -972,22 +963,21 @@ export function Newtype<Self>() {
 **Used by (`Newtype`):** 3 files:
 - `question/schema.ts` -- QuestionID
 - `permission/schema.ts` -- PermissionID
-- `util/schema.ts` (definition)
+- `@opencode-ai/core/schema` (definition)
 
 **Real call pattern:**
 ```typescript
-// withStatics: attach factory methods to a branded schema
-export const SessionID = Schema.String.pipe(
+// withStatics: attach factory methods to a branded schema (no .zod bridge)
+export const SessionID = Schema.String.check(Schema.isStartsWith("ses")).pipe(
   Schema.brand("SessionID"),
   withStatics((s) => ({
-    descending: (id?: string) => s.makeUnsafe(Identifier.descending("session", id)),
-    zod: Identifier.schema("session").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
+    descending: (id?: string) => s.make(Identifier.descending("session", id)),
   })),
 )
 
 // Newtype: create a nominal type that IS a schema
-class QuestionID extends Newtype<QuestionID>()("QuestionID", Schema.String) {
-  static make(id: string): QuestionID { return this.makeUnsafe(id) }
+class QuestionID extends Newtype<QuestionID>()("QuestionID", Schema.String.check(Schema.isStartsWith("que"))) {
+  static ascending(id?: string): QuestionID { return this.make(Identifier.ascending("question", id)) }
 }
 ```
 
@@ -1057,12 +1047,14 @@ export function withTimeout<T>(promise: Promise<T>, ms: number): Promise<T> {
 
 **Implementation:**
 ```typescript
-export namespace Token {
-  const CHARS_PER_TOKEN = 4
-  export function estimate(input: string) {
-    return Math.max(0, Math.round((input || "").length / CHARS_PER_TOKEN))
-  }
+const CHARS_PER_TOKEN = 4
+export function estimate(input: string) {
+  return Math.max(0, Math.round((input || "").length / CHARS_PER_TOKEN))
 }
+
+// Self-barrel at file bottom -- the barrel IS the `Token` namespace, so
+// consumers still write `Token.estimate(...)`.
+export * as Token from "."
 ```
 
 **Used by:**
@@ -1070,22 +1062,9 @@ export namespace Token {
 
 ---
 
-### `update-schema.ts` -- Make all Zod object fields optional+nullable
+### `update-schema.ts` -- (legacy Zod helper, removed)
 
-**What it does:** Transforms a Zod object schema so every field becomes `optional(nullable(T))`. Useful for PATCH/update operations.
-
-**Implementation:**
-```typescript
-export function updateSchema<T extends z.ZodRawShape>(schema: z.ZodObject<T>) {
-  const next = {} as { [K in keyof T]: z.ZodOptional<z.ZodNullable<T[K]>> }
-  for (const [k, v] of Object.entries(schema.required().shape)) {
-    next[k] = v.nullable() as unknown as (typeof next)[typeof k]
-  }
-  return z.object(next)
-}
-```
-
-**Used by:** No direct imports found (infrastructure for PATCH endpoints).
+A Zod-era helper that made every object field `optional(nullable(T))` for PATCH/update payloads. **Removed** with the Effect Schema migration — partial update event shapes are now written directly as a `Schema.Struct` of `Schema.optional(...)` fields (see the `SyncEvent` "Updated" event in [schemas-and-state.md](schemas-and-state.md)).
 
 ---
 
@@ -1121,6 +1100,8 @@ export function which(cmd: string, env?: NodeJS.ProcessEnv) {
 - `"ls *"` pattern matches both `"ls"` and `"ls -la"` (trailing wildcard is optional)
 - Patterns sorted by length (shortest first), last match wins (most specific)
 
+**Import path:** Now lives in `@opencode-ai/core` -- `import { Wildcard } from "@opencode-ai/core/util/wildcard"` (moved out of `@/util/wildcard`). The `Wildcard.*` API is unchanged.
+
 **Used by:**
 - `permission/index.ts` -- Command permission matching
 - `permission/evaluate.ts` -- Permission evaluation
@@ -1147,34 +1128,35 @@ const permission = Wildcard.all("git push origin main", {
 
 **Implementation:**
 ```typescript
-export namespace InstanceState {
-  export const make = <A, E = never, R = never>(
-    init: (ctx: InstanceContext) => Effect.Effect<A, E, R | Scope.Scope>,
-  ): Effect.Effect<InstanceState<A, E, Exclude<R, Scope.Scope>>, never, R | Scope.Scope> =>
-    Effect.gen(function* () {
-      const cache = yield* ScopedCache.make<string, A, E, R>({
-        capacity: Number.POSITIVE_INFINITY,
-        lookup: () => init(Instance.current),
-      })
-      const off = registerDisposer((directory) => Effect.runPromise(ScopedCache.invalidate(cache, directory)))
-      yield* Effect.addFinalizer(() => Effect.sync(off))
-      return { [TypeId]: TypeId, cache }
+// effect/instance-state.ts -- flat module, closed by the self-barrel
+export const make = <A, E = never, R = never>(
+  init: (ctx: InstanceContext) => Effect.Effect<A, E, R | Scope.Scope>,
+): Effect.Effect<InstanceState<A, E, Exclude<R, Scope.Scope>>, never, R | Scope.Scope> =>
+  Effect.gen(function* () {
+    const cache = yield* ScopedCache.make<string, A, E, R>({
+      capacity: Number.POSITIVE_INFINITY,
+      lookup: () => init(Instance.current),
     })
+    const off = registerDisposer((directory) => Effect.runPromise(ScopedCache.invalidate(cache, directory)))
+    yield* Effect.addFinalizer(() => Effect.sync(off))
+    return { [TypeId]: TypeId, cache }
+  })
 
-  export const get = <A, E, R>(self: InstanceState<A, E, R>) =>
-    Effect.suspend(() => ScopedCache.get(self.cache, Instance.directory))
+export const get = <A, E, R>(self: InstanceState<A, E, R>) =>
+  Effect.suspend(() => ScopedCache.get(self.cache, Instance.directory))
 
-  export const use = <A, E, R, B>(self: InstanceState<A, E, R>, select: (value: A) => B) =>
-    Effect.map(get(self), select)
+export const use = <A, E, R, B>(self: InstanceState<A, E, R>, select: (value: A) => B) =>
+  Effect.map(get(self), select)
 
-  export const useEffect = <A, E, R, B, E2, R2>(
-    self: InstanceState<A, E, R>,
-    select: (value: A) => Effect.Effect<B, E2, R2>,
-  ) => Effect.flatMap(get(self), select)
+export const useEffect = <A, E, R, B, E2, R2>(
+  self: InstanceState<A, E, R>,
+  select: (value: A) => Effect.Effect<B, E2, R2>,
+) => Effect.flatMap(get(self), select)
 
-  export const has = /* ... */
-  export const invalidate = /* ... */
-}
+export const has = /* ... */
+export const invalidate = /* ... */
+
+export * as InstanceState from "./instance-state"
 ```
 
 **Used by:** 20 files (core infrastructure):
@@ -1221,7 +1203,7 @@ const s = yield* InstanceState.get(state)
 ```typescript
 export const memoMap = Layer.makeMemoMapUnsafe()
 
-export function makeRuntime<I, S, E>(service: ServiceMap.Service<I, S>, layer: Layer.Layer<I, E>) {
+export function makeRuntime<I, S, E>(service: Context.Service<I, S>, layer: Layer.Layer<I, E>) {
   let rt: ManagedRuntime.ManagedRuntime<I, E> | undefined
   const getRuntime = () => (rt ??= ManagedRuntime.make(layer, { memoMap }))
   return {
@@ -1324,7 +1306,7 @@ export async function disposeInstance(directory: string) {
 export const SessionID = Schema.String.pipe(
   Schema.brand("SessionID"),
   withStatics((s) => ({
-    descending: (id?: string) => s.makeUnsafe(Identifier.descending("session", id)),
+    descending: (id?: string) => s.make(Identifier.descending("session", id)),
   })),
 )
 
@@ -1345,20 +1327,25 @@ const created = Identifier.timestamp(id)
 
 **Implementation:**
 ```typescript
-export namespace BusEvent {
-  export type Definition = ReturnType<typeof define>
-  const registry = new Map<string, Definition>()
-
-  export function define<Type extends string, Properties extends ZodType>(type: Type, properties: Properties) {
-    const result = { type, properties }
-    registry.set(type, result)
-    return result
-  }
-
-  export function payloads() {
-    return z.discriminatedUnion("type", /* all registered events */)
-  }
+export type Definition<Type extends string = string, Properties extends Schema.Top = Schema.Top> = {
+  type: Type
+  properties: Properties
 }
+const registry = new Map<string, Definition>()
+
+export function define<Type extends string, Properties extends Schema.Top>(type: Type, properties: Properties) {
+  const result = { type, properties }
+  registry.set(type, result)
+  return result
+}
+
+export function payloads() {
+  return Schema.Union(/* all registered events as a discriminated union on "type" */)
+}
+
+// Self-barrel at file bottom -- the barrel IS the `BusEvent` namespace, so
+// consumers still write `BusEvent.define(...)` / `BusEvent.Definition`.
+export * as BusEvent from "."
 ```
 
 **Used by:** 25+ files define events. Every module that publishes events uses `BusEvent.define`:
@@ -1419,7 +1406,7 @@ Bus.subscribeAll(callback)
 
 **Key features:**
 - Uses `lazy()` for connection initialization with `reset()` for cleanup
-- Uses `Context.create()` for transaction propagation
+- Uses `LocalContext.create()` for transaction propagation
 - `Database.use(cb)` -- auto-wraps in context or creates new one
 - `Database.transaction(cb)` -- explicit transaction with context nesting
 - `Database.effect(fn)` -- deferred side-effects that run after transaction commits
@@ -1515,9 +1502,9 @@ This IS timeout-based -- it could use `abortAfter(chunkTimeout)`. However, the t
 
 ---
 
-### ANTI-PATTERN: `new AsyncLocalStorage` instead of `Context.create`
+### ANTI-PATTERN: `new AsyncLocalStorage` instead of `LocalContext.create`
 
-**Verdict: No violation found.** The only `new AsyncLocalStorage` is inside `Context.create` itself.
+**Verdict: No violation found.** The only `new AsyncLocalStorage` is inside `LocalContext.create` itself.
 
 ---
 
@@ -1573,7 +1560,7 @@ An LLM should still USE these rather than reinvent them if the functionality mat
 ### CORRECT PATTERN: Effect vs vanilla utility split
 
 The codebase maintains a clean split:
-- **Effect-based modules** use `InstanceState`, `makeRuntime`, `ServiceMap.Service`, `ScopedCache`, `PubSub`, `cross-spawn-spawner`
-- **Vanilla async modules** use `Context.create`, `lazy`, `Lock`, `Flock`, `Process`, `Filesystem`, `git`
+- **Effect-based modules** use `InstanceState`, `makeRuntime`, `Context.Service`, `ScopedCache`, `PubSub`, `cross-spawn-spawner`
+- **Vanilla async modules** use `LocalContext.create` (the `@/util/local-context` AsyncLocalStorage helper, distinct from Effect's `Context.Service`), `lazy`, `Lock`, `Flock`, `Process`, `Filesystem`, `git`
 
-**Never cross these boundaries.** Do not use `Context.create` inside an Effect service. Do not use `InstanceState` outside of an Effect service.
+**Never cross these boundaries.** Do not use the `@/util/local-context` `LocalContext.create` inside an Effect service. Do not use `InstanceState` outside of an Effect service.

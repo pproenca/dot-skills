@@ -106,7 +106,7 @@ import { $ } from "bun"
 import * as fs from "fs/promises"
 import os from "os"
 import path from "path"
-import { Effect, FileSystem, ServiceMap } from "effect"
+import { Effect, FileSystem, Context } from "effect"
 import { ChildProcess, ChildProcessSpawner } from "effect/unstable/process"
 import type { Config } from "../../src/config/config"
 import { Instance } from "../../src/project/instance"
@@ -175,7 +175,7 @@ export async function tmpdir<T>(options?: TmpDirOptions<T>) {
 export const provideInstance =
   (directory: string) =>
   <A, E, R>(self: Effect.Effect<A, E, R>): Effect.Effect<A, E, R> =>
-    Effect.servicesWith((services: ServiceMap.ServiceMap<R>) =>
+    Effect.servicesWith((services: Context.Context<R>) =>
       Effect.promise<A>(async () =>
         Instance.provide({
           directory,
@@ -719,11 +719,11 @@ describe("session.prompt_async error handling", () => {
 
 ### 3.5 Effect Test -- instance-state.test.ts
 
-Demonstrates: Effect.scoped + InstanceState.make, ServiceMap.Service class, ManagedRuntime, concurrent access with Promise.all across directories.
+Demonstrates: Effect.scoped + InstanceState.make, Context.Service class, ManagedRuntime, concurrent access with Promise.all across directories.
 
 ```ts
 import { afterEach, expect, test } from "bun:test"
-import { Duration, Effect, Layer, ManagedRuntime, ServiceMap } from "effect"
+import { Duration, Effect, Layer, ManagedRuntime, Context } from "effect"
 import { InstanceState } from "../../src/effect/instance-state"
 import { Instance } from "../../src/project/instance"
 import { tmpdir } from "../fixture/fixture"
@@ -765,7 +765,7 @@ test("InstanceState preserves directory across async boundaries", async () => {
     }>
   }
 
-  class Test extends ServiceMap.Service<Test, Api>()("@test/InstanceStateAsync") {
+  class Test extends Context.Service<Test, Api>()("@test/InstanceStateAsync") {
     static readonly layer = Layer.effect(
       Test,
       Effect.gen(function* () {

@@ -1,6 +1,6 @@
 # Schemas and State Management
 
-This reference covers database schemas, Zod/Effect schema patterns, event-sourced state management, and the error taxonomy used across the opencode TypeScript codebase.
+This reference covers database schemas, Effect Schema patterns, event-sourced state management, and the error taxonomy used across the opencode TypeScript codebase. The codebase is now on Effect `Schema` end to end — service data, bus/sync events, tool params, branded IDs, and both error families. (`zod` is still a dependency but is no longer the schema tool for these.)
 
 ---
 
@@ -149,231 +149,153 @@ Two tables: `event_sequence` tracks the latest sequence number per aggregate, `e
 
 ---
 
-## 2. Zod Schema Patterns
+## 2. Effect Schema Patterns (data, events, IDs)
 
-### z.object + z.infer + .meta({ref})
+### Schema.Struct + Schema.Schema.Type + .annotate({ identifier })
 
-The `.meta({ ref })` annotation names schemas for OpenAPI generation and SDK type extraction:
-
-```typescript
-// packages/util/src/error.ts -- inside NamedError.create
-const schema = z
-  .object({
-    name: z.literal(name),
-    data,
-  })
-  .meta({
-    ref: name,
-  })
-```
+`.annotate({ identifier })` names a schema for OpenAPI/JSON-Schema generation and SDK type extraction (it replaced Zod's `.meta({ ref })`). `.annotate({ description })` documents a field. Every schema that appears in API responses or events gets an `identifier`:
 
 ```typescript
-// util/log.ts
-export const Level = z.enum(["DEBUG", "INFO", "WARN", "ERROR"]).meta({ ref: "LogLevel", description: "Log level" })
-export type Level = z.infer<typeof Level>
-```
-
-The `ref` becomes the `$ref` name in generated OpenAPI specs. Every schema that appears in API responses or events gets a `.meta({ ref })`.
-
-### z.discriminatedUnion for Variant Types
-
-Messages use discriminated unions on `"type"` for parts, `"status"` for tool state, and `"name"` for errors:
-
-```typescript
-// session/message-v2.ts -- Part types (12 variants)
-export const Part = z.discriminatedUnion("type", [
-  TextPart,        // text with optional synthetic/ignored flags
-  SubtaskPart,     // agent delegation
-  ReasoningPart,   // model thinking
-  FilePart,        // attached files with mime, url, optional source
-  ToolPart,        // tool calls with full lifecycle state
-  StepStartPart,   // marks beginning of an LLM step (with snapshot)
-  StepFinishPart,  // marks end with tokens/cost
-  SnapshotPart,    // git snapshot reference
-  PatchPart,       // file changes since last snapshot
-  AgentPart,       // agent reference
-  RetryPart,       // retry tracking
-  CompactionPart,  // context compaction marker
-])
-
-// session/message-v2.ts -- Tool lifecycle (4-state machine)
-export const ToolState = z.discriminatedUnion("status", [
-  ToolStatePending,   // { status: "pending", input: {}, raw: "" }
-  ToolStateRunning,   // { status: "running", input: {}, title?, metadata?, time: { start } }
-  ToolStateCompleted, // { status: "completed", input: {}, output, title, metadata, time: { start, end, compacted? }, attachments? }
-  ToolStateError,     // { status: "error", input: {}, error, metadata?, time: { start, end } }
-])
-
-// session/message-v2.ts -- Error variants on assistant messages
-export const Assistant = Base.extend({
-  role: z.literal("assistant"),
-  error: z
-    .discriminatedUnion("name", [
-      AuthError.Schema,           // { name: "ProviderAuthError", data: { providerID, message } }
-      NamedError.Unknown.Schema,  // { name: "UnknownError", data: { message } }
-      OutputLengthError.Schema,   // { name: "MessageOutputLengthError", data: {} }
-      AbortedError.Schema,        // { name: "MessageAbortedError", data: { message } }
-      StructuredOutputError.Schema, // { name: "StructuredOutputError", data: { message, retries } }
-      ContextOverflowError.Schema, // { name: "ContextOverflowError", data: { message, responseBody? } }
-      APIError.Schema,            // { name: "APIError", data: { message, statusCode?, isRetryable, ... } }
-    ])
-    .optional(),
+// core/util/log.ts
+export const Level = Schema.Literals(["DEBUG", "INFO", "WARN", "ERROR"]).annotate({
+  identifier: "LogLevel",
+  description: "Log level",
 })
+export type Level = Schema.Schema.Type<typeof Level>
 ```
 
-### Schema Extension with .extend()
+The `identifier` becomes the `$ref`/component name in generated specs. Pull the static TS type with `Schema.Schema.Type<typeof X>` (the replacement for `z.infer`).
 
-`.extend()` adds fields to an existing z.object. Used for role-specific message schemas:
+### Discriminated unions: Schema.Union + discriminator annotation
+
+A literal field discriminator is declared with `.annotate({ discriminator: "type" })` on a `Schema.Union` of `Schema.Struct`s, each carrying a `Schema.Literal(...)` tag:
+
+```typescript
+// session/message-v2.ts -- Part types (each member is a Schema.Struct with type: Schema.Literal(...))
+export const Part = Schema.Union([
+  TextPart,        // type: Schema.Literal("text") -- with optional synthetic/ignored flags
+  SubtaskPart,     // type: Schema.Literal("subtask") -- agent delegation
+  ReasoningPart,   // type: Schema.Literal("reasoning") -- model thinking
+  FilePart,        // type: Schema.Literal("file") -- attached files with mime, url, optional source
+  ToolPart,        // type: Schema.Literal("tool") -- tool calls with full lifecycle state
+  StepStartPart,   // type: Schema.Literal("step-start")
+  StepFinishPart,  // type: Schema.Literal("step-finish") -- tokens/cost
+  SnapshotPart,    // type: Schema.Literal("snapshot")
+  PatchPart,       // type: Schema.Literal("patch")
+  AgentPart,       // type: Schema.Literal("agent")
+  RetryPart,       // type: Schema.Literal("retry")
+  CompactionPart,  // type: Schema.Literal("compaction")
+]).annotate({ discriminator: "type" })
+
+// session/message-v2.ts -- Tool lifecycle (4-state machine, discriminated on "status")
+export const ToolState = Schema.Union([
+  ToolStatePending,   // status: Schema.Literal("pending")
+  ToolStateRunning,   // status: Schema.Literal("running")
+  ToolStateCompleted, // status: Schema.Literal("completed")
+  ToolStateError,     // status: Schema.Literal("error")
+]).annotate({ discriminator: "status" })
+```
+
+`Schema.Literal("text")` is a single literal; `Schema.Literals(["a", "b"])` is the closed set (the old `z.enum`).
+
+### Schema extension with `...Base.fields`
+
+There is no `.extend()` — spread the `.fields` of an existing `Schema.Struct` into a new one:
 
 ```typescript
 // session/message-v2.ts
-export const Assistant = Base.extend({
-  role: z.literal("assistant"),
-  error: z.discriminatedUnion("name", [/* ... */]).optional(),
-})
+export const Assistant = Schema.Struct({
+  ...Base.fields,
+  role: Schema.Literal("assistant"),
+  error: Schema.optional(
+    Schema.Union([
+      AuthError.Schema,             // { name: "ProviderAuthError", data: { providerID, message } }
+      NamedError.Unknown.Schema,    // { name: "UnknownError", data: { message } }
+      OutputLengthError.Schema,     // { name: "MessageOutputLengthError", data: {} }
+      AbortedError.Schema,          // { name: "MessageAbortedError", data: { message } }
+      APIError.Schema,              // { name: "APIError", data: { message, statusCode?, isRetryable, ... } }
+      ContextOverflowError.Schema,  // { name: "ContextOverflowError", data: { message, responseBody? } }
+    ]).annotate({ discriminator: "name" }),
+  ),
+}).annotate({ identifier: "AssistantMessage" })
 ```
 
-For partial updates, `updateSchema()` wraps all fields as optional+nullable, then `.extend()` adds nested partial fields:
+The error union is discriminated on `"name"` — each member is a `NamedError` `.Schema` (a `Schema.Struct({ name: Schema.Literal(tag), data })`; see §5).
 
-```typescript
-// session/index.ts
-Updated: SyncEvent.define({
-  type: "session.updated",
-  version: 1,
-  aggregate: "sessionID",
-  schema: z.object({
-    sessionID: SessionID.zod,
-    info: updateSchema(Info).extend({
-      share: updateSchema(Info.shape.share.unwrap()).optional(),
-      time: updateSchema(Info.shape.time).optional(),
-    }),
-  }),
-  busSchema: z.object({
-    sessionID: SessionID.zod,
-    info: Info,
-  }),
-}),
-```
+### Branded ID Schemas
 
-The event `schema` accepts partial updates (for projectors). The `busSchema` emits the full object (for subscribers). These are intentionally different shapes.
+IDs are branded Effect Schema strings. There are two equivalent idioms; both live in `@opencode-ai/core/schema` and there is **no `.zod` bridge** anymore.
 
-### Branded ID Schemas (Newtype + Identifier)
-
-IDs are branded Effect Schema strings with dual Zod representations. The `Newtype` + `withStatics` pattern creates nominal types:
-
-```typescript
-// util/schema.ts
-export function Newtype<Self>() {
-  return <const Tag extends string, S extends Schema.Top>(tag: Tag, schema: S) => {
-    type Branded = NewtypeBrand<Tag>
-
-    abstract class Base {
-      declare readonly [NewtypeBrand]: Tag
-
-      static makeUnsafe(value: Schema.Schema.Type<S>): Self {
-        return value as unknown as Self
-      }
-    }
-
-    Object.setPrototypeOf(Base, schema)
-
-    return Base as unknown as (abstract new (_: never) => Branded) & {
-      readonly makeUnsafe: (value: Schema.Schema.Type<S>) => Self
-    } & Omit<Schema.Opaque<Self, S, {}>, "makeUnsafe">
-  }
-}
-
-export const withStatics =
-  <S extends object, M extends Record<string, unknown>>(methods: (schema: S) => M) =>
-  (schema: S): S & M =>
-    Object.assign(schema, methods(schema))
-```
-
-Applied to create branded IDs:
+**Idiom A — `Schema.String.check(...).pipe(Schema.brand(...), withStatics(...))`** (Session, Message, Part):
 
 ```typescript
 // session/schema.ts
-export const SessionID = Schema.String.pipe(
-  Schema.brand("SessionID"),
-  withStatics((s) => ({
-    make: (id: string) => s.makeUnsafe(id),
-    descending: (id?: string) => s.makeUnsafe(Identifier.descending("session", id)),
-    zod: Identifier.schema("session").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
-  })),
-)
+import { Schema } from "effect"
+import { Identifier } from "@/id/id"
+import { Session as CoreSession } from "@opencode-ai/core/session"
+import { withStatics } from "@opencode-ai/core/schema"
 
-export const MessageID = Schema.String.pipe(
+export const SessionID = CoreSession.ID
+export type SessionID = Schema.Schema.Type<typeof SessionID>
+
+export const MessageID = Schema.String.check(Schema.isStartsWith("msg")).pipe(
   Schema.brand("MessageID"),
   withStatics((s) => ({
-    make: (id: string) => s.makeUnsafe(id),
-    ascending: (id?: string) => s.makeUnsafe(Identifier.ascending("message", id)),
-    zod: Identifier.schema("message").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
+    ascending: (id?: string) => s.make(Identifier.ascending("message", id)),
   })),
 )
+export type MessageID = Schema.Schema.Type<typeof MessageID>
 ```
 
-SessionIDs are **descending** (newest first in DB ordering). MessageIDs are **ascending** (oldest first within a session). Each has both an Effect Schema representation and a `.zod` property for Zod interop.
+**Idiom B — `Newtype<Self>()("Tag", schema)` class** (Question, Permission): see [service-module.md](service-module.md). Use the class form when you also want instance methods; the `.pipe(withStatics)` form when a value + a couple of static factories is enough.
 
-The `Identifier` module generates ULID-like IDs with the format `prefix_<6-byte-timestamp-hex><14-char-random-base62>`:
+`Schema.isStartsWith("msg")` validates the prefix at decode time; `s.make(raw)` brands. SessionIDs are **descending** (newest first in DB ordering); MessageIDs/PartIDs are **ascending** (oldest first within a session).
+
+The `Identifier` module generates ULID-like IDs (`prefix_<6-byte-timestamp-hex><random-base62>`) — flat exports closed by a self-barrel:
 
 ```typescript
 // id/id.ts
-export namespace Identifier {
-  const prefixes = {
-    event: "evt",
-    session: "ses",
-    message: "msg",
-    permission: "per",
-    question: "que",
-    user: "usr",
-    part: "prt",
-    pty: "pty",
-    tool: "tool",
-    workspace: "wrk",
-  } as const
+const prefixes = {
+  event: "evt", session: "ses", message: "msg", permission: "per",
+  question: "que", user: "usr", part: "prt", pty: "pty", tool: "tool", workspace: "wrk",
+} as const
 
-  export function schema(prefix: keyof typeof prefixes) {
-    return z.string().startsWith(prefixes[prefix])
-  }
-
-  export function ascending(prefix: keyof typeof prefixes, given?: string) {
-    return generateID(prefix, false, given)
-  }
-
-  export function descending(prefix: keyof typeof prefixes, given?: string) {
-    return generateID(prefix, true, given)
-  }
-
-  export function create(prefix: keyof typeof prefixes, descending: boolean, timestamp?: number): string {
-    const currentTimestamp = timestamp ?? Date.now()
-
-    if (currentTimestamp !== lastTimestamp) {
-      lastTimestamp = currentTimestamp
-      counter = 0
-    }
-    counter++
-
-    let now = BigInt(currentTimestamp) * BigInt(0x1000) + BigInt(counter)
-
-    now = descending ? ~now : now
-
-    const timeBytes = Buffer.alloc(6)
-    for (let i = 0; i < 6; i++) {
-      timeBytes[i] = Number((now >> BigInt(40 - 8 * i)) & BigInt(0xff))
-    }
-
-    return prefixes[prefix] + "_" + timeBytes.toString("hex") + randomBase62(LENGTH - 12)
-  }
+export function ascending(prefix: keyof typeof prefixes, given?: string) {
+  return generateID(prefix, "ascending", given)
 }
+
+export function descending(prefix: keyof typeof prefixes, given?: string) {
+  return generateID(prefix, "descending", given)
+}
+
+export function create(prefix: string, direction: "descending" | "ascending", timestamp?: number): string {
+  const currentTimestamp = timestamp ?? Date.now()
+  if (currentTimestamp !== lastTimestamp) {
+    lastTimestamp = currentTimestamp
+    counter = 0
+  }
+  counter++
+
+  let now = BigInt(currentTimestamp) * BigInt(0x1000) + BigInt(counter)
+  now = direction === "descending" ? ~now : now
+
+  const timeBytes = Buffer.alloc(6)
+  for (let i = 0; i < 6; i++) {
+    timeBytes[i] = Number((now >> BigInt(40 - 8 * i)) & BigInt(0xff))
+  }
+  return prefixes[prefix] + "_" + timeBytes.toString("hex") + randomBase62(LENGTH - 12)
+}
+
+export * as Identifier from "./id"
 ```
 
-Descending IDs use bitwise NOT (`~now`) so they sort in reverse chronological order without a DESC clause.
+Descending IDs use bitwise NOT (`~now`) so they sort in reverse chronological order without a DESC clause. Prefix validation now lives inline in each ID schema (`Schema.String.check(Schema.isStartsWith(prefix))`) rather than a separate `Identifier.schema()` helper.
 
 ---
 
 ## 3. Effect Schema Patterns
 
-Effect Schema is used for domain error classes and branded types. Zod is used for event schemas, API validation, and OpenAPI generation. The two worlds are bridged explicitly.
+Effect Schema is the single schema system — domain data, bus/sync events, API validation, branded types, and both error families. Boundaries that need JSON Schema (tools, providers) generate it from the Effect Schema; there is no Zod in between.
 
 ### Schema.TaggedErrorClass for Errors
 
@@ -425,44 +347,38 @@ export class UpgradeFailedError extends Schema.TaggedErrorClass<UpgradeFailedErr
 }) {}
 ```
 
-Pattern: `Schema.TaggedErrorClass<Self>()(tag, fields)`. The double invocation is required -- first call binds the self type, second call provides the tag and schema fields. These are used in Effect error channels, not in Zod discriminated unions.
+Pattern: `Schema.TaggedErrorClass<Self>()(tag, fields)`. The double invocation is required -- first call binds the self type, second call provides the tag and schema fields. These ride Effect error channels (the `E` in `Effect.Effect<A, E>`); the serializable `NamedError` family (§5) is the other half and is now also Effect Schema.
 
 ### Schema.brand for Branded Types
 
 ```typescript
 // sync/schema.ts
-export const EventID = Schema.String.pipe(
+export const EventID = Schema.String.check(Schema.isStartsWith("evt")).pipe(
   Schema.brand("EventID"),
   withStatics((s) => ({
-    make: (id: string) => s.makeUnsafe(id),
-    ascending: (id?: string) => s.makeUnsafe(Identifier.ascending("event", id)),
-    zod: Identifier.schema("event").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
+    ascending: (id?: string) => s.make(Identifier.ascending("event", id)),
   })),
 )
 ```
 
-Every branded ID has `.zod` for cross-system compatibility. The `.zod` property creates a Zod schema that validates the prefix and casts to the branded type.
+`s.make(raw)` brands a prefix-validated string. There is no `.zod` property anymore — the branded schema is used directly wherever a schema is required.
 
-### Bridge: Effect Schema to Zod
+### Effect Schema → JSON Schema (provider/tool boundary)
 
-The `util/effect-zod.ts` module converts Effect Schema AST to Zod schemas by walking the AST tree:
+Providers (OpenAI, Anthropic) and the tool registry need JSON Schema for tool definitions. It is generated directly from the Effect Schema — there is no Effect-to-Zod bridge:
 
 ```typescript
-// util/effect-zod.ts
-export function zod<S extends Schema.Top>(schema: S): z.ZodType<Schema.Schema.Type<S>> {
-  return walk(schema.ast) as z.ZodType<Schema.Schema.Type<S>>
+// tool/json-schema.ts
+export function fromSchema(schema: Schema.Top): JSONSchema7 {
+  /* walk schema.ast -> JSON Schema, carrying identifier/description annotations */
 }
 
-function walk(ast: SchemaAST.AST): z.ZodTypeAny {
-  const out = body(ast)
-  const desc = SchemaAST.resolveDescription(ast)
-  const ref = SchemaAST.resolveIdentifier(ast)
-  const next = desc ? out.describe(desc) : out
-  return ref ? next.meta({ ref }) : next
+export function fromTool(tool: Tool.Def): JSONSchema7 {
+  return fromSchema(tool.parameters)
 }
 ```
 
-This is needed because providers (OpenAI, Anthropic) expect Zod schemas for tool definitions. Effect Schema is the source of truth for domain types; Zod is the exchange format.
+Effect Schema is the source of truth; JSON Schema is the exchange format fed to the model (see `resolveTools` in [tool-module.md](tool-module.md)).
 
 ---
 
@@ -479,8 +395,8 @@ export const Event = {
     type: "session.created",
     version: 1,
     aggregate: "sessionID",
-    schema: z.object({
-      sessionID: SessionID.zod,
+    schema: Schema.Struct({
+      sessionID: SessionID,
       info: Info,
     }),
   }),
@@ -488,49 +404,49 @@ export const Event = {
     type: "session.updated",
     version: 1,
     aggregate: "sessionID",
-    schema: z.object({
-      sessionID: SessionID.zod,
-      info: updateSchema(Info).extend({
-        share: updateSchema(Info.shape.share.unwrap()).optional(),
-        time: updateSchema(Info.shape.time).optional(),
-      }),
+    // the update event carries a partial info -- a Struct of Schema.optional(...) fields the projector patches
+    schema: Schema.Struct({
+      sessionID: SessionID,
+      info: SessionInfoUpdate,
     }),
-    busSchema: z.object({
-      sessionID: SessionID.zod,
+    // busSchema emits the FULL object to subscribers — intentionally a different shape
+    busSchema: Schema.Struct({
+      sessionID: SessionID,
       info: Info,
     }),
   }),
 }
 ```
 
-`define()` registers the event in a global registry and tracks the latest version number per type. Once `SyncEvent.init()` is called, the registry freezes -- no more definitions allowed.
+`define()` registers the event in a global registry and tracks the latest version number per type. Once `SyncEvent.init()` is called, the registry freezes -- no more definitions allowed. Branded IDs go in directly (`SessionID`, not `SessionID.zod`).
 
 ### SyncEvent.define Internals
 
 ```typescript
-// sync/index.ts
-export namespace SyncEvent {
-  export type Definition = {
-    type: string
-    version: number
-    aggregate: string
-    schema: z.ZodObject
-    properties: z.ZodObject  // Bus compat
-  }
+// sync/index.ts — flat exports closed by `export * as SyncEvent from "."`
+import { Schema } from "effect"
 
-  export const registry = new Map<string, Definition>()
-  let projectors: Map<Definition, ProjectorFunc> | undefined
-  const versions = new Map<string, number>()
-  let frozen = false
-
-  export function define<Type, Agg, Schema, BusSchema>(input) {
-    if (frozen) throw new Error("sync system has been frozen")
-    const def = { ...input, properties: input.busSchema || input.schema }
-    versions.set(def.type, Math.max(def.version, versions.get(def.type) || 0))
-    registry.set(versionedType(def.type, def.version), def)
-    return def
-  }
+export type Definition<Schm extends Schema.Top = Schema.Top, BusSchm extends Schema.Top = Schm> = {
+  type: string
+  version: number
+  aggregate: string
+  schema: Schm
+  properties: BusSchm // Bus payload schema; defaults to `schema` unless `busSchema` given
 }
+
+export const registry = new Map<string, Definition>()
+const versions = new Map<string, number>()
+let frozen = false
+
+export function define<Type, Agg, Schm, BusSchm>(input) {
+  if (frozen) throw new Error("sync system has been frozen")
+  const def = { ...input, properties: input.busSchema ?? input.schema }
+  versions.set(def.type, Math.max(def.version, versions.get(def.type) || 0))
+  registry.set(versionedType(def.type, def.version), def)
+  return def
+}
+
+export * as SyncEvent from "."
 ```
 
 Versioned event types: `"session.created"` version 1 is stored as `"session.created.1"` in the registry. Only the latest version can be `run()`; old versions exist only for `replay()`.
@@ -633,7 +549,7 @@ export function initProjectors() {
     projectors: sessionProjectors,
     convertEvent: (type, data) => {
       if (type === "session.updated") {
-        const id = (data as z.infer<typeof Session.Event.Updated.schema>).sessionID
+        const id = (data as Schema.Schema.Type<typeof Session.Event.Updated.schema>).sessionID
         const row = Database.use((db) => db.select().from(SessionTable).where(eq(SessionTable.id, id)).get())
         if (!row) return data
         return { sessionID: id, info: Session.fromRow(row) }
@@ -670,40 +586,48 @@ Replay enforces strict sequential ordering and skips already-applied events. Use
 
 ## 5. Error Taxonomy
 
-The codebase has two parallel error systems: `NamedError` (Zod-based, for API/storage errors) and `Schema.TaggedErrorClass` (Effect-based, for domain/service errors).
+The codebase has two error families, **both built on Effect `Schema`**: `NamedError` (serializable discriminated-union errors for the API/wire, storage, and assistant-message errors) and `Schema.TaggedErrorClass` (Effect error-channel errors for services). `NamedError` used to be Zod-based; it is now a `Schema.Struct({ name: Schema.Literal(tag), data })`.
 
 ### NamedError.create Pattern
 
 ```typescript
-// packages/util/src/error.ts
-export abstract class NamedError extends Error {
-  abstract schema(): z.core.$ZodType
-  abstract toObject(): { name: string; data: any }
+// core/util/error.ts
+import { Schema } from "effect"
 
-  static create<Name extends string, Data extends z.core.$ZodType>(name: Name, data: Data) {
-    const schema = z
-      .object({
-        name: z.literal(name),
-        data,
-      })
-      .meta({
-        ref: name,
-      })
+export abstract class NamedError extends Error {
+  abstract schema(): Schema.Top
+  abstract toObject(): { name: string; data: unknown }
+
+  static hasName(error: unknown, name: string): boolean {
+    return (
+      typeof error === "object" && error !== null && "name" in error &&
+      (error as Record<string, unknown>).name === name
+    )
+  }
+
+  // `data` is either an object of Schema fields (sugar) or a full Schema
+  static create<Name extends string>(name: Name, data: Schema.Top | Schema.Struct.Fields) {
+    const dataSchema = Schema.isSchema(data) ? data : Schema.Struct(data)
+    const schema = Schema.Struct({
+      name: Schema.Literal(name),
+      data: dataSchema,
+    }).annotate({ identifier: name })
+
     const result = class extends NamedError {
       public static readonly Schema = schema
-
-      public override readonly name = name as Name
+      public static readonly tag = name
+      public override readonly name = name
 
       constructor(
-        public readonly data: z.input<Data>,
+        public readonly data: Schema.Schema.Type<typeof dataSchema>,
         options?: ErrorOptions,
       ) {
         super(name, options)
         this.name = name
       }
 
-      static isInstance(input: any): input is InstanceType<typeof result> {
-        return typeof input === "object" && "name" in input && input.name === name
+      static isInstance(input: unknown): input is InstanceType<typeof result> {
+        return NamedError.hasName(input, name)
       }
 
       schema() {
@@ -711,113 +635,89 @@ export abstract class NamedError extends Error {
       }
 
       toObject() {
-        return {
-          name: name,
-          data: this.data,
-        }
+        return { name, data: this.data }
       }
     }
     Object.defineProperty(result, "name", { value: name })
     return result
   }
 
-  public static readonly Unknown = NamedError.create(
-    "UnknownError",
-    z.object({
-      message: z.string(),
-    }),
-  )
+  public static readonly Unknown = NamedError.create("UnknownError", {
+    message: Schema.String,
+    ref: Schema.optional(Schema.String),
+  })
 }
 ```
 
 Each `NamedError.create()` call produces a class with:
-- `.Schema` -- a Zod schema with `{ name: z.literal(tag), data: ... }` for discriminated unions
+- `.Schema` -- an Effect Schema `Schema.Struct({ name: Schema.Literal(tag), data })` (plus `.tag`) for discriminated unions
 - `.isInstance()` -- runtime type check using the `name` discriminator
 - `.toObject()` -- serialization for JSON responses and event storage
 
+`create` accepts a plain object of `Schema` fields as a shorthand for `Schema.Struct(...)`.
+
 ### Real NamedError Subclasses
+
+`create` takes a plain object of `Schema` fields (it wraps them in `Schema.Struct`), so subclasses pass `{ field: Schema.X }` directly.
 
 **Message errors** (session/message-v2.ts):
 ```typescript
-export const OutputLengthError = NamedError.create("MessageOutputLengthError", z.object({}))
+export const OutputLengthError = NamedError.create("MessageOutputLengthError", {})
 
-export const AbortedError = NamedError.create("MessageAbortedError", z.object({ message: z.string() }))
+export const AbortedError = NamedError.create("MessageAbortedError", { message: Schema.String })
 
-export const StructuredOutputError = NamedError.create(
-  "StructuredOutputError",
-  z.object({
-    message: z.string(),
-    retries: z.number(),
-  }),
-)
+export const StructuredOutputError = NamedError.create("StructuredOutputError", {
+  message: Schema.String,
+  retries: Schema.Number,
+})
 
-export const AuthError = NamedError.create(
-  "ProviderAuthError",
-  z.object({
-    providerID: z.string(),
-    message: z.string(),
-  }),
-)
+export const AuthError = NamedError.create("ProviderAuthError", {
+  providerID: Schema.String,
+  message: Schema.String,
+})
 
-export const APIError = NamedError.create(
-  "APIError",
-  z.object({
-    message: z.string(),
-    statusCode: z.number().optional(),
-    isRetryable: z.boolean(),
-    responseHeaders: z.record(z.string(), z.string()).optional(),
-    responseBody: z.string().optional(),
-    metadata: z.record(z.string(), z.string()).optional(),
-  }),
-)
+export const APIError = NamedError.create("APIError", {
+  message: Schema.String,
+  statusCode: Schema.optional(Schema.Number),
+  isRetryable: Schema.Boolean,
+  responseHeaders: Schema.optional(Schema.Record(Schema.String, Schema.String)),
+  responseBody: Schema.optional(Schema.String),
+  metadata: Schema.optional(Schema.Record(Schema.String, Schema.String)),
+})
 
-export const ContextOverflowError = NamedError.create(
-  "ContextOverflowError",
-  z.object({ message: z.string(), responseBody: z.string().optional() }),
-)
+export const ContextOverflowError = NamedError.create("ContextOverflowError", {
+  message: Schema.String,
+  responseBody: Schema.optional(Schema.String),
+})
 ```
 
 **Storage errors** (storage/db.ts):
 ```typescript
-export const NotFoundError = NamedError.create(
-  "NotFoundError",
-  z.object({
-    message: z.string(),
-  }),
-)
+export const NotFoundError = NamedError.create("NotFoundError", { message: Schema.String })
 ```
 
 **Provider errors** (provider/provider.ts):
 ```typescript
-export const ModelNotFoundError = NamedError.create(
-  "ProviderModelNotFoundError",
-  z.object({
-    providerID: ProviderID.zod,
-    modelID: ModelID.zod,
-    suggestions: z.array(z.string()).optional(),
-  }),
-)
+export const ModelNotFoundError = NamedError.create("ProviderModelNotFoundError", {
+  providerID: ProviderID,
+  modelID: ModelID,
+  suggestions: Schema.optional(Schema.Array(Schema.String)),
+})
 
-export const InitError = NamedError.create(
-  "ProviderInitError",
-  z.object({
-    providerID: ProviderID.zod,
-  }),
-)
+export const InitError = NamedError.create("ProviderInitError", {
+  providerID: ProviderID,
+})
 ```
 
 **Provider auth errors** (provider/auth.ts):
 ```typescript
-export const OauthMissing = NamedError.create("ProviderAuthOauthMissing", z.object({ providerID: ProviderID.zod }))
-export const OauthCodeMissing = NamedError.create("ProviderAuthOauthCodeMissing", z.object({ providerID: ProviderID.zod }))
-export const OauthCallbackFailed = NamedError.create("ProviderAuthOauthCallbackFailed", z.object({}))
-export const ValidationFailed = NamedError.create(
-  "ProviderAuthValidationFailed",
-  z.object({
-    field: z.string(),
-    message: z.string(),
-  }),
-)
+export const OauthMissing = NamedError.create("ProviderAuthOauthMissing", { providerID: ProviderID })
+export const OauthCodeMissing = NamedError.create("ProviderAuthOauthCodeMissing", { providerID: ProviderID })
+export const OauthCallbackFailed = NamedError.create("ProviderAuthOauthCallbackFailed", {})
+export const ValidationFailed = NamedError.create("ProviderAuthValidationFailed", {
+  field: Schema.String,
+  message: Schema.String,
+})
 ```
 
 ### Error Flow: Provider -> parseAPICallError -> MessageV2.fromError -> HTTP Status
@@ -825,47 +725,47 @@ export const ValidationFailed = NamedError.create(
 **Step 1 -- ProviderError.parseAPICallError** classifies raw errors from the AI SDK:
 
 ```typescript
-// provider/error.ts
-export namespace ProviderError {
-  const OVERFLOW_PATTERNS = [
-    /prompt is too long/i,                        // Anthropic
-    /input is too long for requested model/i,     // Amazon Bedrock
-    /exceeds the context window/i,                // OpenAI
-    /input token count.*exceeds the maximum/i,    // Google (Gemini)
-    /maximum prompt length is \d+/i,              // xAI (Grok)
-    /reduce the length of the messages/i,         // Groq
-    /maximum context length is \d+ tokens/i,      // OpenRouter, DeepSeek, vLLM
-    /exceeds the limit of \d+/i,                  // GitHub Copilot
-    /exceeds the available context size/i,        // llama.cpp
-    /greater than the context length/i,           // LM Studio
-    /context window exceeds limit/i,              // MiniMax
-    /exceeded model token limit/i,                // Kimi/Moonshot
-    /context[_ ]length[_ ]exceeded/i,             // Generic fallback
-    /request entity too large/i,                  // HTTP 413
-    /context length is only \d+ tokens/i,         // vLLM
-    /input length.*exceeds.*context length/i,     // vLLM
-  ]
+// provider/error.ts — flat module, closed by the self-barrel
+const OVERFLOW_PATTERNS = [
+  /prompt is too long/i,                        // Anthropic
+  /input is too long for requested model/i,     // Amazon Bedrock
+  /exceeds the context window/i,                // OpenAI
+  /input token count.*exceeds the maximum/i,    // Google (Gemini)
+  /maximum prompt length is \d+/i,              // xAI (Grok)
+  /reduce the length of the messages/i,         // Groq
+  /maximum context length is \d+ tokens/i,      // OpenRouter, DeepSeek, vLLM
+  /exceeds the limit of \d+/i,                  // GitHub Copilot
+  /exceeds the available context size/i,        // llama.cpp
+  /greater than the context length/i,           // LM Studio
+  /context window exceeds limit/i,              // MiniMax
+  /exceeded model token limit/i,                // Kimi/Moonshot
+  /context[_ ]length[_ ]exceeded/i,             // Generic fallback
+  /request entity too large/i,                  // HTTP 413
+  /context length is only \d+ tokens/i,         // vLLM
+  /input length.*exceeds.*context length/i,     // vLLM
+]
 
-  export function parseAPICallError(input: { providerID: ProviderID; error: APICallError }): ParsedAPICallError {
-    const m = message(input.providerID, input.error)
-    const body = json(input.error.responseBody)
-    if (isOverflow(m) || input.error.statusCode === 413 || body?.error?.code === "context_length_exceeded") {
-      return { type: "context_overflow", message: m, responseBody: input.error.responseBody }
-    }
-    const metadata = input.error.url ? { url: input.error.url } : undefined
-    return {
-      type: "api_error",
-      message: m,
-      statusCode: input.error.statusCode,
-      isRetryable: input.providerID.startsWith("openai")
-        ? isOpenAiErrorRetryable(input.error)
-        : input.error.isRetryable,
-      responseHeaders: input.error.responseHeaders,
-      responseBody: input.error.responseBody,
-      metadata,
-    }
+export function parseAPICallError(input: { providerID: ProviderID; error: APICallError }): ParsedAPICallError {
+  const m = message(input.providerID, input.error)
+  const body = json(input.error.responseBody)
+  if (isOverflow(m) || input.error.statusCode === 413 || body?.error?.code === "context_length_exceeded") {
+    return { type: "context_overflow", message: m, responseBody: input.error.responseBody }
+  }
+  const metadata = input.error.url ? { url: input.error.url } : undefined
+  return {
+    type: "api_error",
+    message: m,
+    statusCode: input.error.statusCode,
+    isRetryable: input.providerID.startsWith("openai")
+      ? isOpenAiErrorRetryable(input.error)
+      : input.error.isRetryable,
+    responseHeaders: input.error.responseHeaders,
+    responseBody: input.error.responseBody,
+    metadata,
   }
 }
+
+export * as ProviderError from "."
 ```
 
 **Step 2 -- MessageV2.fromError** converts any thrown error into the typed discriminated union:
@@ -978,25 +878,25 @@ export function errorHandler(log: Log.Logger): ErrorHandler {
 ### Database Initialization
 
 ```typescript
-// storage/db.ts
-export namespace Database {
-  export const Path = iife(() => {
-    if (Flag.OPENCODE_DB) { /* custom path */ }
-    return getChannelPath()
-  })
+// storage/db.ts — flat module, closed by `export * as Database from "./db"`
+export const Path = iife(() => {
+  if (Flag.OPENCODE_DB) { /* custom path */ }
+  return getChannelPath()
+})
 
-  export const Client = lazy(() => {
-    const db = init(Path)
-    db.run("PRAGMA journal_mode = WAL")
-    db.run("PRAGMA synchronous = NORMAL")
-    db.run("PRAGMA busy_timeout = 5000")
-    db.run("PRAGMA cache_size = -64000")
-    db.run("PRAGMA foreign_keys = ON")
-    db.run("PRAGMA wal_checkpoint(PASSIVE)")
-    // Apply migrations
-    return db
-  })
-}
+export const Client = lazy(() => {
+  const db = init(Path)
+  db.run("PRAGMA journal_mode = WAL")
+  db.run("PRAGMA synchronous = NORMAL")
+  db.run("PRAGMA busy_timeout = 5000")
+  db.run("PRAGMA cache_size = -64000")
+  db.run("PRAGMA foreign_keys = ON")
+  db.run("PRAGMA wal_checkpoint(PASSIVE)")
+  // Apply migrations
+  return db
+})
+
+export * as Database from "./db"
 ```
 
 `Client` uses `lazy()` so the database is opened on first use, not on import. Different release channels use different database files via `getChannelPath()`. The `init` function is platform-conditional: Bun uses `bun:sqlite`, Node uses `node:sqlite` (22+), selected via `#db` import alias.
@@ -1005,13 +905,13 @@ export namespace Database {
 
 ```typescript
 // storage/db.ts
-const ctx = Context.create<{ tx: TxOrDb; effects: (() => void | Promise<void>)[] }>("database")
+const ctx = LocalContext.create<{ tx: TxOrDb; effects: (() => void | Promise<void>)[] }>("database")
 
 export function use<T>(callback: (trx: TxOrDb) => T): T {
   try {
     return callback(ctx.use().tx)
   } catch (err) {
-    if (err instanceof Context.NotFound) {
+    if (err instanceof LocalContext.NotFound) {
       const effects: (() => void | Promise<void>)[] = []
       const result = ctx.provide({ effects, tx: Client() }, () => callback(Client()))
       for (const effect of effects) effect()
@@ -1022,7 +922,7 @@ export function use<T>(callback: (trx: TxOrDb) => T): T {
 }
 ```
 
-If already inside a transaction or context, reuses the existing connection. If no context exists (`Context.NotFound`), auto-creates one with the raw client. Effects queued during the callback are flushed immediately after (since there is no transaction to wait for).
+If already inside a transaction or context, reuses the existing connection. If no context exists (`LocalContext.NotFound`), auto-creates one with the raw client. Effects queued during the callback are flushed immediately after (since there is no transaction to wait for).
 
 ### Database.transaction -- Write Context with Behavior
 
@@ -1035,7 +935,7 @@ export function transaction<T>(
   try {
     return callback(ctx.use().tx)
   } catch (err) {
-    if (err instanceof Context.NotFound) {
+    if (err instanceof LocalContext.NotFound) {
       const effects: (() => void | Promise<void>)[] = []
       const result = Client().transaction(
         (tx: TxOrDb) => ctx.provide({ tx, effects }, () => callback(tx)),
@@ -1049,7 +949,7 @@ export function transaction<T>(
 }
 ```
 
-**Reentrant**: if already inside a transaction, the callback receives the existing `tx` without nesting. New transactions propagate via `AsyncLocalStorage` (`Context.create`). Effects are flushed AFTER the transaction commits.
+**Reentrant**: if already inside a transaction, the callback receives the existing `tx` without nesting. New transactions propagate via `AsyncLocalStorage` (`LocalContext.create`). Effects are flushed AFTER the transaction commits.
 
 `NotPromise<T>` prevents async callbacks -- SQLite transactions are synchronous. Use `{ behavior: "immediate" }` for write transactions that need read consistency (like sequence number increment in `SyncEvent.run`).
 
@@ -1076,35 +976,35 @@ Database.transaction((tx) => {
 })
 ```
 
-### The Context.NotFound Pattern
+### The LocalLocalContext.NotFound Pattern
 
-The `Context` module wraps `AsyncLocalStorage`:
+opencode's own `AsyncLocalStorage` wrapper was renamed from `Context` to **`LocalContext`** (`@/util/local-context`) so it no longer collides with Effect's `Context` (the DI/service namespace). It is a flat module closed by a self-barrel:
 
 ```typescript
-// util/context.ts
-export namespace Context {
-  export class NotFound extends Error {
-    constructor(public override readonly name: string) {
-      super(`No context found for ${name}`)
-    }
-  }
-
-  export function create<T>(name: string) {
-    const storage = new AsyncLocalStorage<T>()
-    return {
-      use() {
-        const result = storage.getStore()
-        if (!result) {
-          throw new NotFound(name)
-        }
-        return result
-      },
-      provide<R>(value: T, fn: () => R) {
-        return storage.run(value, fn)
-      },
-    }
+// util/local-context.ts
+export class NotFound extends Error {
+  constructor(public override readonly name: string) {
+    super(`No context found for ${name}`)
   }
 }
+
+export function create<T>(name: string) {
+  const storage = new AsyncLocalStorage<T>()
+  return {
+    use() {
+      const result = storage.getStore()
+      if (!result) {
+        throw new NotFound(name)
+      }
+      return result
+    },
+    provide<R>(value: T, fn: () => R) {
+      return storage.run(value, fn)
+    },
+  }
+}
+
+export * as LocalContext from "./local-context"
 ```
 
-Both `Database.use()` and `Database.transaction()` try `ctx.use()` first. If it throws `Context.NotFound`, they auto-create a root context. This means callers never need to explicitly set up a database context -- the first database call in a call stack creates it automatically.
+Both `Database.use()` and `Database.transaction()` try `ctx.use()` first. If it throws `LocalLocalContext.NotFound`, they auto-create a root context. This means callers never need to explicitly set up a database context -- the first database call in a call stack creates it automatically. (This `LocalContext` is unrelated to Effect's `Context`/`Context.Service` used for DI elsewhere.)

@@ -9,61 +9,61 @@ Real code from `packages/opencode/src/server/`, `config/`, `plugin/`, `project/`
 Hono app with layered middleware. `ControlPlaneRoutes` is the top-level app; `InstanceRoutes` is mounted as the catch-all via `WorkspaceRouterMiddleware`.
 
 ```typescript
-export namespace Server {
-  export const ControlPlaneRoutes = (opts?: { cors?: string[] }): Hono => {
-    const app = new Hono()
-    return app
-      .onError(errorHandler(log))
-      // Basic auth guard (skips OPTIONS for CORS preflight)
-      .use((c, next) => {
-        if (c.req.method === "OPTIONS") return next()
-        const password = Flag.OPENCODE_SERVER_PASSWORD
-        if (!password) return next()
-        const username = Flag.OPENCODE_SERVER_USERNAME ?? "opencode"
-        return basicAuth({ username, password })(c, next)
-      })
-      // Request logging + timing
-      .use(async (c, next) => {
-        const skip = c.req.path === "/log"
-        if (!skip) log.info("request", { method: c.req.method, path: c.req.path })
-        const timer = log.time("request", { method: c.req.method, path: c.req.path })
-        await next()
-        if (!skip) timer.stop()
-      })
-      // CORS whitelist
-      .use(cors({
-        maxAge: 86_400,
-        origin(input) {
-          if (!input) return
-          if (input.startsWith("http://localhost:")) return input
-          if (input.startsWith("http://127.0.0.1:")) return input
-          if (/^https:\/\/([a-z0-9-]+\.)*opencode\.ai$/.test(input)) return input
-          if (opts?.cors?.includes(input)) return input
-        },
-      }))
-      // Selective compression (skip SSE and streaming endpoints)
-      .use((c, next) => {
-        if (skipCompress(c.req.path, c.req.method)) return next()
-        return zipped(c, next)
-      })
-      .route("/global", GlobalRoutes())
-      // ... auth routes, log route
-      .use(WorkspaceRouterMiddleware)
-  }
-
-  export function listen(opts: { port; hostname; mdns?; mdnsDomain?; cors? }) {
-    url = new URL(`http://${opts.hostname}:${opts.port}`)
-    const app = ControlPlaneRoutes({ cors: opts.cors })
-    const tryServe = (port: number) => {
-      try { return Bun.serve({ hostname: opts.hostname, idleTimeout: 0, fetch: app.fetch, websocket, port }) }
-      catch { return undefined }
-    }
-    const server = opts.port === 0 ? (tryServe(4096) ?? tryServe(0)) : tryServe(opts.port)
-    if (!server) throw new Error(`Failed to start server on port ${opts.port}`)
-    if (shouldPublishMDNS) MDNS.publish(server.port!, opts.mdnsDomain)
-    return server
-  }
+export const ControlPlaneRoutes = (opts?: { cors?: string[] }): Hono => {
+  const app = new Hono()
+  return app
+    .onError(errorHandler(log))
+    // Basic auth guard (skips OPTIONS for CORS preflight)
+    .use((c, next) => {
+      if (c.req.method === "OPTIONS") return next()
+      const password = Flag.OPENCODE_SERVER_PASSWORD
+      if (!password) return next()
+      const username = Flag.OPENCODE_SERVER_USERNAME ?? "opencode"
+      return basicAuth({ username, password })(c, next)
+    })
+    // Request logging + timing
+    .use(async (c, next) => {
+      const skip = c.req.path === "/log"
+      if (!skip) log.info("request", { method: c.req.method, path: c.req.path })
+      const timer = log.time("request", { method: c.req.method, path: c.req.path })
+      await next()
+      if (!skip) timer.stop()
+    })
+    // CORS whitelist
+    .use(cors({
+      maxAge: 86_400,
+      origin(input) {
+        if (!input) return
+        if (input.startsWith("http://localhost:")) return input
+        if (input.startsWith("http://127.0.0.1:")) return input
+        if (/^https:\/\/([a-z0-9-]+\.)*opencode\.ai$/.test(input)) return input
+        if (opts?.cors?.includes(input)) return input
+      },
+    }))
+    // Selective compression (skip SSE and streaming endpoints)
+    .use((c, next) => {
+      if (skipCompress(c.req.path, c.req.method)) return next()
+      return zipped(c, next)
+    })
+    .route("/global", GlobalRoutes())
+    // ... auth routes, log route
+    .use(WorkspaceRouterMiddleware)
 }
+
+export function listen(opts: { port; hostname; mdns?; mdnsDomain?; cors? }) {
+  url = new URL(`http://${opts.hostname}:${opts.port}`)
+  const app = ControlPlaneRoutes({ cors: opts.cors })
+  const tryServe = (port: number) => {
+    try { return Bun.serve({ hostname: opts.hostname, idleTimeout: 0, fetch: app.fetch, websocket, port }) }
+    catch { return undefined }
+  }
+  const server = opts.port === 0 ? (tryServe(4096) ?? tryServe(0)) : tryServe(opts.port)
+  if (!server) throw new Error(`Failed to start server on port ${opts.port}`)
+  if (shouldPublishMDNS) MDNS.publish(server.port!, opts.mdnsDomain)
+  return server
+}
+
+export * as Server from "."
 ```
 
 Middleware execution order per request:
@@ -134,7 +134,7 @@ Directory resolution priority: `?directory=` query > `x-opencode-directory` head
 
 ## 3. Route Pattern
 
-Every route file exports a `lazy(() => new Hono().METHOD(...))` factory. Each endpoint uses three layers: `describeRoute` (OpenAPI metadata) + `validator` (Zod input validation) + async handler.
+Every route file exports a `lazy(() => new Hono().METHOD(...))` factory. Each endpoint uses three layers: `describeRoute` (OpenAPI metadata) + `validator` (Effect Schema input validation) + async handler.
 
 ### `lazy` helper (`util/lazy.ts`)
 
@@ -166,6 +166,7 @@ export function lazy<T>(fn: () => T) {
 ### Imports used in route files
 
 ```typescript
+import { Schema } from "effect"
 import { Hono } from "hono"
 import { describeRoute } from "hono-openapi"
 import { resolver, validator } from "hono-openapi/zod"
@@ -227,16 +228,16 @@ export const SessionRoutes = lazy(() =>
         responses: {
           200: {
             description: "Sessions list",
-            content: { "application/json": { schema: resolver(z.array(Session.Info)) } },
+            content: { "application/json": { schema: resolver(Schema.Array(Session.Info)) } },
           },
         },
       }),
-      validator("query", z.object({
-        directory: z.string().optional(),
-        roots: z.coerce.boolean().optional(),
-        start: z.coerce.number().optional(),
-        search: z.string().optional(),
-        limit: z.coerce.number().optional(),
+      validator("query", Schema.Struct({
+        directory: Schema.optional(Schema.String),
+        roots: Schema.optional(Schema.Boolean),
+        start: Schema.optional(Schema.Number),
+        search: Schema.optional(Schema.String),
+        limit: Schema.optional(Schema.Number),
       })),
       async (c) => {
         const query = c.req.valid("query")
@@ -266,11 +267,11 @@ export const XxxRoutes = lazy(() =>
         summary: "...",
         operationId: "namespace.action",
         responses: {
-          200: { description: "...", content: { "application/json": { schema: resolver(ZodSchema) } } },
+          200: { description: "...", content: { "application/json": { schema: resolver(SchemaStruct) } } },
           ...errors(400, 404),  // optional error codes
         },
       }),
-      validator("json" | "query" | "param", ZodSchema),  // optional per-source
+      validator("json" | "query" | "param", SchemaStruct),  // optional per-source
       async (c) => {
         const data = c.req.valid("json" | "query" | "param")
         // call domain module directly (Config.get(), Session.list(), etc.)
@@ -282,10 +283,10 @@ export const XxxRoutes = lazy(() =>
 
 Key rules:
 - Route files call domain modules directly -- no controller layer.
-- `resolver(schema)` wraps a Zod schema for OpenAPI doc generation.
+- `resolver(schema)` wraps an Effect Schema for OpenAPI doc generation.
 - `validator("json", schema)` validates + parses the request body; `"query"` for query params, `"param"` for URL params.
 - `c.req.valid("json")` returns the parsed, typed data.
-- Query params that are numbers use `z.coerce.number()`, booleans use `z.coerce.boolean()`.
+- Query params that are numbers use `Schema.Number`, booleans use `Schema.Boolean`.
 - `errors(400)` and `errors(400, 404)` add standard OpenAPI error response schemas.
 - Every route factory is wrapped in `lazy()` for deferred initialization.
 
@@ -293,47 +294,45 @@ Key rules:
 
 ## 4. Error Middleware (`server/middleware.ts` + `server/error.ts`)
 
-### NamedError Base Class (`packages/util/src/error.ts`)
+### NamedError Base Class (`core/util/error.ts`)
 
 ```typescript
 export abstract class NamedError extends Error {
-  abstract schema(): z.core.$ZodType
-  abstract toObject(): { name: string; data: any }
+  abstract schema(): Schema.Top
+  abstract toObject(): { name: string; data: unknown }
 
-  static create<Name extends string, Data extends z.core.$ZodType>(name: Name, data: Data) {
-    const schema = z
-      .object({
-        name: z.literal(name),
-        data,
-      })
-      .meta({ ref: name })
+  // `data` is an object of Schema fields (sugar for Schema.Struct) or a full Schema
+  static create<Name extends string>(name: Name, data: Schema.Top | Schema.Struct.Fields) {
+    const dataSchema = Schema.isSchema(data) ? data : Schema.Struct(data)
+    const schema = Schema.Struct({
+      name: Schema.Literal(name),
+      data: dataSchema,
+    }).annotate({ identifier: name })
     const result = class extends NamedError {
       public static readonly Schema = schema
-      public override readonly name = name as Name
+      public static readonly tag = name
+      public override readonly name = name
 
       constructor(
-        public readonly data: z.input<Data>,
+        public readonly data: Schema.Schema.Type<typeof dataSchema>,
         options?: ErrorOptions,
       ) {
         super(name, options)
         this.name = name
       }
 
-      static isInstance(input: any): input is InstanceType<typeof result> {
-        return typeof input === "object" && "name" in input && input.name === name
+      static isInstance(input: unknown): input is InstanceType<typeof result> {
+        return NamedError.hasName(input, name)
       }
 
       schema() { return schema }
-      toObject() { return { name: name, data: this.data } }
+      toObject() { return { name, data: this.data } }
     }
     Object.defineProperty(result, "name", { value: name })
     return result
   }
 
-  public static readonly Unknown = NamedError.create(
-    "UnknownError",
-    z.object({ message: z.string() }),
-  )
+  public static readonly Unknown = NamedError.create("UnknownError", { message: Schema.String })
 }
 ```
 
@@ -366,11 +365,11 @@ export const ERRORS = {
     content: {
       "application/json": {
         schema: resolver(
-          z.object({
-            data: z.any(),
-            errors: z.array(z.record(z.string(), z.any())),
-            success: z.literal(false),
-          }).meta({ ref: "BadRequestError" }),
+          Schema.Struct({
+            data: Schema.Any,
+            errors: Schema.Array(Schema.Record(Schema.String, Schema.Any)),
+            success: Schema.Literal(false),
+          }).annotate({ identifier: "BadRequestError" }),
         ),
       },
     },
@@ -411,45 +410,45 @@ All error responses are `{ name: string, data: any }` -- the `toObject()` shape.
 ### Config File Discovery (`config/paths.ts`)
 
 ```typescript
-export namespace ConfigPaths {
-  export async function projectFiles(name: string, directory: string, worktree: string) {
-    const files: string[] = []
-    for (const file of [`${name}.jsonc`, `${name}.json`]) {
-      const found = await Filesystem.findUp(file, directory, worktree)
-      for (const resolved of found.toReversed()) {
-        files.push(resolved)
-      }
+export async function projectFiles(name: string, directory: string, worktree: string) {
+  const files: string[] = []
+  for (const file of [`${name}.jsonc`, `${name}.json`]) {
+    const found = await Filesystem.findUp(file, directory, worktree)
+    for (const resolved of found.toReversed()) {
+      files.push(resolved)
     }
-    return files
   }
-
-  export async function directories(directory: string, worktree: string) {
-    return [
-      Global.Path.config,
-      ...(!Flag.OPENCODE_DISABLE_PROJECT_CONFIG
-        ? await Array.fromAsync(
-            Filesystem.up({
-              targets: [".opencode"],
-              start: directory,
-              stop: worktree,
-            }),
-          )
-        : []),
-      ...(await Array.fromAsync(
-        Filesystem.up({
-          targets: [".opencode"],
-          start: Global.Path.home,
-          stop: Global.Path.home,
-        }),
-      )),
-      ...(Flag.OPENCODE_CONFIG_DIR ? [Flag.OPENCODE_CONFIG_DIR] : []),
-    ]
-  }
-
-  export function fileInDirectory(dir: string, name: string) {
-    return [path.join(dir, `${name}.jsonc`), path.join(dir, `${name}.json`)]
-  }
+  return files
 }
+
+export async function directories(directory: string, worktree: string) {
+  return [
+    Global.Path.config,
+    ...(!Flag.OPENCODE_DISABLE_PROJECT_CONFIG
+      ? await Array.fromAsync(
+          Filesystem.up({
+            targets: [".opencode"],
+            start: directory,
+            stop: worktree,
+          }),
+        )
+      : []),
+    ...(await Array.fromAsync(
+      Filesystem.up({
+        targets: [".opencode"],
+        start: Global.Path.home,
+        stop: Global.Path.home,
+      }),
+    )),
+    ...(Flag.OPENCODE_CONFIG_DIR ? [Flag.OPENCODE_CONFIG_DIR] : []),
+  ]
+}
+
+export function fileInDirectory(dir: string, name: string) {
+  return [path.join(dir, `${name}.jsonc`), path.join(dir, `${name}.json`)]
+}
+
+export * as ConfigPaths from "."
 ```
 
 ### Config Merge Order (lowest to highest priority)
@@ -679,116 +678,115 @@ export async function installDependencies(dir: string, input?: InstallInput) {
 ### Effect Service Definition
 
 ```typescript
-export namespace Plugin {
-  type TriggerName = {
-    [K in keyof Hooks]-?: NonNullable<Hooks[K]> extends (input: any, output: any) => Promise<void> ? K : never
-  }[keyof Hooks]
+type TriggerName = {
+  [K in keyof Hooks]-?: NonNullable<Hooks[K]> extends (input: any, output: any) => Promise<void> ? K : never
+}[keyof Hooks]
 
-  export interface Interface {
-    readonly trigger: <Name extends TriggerName, Input, Output>(
-      name: Name, input: Input, output: Output,
-    ) => Effect.Effect<Output>
-    readonly list: () => Effect.Effect<Hooks[]>
-    readonly init: () => Effect.Effect<void>
-  }
+export interface Interface {
+  readonly trigger: <Name extends TriggerName, Input, Output>(
+    name: Name, input: Input, output: Output,
+  ) => Effect.Effect<Output>
+  readonly list: () => Effect.Effect<Hooks[]>
+  readonly init: () => Effect.Effect<void>
+}
 
-  export class Service extends ServiceMap.Service<Service, Interface>()("@opencode/Plugin") {}
+export class Service extends Context.Service<Service, Interface>()("@opencode/Plugin") {}
 
-  const INTERNAL_PLUGINS: PluginInstance[] = [CodexAuthPlugin, CopilotAuthPlugin, GitlabAuthPlugin, PoeAuthPlugin]
+const INTERNAL_PLUGINS: PluginInstance[] = [CodexAuthPlugin, CopilotAuthPlugin, GitlabAuthPlugin, PoeAuthPlugin]
 ```
 
 ### Init Sequence (local SDK client, internal then external, hook fanout)
 
 ```typescript
-  export const layer = Layer.effect(
-    Service,
-    Effect.gen(function* () {
-      const bus = yield* Bus.Service
-      const config = yield* Config.Service
+export const layer = Layer.effect(
+  Service,
+  Effect.gen(function* () {
+    const bus = yield* Bus.Service
+    const config = yield* Config.Service
 
-      const cache = yield* InstanceState.make<State>(
-        Effect.fn("Plugin.state")(function* (ctx) {
-          const hooks: Hooks[] = []
+    const cache = yield* InstanceState.make<State>(
+      Effect.fn("Plugin.state")(function* (ctx) {
+        const hooks: Hooks[] = []
 
-          // Step 1: Create local SDK client (in-process fetch, no network)
-          const { Server } = yield* Effect.promise(() => import("../server/server"))
-          const client = createOpencodeClient({
-            baseUrl: "http://localhost:4096",
-            directory: ctx.directory,
-            headers: Flag.OPENCODE_SERVER_PASSWORD ? { /* basic auth */ } : undefined,
-            fetch: async (...args) => Server.Default().fetch(...args),
-          })
-          const cfg = yield* config.get()
-          const input: PluginInput = {
-            client, project: ctx.project, worktree: ctx.worktree,
-            directory: ctx.directory,
-            get serverUrl(): URL { return Server.url ?? new URL("http://localhost:4096") },
-            $: Bun.$,
-          }
+        // Step 1: Create local SDK client (in-process fetch, no network)
+        const { Server } = yield* Effect.promise(() => import("../server/server"))
+        const client = createOpencodeClient({
+          baseUrl: "http://localhost:4096",
+          directory: ctx.directory,
+          headers: Flag.OPENCODE_SERVER_PASSWORD ? { /* basic auth */ } : undefined,
+          fetch: async (...args) => Server.Default().fetch(...args),
+        })
+        const cfg = yield* config.get()
+        const input: PluginInput = {
+          client, project: ctx.project, worktree: ctx.worktree,
+          directory: ctx.directory,
+          get serverUrl(): URL { return Server.url ?? new URL("http://localhost:4096") },
+          $: Bun.$,
+        }
 
-          // Step 2: Load internal plugins first
-          for (const plugin of INTERNAL_PLUGINS) {
-            const init = yield* Effect.tryPromise({
-              try: () => plugin(input),
-              catch: (err) => { log.error("failed to load internal plugin", { name: plugin.name, error: err }) },
-            }).pipe(Effect.option)
-            if (init._tag === "Some") hooks.push(init.value)
-          }
+        // Step 2: Load internal plugins first
+        for (const plugin of INTERNAL_PLUGINS) {
+          const init = yield* Effect.tryPromise({
+            try: () => plugin(input),
+            catch: (err) => { log.error("failed to load internal plugin", { name: plugin.name, error: err }) },
+          }).pipe(Effect.option)
+          if (init._tag === "Some") hooks.push(init.value)
+        }
 
-          // Step 3: Load external plugins (sequential for deterministic hook order)
-          const plugins = Flag.OPENCODE_PURE ? [] : (cfg.plugin ?? [])
-          if (plugins.length) yield* config.waitForDependencies()
+        // Step 3: Load external plugins (sequential for deterministic hook order)
+        const plugins = Flag.OPENCODE_PURE ? [] : (cfg.plugin ?? [])
+        if (plugins.length) yield* config.waitForDependencies()
 
-          const loaded = yield* Effect.promise(() => Promise.all(plugins.map((item) => prepPlugin(item))))
-          for (const load of loaded) {
-            if (!load) continue
-            yield* Effect.tryPromise({
-              try: () => applyPlugin(load, input, hooks),
-              catch: (err) => { /* error handling */ },
-            }).pipe(Effect.catch((message) => bus.publish(Session.Event.Error, { /* ... */ })))
-          }
+        const loaded = yield* Effect.promise(() => Promise.all(plugins.map((item) => prepPlugin(item))))
+        for (const load of loaded) {
+          if (!load) continue
+          yield* Effect.tryPromise({
+            try: () => applyPlugin(load, input, hooks),
+            catch: (err) => { /* error handling */ },
+          }).pipe(Effect.catch((message) => bus.publish(Session.Event.Error, { /* ... */ })))
+        }
 
-          // Step 4: Notify plugins of current config
-          for (const hook of hooks) {
-            yield* Effect.tryPromise({
-              try: () => Promise.resolve((hook as any).config?.(cfg)),
-            }).pipe(Effect.ignore)
-          }
+        // Step 4: Notify plugins of current config
+        for (const hook of hooks) {
+          yield* Effect.tryPromise({
+            try: () => Promise.resolve((hook as any).config?.(cfg)),
+          }).pipe(Effect.ignore)
+        }
 
-          // Step 5: Subscribe to bus events and fan out to all plugins
-          yield* bus.subscribeAll().pipe(
-            Stream.runForEach((input) =>
-              Effect.sync(() => {
-                for (const hook of hooks) {
-                  hook["event"]?.({ event: input as any })
-                }
-              }),
-            ),
-            Effect.forkScoped,
-          )
+        // Step 5: Subscribe to bus events and fan out to all plugins
+        yield* bus.subscribeAll().pipe(
+          Stream.runForEach((input) =>
+            Effect.sync(() => {
+              for (const hook of hooks) {
+                hook["event"]?.({ event: input as any })
+              }
+            }),
+          ),
+          Effect.forkScoped,
+        )
 
-          return { hooks }
-        }),
-      )
+        return { hooks }
+      }),
+    )
 ```
 
 ### Hook Trigger Fanout
 
 ```typescript
-      const trigger = Effect.fn("Plugin.trigger")(function* <
-        Name extends TriggerName,
-        Input = Parameters<Required<Hooks>[Name]>[0],
-        Output = Parameters<Required<Hooks>[Name]>[1],
-      >(name: Name, input: Input, output: Output) {
-        if (!name) return output
-        const state = yield* InstanceState.get(cache)
-        for (const hook of state.hooks) {
-          const fn = hook[name] as any
-          if (!fn) continue
-          yield* Effect.promise(() => fn(input, output))
-        }
-        return output
-      })
+    const trigger = Effect.fn("Plugin.trigger")(function* <
+      Name extends TriggerName,
+      Input = Parameters<Required<Hooks>[Name]>[0],
+      Output = Parameters<Required<Hooks>[Name]>[1],
+    >(name: Name, input: Input, output: Output) {
+      if (!name) return output
+      const state = yield* InstanceState.get(cache)
+      for (const hook of state.hooks) {
+        const fn = hook[name] as any
+        if (!fn) continue
+        yield* Effect.promise(() => fn(input, output))
+      }
+      return output
+    })
 ```
 
 ### Plugin Resolution (`plugin/shared.ts`)
@@ -828,26 +826,27 @@ export async function resolvePluginEntrypoint(spec: string, target: string, kind
 ### Export Dedup and Promise API
 
 ```typescript
-  export const defaultLayer = layer.pipe(
-    Layer.provide(Bus.layer),
-    Layer.provide(Config.defaultLayer),
-  )
-  const { runPromise } = makeRuntime(Service, defaultLayer)
+export const defaultLayer = layer.pipe(
+  Layer.provide(Bus.layer),
+  Layer.provide(Config.defaultLayer),
+)
+const { runPromise } = makeRuntime(Service, defaultLayer)
 
-  export async function trigger<Name extends TriggerName, Input, Output>(
-    name: Name, input: Input, output: Output,
-  ): Promise<Output> {
-    return runPromise((svc) => svc.trigger(name, input, output))
-  }
-
-  export async function list(): Promise<Hooks[]> {
-    return runPromise((svc) => svc.list())
-  }
-
-  export async function init() {
-    return runPromise((svc) => svc.init())
-  }
+export async function trigger<Name extends TriggerName, Input, Output>(
+  name: Name, input: Input, output: Output,
+): Promise<Output> {
+  return runPromise((svc) => svc.trigger(name, input, output))
 }
+
+export async function list(): Promise<Hooks[]> {
+  return runPromise((svc) => svc.list())
+}
+
+export async function init() {
+  return runPromise((svc) => svc.init())
+}
+
+export * as Plugin from "."
 ```
 
 Plugin lifecycle summary:
@@ -929,38 +928,38 @@ export const Instance = {
 Per-directory state keyed by `init` function identity:
 
 ```typescript
-export namespace State {
-  const recordsByKey = new Map<string, Map<any, Entry>>()
+const recordsByKey = new Map<string, Map<any, Entry>>()
 
-  export function create<S>(root: () => string, init: () => S, dispose?: (state: Awaited<S>) => Promise<void>) {
-    return () => {
-      const key = root()
-      let entries = recordsByKey.get(key)
-      if (!entries) {
-        entries = new Map<string, Entry>()
-        recordsByKey.set(key, entries)
-      }
-      const exists = entries.get(init)
-      if (exists) return exists.state as S
-      const state = init()
-      entries.set(init, { state, dispose })
-      return state
+export function create<S>(root: () => string, init: () => S, dispose?: (state: Awaited<S>) => Promise<void>) {
+  return () => {
+    const key = root()
+    let entries = recordsByKey.get(key)
+    if (!entries) {
+      entries = new Map<string, Entry>()
+      recordsByKey.set(key, entries)
     }
-  }
-
-  export async function dispose(key: string) {
-    const entries = recordsByKey.get(key)
-    if (!entries) return
-    const tasks: Promise<void>[] = []
-    for (const [init, entry] of entries) {
-      if (!entry.dispose) continue
-      tasks.push(Promise.resolve(entry.state).then((state) => entry.dispose!(state)).catch(/* ... */))
-    }
-    await Promise.all(tasks)
-    entries.clear()
-    recordsByKey.delete(key)
+    const exists = entries.get(init)
+    if (exists) return exists.state as S
+    const state = init()
+    entries.set(init, { state, dispose })
+    return state
   }
 }
+
+export async function dispose(key: string) {
+  const entries = recordsByKey.get(key)
+  if (!entries) return
+  const tasks: Promise<void>[] = []
+  for (const [init, entry] of entries) {
+    if (!entry.dispose) continue
+    tasks.push(Promise.resolve(entry.state).then((state) => entry.dispose!(state)).catch(/* ... */))
+  }
+  await Promise.all(tasks)
+  entries.clear()
+  recordsByKey.delete(key)
+}
+
+export * as State from "."
 ```
 
 ### Instance Bootstrap (`project/bootstrap.ts`)

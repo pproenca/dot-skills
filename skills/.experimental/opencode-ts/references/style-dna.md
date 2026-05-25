@@ -114,13 +114,13 @@ return prefixes[prefix] + "_" + hexPart + randomPart
 From `permission/index.ts` -- the `reply` method:
 
 ```ts
-const reply = Effect.fn("Permission.reply")(function* (input: z.infer<typeof ReplyInput>) {
+const reply = Effect.fn("Permission.reply")(function* (input: ReplyInput) {
   const { approved, pending } = yield* InstanceState.get(state)
   const existing = pending.get(input.requestID)
-  if (!existing) return                          // early return, no else
+  if (!existing) return yield* new NotFoundError({ requestID: input.requestID })  // early return, no else
 
   pending.delete(input.requestID)
-  void Bus.publish(Event.Replied, {
+  yield* bus.publish(Event.Replied, {            // bus = yield* Bus.Service, acquired in the layer
     sessionID: existing.info.sessionID,
     requestID: existing.info.id,
     reply: input.reply,
@@ -223,19 +223,18 @@ import os from "os"
 import { randomBytes } from "crypto"
 
 // 2. Effect ecosystem (effect, effect/unstable/*)
-import { Deferred, Effect, Layer, Schema, ServiceMap } from "effect"
+import { Deferred, Effect, Layer, Schema, Context } from "effect"
 
 // 3. External packages
-import z from "zod"
+import { eq } from "drizzle-orm"
 import launch from "cross-spawn"
 
-// 4. Internal @/ absolute imports (deep -> shallow)
+// 4. Shared core package + internal @/ absolute imports (deep -> shallow)
+import * as Log from "@opencode-ai/core/util/log"
 import { Bus } from "@/bus"
 import { BusEvent } from "@/bus/bus-event"
 import { InstanceState } from "@/effect/instance-state"
-import { makeRuntime } from "@/effect/run-service"
 import { SessionID, MessageID } from "@/session/schema"
-import { Log } from "@/util/log"
 
 // 5. Relative sibling imports (always last)
 import { QuestionID } from "./schema"
@@ -243,115 +242,113 @@ import { QuestionID } from "./schema"
 
 ### Key conventions
 
-- `effect` imports are destructured from the main package: `{ Effect, Layer, Schema, ServiceMap }`
-- `ServiceMap` specifically: `import * as ServiceMap from "effect/ServiceMap"` in infrastructure, but `{ ServiceMap }` from `"effect"` in modules
-- Zod is always `import z from "zod"` (default import, lowercase `z`)
-- Internal paths use `@/` prefix (configured in tsconfig): `@/bus`, `@/util/log`, `@/effect/run-service`
+- `effect` imports are destructured from the main package: `{ Effect, Layer, Schema, Context }` — `Context` is the DI/service namespace (was `ServiceMap` in early v4-beta).
+- Effect `Schema` is the schema tool everywhere — there is no `import z from "zod"` in module code anymore.
+- Framework-agnostic shared logic comes from `@opencode-ai/core/*` (e.g. `@opencode-ai/core/util/log`, `@opencode-ai/core/schema`, `@opencode-ai/core/permission`); app wiring uses the `@/` prefix (`@/bus`, `@/effect/run-service`).
 - Schema files import from sibling: `import { QuestionID } from "./schema"`
 - SQL table files import from sibling: `import { AccountTable } from "./account.sql"`
 - Never barrel imports. Always import from the specific file.
 
 ---
 
-## 5. Namespace Shape -- Standard Anatomy
+## 5. Module Shape -- Standard Anatomy
 
-Every service module follows this exact structure inside `export namespace X { }`:
+Every service module is **flat top-level exports** closed by a self-barrel. There is no in-file `export namespace X { }` — `export * as X from "."` at the bottom is what makes `import { X } from "@/x"` resolve to a namespace.
 
 ```ts
-export namespace Question {
-  // ---- Private setup ----
-  const log = Log.create({ service: "question" })
+import { Deferred, Effect, Layer, Schema, Context } from "effect"
+import { Bus } from "@/bus"
+import { BusEvent } from "@/bus/bus-event"
+import { InstanceState } from "@/effect/instance-state"
+import * as Log from "@opencode-ai/core/util/log"
+import { QuestionID } from "./schema"
 
-  // ---- Zod schemas (API-facing) ----
-  export const Option = z.object({ ... }).meta({ ref: "QuestionOption" })
-  export type Option = z.infer<typeof Option>
+// ---- Private setup ----
+const log = Log.create({ service: "question" })
 
-  export const Info = z.object({ ... }).meta({ ref: "QuestionInfo" })
-  export type Info = z.infer<typeof Info>
+// ---- Effect Schemas (data + API-facing) ----
+export const Option = Schema.Struct({ ... }).annotate({ identifier: "QuestionOption" })
+export type Option = Schema.Schema.Type<typeof Option>
 
-  export const Request = z.object({ ... }).meta({ ref: "QuestionRequest" })
-  export type Request = z.infer<typeof Request>
+export const Info = Schema.Struct({ ... }).annotate({ identifier: "QuestionInfo" })
+export type Info = Schema.Schema.Type<typeof Info>
 
-  // ---- Bus events ----
-  export const Event = {
-    Asked: BusEvent.define("question.asked", Request),
-    Replied: BusEvent.define("question.replied", z.object({ ... })),
-  }
+export const Request = Schema.Struct({ ... }).annotate({ identifier: "QuestionRequest" })
+export type Request = Schema.Schema.Type<typeof Request>
 
-  // ---- Error classes (Effect Schema) ----
-  export class RejectedError extends Schema.TaggedErrorClass<RejectedError>()(
-    "QuestionRejectedError", {}
-  ) {
-    override get message() {
-      return "The user dismissed this question"
-    }
-  }
+// ---- Bus events ----
+export const Event = {
+  Asked: BusEvent.define("question.asked", Request),
+  Replied: BusEvent.define("question.replied", Schema.Struct({ ... })),
+}
 
-  // ---- Private types ----
-  interface PendingEntry {
-    info: Request
-    deferred: Deferred.Deferred<Answer[], RejectedError>
-  }
-
-  interface State {
-    pending: Map<QuestionID, PendingEntry>
-  }
-
-  // ---- Service interface ----
-  export interface Interface {
-    readonly ask: (...) => Effect.Effect<Answer[], RejectedError>
-    readonly reply: (...) => Effect.Effect<void>
-    readonly reject: (...) => Effect.Effect<void>
-    readonly list: () => Effect.Effect<Request[]>
-  }
-
-  // ---- Service tag ----
-  export class Service extends ServiceMap.Service<Service, Interface>()(
-    "@opencode/Question"
-  ) {}
-
-  // ---- Layer (the implementation) ----
-  export const layer = Layer.effect(
-    Service,
-    Effect.gen(function* () {
-      const state = yield* InstanceState.make<State>(
-        Effect.fn("Question.state")(function* () { ... })
-      )
-
-      const ask = Effect.fn("Question.ask")(function* (input) { ... })
-      const reply = Effect.fn("Question.reply")(function* (input) { ... })
-      const reject = Effect.fn("Question.reject")(function* (requestID) { ... })
-      const list = Effect.fn("Question.list")(function* () { ... })
-
-      return Service.of({ ask, reply, reject, list })
-    }),
-  )
-
-  // ---- Runtime bridge ----
-  const { runPromise } = makeRuntime(Service, layer)
-
-  // ---- Public async facade ----
-  export async function ask(input) {
-    return runPromise((s) => s.ask(input))
-  }
-
-  export async function reply(input) {
-    return runPromise((s) => s.reply(input))
+// ---- Error classes (Effect Schema) ----
+export class RejectedError extends Schema.TaggedErrorClass<RejectedError>()("QuestionRejectedError", {}) {
+  override get message() {
+    return "The user dismissed this question"
   }
 }
+
+// ---- Private types ----
+interface PendingEntry {
+  info: Request
+  deferred: Deferred.Deferred<ReadonlyArray<Answer>, RejectedError>
+}
+
+interface State {
+  pending: Map<QuestionID, PendingEntry>
+}
+
+// ---- Service interface ----
+export interface Interface {
+  readonly ask: (...) => Effect.Effect<ReadonlyArray<Answer>, RejectedError>
+  readonly reply: (...) => Effect.Effect<void, NotFoundError>
+  readonly reject: (...) => Effect.Effect<void, NotFoundError>
+  readonly list: () => Effect.Effect<ReadonlyArray<Request>>
+}
+
+// ---- Service class ----
+export class Service extends Context.Service<Service, Interface>()("@opencode/Question") {}
+
+// ---- Layer (the implementation) ----
+export const layer = Layer.effect(
+  Service,
+  Effect.gen(function* () {
+    const bus = yield* Bus.Service                 // dependencies acquired here, not via globals
+    const state = yield* InstanceState.make<State>(
+      Effect.fn("Question.state")(function* () { ... })
+    )
+
+    const ask = Effect.fn("Question.ask")(function* (input) { ... })
+    const reply = Effect.fn("Question.reply")(function* (input) { ... })
+    const reject = Effect.fn("Question.reject")(function* (requestID) { ... })
+    const list = Effect.fn("Question.list")(function* () { ... })
+
+    return Service.of({ ask, reply, reject, list })
+  }),
+)
+
+// ---- Default layer (wires this service's own dependencies) ----
+export const defaultLayer = layer.pipe(Layer.provide(Bus.layer))
+
+// ---- Self-barrel: THIS is the module's namespace ----
+export * as Question from "."
 ```
 
-### The 5-layer cake (never skip a layer)
+Question has **no `makeRuntime` facade** — every caller is in Effect-land (`const q = yield* Question.Service`). A `makeRuntime` + async facade is added only when imperative (non-Effect) code must call in (see `Bus`).
 
-| Layer | Purpose |
-|-------|---------|
+### The service pattern (skip the facade unless you need it)
+
+| Element | Purpose |
+|---------|---------|
 | **Interface** | Pure method signatures with `Effect.Effect<A, E>` returns |
-| **Service class** | `ServiceMap.Service<Self, Interface>()("@opencode/Name")` |
+| **Service class** | `Context.Service<Self, Interface>()("@opencode/Name")` |
 | **Layer** | `Layer.effect(Service, Effect.gen(function* () { ... return Service.of({...}) }))` |
-| **makeRuntime** | `const { runPromise } = makeRuntime(Service, layer)` |
-| **Public facade** | `export async function name() { return runPromise((s) => s.name()) }` |
+| **defaultLayer** | `layer.pipe(Layer.provide(Dep.layer))` — wires dependencies |
+| **Self-barrel** | `export * as Name from "."` at the file bottom |
+| **makeRuntime facade** *(optional)* | only for imperative callers: `makeRuntime(Service, layer)` + async wrappers |
 
-### Namespace naming
+### Module naming
 
 - Service tag: `"@opencode/Question"`, `"@opencode/Permission"`, `"@opencode/Auth"`
 - Effect.fn tracing: `"Question.ask"`, `"Permission.reply"`, `"Auth.get"`
@@ -362,28 +359,26 @@ export namespace Question {
 
 ## 6. Schema Conventions
 
-### Zod schemas -- API-facing
+### Effect Schema -- data, API, and events
 
-Always attach `.meta({ ref })` for codegen. Schema and type share the same name.
+Always attach `.annotate({ identifier })` for codegen; schema and type share the same name. `.annotate({ description })` documents a field.
 
 ```ts
-export const Option = z
-  .object({
-    label: z.string().describe("Display text (1-5 words, concise)"),
-    description: z.string().describe("Explanation of choice"),
-  })
-  .meta({ ref: "QuestionOption" })
-export type Option = z.infer<typeof Option>
+export const Option = Schema.Struct({
+  label: Schema.String.annotate({ description: "Display text (1-5 words, concise)" }),
+  description: Schema.String.annotate({ description: "Explanation of choice" }),
+}).annotate({ identifier: "QuestionOption" })
+export type Option = Schema.Schema.Type<typeof Option>
 ```
 
 ```ts
-export const Action = z.enum(["allow", "deny", "ask"]).meta({
-  ref: "PermissionAction",
+export const Action = Schema.Literals(["allow", "deny", "ask"]).annotate({
+  identifier: "PermissionAction",
 })
-export type Action = z.infer<typeof Action>
+export type Action = Schema.Schema.Type<typeof Action>
 ```
 
-### Effect Schema -- internal domain types
+### Schema classes -- when you need a nominal class
 
 ```ts
 export class Oauth extends Schema.Class<Oauth>("OAuth")({
@@ -395,31 +390,22 @@ export class Oauth extends Schema.Class<Oauth>("OAuth")({
 }) {}
 ```
 
-### Branded types -- two patterns
+### Branded IDs -- two idioms (`@opencode-ai/core/schema`, no `.zod` bridge)
 
-**Newtype** (for IDs with ascending/descending generation):
+**Newtype class** (for IDs with generation + methods):
 
 ```ts
-export class QuestionID extends Newtype<QuestionID>()("QuestionID", Schema.String) {
-  static make(id: string): QuestionID {
-    return this.makeUnsafe(id)
-  }
-
+export class QuestionID extends Newtype<QuestionID>()("QuestionID", Schema.String.check(Schema.isStartsWith("que"))) {
   static ascending(id?: string): QuestionID {
-    return this.makeUnsafe(Identifier.ascending("question", id))
+    return this.make(Identifier.ascending("question", id))
   }
-
-  static readonly zod = Identifier.schema("question") as unknown as z.ZodType<QuestionID>
 }
 ```
 
 **Schema.brand** (for simple branded primitives):
 
 ```ts
-export const AccountID = Schema.String.pipe(
-  Schema.brand("AccountID"),
-  withStatics((s) => ({ make: (id: string) => s.makeUnsafe(id) })),
-)
+export const AccountID = Schema.String.pipe(Schema.brand("AccountID"))
 export type AccountID = Schema.Schema.Type<typeof AccountID>
 ```
 
@@ -533,14 +519,14 @@ else foo = 2
 const foo = condition ? 1 : 2
 ```
 
-### Forgetting `.meta({ ref })` on Zod schemas used in the API
+### Forgetting `.annotate({ identifier })` on Effect Schemas used in the API
 
 ```ts
-// REJECTED -- no ref means no stable name in generated SDK
-export const Info = z.object({ question: z.string() })
+// REJECTED -- no identifier means no stable name in generated SDK
+export const Info = Schema.Struct({ question: Schema.String })
 
 // ACCEPTED
-export const Info = z.object({ question: z.string() }).meta({ ref: "QuestionInfo" })
+export const Info = Schema.Struct({ question: Schema.String }).annotate({ identifier: "QuestionInfo" })
 ```
 
 ### Using camelCase in Drizzle table fields
@@ -605,12 +591,15 @@ const query = (f) =>
   })
 ```
 
-### Missing `void` on fire-and-forget Bus.publish
+### Treating `bus.publish` as fire-and-forget instead of yielding it
 
 ```ts
-// ACCEPTED (both forms appear in the codebase)
-Bus.publish(Event.Asked, info)
-void Bus.publish(Event.Asked, info)
+// REJECTED -- bus.publish returns an Effect; dropping it never runs the publish
+bus.publish(Event.Asked, info)
+
+// ACCEPTED -- acquire the bus in the layer, then yield the publish Effect
+const bus = yield* Bus.Service
+yield* bus.publish(Event.Asked, info)
 ```
 
 ### Using `Math.random()` for IDs

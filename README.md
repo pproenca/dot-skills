@@ -143,7 +143,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [nginx-c-module-perf](skills/.experimental/nginx-c-module-perf) | nginx C module performance optimization and reliability guidelines based on the official nginx.. |
 | [nginx-c-modules](skills/.experimental/nginx-c-modules) | nginx C module development guidelines based on the official nginx development guide |
 | [openai-codex-rust-patterns](skills/.experimental/openai-codex-rust-patterns) | OpenAI Codex Rust coding patterns distilled from the codex-rs workspace |
-| [opencode-ts](skills/.experimental/opencode-ts) | Write and refactor TypeScript code in repos that use Effect-TS services, Zod schemas,.. |
+| [opencode-ts](skills/.experimental/opencode-ts) | Write and refactor TypeScript code in repos that use Effect-TS services, Effect Schema,.. |
 | [opensearch-function-scoring-algorithms](skills/.experimental/opensearch-function-scoring-algorithms) | Use this skill when designing, tuning, reviewing, or evaluating search relevance and ranking for.. |
 | [opensearch-personalize-caching-strategies](skills/.experimental/opensearch-personalize-caching-strategies) | Use this skill when designing, tuning, reviewing, or debugging caching in front of AWS.. |
 | [opinionated-nextjs-patterns](skills/.experimental/opinionated-nextjs-patterns) | Use this skill when writing, reviewing, or refactoring any Next.js 16 (App Router) codebase that.. |

@@ -14,7 +14,7 @@ import { makeRuntime } from "@/effect/run-service"
 
 ```ts
 export function makeRuntime<I, S, E>(
-  service: ServiceMap.Service<I, S>,
+  service: Context.Service<I, S>,
   layer: Layer.Layer<I, E>,
 ): {
   runSync: <A, Err>(fn: (svc: S) => Effect.Effect<A, Err, I>) => A
@@ -25,15 +25,15 @@ export function makeRuntime<I, S, E>(
 ```
 
 ```ts
-// question/index.ts
-const { runPromise } = makeRuntime(Service, layer)
+// bus/index.ts -- only modules with imperative (non-Effect) callers keep a facade
+const { runPromise, runSync } = makeRuntime(Service, layer)
 
-export async function ask(input) {
-  return runPromise((s) => s.ask(input))
+export async function publish(ctx, def, properties, options?) {
+  return runPromise((svc) => svc.publish(def, properties, options).pipe(Effect.provideService(InstanceRef, ctx)))
 }
 ```
 
-Use when: bridging an Effect ServiceMap service to imperative async/sync callers.
+Use when: bridging an Effect `Context` service to imperative async/sync callers. Pure Effect-land services (Question, Permission) skip this — they're used via `yield* X.Service`.
 
 ### memoMap
 
@@ -78,15 +78,15 @@ const cache = yield* InstanceState.make<State>(
 
 Use when: you need per-project-directory state inside an Effect layer that auto-invalidates on instance disposal.
 
-### ServiceMap.Service
+### Context.Service
 
 ```ts
-import * as ServiceMap from "effect/ServiceMap"
+import { Context } from "effect"
 ```
 
 ```ts
 // question/index.ts
-export class Service extends ServiceMap.Service<Service, Interface>()("@opencode/Question") {}
+export class Service extends Context.Service<Service, Interface>()("@opencode/Question") {}
 
 export const layer = Layer.effect(Service, Effect.gen(function* () {
   // ... build state, define methods
@@ -94,7 +94,7 @@ export const layer = Layer.effect(Service, Effect.gen(function* () {
 }))
 ```
 
-Use when: defining a new Effect-based service. This replaces the older `Context.Tag` pattern.
+Use when: defining a new Effect-based service. `Context.Service` replaced both `effect/ServiceMap`'s `ServiceMap.Service` (early v4-beta) and the older `Context.Tag` pattern.
 
 ---
 
@@ -143,43 +143,33 @@ Use when: you need to know when an ascending ID was created without a DB lookup.
 
 ## 3. Schema
 
-### Newtype (branded IDs via Effect Schema)
+### Branded IDs (Schema.String.check + brand + withStatics)
 
 ```ts
-import { Newtype, withStatics } from "@/util/schema"
+import { withStatics } from "@opencode-ai/core/schema"
 ```
 
-The standard pattern for branded ID types:
+The standard pattern for branded ID types — a prefix check, `Schema.brand`, and static factories:
 
 ```ts
 // session/schema.ts
-export const SessionID = Schema.String.pipe(
-  Schema.brand("SessionID"),
-  withStatics((s) => ({
-    make: (id: string) => s.makeUnsafe(id),
-    descending: (id?: string) => s.makeUnsafe(Identifier.descending("session", id)),
-    zod: Identifier.schema("session").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
-  })),
-)
-
-export const MessageID = Schema.String.pipe(
+export const MessageID = Schema.String.check(Schema.isStartsWith("msg")).pipe(
   Schema.brand("MessageID"),
   withStatics((s) => ({
-    make: (id: string) => s.makeUnsafe(id),
-    ascending: (id?: string) => s.makeUnsafe(Identifier.ascending("message", id)),
-    zod: Identifier.schema("message").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
+    ascending: (id?: string) => s.make(Identifier.ascending("message", id)),
   })),
 )
+export type MessageID = Schema.Schema.Type<typeof MessageID>
 ```
 
-Each branded ID exposes: `.make(raw)` for wrapping, `.ascending()` or `.descending()` for generation, `.zod` for Zod-side validation.
+Each branded ID exposes `.make(raw)` to brand a validated string and `.ascending()`/`.descending()` to mint a fresh one. There is **no `.zod` bridge** — the branded schema is used directly wherever a schema is needed.
 
-Use when: defining a new entity type that needs a branded ID. Follow this exact pattern.
+Use when: defining a new entity type that needs a branded ID.
 
 ### withStatics
 
 ```ts
-import { withStatics } from "@/util/schema"
+import { withStatics } from "@opencode-ai/core/schema"
 ```
 
 ```ts
@@ -191,51 +181,50 @@ export const withStatics =
 
 ```ts
 // sync/schema.ts
-export const EventID = Schema.String.pipe(
+export const EventID = Schema.String.check(Schema.isStartsWith("evt")).pipe(
   Schema.brand("EventID"),
   withStatics((s) => ({
-    make: (id: string) => s.makeUnsafe(id),
-    ascending: (id?: string) => s.makeUnsafe(Identifier.ascending("event", id)),
-    zod: Identifier.schema("event").pipe(z.custom<Schema.Schema.Type<typeof s>>()),
+    ascending: (id?: string) => s.make(Identifier.ascending("event", id)),
   })),
 )
 ```
 
-Use when: attaching static methods (factories, Zod bridges) to an Effect Schema object in a `.pipe()` chain.
+Use when: attaching static factories to an Effect Schema in a `.pipe()` chain.
 
-### Newtype (class-based, for complex schemas)
+### Newtype (class-based, for IDs with methods)
 
 ```ts
-import { Newtype } from "@/util/schema"
+import { Newtype } from "@opencode-ai/core/schema"
 ```
 
 ```ts
-export function Newtype<Self>() {
-  return <const Tag extends string, S extends Schema.Top>(tag: Tag, schema: S) => { ... }
+// question/schema.ts
+export class QuestionID extends Newtype<QuestionID>()("QuestionID", Schema.String.check(Schema.isStartsWith("que"))) {
+  static ascending(id?: string): QuestionID {
+    return this.make(Identifier.ascending("question", id))
+  }
 }
 ```
 
-Uses `Object.setPrototypeOf(Base, schema)` so the returned class IS the schema. The `Self` generic enables circular type references.
+`Newtype<Self>()(tag, schema)` returns a class that IS the schema (the `Self` generic enables circular type references). Use the class form when you want instance/static methods; the `.pipe(withStatics)` form when a value plus a couple of factories is enough.
 
-Use when: you need a nominal type that wraps a complex schema (not just a branded string).
-
-### .meta({ ref })
+### .annotate({ identifier })
 
 ```ts
-z.object({ ... }).meta({ ref: "SessionInfo" })
+Schema.Struct({ ... }).annotate({ identifier: "SessionInfo" })
 ```
 
-Attaches a reference name to Zod schemas. Used by SDK type generation and discriminated union construction.
+Attaches a reference name to a schema (replaced Zod's `.meta({ ref })`). Used by SDK/JSON-Schema generation and discriminated-union construction; `.annotate({ description })` documents a field.
 
 ```ts
 // bus/bus-event.ts
-z.object({
-  type: z.literal(type),
+Schema.Struct({
+  type: Schema.Literal(type),
   properties: def.properties,
-}).meta({ ref: "Event" + "." + def.type })
+}).annotate({ identifier: "Event." + def.type })
 ```
 
-Use when: defining any Zod schema that will appear in generated SDKs or API types.
+Use when: any schema that will appear in generated SDKs or API types.
 
 ---
 
@@ -248,17 +237,17 @@ import { fn } from "@/util/fn"
 ```
 
 ```ts
-export function fn<T extends z.ZodType, Result>(
+export function fn<T extends Schema.Top, Result>(
   schema: T,
-  cb: (input: z.infer<T>) => Result,
-): ((input: z.infer<T>) => Result) & { force: (input: z.infer<T>) => Result; schema: T }
+  cb: (input: Schema.Schema.Type<T>) => Result,
+): ((input: Schema.Schema.Type<T>) => Result) & { force: (input: Schema.Schema.Type<T>) => Result; schema: T }
 ```
 
 ```ts
 export const create = fn(
-  z.object({
-    sessionID: SessionID.zod,
-    title: z.string(),
+  Schema.Struct({
+    sessionID: SessionID,
+    title: Schema.String,
   }),
   (input) => {
     // input is validated and typed
@@ -502,7 +491,7 @@ Use when: coordinating a one-time "ready" or "done" event between async tasks.
 ### Log.create
 
 ```ts
-import { Log } from "@/util/log"
+import * as Log from "@opencode-ai/core/util/log"
 ```
 
 ```ts
@@ -527,24 +516,26 @@ Use when: any module needs logging. Always pass `{ service: "name" }`.
 
 ---
 
-## 8. Context
+## 8. Local Context
 
-### Context.create (AsyncLocalStorage wrapper)
+### LocalContext.create (AsyncLocalStorage wrapper)
 
 ```ts
-import { Context } from "@/util/context"
+import { LocalContext } from "@/util/local-context"
 ```
+
+Renamed from `Context` to `LocalContext` so it no longer collides with Effect's `Context` (the DI/service namespace). It is opencode's own AsyncLocalStorage helper — unrelated to `Context.Service`.
 
 ```ts
 export function create<T>(name: string): {
-  use(): T                           // throws Context.NotFound if missing
-  provide<R>(value: T, fn: () => R): R  // runs fn with value in scope
+  use(): T                                // throws LocalContext.NotFound if missing
+  provide<R>(value: T, fn: () => R): R    // runs fn with value in scope
 }
 ```
 
 ```ts
 // storage/db.ts
-const ctx = Context.create<{ tx: TxOrDb; effects: (() => void)[] }>("database")
+const ctx = LocalContext.create<{ tx: TxOrDb; effects: (() => void)[] }>("database")
 
 // Provide:
 ctx.provide({ tx: client, effects: [] }, () => callback(client))
@@ -613,25 +604,25 @@ import { BusEvent } from "@/bus/bus-event"
 ```
 
 ```ts
-export function define<Type extends string, Properties extends ZodType>(
+export function define<Type extends string, Properties extends Schema.Top>(
   type: Type,
   properties: Properties,
-): { type: Type; properties: Properties }
+): Definition<Type, Properties>
 ```
 
 ```ts
 // question/index.ts
 export const Event = {
   Asked: BusEvent.define("question.asked", Request),
-  Replied: BusEvent.define("question.replied", z.object({
-    sessionID: SessionID.zod,
-    requestID: QuestionID.zod,
-    answers: z.array(Answer),
+  Replied: BusEvent.define("question.replied", Schema.Struct({
+    sessionID: SessionID,
+    requestID: QuestionID,
+    answers: Schema.Array(Answer),
   })),
 }
 ```
 
-Events are auto-registered in a global registry. `BusEvent.payloads()` builds a discriminated union for SDK generation.
+Events are auto-registered in a global registry. `BusEvent.effectPayloads()` builds the discriminated union for SDK generation.
 
 Use when: defining a new pub/sub event type.
 
@@ -642,21 +633,23 @@ import { Bus } from "@/bus"
 ```
 
 ```ts
-export async function publish<D>(def: D, properties: z.infer<D["properties"]>): Promise<void>
-export function subscribe<D>(def: D, callback: (properties: z.infer<D["properties"]>) => void): () => void
+// top-level async facade (for imperative callers)
+export async function publish<D>(ctx: InstanceContext, def: D, properties: Schema.Schema.Type<D["properties"]>): Promise<void>
+export function subscribe<D>(def: D, callback: (event: { properties: Schema.Schema.Type<D["properties"]> }) => unknown): () => void
 ```
 
 ```ts
-// Publishing:
-Bus.publish(Event.Asked, { sessionID, requestID: id, tool: input.tool })
+// Inside an Effect service: acquire the bus, then yield* publish (it returns an Effect)
+const bus = yield* Bus.Service
+yield* bus.publish(Event.Asked, { sessionID, requestID: id, tool: input.tool })
 
-// Subscribing (returns unsubscribe function):
-const unsub = Bus.subscribe(Session.Event.Updated, (props) => {
-  console.log("session updated:", props.sessionID)
+// Imperative subscribe (returns unsubscribe function):
+const unsub = Bus.subscribe(Session.Event.Updated, (event) => {
+  console.log("session updated:", event.properties.sessionID)
 })
 ```
 
-`publish` is fire-and-forget. `subscribe` is synchronous (`runSync` internally).
+Inside a service, `bus.publish(...)` is an `Effect` — yield it (not fire-and-forget). The top-level `Bus.publish(ctx, ...)` (async) and `Bus.subscribe` (runSync) are facades for imperative callers.
 
 Use when: decoupled communication between modules.
 
@@ -667,13 +660,13 @@ import { SyncEvent } from "@/sync"
 ```
 
 ```ts
-export function define<Type, Agg, Schema>(input: {
-  type: Type; version: number; aggregate: Agg; schema: Schema; busSchema?: BusSchema
+export function define<Type, Agg, Schm, BusSchm>(input: {
+  type: Type; version: number; aggregate: Agg; schema: Schm; busSchema?: BusSchm
 }): Definition
 
-export function run<Def>(def: Def, data: z.infer<Def["schema"]>): void
+export function run<Def>(def: Def, data: Schema.Schema.Type<Def["schema"]>): void
 
-export function project<Def>(def: Def, fn: (db: TxOrDb, data: z.infer<Def["schema"]>) => void): [Def, ProjectorFunc]
+export function project<Def>(def: Def, fn: (db: TxOrDb, data: Schema.Schema.Type<Def["schema"]>) => void): [Def, ProjectorFunc]
 ```
 
 ```ts
@@ -683,7 +676,7 @@ export const Event = {
     type: "session.created",
     version: 1,
     aggregate: "sessionID",
-    schema: z.object({ sessionID: SessionID.zod, info: Info }),
+    schema: Schema.Struct({ sessionID: SessionID, info: Info }),
   }),
 }
 
@@ -803,30 +796,31 @@ import { init } from "#db"  // Resolves to db.bun.ts or db.node.ts
 ### NamedError.create
 
 ```ts
-import { NamedError } from "@opencode/util"
+import { NamedError } from "@opencode-ai/core/util/error"
 ```
 
 ```ts
 export abstract class NamedError extends Error {
-  static create<Name extends string, Data extends z.core.$ZodType>(
+  // `data` is an object of Schema fields (sugar for Schema.Struct) or a full Schema
+  static create<Name extends string>(
     name: Name,
-    data: Data,
-  ): typeof NamedError & { Schema: z.ZodObject; new(data: z.input<Data>, options?: ErrorOptions): NamedError }
+    data: Schema.Top | Schema.Struct.Fields,
+  ): typeof NamedError & { Schema: Schema.Top; tag: Name; new(data, options?: ErrorOptions): NamedError }
 }
 ```
 
 ```ts
 // session/message-v2.ts
-export const AbortedError = NamedError.create("MessageAbortedError", z.object({
-  message: z.string(),
-}))
+export const AbortedError = NamedError.create("MessageAbortedError", {
+  message: Schema.String,
+})
 
 // provider/provider.ts
-export const ModelNotFoundError = NamedError.create("ProviderModelNotFoundError", z.object({
-  providerID: ProviderID.zod,
-  modelID: ModelID.zod,
-  suggestions: z.array(z.string()).optional(),
-}))
+export const ModelNotFoundError = NamedError.create("ProviderModelNotFoundError", {
+  providerID: ProviderID,
+  modelID: ModelID,
+  suggestions: Schema.optional(Schema.Array(Schema.String)),
+})
 
 // Throwing:
 throw new AbortedError({ message: "User cancelled" })
@@ -835,12 +829,12 @@ throw new AbortedError({ message: "User cancelled" })
 error.toObject()  // => { name: "MessageAbortedError", data: { message: "User cancelled" } }
 
 // Schema access:
-AbortedError.Schema  // Zod schema for validation/SDK generation
+AbortedError.Schema  // Effect Schema (Schema.Struct({ name: Schema.Literal(tag), data })) for validation/SDK generation
 ```
 
-Each subclass has a `.Schema` static for introspection and a `.toObject()` for serialization.
+Each subclass has a `.Schema` static (Effect Schema) for introspection, a `.tag`, and a `.toObject()` for serialization.
 
-Use when: cross-boundary errors (API responses, non-Effect code). Zod-validated data.
+Use when: serializable cross-boundary errors (API responses, wire/storage, assistant-message errors).
 
 ### Schema.TaggedErrorClass
 
@@ -873,7 +867,7 @@ Use when: errors within Effect service implementations that need to be caught/ma
 
 ### When to use which error pattern
 
-| Pattern | System | When |
-|---------|--------|------|
-| `NamedError.create` | Zod | API boundaries, non-Effect code, serializable errors |
-| `Schema.TaggedErrorClass` | Effect Schema | Inside Effect pipelines, typed error channels |
+| Pattern | Built on | When |
+|---------|----------|------|
+| `NamedError.create` | Effect Schema (`Schema.Struct({ name, data })`) | API boundaries, wire/storage, serializable discriminated-union errors |
+| `Schema.TaggedErrorClass` | Effect Schema | Inside Effect pipelines, typed error channels (the `E` in `Effect.Effect<A, E>`) |

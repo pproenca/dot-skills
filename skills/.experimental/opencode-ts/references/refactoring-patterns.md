@@ -322,27 +322,27 @@ Created `src/util/glob.ts` wrapping the `glob` and `minimatch` npm packages:
 import { glob, globSync, type GlobOptions } from "glob"
 import { minimatch } from "minimatch"
 
-export namespace Glob {
-  export interface Options {
-    cwd?: string
-    absolute?: boolean
-    include?: "file" | "all"
-    dot?: boolean
-    symlink?: boolean
-  }
-
-  export async function scan(pattern: string, options: Options = {}): Promise<string[]> {
-    return glob(pattern, toGlobOptions(options)) as Promise<string[]>
-  }
-
-  export function scanSync(pattern: string, options: Options = {}): string[] {
-    return globSync(pattern, toGlobOptions(options)) as string[]
-  }
-
-  export function match(pattern: string, filepath: string): boolean {
-    return minimatch(filepath, pattern, { dot: true })
-  }
+export interface Options {
+  cwd?: string
+  absolute?: boolean
+  include?: "file" | "all"
+  dot?: boolean
+  symlink?: boolean
 }
+
+export async function scan(pattern: string, options: Options = {}): Promise<string[]> {
+  return glob(pattern, toGlobOptions(options)) as Promise<string[]>
+}
+
+export function scanSync(pattern: string, options: Options = {}): string[] {
+  return globSync(pattern, toGlobOptions(options)) as string[]
+}
+
+export function match(pattern: string, filepath: string): boolean {
+  return minimatch(filepath, pattern, { dot: true })
+}
+
+export * as Glob from "."
 ```
 
 BEFORE (config.ts -- repeated 4 times for commands, agents, modes, plugins):
@@ -416,39 +416,39 @@ Created `src/util/process.ts`:
 // src/util/process.ts (NEW FILE)
 import { spawn as launch, type ChildProcess } from "child_process"
 
-export namespace Process {
-  export type Stdio = "inherit" | "pipe" | "ignore"
+export type Stdio = "inherit" | "pipe" | "ignore"
 
-  export interface Options {
-    cwd?: string
-    env?: NodeJS.ProcessEnv | null
-    stdin?: Stdio
-    stdout?: Stdio
-    stderr?: Stdio
-    abort?: AbortSignal
-    kill?: NodeJS.Signals | number
-    timeout?: number
-  }
-
-  export type Child = ChildProcess & { exited: Promise<number> }
-
-  export function spawn(cmd: string[], options: Options = {}): Child {
-    if (cmd.length === 0) throw new Error("Command is required")
-    options.abort?.throwIfAborted()
-
-    const proc = launch(cmd[0], cmd.slice(1), {
-      cwd: options.cwd,
-      env: options.env === null ? {} : options.env ? { ...process.env, ...options.env } : undefined,
-      stdio: [options.stdin ?? "ignore", options.stdout ?? "ignore", options.stderr ?? "ignore"],
-    })
-
-    // ... abort signal handling, timeout SIGTERM -> SIGKILL escalation ...
-
-    const child = proc as Child
-    child.exited = exited
-    return child
-  }
+export interface Options {
+  cwd?: string
+  env?: NodeJS.ProcessEnv | null
+  stdin?: Stdio
+  stdout?: Stdio
+  stderr?: Stdio
+  abort?: AbortSignal
+  kill?: NodeJS.Signals | number
+  timeout?: number
 }
+
+export type Child = ChildProcess & { exited: Promise<number> }
+
+export function spawn(cmd: string[], options: Options = {}): Child {
+  if (cmd.length === 0) throw new Error("Command is required")
+  options.abort?.throwIfAborted()
+
+  const proc = launch(cmd[0], cmd.slice(1), {
+    cwd: options.cwd,
+    env: options.env === null ? {} : options.env ? { ...process.env, ...options.env } : undefined,
+    stdio: [options.stdin ?? "ignore", options.stdout ?? "ignore", options.stderr ?? "ignore"],
+  })
+
+  // ... abort signal handling, timeout SIGTERM -> SIGKILL escalation ...
+
+  const child = proc as Child
+  child.exited = exited
+  return child
+}
+
+export * as Process from "."
 ```
 
 BEFORE (bun/index.ts):
@@ -721,68 +721,75 @@ export namespace Agent {
 }
 ```
 
-AFTER -- Effect Service with layer, interface, and backward-compatible exports:
+AFTER -- Effect Service as a flat module: interface, tag, layer, then a
+self-barrel (`export * as Agent from "."`) so consumers still write
+`Agent.Service` / `Agent.layer` without an in-file `namespace`:
 ```typescript
-import { Effect, ServiceMap, Layer } from "effect"
+import { Effect, Context, Layer } from "effect"
 import { InstanceState } from "@/effect/instance-state"
 import { makeRunPromise } from "@/effect/run-service"
 
-export namespace Agent {
-  // 1. Define the interface
-  export interface Interface {
-    readonly get: (agent: string) => Effect.Effect<Agent.Info>
-    readonly list: () => Effect.Effect<Agent.Info[]>
-    readonly defaultAgent: () => Effect.Effect<string>
-    readonly generate: (input: { ... }) => Effect.Effect<{ ... }>
-  }
-
-  // 2. Define the service tag
-  export class Service extends ServiceMap.Service<Service, Interface>()("@opencode/Agent") {}
-
-  // 3. Define the layer (constructor)
-  export const layer = Layer.effect(
-    Service,
-    Effect.gen(function* () {
-      const config = () => Effect.promise(() => Config.get())
-      const auth = yield* Auth.Service
-
-      const state = yield* InstanceState.make<State>(
-        Effect.fn("Agent.state")(function* (ctx) {
-          const cfg = yield* config()
-          // ... build agents record using yield* instead of await ...
-          return { get, list, defaultAgent } satisfies State
-        }),
-      )
-
-      return Service.of({
-        get: Effect.fn("Agent.get")(function* (agent: string) {
-          return yield* InstanceState.useEffect(state, (s) => s.get(agent))
-        }),
-        // ... other methods ...
-      })
-    }),
-  )
-
-  // 4. Default layer for standalone use
-  export const defaultLayer = layer.pipe(Layer.provide(Auth.layer))
-
-  // 5. Backward-compatible async exports
-  const runPromise = makeRunPromise(Service, defaultLayer)
-
-  export async function get(agent: string) {
-    return runPromise((svc) => svc.get(agent))
-  }
-
-  export async function list() {
-    return runPromise((svc) => svc.list())
-  }
+// 1. Define the interface
+export interface Interface {
+  readonly get: (agent: string) => Effect.Effect<Agent.Info>
+  readonly list: () => Effect.Effect<Agent.Info[]>
+  readonly defaultAgent: () => Effect.Effect<string>
+  readonly generate: (input: { ... }) => Effect.Effect<{ ... }>
 }
+
+// 2. Define the service tag
+export class Service extends Context.Service<Service, Interface>()("@opencode/Agent") {}
+
+// 3. Define the layer (constructor)
+export const layer = Layer.effect(
+  Service,
+  Effect.gen(function* () {
+    const config = () => Effect.promise(() => Config.get())
+    const auth = yield* Auth.Service
+
+    const state = yield* InstanceState.make<State>(
+      Effect.fn("Agent.state")(function* (ctx) {
+        const cfg = yield* config()
+        // ... build agents record using yield* instead of await ...
+        return { get, list, defaultAgent } satisfies State
+      }),
+    )
+
+    return Service.of({
+      get: Effect.fn("Agent.get")(function* (agent: string) {
+        return yield* InstanceState.useEffect(state, (s) => s.get(agent))
+      }),
+      // ... other methods ...
+    })
+  }),
+)
+
+// 4. Default layer for standalone use
+export const defaultLayer = layer.pipe(Layer.provide(Auth.layer))
+
+// 5. Backward-compatible async exports
+const runPromise = makeRunPromise(Service, defaultLayer)
+
+export async function get(agent: string) {
+  return runPromise((svc) => svc.get(agent))
+}
+
+export async function list() {
+  return runPromise((svc) => svc.list())
+}
+
+// 6. Self-barrel — backs `import { Agent } from "@/agent/agent"` then `Agent.Service`
+export * as Agent from "."
 ```
 
 **Why:** The Effect migration:
 - Makes dependencies explicit (Auth.Service injected via `yield*`)
 - Replaces `Instance.state()` with `InstanceState.make()` (Effect-managed lifecycle)
 - Each method gets tracing via `Effect.fn("Agent.get")`
+- Drops the in-file `export namespace Agent {}` wrapper for **flat top-level
+  exports + a self-barrel** (`export * as Agent from "."`) — the current
+  opencode module shape (see `question/index.ts`, `permission/index.ts`).
+  `Context.Service` replaces the old `ServiceMap.Service` tag constructor.
 - Backward-compatible `async function` exports preserve API for non-Effect callers
 - `await` becomes `yield*`, `Promise` becomes `Effect.promise()`
 
@@ -821,7 +828,7 @@ schema entries, permission rules, and UI display entries. Removed from:
 // DELETED from tool/todo.ts:
 export const TodoReadTool = Tool.define("todoread", {
   description: "Use this tool to read your todo list",
-  parameters: z.object({}),
+  parameters: Schema.Struct({}),
   async execute(_params, ctx) {
     await ctx.ask({
       permission: "todoread",
@@ -889,7 +896,7 @@ if (providerID === ProviderID.githubCopilot) {
 }
 
 // DELETED from schema.ts:
-githubCopilotEnterprise: schema.makeUnsafe("github-copilot-enterprise"),
+githubCopilotEnterprise: schema.make("github-copilot-enterprise"),
 ```
 
 KEPT -- simple deployment type check in copilot.ts:
