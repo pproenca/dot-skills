@@ -1,10 +1,10 @@
 {
   "name": "emilkowal-animations",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "organization": "Emil Kowalski",
   "technology": "Web Animations",
   "date": "May 2026",
-  "abstract": "Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), his animations.dev course, and his official emil-design-eng skill. Contains 50 rules across 7 categories, prioritized by impact from critical (easing selection, timing) to polish (blur bridging, stagger orchestration). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific values to guide animation decisions.",
+  "abstract": "Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), his animations.dev course, and his official emil-design-eng skill. Contains 58 rules across 8 categories, prioritized by impact from critical (easing selection, timing) to polish (blur bridging, stagger orchestration), plus a Tailwind CSS v4 category that maps each principle to the proper v4 utilities (@theme easing tokens, the starting: variant, active:/motion-reduce: variants, transform-origin and will-change utilities). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific values to guide animation decisions.",
   "references": [
     "https://emilkowal.ski/ui/great-animations",
     "https://emilkowal.ski/ui/good-vs-great-animations",
@@ -18,6 +18,8 @@
     "https://animations.dev/",
     "https://github.com/emilkowalski/vaul",
     "https://github.com/emilkowalski/sonner",
-    "https://github.com/emilkowalski/skill"
+    "https://github.com/emilkowalski/skill",
+    "https://tailwindcss.com/blog/tailwindcss-v4",
+    "https://tailwindcss.com/docs/upgrade-guide"
   ]
 }

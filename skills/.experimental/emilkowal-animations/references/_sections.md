@@ -39,3 +39,8 @@ The section ID (in parentheses) is the filename prefix used to group rules.
 
 **Impact:** MEDIUM
 **Description:** Respecting prefers-reduced-motion, providing safe fallbacks, blur bridging, clip-path reveals, and staggered orchestration elevate good animations to great ones.
+
+## 8. Tailwind v4 Utilities (tw)
+
+**Impact:** MEDIUM
+**Description:** How to express the principles above with proper Tailwind CSS v4 utilities when a project uses Tailwind, without losing the intended feel. Covers the v4-specific idioms—`@theme` easing tokens, the `starting:` variant, `active:`/`motion-reduce:` variants, transform-origin and `will-change` utilities—rather than reaching for `transition-all` or inline arbitrary curves. Applies only to Tailwind v4 projects; the raw-CSS and Framer Motion rules remain the source of truth.

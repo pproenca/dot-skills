@@ -5,7 +5,7 @@ description: Emil Kowalski's animation best practices for web interfaces. Use wh
 
 # Emil Kowalski Animation Best Practices
 
-Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), and his [animations.dev](https://animations.dev) course. Contains 50 rules across 7 categories, prioritized by impact.
+Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), and his [animations.dev](https://animations.dev) course. Contains 58 rules across 8 categories, prioritized by impact.
 
 ## When to Apply
 
@@ -16,6 +16,7 @@ Reference these guidelines when:
 - Building toast notifications or drawer components
 - Optimizing animation performance
 - Ensuring animation accessibility
+- Expressing any of the above with Tailwind CSS v4 utilities (see the `tw-` category)
 
 ## Rule Categories by Priority
 
@@ -28,6 +29,7 @@ Reference these guidelines when:
 | 5 | Interaction Patterns | MEDIUM-HIGH | `interact-` |
 | 6 | Strategic Animation | MEDIUM | `strategy-` |
 | 7 | Accessibility & Polish | MEDIUM | `polish-` |
+| 8 | Tailwind v4 Utilities | MEDIUM | `tw-` |
 
 ## Quick Reference
 
@@ -101,6 +103,19 @@ Reference these guidelines when:
 - [`polish-scroll-reveal`](references/polish-scroll-reveal.md) - Trigger scroll animations at appropriate threshold
 - [`polish-hover-gap-fill`](references/polish-hover-gap-fill.md) - Fill gaps between hoverable elements
 - [`polish-stagger-children`](references/polish-stagger-children.md) - Stagger child animations for orchestration
+
+### 8. Tailwind v4 Utilities (MEDIUM)
+
+Express the principles above with proper Tailwind CSS v4 utilities. Applies only to Tailwind v4 projects; the raw-CSS and Framer Motion rules above remain the source of truth.
+
+- [`tw-ease-duration-defaults`](references/tw-ease-duration-defaults.md) - Set ease-out and a sub-300ms duration explicitly
+- [`tw-custom-easing-theme`](references/tw-custom-easing-theme.md) - Register custom easing curves as @theme tokens
+- [`tw-press-scale`](references/tw-press-scale.md) - Use active:scale-[0.97] for button press feedback
+- [`tw-asymmetric-timing`](references/tw-asymmetric-timing.md) - Split press and release timing with active:duration
+- [`tw-starting-enter`](references/tw-starting-enter.md) - Animate enter states with the starting: variant
+- [`tw-reduced-motion`](references/tw-reduced-motion.md) - Gate movement behind motion-safe / motion-reduce
+- [`tw-origin-aware`](references/tw-origin-aware.md) - Set transform-origin with origin-* utilities
+- [`tw-will-change`](references/tw-will-change.md) - Scope will-change-transform to the active gesture
 
 ## Key Values Reference
 
