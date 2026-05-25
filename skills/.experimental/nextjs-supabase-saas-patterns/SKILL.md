@@ -1,13 +1,13 @@
 ---
 name: nextjs-supabase-saas-patterns
-description: Use this skill whenever writing, reviewing, or refactoring Next.js + Supabase SaaS code that follows the Makerkit Turbo architecture — covers authorization & RLS, multi-tenant data modeling (accounts as tenant root + account_id), request middleware (proxy.ts), server-side data loading with cache() and feature APIs, server actions wrapped with authActionClient, route handlers with enhanceRouteHandler, client/server boundaries ('use client' discipline), React Query hooks with useSupabase, forms with React Hook Form + Zod, and feature-package layout. Trigger on tasks involving @kit/* package APIs (authActionClient, enhanceRouteHandler, createAccountsApi, getSupabaseServerClient, getSupabaseServerAdminClient, useSupabase, useAction), 'use client' placement, RLS policies, account_id-based tenancy, Supabase realtime, or any code generation in a Makerkit-style monorepo. Trigger even when the user does not explicitly mention "patterns" or "best practices" — this skill applies to all coding tasks in this stack.
+description: Use this skill whenever writing, reviewing, or refactoring Next.js + Supabase SaaS code built on a @kit/* package architecture — covers authorization & RLS, multi-tenant data modeling (accounts as tenant root + account_id), request middleware (proxy.ts), server-side data loading with cache() and feature APIs, server actions wrapped with authActionClient, route handlers with enhanceRouteHandler, client/server boundaries ('use client' discipline), React Query hooks with useSupabase, forms with React Hook Form + Zod, and feature-package layout. Trigger on tasks involving @kit/* package APIs (authActionClient, enhanceRouteHandler, createAccountsApi, getSupabaseServerClient, getSupabaseServerAdminClient, useSupabase, useAction), 'use client' placement, RLS policies, account_id-based tenancy, Supabase realtime, or any code generation in a @kit/* package monorepo. Trigger even when the user does not explicitly mention "patterns" or "best practices" — this skill applies to all coding tasks in this stack.
 ---
 
-# Makerkit Next.js 16 + Supabase SaaS Best Practices
+# Next.js 16 + Supabase SaaS Best Practices
 
-Implementation-pattern reference for Next.js 16 + Supabase SaaS codebases that follow the Makerkit Turbo architecture. Contains **49 rules across 8 categories**, prioritised by lifecycle-cascade impact — authorization and tenant modeling first, then request boundary, server fetching, mutations, client boundaries, architecture, and UI conventions.
+Implementation-pattern reference for Next.js 16 + Supabase SaaS codebases built on an accounts-as-tenant-root, `@kit/*` package architecture. Contains **49 rules across 8 categories**, prioritised by lifecycle-cascade impact — authorization and tenant modeling first, then request boundary, server fetching, mutations, client boundaries, architecture, and UI conventions.
 
-Each rule is a focused, actionable check with an **Incorrect → Correct** code example drawn from the canonical kit patterns. Rules name the exact `@kit/*` package APIs (`authActionClient`, `getSupabaseServerClient`, `enhanceRouteHandler`, etc.) so guidance maps directly to imports in the codebase.
+Each rule is a focused, actionable check with an **Incorrect → Correct** code example drawn from canonical `@kit/*` package patterns. Rules name the exact `@kit/*` package APIs (`authActionClient`, `getSupabaseServerClient`, `enhanceRouteHandler`, etc.) so guidance maps directly to imports in the codebase.
 
 ## When to Apply
 

@@ -1,11 +1,11 @@
 {
   "version": "0.1.0",
-  "organization": "Makerkit",
+  "organization": "Community",
   "technology": "Next.js 16 + Supabase SaaS",
   "discipline": "distillation",
   "type": "code-quality",
   "date": "May 2026",
-  "abstract": "Implementation-pattern reference for Next.js 16 + Supabase SaaS codebases that follow the Makerkit Turbo architecture. Contains 49 rules across 8 categories, prioritized by execution-lifecycle cascade impact — from authorization & RLS (CRITICAL) and multi-tenant data modeling (CRITICAL) through request middleware, server-side loaders, server actions, route handlers, client/server boundaries, architecture, policy engine, and UI conventions. Each rule includes a quantified impact, a why-it-matters explanation, and Incorrect/Correct code examples drawn from the canonical kit patterns. Rules name the exact @kit/* package APIs (authActionClient, getSupabaseServerClient, enhanceRouteHandler, createAccountsApi, useSupabase, useAction, definePolicy, createPoliciesEvaluator, etc.) so guidance maps directly to imports.",
+  "abstract": "Implementation-pattern reference for Next.js 16 + Supabase SaaS codebases built on an accounts-as-tenant-root, @kit/* package architecture. Contains 49 rules across 8 categories, prioritized by execution-lifecycle cascade impact — from authorization & RLS (CRITICAL) and multi-tenant data modeling (CRITICAL) through request middleware, server-side loaders, server actions, route handlers, client/server boundaries, architecture, policy engine, and UI conventions. Each rule includes a quantified impact, a why-it-matters explanation, and Incorrect/Correct code examples drawn from canonical @kit/* package patterns. Rules name the exact @kit/* package APIs (authActionClient, getSupabaseServerClient, enhanceRouteHandler, createAccountsApi, useSupabase, useAction, definePolicy, createPoliciesEvaluator, etc.) so guidance maps directly to imports.",
   "references": [
     "https://makerkit.dev/docs/next-supabase-turbo",
     "https://nextjs.org/docs/app",

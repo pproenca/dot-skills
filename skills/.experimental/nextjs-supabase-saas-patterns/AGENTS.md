@@ -1,7 +1,7 @@
 # Next.js 16 + Supabase SaaS
 
 **Version 0.1.0**  
-Makerkit  
+Community  
 May 2026
 
 > **Note:**  
@@ -13,7 +13,7 @@ May 2026
 
 ## Abstract
 
-Implementation-pattern reference for Next.js 16 + Supabase SaaS codebases that follow the Makerkit Turbo architecture. Contains 49 rules across 8 categories, prioritized by execution-lifecycle cascade impact — from authorization & RLS (CRITICAL) and multi-tenant data modeling (CRITICAL) through request middleware, server-side loaders, server actions, route handlers, client/server boundaries, architecture, policy engine, and UI conventions. Each rule includes a quantified impact, a why-it-matters explanation, and Incorrect/Correct code examples drawn from the canonical kit patterns. Rules name the exact @kit/* package APIs (authActionClient, getSupabaseServerClient, enhanceRouteHandler, createAccountsApi, useSupabase, useAction, definePolicy, createPoliciesEvaluator, etc.) so guidance maps directly to imports.
+Implementation-pattern reference for Next.js 16 + Supabase SaaS codebases built on an accounts-as-tenant-root, @kit/* package architecture. Contains 49 rules across 8 categories, prioritized by execution-lifecycle cascade impact — from authorization & RLS (CRITICAL) and multi-tenant data modeling (CRITICAL) through request middleware, server-side loaders, server actions, route handlers, client/server boundaries, architecture, policy engine, and UI conventions. Each rule includes a quantified impact, a why-it-matters explanation, and Incorrect/Correct code examples drawn from canonical @kit/* package patterns. Rules name the exact @kit/* package APIs (authActionClient, getSupabaseServerClient, enhanceRouteHandler, createAccountsApi, useSupabase, useAction, definePolicy, createPoliciesEvaluator, etc.) so guidance maps directly to imports.
 
 ---
 
