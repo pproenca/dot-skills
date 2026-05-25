@@ -1,6 +1,6 @@
 # Next.js 16 App Router — Partial Prerendering / Cache Components (React 19.2)
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 dot-skills  
 May 2026
 
@@ -8,7 +8,7 @@ May 2026
 
 ## Abstract
 
-Partial Prerendering (PPR) patterns for the Next.js 16 App Router under the Cache Components model, from the simplest static-shell-plus-one-hole page to forms and multi-step wizards. Corrects the wrong defaults of a model trained on Next.js 14/15: the removed experimental.ppr flags, implicit caching, Suspense as the static/dynamic boundary, the 'use cache' directive and its constraints, async runtime APIs, server-to-client Promise streaming with use(), and read-your-writes mutations with updateTag.
+Partial Prerendering (PPR) patterns for the Next.js 16 App Router under the Cache Components model, from the simplest static-shell-plus-one-hole page to forms and multi-step wizards. Corrects the wrong defaults of a model trained on Next.js 14/15: the removed experimental.ppr flags, implicit caching, Suspense as the static/dynamic boundary, the 'use cache' directive and its constraints, async runtime APIs, server-to-client Promise streaming with use(), and read-your-writes mutations with updateTag. Includes an empirical boundary-debugging playbook that deconstructs what actually rendered static vs dynamic by diffing the static shell against the hydrated DOM, using next build signals and chrome-devtools-mcp driven via mcporter.
 
 ---
 
@@ -51,13 +51,16 @@ Partial Prerendering (PPR) patterns for the Next.js 16 App Router under the Cach
 3. [https://nextjs.org/docs/app/getting-started/caching](https://nextjs.org/docs/app/getting-started/caching)
 4. [https://nextjs.org/docs/app/getting-started/fetching-data](https://nextjs.org/docs/app/getting-started/fetching-data)
 5. [https://nextjs.org/docs/app/api-reference/directives/use-cache](https://nextjs.org/docs/app/api-reference/directives/use-cache)
-6. [https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)
-7. [https://nextjs.org/docs/app/api-reference/functions/cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife)
-8. [https://nextjs.org/docs/app/api-reference/functions/cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag)
-9. [https://nextjs.org/docs/app/api-reference/functions/connection](https://nextjs.org/docs/app/api-reference/functions/connection)
-10. [https://nextjs.org/docs/app/api-reference/functions/generate-static-params](https://nextjs.org/docs/app/api-reference/functions/generate-static-params)
-11. [https://nextjs.org/docs/app/guides/preserving-ui-state](https://nextjs.org/docs/app/guides/preserving-ui-state)
-12. [https://nextjs.org/docs/app/guides/upgrading/version-16](https://nextjs.org/docs/app/guides/upgrading/version-16)
+6. [https://nextjs.org/docs/app/api-reference/directives/use-cache-private](https://nextjs.org/docs/app/api-reference/directives/use-cache-private)
+7. [https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents](https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents)
+8. [https://nextjs.org/docs/app/api-reference/functions/cacheLife](https://nextjs.org/docs/app/api-reference/functions/cacheLife)
+9. [https://nextjs.org/docs/app/api-reference/functions/cacheTag](https://nextjs.org/docs/app/api-reference/functions/cacheTag)
+10. [https://nextjs.org/docs/app/api-reference/functions/connection](https://nextjs.org/docs/app/api-reference/functions/connection)
+11. [https://nextjs.org/docs/app/api-reference/functions/generate-static-params](https://nextjs.org/docs/app/api-reference/functions/generate-static-params)
+12. [https://nextjs.org/docs/app/guides/preserving-ui-state](https://nextjs.org/docs/app/guides/preserving-ui-state)
+13. [https://nextjs.org/docs/app/guides/upgrading/version-16](https://nextjs.org/docs/app/guides/upgrading/version-16)
+14. [https://raw.githubusercontent.com/steipete/agent-scripts/refs/heads/main/skills/browser-use/SKILL.md](https://raw.githubusercontent.com/steipete/agent-scripts/refs/heads/main/skills/browser-use/SKILL.md)
+15. [https://raw.githubusercontent.com/steipete/agent-scripts/refs/heads/main/skills/browser-use/mcporter-config.md](https://raw.githubusercontent.com/steipete/agent-scripts/refs/heads/main/skills/browser-use/mcporter-config.md)
 
 ---
 

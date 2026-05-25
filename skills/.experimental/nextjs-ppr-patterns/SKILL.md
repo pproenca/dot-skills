@@ -9,6 +9,8 @@ Partial Prerendering (PPR) for the **Next.js 16 App Router** under the **Cache C
 
 > **Version-specific.** This skill targets **Next.js 16** (PPR via `cacheComponents`, React 19.2). The Next.js 14/15 `experimental.ppr` flag and `export const experimental_ppr` route export were **removed** — see `setup-enable-cache-components`. For migrating an existing app, see the [migration guide](https://nextjs.org/docs/app/guides/migrating-to-cache-components).
 
+> **Write, then verify.** These rules are for *authoring* PPR; they can't tell you what actually rendered. To empirically deconstruct the boundary — diff the static shell against the hydrated DOM to find the dynamic holes, locate the `'use client'` islands, measure loading, and explain why a route is dynamic — drive `next build` and a real browser per [_debug-boundaries.md](references/_debug-boundaries.md).
+
 ## When to Apply
 
 - Building or reviewing a Next.js 16 page that mixes static chrome with personalized, real-time, or per-request content
@@ -16,6 +18,7 @@ Partial Prerendering (PPR) for the **Next.js 16 App Router** under the **Cache C
 - Deciding where `<Suspense>` boundaries go, or debugging an `Uncached data was accessed outside of <Suspense>` build error
 - Adding `'use cache'`, `cacheLife`, `cacheTag`, or choosing `updateTag` / `revalidateTag` / `refresh` after a mutation
 - Composing forms, multi-step wizards, dashboards, or streaming server data into interactive Client Components
+- Empirically verifying or debugging what actually rendered — which parts are in the static shell vs streamed, where the CSR/SSR boundary is, and why a route went dynamic
 
 ## Rule Categories
 
@@ -74,6 +77,7 @@ Partial Prerendering (PPR) for the **Next.js 16 App Router** under the **Cache C
 Read a reference file when its decision comes up. Each rule names the wrong default it corrects, then shows the canonical way (with an incorrect/correct contrast only where the wrong way is a real trap). If you're starting cold, read `setup-` first — the rest assumes the dynamic-by-default mental model.
 
 - [Section definitions](references/_sections.md) — category structure and ordering
+- [Boundary debugging](references/_debug-boundaries.md) — empirically deconstruct the static/dynamic boundary and loading with `next build` and chrome-devtools-mcp (via mcporter); use it when a PPR result surprises you or you're chasing a `blocking-route` error
 - [Rule template](assets/templates/_template.md) — for adding new rules
 - [AGENTS.md](AGENTS.md) — auto-built table of contents across all rules
 
@@ -88,5 +92,6 @@ Read a reference file when its decision comes up. Each rule names the wrong defa
 | File | Description |
 |------|-------------|
 | [references/_sections.md](references/_sections.md) | Category definitions and ordering |
+| [references/_debug-boundaries.md](references/_debug-boundaries.md) | Empirical CSR/SSR boundary & loading debugging (`next build` + chrome-devtools-mcp via mcporter) |
 | [assets/templates/_template.md](assets/templates/_template.md) | Template for new rules |
 | [metadata.json](metadata.json) | Version and source references |
