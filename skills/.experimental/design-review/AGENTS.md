@@ -1,6 +1,6 @@
 # UI Design Review (React / CSS / Tailwind)
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 dot-skills  
 May 2026
 
@@ -8,7 +8,7 @@ May 2026
 
 ## Abstract
 
-A read-only design review for UI code (React/JSX, CSS, Tailwind) that reports findings as a prioritised Before/After/Why table across visual hierarchy, spacing, typography, colour and contrast, component states, motion, responsiveness, and accessibility — grounded in Refactoring UI and Emil Kowalski's design-engineering principles.
+A design review for UI that reports findings as a prioritised Before/After/Why table across visual hierarchy, spacing, typography, colour and contrast, component states, motion, responsiveness, accessibility, multi-page flow and navigation, and interaction continuity — grounded in Refactoring UI and Emil Kowalski's design-engineering principles. Reviews static code (React/JSX, CSS, Tailwind) and, when the verdict turns on rendered behaviour, drives a real browser via chrome-devtools-mcp to measure animation timing, jank/FPS, focus order, the accessibility tree, and the multi-page flow that a screenshot cannot show.
 
 ---
 
@@ -56,6 +56,15 @@ A read-only design review for UI code (React/JSX, CSS, Tailwind) that reports fi
    - 8.1 [Give icon-only controls an accessible name](references/access-name-icon-controls.md)
    - 8.2 [Honor the reduced-motion preference](references/access-respect-reduced-motion.md)
    - 8.3 [Use semantic elements for interactive controls](references/access-semantic-elements.md)
+9. [Flow & Navigation](references/_sections.md#9-flow-&-navigation)
+   - 9.1 [Keep the app shell consistent across pages](references/flow-consistent-shell.md)
+   - 9.2 [Make every page work as a first entry point](references/flow-entry-point-integrity.md)
+   - 9.3 [Preserve scroll and view state across navigation](references/flow-preserve-state-on-nav.md)
+   - 9.4 [Show where the user is and the way back](references/flow-wayfinding.md)
+10. [Interaction Continuity](references/_sections.md#10-interaction-continuity)
+   - 10.1 [Bridge route changes so the screen never flashes blank](references/interact-bridge-route-transitions.md)
+   - 10.2 [Fill the gap while an interaction is in flight](references/interact-feedback-spans-async.md)
+   - 10.3 [Move focus to new content after client-side navigation](references/interact-move-focus-on-navigation.md)
 
 ---
 
@@ -70,6 +79,15 @@ A read-only design review for UI code (React/JSX, CSS, Tailwind) that reports fi
 7. [https://www.w3.org/WAI/WCAG22/](https://www.w3.org/WAI/WCAG22/)
 8. [https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible](https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible)
 9. [https://developer.apple.com/design/human-interface-guidelines/layout](https://developer.apple.com/design/human-interface-guidelines/layout)
+10. [https://www.nngroup.com/articles/ten-usability-heuristics/](https://www.nngroup.com/articles/ten-usability-heuristics/)
+11. [https://www.nngroup.com/articles/breadcrumbs/](https://www.nngroup.com/articles/breadcrumbs/)
+12. [https://www.nngroup.com/articles/response-times-3-important-limits/](https://www.nngroup.com/articles/response-times-3-important-limits/)
+13. [https://developer.mozilla.org/en-US/docs/Web/API/History/scrollRestoration](https://developer.mozilla.org/en-US/docs/Web/API/History/scrollRestoration)
+14. [https://developer.mozilla.org/en-US/docs/Web/API/History_API](https://developer.mozilla.org/en-US/docs/Web/API/History_API)
+15. [https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API](https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API)
+16. [https://www.gatsbyjs.com/blog/2019-07-11-user-testing-accessible-client-routing/](https://www.gatsbyjs.com/blog/2019-07-11-user-testing-accessible-client-routing/)
+17. [https://github.com/ChromeDevTools/chrome-devtools-mcp](https://github.com/ChromeDevTools/chrome-devtools-mcp)
+18. [https://github.com/steipete/agent-scripts/blob/main/skills/browser-use/mcporter-config.md](https://github.com/steipete/agent-scripts/blob/main/skills/browser-use/mcporter-config.md)
 
 ---
 

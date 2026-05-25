@@ -1,12 +1,12 @@
 {
   "name": "design-review",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "UI Design Review (React / CSS / Tailwind)",
   "discipline": "distillation",
   "type": "code-quality",
   "date": "May 2026",
-  "abstract": "A read-only design review for UI code (React/JSX, CSS, Tailwind) that reports findings as a prioritised Before/After/Why table across visual hierarchy, spacing, typography, colour and contrast, component states, motion, responsiveness, and accessibility — grounded in Refactoring UI and Emil Kowalski's design-engineering principles.",
+  "abstract": "A design review for UI that reports findings as a prioritised Before/After/Why table across visual hierarchy, spacing, typography, colour and contrast, component states, motion, responsiveness, accessibility, multi-page flow and navigation, and interaction continuity — grounded in Refactoring UI and Emil Kowalski's design-engineering principles. Reviews static code (React/JSX, CSS, Tailwind) and, when the verdict turns on rendered behaviour, drives a real browser via chrome-devtools-mcp to measure animation timing, jank/FPS, focus order, the accessibility tree, and the multi-page flow that a screenshot cannot show.",
   "references": [
     "https://www.refactoringui.com/",
     "https://medium.com/refactoring-ui/7-practical-tips-for-cheating-at-design-40c736799886",
@@ -16,6 +16,15 @@
     "https://practicaltypography.com/",
     "https://www.w3.org/WAI/WCAG22/",
     "https://developer.mozilla.org/en-US/docs/Web/CSS/:focus-visible",
-    "https://developer.apple.com/design/human-interface-guidelines/layout"
+    "https://developer.apple.com/design/human-interface-guidelines/layout",
+    "https://www.nngroup.com/articles/ten-usability-heuristics/",
+    "https://www.nngroup.com/articles/breadcrumbs/",
+    "https://www.nngroup.com/articles/response-times-3-important-limits/",
+    "https://developer.mozilla.org/en-US/docs/Web/API/History/scrollRestoration",
+    "https://developer.mozilla.org/en-US/docs/Web/API/History_API",
+    "https://developer.mozilla.org/en-US/docs/Web/API/View_Transition_API",
+    "https://www.gatsbyjs.com/blog/2019-07-11-user-testing-accessible-client-routing/",
+    "https://github.com/ChromeDevTools/chrome-devtools-mcp",
+    "https://github.com/steipete/agent-scripts/blob/main/skills/browser-use/mcporter-config.md"
   ]
 }

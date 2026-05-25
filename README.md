@@ -81,7 +81,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [codex-goals](skills/.experimental/codex-goals) | Patterns and anti-patterns for using OpenAI Codex Goals — the persistent objectives feature.. |
 | [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
 | [computer-science-algorithms](skills/.experimental/computer-science-algorithms) | Use this skill whenever choosing or implementing an algorithm or data structure — covers.. |
-| [design-review](skills/.experimental/design-review) | Use this skill to run a structured design review of existing UI code (React/JSX, CSS, Tailwind).. |
+| [design-review](skills/.experimental/design-review) | Use this skill to run a structured design review of UI — existing code (React/JSX, CSS,.. |
 | [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Use this skill whenever reverse-engineering a Sketch file (or Figma export with similar shape).. |
 | [deterministic-metric-design](skills/.experimental/deterministic-metric-design) | Use this skill whenever designing, reviewing, or validating a quantitative metric, score,.. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |

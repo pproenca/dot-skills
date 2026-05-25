@@ -40,3 +40,11 @@ review time based on its impact in that specific UI.
 ## 8. Accessibility & Semantics (access)
 
 **Description:** Whether the markup conveys meaning and the experience is usable assistively. The structural accessibility wrong-defaults not already caught by color, state, or responsiveness. Covers semantic elements, accessible names for icon controls, and honoring reduced-motion preferences.
+
+## 9. Flow & Navigation (flow)
+
+**Description:** Whether the experience holds together *across* pages, not just within one screen. Single-screen review can't see that the app shell drifts route to route, that navigation drops the user's scroll and filters, that a deep link or refresh renders a broken page, or that users can't tell where they are. Reviewed by walking the multi-page flow (see `_runtime-capture.md`). Covers app-shell consistency, view-state persistence, entry-point integrity, and wayfinding.
+
+## 10. Interaction Continuity (interact)
+
+**Description:** Whether the experience stays continuous *over time and across transitions* as the user interacts — the dimension a screenshot cannot show. Distinct from `state` (how one control *looks* in each state): this is whether the bridge *between* states and views holds — route changes that flash blank, async actions that leave a dead interval, and navigations that strand keyboard/AT focus. Best reviewed against a captured trace or recording (see `_runtime-capture.md`). Covers bridging route transitions, spanning async feedback, and moving focus on navigation.

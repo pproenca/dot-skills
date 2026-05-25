@@ -1,6 +1,6 @@
 ---
 name: design-review
-description: Use this skill to run a structured design review of existing UI code (React/JSX, CSS, Tailwind) and report findings as a prioritised Before / After / Why table. Trigger when the user asks to "review this UI", "design review", "critique this component/screen", asks why something "looks off", "looks AI-generated", or "looks like a wireframe", or wants to raise visual polish. Covers visual hierarchy, spacing, typography, colour & contrast, component states & feedback, motion, responsiveness, and accessibility — grounded in Refactoring UI and Emil Kowalski's design-engineering principles. For building UI from scratch use web-taste; for the full animation rule set see emilkowal-animations.
+description: Use this skill to run a structured design review of UI — existing code (React/JSX, CSS, Tailwind) and, when behaviour matters, the running app in a real browser — reported as a prioritised Before / After / Why table. Trigger when the user asks to "review this UI", "design review", "critique this component/screen/page or multi-page flow", asks why something "looks off", "looks AI-generated", or "looks like a wireframe", or wants to raise visual polish. Covers visual hierarchy, spacing, typography, colour & contrast, component states, motion, responsiveness, accessibility, multi-page flow & navigation, and interaction continuity — grounded in Refactoring UI and Emil Kowalski's principles. For animation/jank/FPS, focus order, and cross-page UX it can drive Chrome via chrome-devtools-mcp to capture what a screenshot can't. For building UI from scratch use web-taste; for the full animation set see emilkowal-animations.
 ---
 
 # Design Review
@@ -20,10 +20,13 @@ Not for building UI from scratch (use `web-taste`) or for the exhaustive animati
 
 ## How to Run the Review
 
+**Two modes.** A *static* review reads the code and is the default. A *runtime* review additionally drives a real browser to measure what the code can't show — animation timing and dropped frames, layout shift, the live focus order and accessibility tree, and the multi-page flow clicked through end to end. Switch to runtime whenever the verdict turns on rendered behaviour (the `motion-`, `interact-`, and `flow-` categories), per [runtime-capture.md](references/_runtime-capture.md).
+
 1. **Orient — the 0.5-second test.** Before reading line by line, picture the rendered screen. Where does the eye land first? Is there a single focal point, or does everything carry equal weight? This frames which categories matter most for *this* UI.
 2. **Pass the categories in priority order** (table below). For each decision the code makes, read the matching reference file and check the code against it. Visual hierarchy and spacing are where the largest, most frequent problems live — start there.
-3. **Record each problem as a finding** with a Before (the exact code), an After (the concrete fix), a Why (the principle), and a context-assigned **Severity**.
-4. **Close with a verdict**: the top 3 fixes, ranked by impact, so the author knows what to change first.
+3. **For multi-page or interaction-driven UX, walk it in a browser.** When the brief is a flow ("review this onboarding") or the issue is felt in motion (jank, blank route flashes, lost focus), capture runtime evidence per [runtime-capture.md](references/_runtime-capture.md) so the Before column is a measured value, not a guess.
+4. **Record each problem as a finding** with a Before (the exact code or measurement), an After (the concrete fix), a Why (the principle), and a context-assigned **Severity**.
+5. **Close with a verdict**: the top 3 fixes, ranked by impact, so the author knows what to change first.
 
 ## Output Format (Required)
 
@@ -69,6 +72,8 @@ Finish with: **Top 3 fixes** — the highest-impact rows, in the order the autho
 | 6 | Motion & Animation | `motion-` | Purpose/frequency, ease-out curves, sub-300ms, enter origin/scale, transform-only |
 | 7 | Responsiveness & Touch | `resp-` | Fluid mobile-first, 44px targets, gating hover |
 | 8 | Accessibility & Semantics | `access-` | Semantic elements, accessible names, reduced-motion |
+| 9 | Flow & Navigation | `flow-` | App-shell consistency, view-state persistence, entry-point integrity, wayfinding |
+| 10 | Interaction Continuity | `interact-` | Bridging route transitions, async feedback, focus on navigation |
 
 ## Quick Reference
 
@@ -132,10 +137,28 @@ For drag, gestures, springs, stagger, clip-path, and the full timing/easing tabl
 - [`access-name-icon-controls`](references/access-name-icon-controls.md) — Give icon-only controls an accessible name
 - [`access-respect-reduced-motion`](references/access-respect-reduced-motion.md) — Honor the reduced-motion preference
 
+### 9. Flow & Navigation (`flow-`)
+
+Reviews the experience *across* pages, which single-screen review can't see. Walk the flow in a browser ([runtime-capture.md](references/_runtime-capture.md)).
+
+- [`flow-consistent-shell`](references/flow-consistent-shell.md) — Keep the app shell consistent across pages
+- [`flow-preserve-state-on-nav`](references/flow-preserve-state-on-nav.md) — Preserve scroll and view state across navigation
+- [`flow-entry-point-integrity`](references/flow-entry-point-integrity.md) — Make every page work as a first entry point
+- [`flow-wayfinding`](references/flow-wayfinding.md) — Show where the user is and the way back
+
+### 10. Interaction Continuity (`interact-`)
+
+Reviews whether the experience stays continuous over time and across transitions — the dimension a screenshot can't show. Best judged against a captured trace ([runtime-capture.md](references/_runtime-capture.md)).
+
+- [`interact-bridge-route-transitions`](references/interact-bridge-route-transitions.md) — Bridge route changes so the screen never flashes blank
+- [`interact-feedback-spans-async`](references/interact-feedback-spans-async.md) — Fill the gap while an interaction is in flight
+- [`interact-move-focus-on-navigation`](references/interact-move-focus-on-navigation.md) — Move focus to new content after client-side navigation
+
 ## How to Use
 
 Read a reference file when its decision comes up in the code under review. Each rule names the wrong default it corrects, then shows the canonical fix (with an Incorrect/Correct contrast only where the wrong way is a real trap). Cite the rule slug in the "Why" column so the author can follow up.
 
+- [Runtime capture](references/_runtime-capture.md) — drive a real browser (chrome-devtools-mcp) to measure motion, jank, focus order, and multi-page flow when a static read isn't enough
 - [Section definitions](references/_sections.md) — category structure and order
 - [Rule template](assets/templates/_template.md) — for adding new rules
 - [AGENTS.md](AGENTS.md) — auto-built table of contents across all rules
@@ -151,6 +174,7 @@ Read a reference file when its decision comes up in the code under review. Each 
 
 | File | Description |
 |------|-------------|
+| [references/_runtime-capture.md](references/_runtime-capture.md) | Browser-driven capture playbook (chrome-devtools-mcp via mcporter) |
 | [references/_sections.md](references/_sections.md) | Category definitions and ordering |
 | [assets/templates/_template.md](assets/templates/_template.md) | Template for new rules |
 | [metadata.json](metadata.json) | Version and source references |
