@@ -1,12 +1,8 @@
 # React
 
-**Version 0.1.0**  
+**Version 1.1.0**  
 React Refactor Best Practices  
-February 2026
-
-> **Note:** React architectural refactoring guide for agents and LLMs.
-> Use when maintaining, generating, or refactoring React codebases.
-> Humans may also find it useful, but guidance here is optimized for AI-assisted workflows.
+May 2026
 
 ---
 
@@ -84,7 +80,7 @@ This document was compiled from individual reference files. For detailed editing
 
 | File | Description |
 |------|-------------|
-| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [references/_sections.md](references/_sections.md) | Category definitions and ordering |
 | [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
 | [SKILL.md](SKILL.md) | Quick reference entry point |
 | [metadata.json](metadata.json) | Version and reference URLs |

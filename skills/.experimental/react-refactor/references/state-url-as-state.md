@@ -36,11 +36,18 @@ function IssueTracker() {
 }
 ```
 
-**Correct (useSearchParams — view state in the URL):**
+**Correct (Next.js App Router `useSearchParams` — view state in the URL):**
 
 ```tsx
+"use client";
+
+import { useSearchParams, useRouter, usePathname } from "next/navigation";
+
 function IssueTracker() {
-  const [searchParams, setSearchParams] = useSearchParams();
+  // In Next.js App Router, useSearchParams() is READ-ONLY — there is no setter.
+  const searchParams = useSearchParams();
+  const router = useRouter();
+  const pathname = usePathname();
 
   const searchQuery = searchParams.get("q") ?? "";
   const statusFilter = (searchParams.get("status") ?? "open") as "open" | "closed" | "all";
@@ -51,12 +58,11 @@ function IssueTracker() {
   const issues = useIssueSearch({ searchQuery, statusFilter, page, sortBy });
 
   function updateParam(key: string, value: string) {
-    setSearchParams((prev) => {
-      const next = new URLSearchParams(prev);
-      if (value) next.set(key, value);
-      else next.delete(key);
-      return next;
-    });
+    // Updates go through the router — build a new query string, then push it.
+    const next = new URLSearchParams(searchParams.toString());
+    if (value) next.set(key, value);
+    else next.delete(key);
+    router.push(`${pathname}?${next.toString()}`);
   }
 
   return (
@@ -74,4 +80,6 @@ function IssueTracker() {
 }
 ```
 
-Reference: [React Router - useSearchParams](https://reactrouter.com/en/main/hooks/use-search-params)
+For server-rendered filters, read the params instead from the route's `searchParams` prop — a Promise in Next.js 16, so `await` it: `async function Page({ searchParams }: { searchParams: Promise<Record<string, string>> }) { const { q } = await searchParams; }`.
+
+Reference: [Next.js - useSearchParams](https://nextjs.org/docs/app/api-reference/functions/use-search-params)

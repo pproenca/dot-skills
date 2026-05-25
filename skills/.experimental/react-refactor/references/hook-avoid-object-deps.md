@@ -9,6 +9,8 @@ tags: hook, dependencies, referential-equality, primitives
 
 Object and array literals in dependency arrays fail referential equality on every render, even when their contents are identical. The effect re-executes every render because `{} !== {}`. Extracting primitive values from objects or using stable references prevents phantom re-executions.
 
+The React Compiler does not fix this: it memoizes render output but leaves `useEffect` dependency arrays untouched, so an unstable object dependency still re-fires the effect. This rule applies whether or not the Compiler is enabled.
+
 **Incorrect (object dep — effect fires every render):**
 
 ```tsx

@@ -76,4 +76,18 @@ export default function DashboardPage() {
 // Zero client JS for ProjectList — data fetched on the server, streamed as HTML
 ```
 
-Reference: [React Docs - Server Components](https://react.dev/reference/rsc/server-components)
+**Next.js 16:** `params`, `searchParams`, `cookies()`, `headers()`, and `draftMode()` are now async — synchronous access was removed. Read route inputs with `await` in the server component before fetching:
+
+```tsx
+export default async function ProjectsPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ status?: string }>;
+}) {
+  const { status } = await searchParams; // Promise in Next.js 16 — must await
+  const projects = await db.project.findMany({ where: status ? { status } : undefined });
+  return <ProjectTable projects={projects} />;
+}
+```
+
+Reference: [React Docs - Server Components](https://react.dev/reference/rsc/server-components) · [Next.js 16 upgrade guide](https://nextjs.org/docs/app/guides/upgrading/version-16)
