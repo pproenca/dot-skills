@@ -1,0 +1,25 @@
+{
+  "version": "0.2.0",
+  "organization": "Community",
+  "technology": "Next.js 16 (App Router)",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Opinionated, backend-agnostic implementation-pattern reference for Next.js 16 (App Router) codebases. Contains 50 rules across 8 categories, prioritized by execution-lifecycle cascade impact — from authorization at the data layer (CRITICAL) and optional multi-tenant modeling (CRITICAL) through the proxy.ts request boundary, server-side loaders, mutations, client/server boundaries, architecture, and UI conventions. Each rule states a transferable principle and includes a why-it-matters explanation plus Incorrect/Correct code examples. Examples use Supabase as the concrete backend, with a Transferable note where the store matters (Drizzle, Prisma). The target structure is a Turbo monorepo of @app/* packages built on canonical libraries — next-safe-action, @supabase/ssr, @tanstack/react-query, react-hook-form + zod, shadcn/ui, next-intl, pino — that confine the backend behind one data-access package, rather than a vendored starter kit.",
+  "references": [
+    "https://nextjs.org/docs/app",
+    "https://nextjs.org/docs/app/api-reference/file-conventions/proxy",
+    "https://next-safe-action.dev/",
+    "https://tanstack.com/query/latest/docs/framework/react/overview",
+    "https://react.dev/reference/react/cache",
+    "https://react.dev/reference/rsc/use-client",
+    "https://react-hook-form.com/",
+    "https://zod.dev/",
+    "https://ui.shadcn.com/docs",
+    "https://base-ui.com/react/handbook/composition",
+    "https://next-intl.dev/",
+    "https://turborepo.com/docs/core-concepts/internal-packages",
+    "https://supabase.com/docs/guides/auth/server-side/nextjs",
+    "https://supabase.com/docs/guides/database/postgres/row-level-security"
+  ]
+}
