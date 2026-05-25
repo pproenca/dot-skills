@@ -1,0 +1,25 @@
+{
+  "name": "nextjs-ppr-patterns",
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Next.js 16 App Router — Partial Prerendering / Cache Components (React 19.2)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Partial Prerendering (PPR) patterns for the Next.js 16 App Router under the Cache Components model, from the simplest static-shell-plus-one-hole page to forms and multi-step wizards. Corrects the wrong defaults of a model trained on Next.js 14/15: the removed experimental.ppr flags, implicit caching, Suspense as the static/dynamic boundary, the 'use cache' directive and its constraints, async runtime APIs, server-to-client Promise streaming with use(), and read-your-writes mutations with updateTag.",
+  "references": [
+    "https://nextjs.org/blog/next-16",
+    "https://nextjs.org/docs/app/getting-started/partial-prerendering",
+    "https://nextjs.org/docs/app/getting-started/caching",
+    "https://nextjs.org/docs/app/getting-started/fetching-data",
+    "https://nextjs.org/docs/app/api-reference/directives/use-cache",
+    "https://nextjs.org/docs/app/api-reference/directives/use-cache-private",
+    "https://nextjs.org/docs/app/api-reference/config/next-config-js/cacheComponents",
+    "https://nextjs.org/docs/app/api-reference/functions/cacheLife",
+    "https://nextjs.org/docs/app/api-reference/functions/cacheTag",
+    "https://nextjs.org/docs/app/api-reference/functions/connection",
+    "https://nextjs.org/docs/app/api-reference/functions/generate-static-params",
+    "https://nextjs.org/docs/app/guides/preserving-ui-state",
+    "https://nextjs.org/docs/app/guides/upgrading/version-16"
+  ]
+}
