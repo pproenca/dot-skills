@@ -58,4 +58,4 @@ impl TryFrom<JSONRPCRequest> for ServerRequest {
 
 The macro invocation pairs each variant with both a params *and* response type, so you cannot add a method without declaring both sides of the conversation. The `TryFrom<JSONRPCRequest>` becomes a one-liner because all the work is in the serde tag attribute.
 
-Reference: `codex-rs/app-server-protocol/src/protocol/common.rs:86`.
+Reference: `codex-rs/app-server-protocol/src/protocol/common.rs:161`.

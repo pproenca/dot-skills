@@ -52,4 +52,4 @@ pub fn trace_export_filter(meta: &tracing::Metadata<'_>) -> bool {
 
 The `log_and_trace_event!` composite macro forces callers to explicitly classify extra fields as `log:`-only, `trace:`-only, or `common:`. Sensitive shapes go to `log:`; their cardinality-bounded counterparts (counts, booleans) go to `trace:`. Even the auth env fingerprint is a boolean, never the key itself.
 
-Reference: `codex-rs/otel/src/events/shared.rs:1`, `codex-rs/otel/src/provider.rs:150`.
+Reference: `codex-rs/otel/src/events/shared.rs:4`, `codex-rs/otel/src/provider.rs:184`.

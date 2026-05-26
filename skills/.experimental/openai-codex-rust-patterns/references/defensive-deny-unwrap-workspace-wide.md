@@ -40,4 +40,4 @@ FileSystemSpecialPath::SlashTmp => {
 
 The `#[allow]` attribute is the declaration that this `expect` is intentional, and the adjacent comment documents the invariant that makes it safe. Reviewers can `git grep expect_used` across the repo to audit every panic site in minutes.
 
-Reference: `codex-rs/Cargo.toml:366`, `codex-rs/protocol/src/permissions.rs:1055`.
+Reference: `codex-rs/Cargo.toml:438`, `codex-rs/protocol/src/permissions.rs:1476`.

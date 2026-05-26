@@ -54,4 +54,4 @@ cmd.kill_on_drop(true);
 
 `parent_pid` is captured *before* the closure because inside `pre_exec` the child is already a new process — `getpid()` there would return the child's own pid. `stdin = Stdio::null()` is specifically because ripgrep has a heuristic that reads stdin when it's an open pipe, causing it to hang on an empty one.
 
-Reference: `codex-rs/core/src/spawn.rs:66`, `codex-rs/core/src/spawn.rs:85`.
+Reference: `codex-rs/core/src/spawn.rs:75`, `codex-rs/core/src/spawn.rs:91`.

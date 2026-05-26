@@ -53,4 +53,4 @@ fn flush_terminal_input_buffer() {
 
 Stopping polling is not enough — crossterm spawns an internal reader thread that races the child for stdin bytes. You must drop the stream. And even after recreating it, stale bytes can remain in the kernel's tty input buffer from the handoff window; `tcflush(TCIFLUSH)` drops them. Windows has a sibling using `FlushConsoleInputBuffer`.
 
-Reference: `codex-rs/tui/src/tui/event_stream.rs:10`, `codex-rs/tui/src/tui.rs:209`.
+Reference: `codex-rs/tui/src/tui/event_stream.rs:90`, `codex-rs/tui/src/tui.rs:322`.

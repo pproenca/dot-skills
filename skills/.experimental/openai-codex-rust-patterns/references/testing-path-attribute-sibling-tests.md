@@ -12,38 +12,37 @@ The default Rust convention — `#[cfg(test)] mod tests { ... }` at the bottom o
 **Incorrect (inline mod tests — implementation drowns in tests):**
 
 ```rust
-// core/src/arc_monitor.rs — 500 lines of implementation ...
+// core/src/exec_policy.rs — 500 lines of implementation ...
 
 #[cfg(test)]
 mod tests {
     use super::*;
     // ... 2000 lines of tests inside this file
     #[test]
-    fn exercises_arc_monitor() { /* ... */ }
+    fn exercises_exec_policy() { /* ... */ }
 }
 ```
 
 **Correct (sibling tests file via #[path]):**
 
 ```rust
-// core/src/arc_monitor.rs — ends with this 3-line stub
+// core/src/exec_policy.rs — ends with this 3-line stub
 #[cfg(test)]
-#[path = "arc_monitor_tests.rs"]
+#[path = "exec_policy_tests.rs"]
 mod tests;
 
-// core/src/arc_monitor_tests.rs — lives next to arc_monitor.rs
+// core/src/exec_policy_tests.rs — lives next to exec_policy.rs
 use super::*;
 
 #[test]
-fn exercises_arc_monitor() {
+fn exercises_exec_policy() {
     /* ... */
 }
 
-// core/src/codex_tests.rs — nested when even the sibling is huge
-#[path = "codex_tests_guardian.rs"]
-mod guardian_tests;
+// core/src/session/tests.rs — nested when even the sibling is huge
+mod guardian_tests; // core/src/session/tests/guardian_tests.rs
 ```
 
 `ls core/src` shows over 60 `foo.rs` / `foo_tests.rs` pairs — this is house style, not a one-off. The nested `#[path]` inside `codex_tests.rs` is the escape hatch when even the sibling file hits 5000 lines. Tests still see `pub(crate)` items because they compile as a child module of the parent, same as inline tests.
 
-Reference: `codex-rs/core/src/arc_monitor.rs:428`, `codex-rs/core/src/codex_tests.rs:125`.
+Reference: `codex-rs/core/src/exec_policy.rs:1046`, `codex-rs/core/src/session/tests.rs:181`.

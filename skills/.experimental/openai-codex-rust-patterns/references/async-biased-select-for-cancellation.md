@@ -41,4 +41,4 @@ tokio::select! {
 
 `biased;` plus an active unwind of the parent's wait queue. Cancellation does not just drop the future; it converts to a synthetic decline that every waiter can observe — which is what prevents the "ghost approval" bug.
 
-Reference: `codex-rs/core/src/codex_delegate.rs:796`.
+Reference: `codex-rs/core/src/codex_delegate.rs:779`.

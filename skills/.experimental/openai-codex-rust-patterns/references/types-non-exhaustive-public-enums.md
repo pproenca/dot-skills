@@ -51,4 +51,4 @@ pub enum UserInput {
 
 The attribute sits above the derives, separate from serde and strum attributes. It is paired with `#[serde(tag = "type")]` so the wire encoding is also version-tolerant — unknown tags fail loudly rather than silently dropping data. Apply it from day one; retrofitting later is as breaking as adding a variant without it.
 
-Reference: `codex-rs/protocol/src/protocol.rs:359`, `codex-rs/protocol/src/user_input.rs:10`.
+Reference: `codex-rs/protocol/src/protocol.rs:478`, `codex-rs/protocol/src/user_input.rs:12`.

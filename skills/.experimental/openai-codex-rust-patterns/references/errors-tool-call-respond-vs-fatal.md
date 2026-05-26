@@ -24,7 +24,7 @@ fn handle_apply_patch(argv: &[String]) -> anyhow::Result<String> {
 **Correct (two variants encoded at the construction site):**
 
 ```rust
-// core/src/function_tool.rs
+// tools/src/function_call_error.rs
 #[derive(Debug, thiserror::Error, PartialEq)]
 pub enum FunctionCallError {
     #[error("{0}")]
@@ -53,4 +53,4 @@ Err(FunctionCallError::Fatal(message)) => {
 
 Handlers convert every downstream error at the construction site — `apply_patch` turns a patch rejection into `RespondToModel(...)` while authentication failures become `Fatal`. There is no `#[from]` conversion: the crate author wants callers to consciously choose.
 
-Reference: `codex-rs/core/src/function_tool.rs:4`, `codex-rs/core/src/stream_events_utils.rs:303`.
+Reference: `codex-rs/tools/src/function_call_error.rs:5`, `codex-rs/core/src/stream_events_utils.rs:425`.

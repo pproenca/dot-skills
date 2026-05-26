@@ -1,13 +1,13 @@
 ---
-title: Use Arc AbortOnDropHandle for structured cancellation
+title: Store JoinHandles as AbortOnDropHandle so Drop cancels them
 impact: HIGH
 impactDescription: prevents leaked background tasks when a session or turn is cleared
 tags: async, cancellation, structured-concurrency, tokio-util
 ---
 
-## Use Arc AbortOnDropHandle for structured cancellation
+## Store JoinHandles as AbortOnDropHandle so Drop cancels them
 
-Raw `JoinHandle` storage forces every cleanup path to remember `handle.abort()` — and one missed error branch leaks the task. Codex wraps every `JoinHandle` in `tokio_util::task::AbortOnDropHandle`, then stores that in state structs so `Drop` aborts the task automatically. Wrapping in `Arc` lets multiple observers clone the handle while preserving single-owner abort semantics: the task aborts on the last `Arc` drop.
+A raw `JoinHandle` forces every cleanup path to remember `handle.abort()`; one missed error branch and the task leaks, running on against state that's being torn down. Codex stores tasks as `tokio_util::task::AbortOnDropHandle` inside its state structs, so dropping the owner aborts the task automatically — clearing the turn's task map is enough, with no abort call to forget. When a task is *meant* to outlive its owner, that intent is made explicit with `.detach()` rather than left implicit.
 
 **Incorrect (easy to leak tasks on error paths):**
 
@@ -17,33 +17,30 @@ pub(crate) struct RunningTask {
 }
 fn clear_turn(turn: &mut ActiveTurn) {
     for task in turn.drain_tasks() {
-        task.handle.abort(); // easy to forget on error branches
+        task.handle.abort(); // every error branch must remember this
     }
 }
 ```
 
-**Correct (Drop semantics do the work):**
+**Correct (Drop does the work; detach is the deliberate opt-out):**
 
 ```rust
 // core/src/state/turn.rs
 pub(crate) struct RunningTask {
-    pub(crate) done: Arc<Notify>,
-    pub(crate) kind: TaskKind,
     pub(crate) cancellation_token: CancellationToken,
-    pub(crate) handle: Arc<AbortOnDropHandle<()>>,
+    pub(crate) handle: AbortOnDropHandle<()>,
+    /* ... */
 }
 
 // core/src/tasks/mod.rs — construction site
-let handle = tokio::spawn(
-    async move { /* task body */ }.instrument(task_span),
-);
-let running_task = RunningTask {
-    handle: Arc::new(AbortOnDropHandle::new(handle)),
-    /* ... */
-};
-turn.add_task(running_task);
+let handle = tokio::spawn(async move { /* task body */ }.instrument(task_span));
+turn.add_task(RunningTask { handle: AbortOnDropHandle::new(handle), /* ... */ });
+
+// core/src/state/turn.rs — when removal should NOT cancel, say so explicitly
+let task = self.tasks.swap_remove(sub_id)?;
+task.handle.detach(); // intentionally let it finish after removal
 ```
 
-`IndexMap<String, RunningTask>::clear()` now releases every `RunningTask`, which drops every `Arc<AbortOnDropHandle>`, which aborts the underlying task. You never grep for "where is the abort".
+Clearing the `IndexMap<String, RunningTask>` drops every `AbortOnDropHandle`, which aborts each underlying task — you never grep for "where is the abort". The one place a task should survive removal calls `detach()`, so the exception is visible in the code rather than being an accidental leak. Pair with [[async-child-cancellation-tokens]] for cooperative shutdown before the hard abort.
 
-Reference: `codex-rs/core/src/state/turn.rs:69`, `codex-rs/core/src/tasks/mod.rs:294`.
+Reference: `codex-rs/core/src/state/turn.rs:77`, `codex-rs/core/src/tasks/mod.rs:445`.

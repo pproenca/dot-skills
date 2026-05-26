@@ -84,4 +84,4 @@ fn attach_parent_context(
 
 The env-var load is gated behind `OnceLock` because `TRACEPARENT` is set at process start — reading it every span creation would be wasteful. The fallback priority (request-provided > env > new root) is the inverse of what most codebases get wrong.
 
-Reference: `codex-rs/otel/src/trace_context.rs:66`, `codex-rs/app-server/src/app_server_tracing.rs:124`.
+Reference: `codex-rs/otel/src/trace_context.rs:91`, `codex-rs/app-server/src/app_server_tracing.rs:132`.

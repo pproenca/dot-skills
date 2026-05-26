@@ -1,6 +1,6 @@
 ---
 title: Replace fixed throttles with hysteresis-gated smooth and catch-up modes
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: prevents visible lag on bursts without sacrificing the typewriter cadence feel
 tags: tui, streaming, chunking, hysteresis
 ---
@@ -46,6 +46,6 @@ pub fn decide(&self, snapshot: QueueSnapshot, now: Instant) -> Decision {
 }
 ```
 
-Enter OR, exit AND — that asymmetry is what kills oscillation when only one signal is noisy. The codex team's own doc `docs/tui-stream-chunking-tuning.md` prescribes the tuning order: thresholds → holds → severe gates → baseline cadence.
+Enter OR, exit AND — that asymmetry is what kills oscillation when only one signal is noisy. Tune in this order: thresholds → holds → severe gates → baseline cadence.
 
-Reference: `codex-rs/tui/src/streaming/chunking.rs:82`, `codex-rs/docs/tui-stream-chunking-tuning.md`.
+Reference: `codex-rs/tui/src/streaming/chunking.rs:85`.

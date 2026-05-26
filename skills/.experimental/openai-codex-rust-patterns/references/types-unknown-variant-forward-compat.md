@@ -53,4 +53,4 @@ pub enum FileSystemSpecialPath {
 
 The `Unknown` variant carries the raw string, not a parsed form — you cannot lose the original value by round-tripping through this type. The warning doc comment is load-bearing; it names a real regression (`Codex 0.112.0`) that future editors must not reintroduce.
 
-Reference: `codex-rs/protocol/src/permissions.rs:78`.
+Reference: `codex-rs/protocol/src/permissions.rs:138`.

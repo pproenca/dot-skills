@@ -48,4 +48,4 @@ fn should_use_deterministic_process_ids() -> bool {
 
 `cfg!(test)` alone isn't enough because integration tests in `core/tests/` compile against the non-test build — the AtomicBool bridges that gap. The `_for_tests` suffix is how reviewers audit the test-only surface via grep.
 
-Reference: `codex-rs/core/src/unified_exec/process_manager.rs:71`, `codex-rs/core/src/test_support.rs:1`.
+Reference: `codex-rs/core/src/unified_exec/process_manager.rs:80`, `codex-rs/core/src/test_support.rs:1`.

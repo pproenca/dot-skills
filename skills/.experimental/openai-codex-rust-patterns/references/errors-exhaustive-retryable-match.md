@@ -50,4 +50,4 @@ pub fn is_retryable(&self) -> bool {
 
 Both arms list every variant. The companion retry loop becomes a one-liner: `if !err.is_retryable() { return Err(err); }`. Impact is compile-time — a PR that adds `BrokenPipe` cannot merge until the author picks which bucket it belongs to.
 
-Reference: `codex-rs/protocol/src/error.rs:168`, `codex-rs/core/src/codex.rs:6838`.
+Reference: `codex-rs/protocol/src/error.rs:173`, `codex-rs/core/src/session/turn.rs:968`.

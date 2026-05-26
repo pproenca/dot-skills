@@ -53,4 +53,4 @@ codex-utils-fuzzy-match   = { path = "utils/fuzzy-match" }
 
 The directory structure (`utils/foo`) is distinct from the crate name (`codex-utils-foo`) — the directory namespace keeps the 75-crate `ls` output legible, while the crate-name prefix makes `cargo add codex-utils-*` greppable. `profile.release` uses `lto = "fat"` and `codegen-units = 1` so the crate explosion has zero runtime cost after link-time optimization.
 
-Reference: `codex-rs/Cargo.toml:62`, `codex-rs/Cargo.toml:168`.
+Reference: `codex-rs/Cargo.toml:82`, `codex-rs/Cargo.toml:196`.

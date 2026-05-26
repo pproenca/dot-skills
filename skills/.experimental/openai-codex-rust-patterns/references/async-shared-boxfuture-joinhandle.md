@@ -22,7 +22,7 @@ pub struct SessionHandle {
 **Correct (Shared lets every caller await the same future):**
 
 ```rust
-// core/src/codex.rs
+// core/src/session/mod.rs
 pub(crate) type SessionLoopTermination = Shared<BoxFuture<'static, ()>>;
 
 pub(crate) fn session_loop_termination_from_handle(
@@ -40,4 +40,4 @@ pub(crate) fn session_loop_termination_from_handle(
 
 The closure swallows `handle.await`'s `Result` (panic detail is dropped on purpose — callers only care *when* it ends). `Shared` requires the output to be `Clone`, which `()` trivially is — that is why the function returns `()` instead of propagating the result.
 
-Reference: `codex-rs/core/src/codex.rs:408`.
+Reference: `codex-rs/core/src/session/mod.rs:380`, `codex-rs/core/src/session/mod.rs:819`.

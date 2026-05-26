@@ -55,4 +55,4 @@ insta::with_settings!({ snapshot_suffix => "windows" }, {
 
 The macro hard-codes the `codex_tui__chatwidget__tests__` prefix so moving tests between submodules does not rename the snapshot files — a workaround for insta's default behavior. Look for `@windows` suffixes in `tui/src/chatwidget/snapshots/` to see how cross-platform variants coexist.
 
-Reference: `codex-rs/tui/src/onboarding/trust_directory.rs:217`, `codex-rs/tui/src/chatwidget/tests.rs:230`.
+Reference: `codex-rs/tui/src/onboarding/trust_directory.rs:231`, `codex-rs/tui/src/chatwidget/tests.rs:197`.

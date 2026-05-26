@@ -53,4 +53,4 @@ args.push(path_to_string(unreadable_root));
 
 The file-fd side uses `preserved_files: Vec<File>` to keep the `/dev/null` handle alive across the spawn. The equivalent Seatbelt policy blocks the same hole via `(require-not (literal ...))` alongside `(require-not (subpath ...))` because Seatbelt's `(subpath)` predicate does not cover first-time creation of the directory itself.
 
-Reference: `codex-rs/linux-sandbox/src/bwrap.rs:513`, `codex-rs/linux-sandbox/src/bwrap.rs:605`.
+Reference: `codex-rs/linux-sandbox/src/bwrap.rs:1058`, `codex-rs/linux-sandbox/src/bwrap.rs:1076`.

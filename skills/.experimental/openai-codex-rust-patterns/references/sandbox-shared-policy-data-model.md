@@ -36,7 +36,7 @@ let (argv, arg0_override) = match sandbox {
     SandboxType::None => (os_argv_to_strings(raw_argv), None),
     #[cfg(target_os = "macos")]
     SandboxType::MacosSeatbelt => {
-        let args = create_seatbelt_command_args_for_policies(
+        let args = create_seatbelt_command_args(
             os_argv_to_strings(raw_argv),
             &effective_file_system_policy,
             effective_network_policy,
@@ -56,4 +56,4 @@ let (argv, arg0_override) = match sandbox {
 
 The shared `SandboxPolicy` is serializable and gets passed through argv to the Linux sandbox helper as JSON — so even sub-processes share the schema. Adding a new constraint is one edit in the shared type plus three backend render patches, not three independent rewrites.
 
-Reference: `codex-rs/sandboxing/src/manager.rs:23`, `codex-rs/sandboxing/src/manager.rs:199`.
+Reference: `codex-rs/sandboxing/src/manager.rs:23`, `codex-rs/sandboxing/src/manager.rs:196`.

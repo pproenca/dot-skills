@@ -7,43 +7,35 @@ tags: proto, serde, api-design, tri-state
 
 ## Use double-nested Options to distinguish absent, null, and set
 
-In PATCH-like update APIs, a plain `Option<T>` collapses "leave this field alone" and "explicitly clear this field" into one state, which destroys the semantics of partial updates. Codex reaches for `Option<Option<T>>` with `serde_with::rust::double_option`: the outer layer means "field omitted from JSON" (leave unchanged), `Some(None)` means the field was sent as JSON `null` (clear it), and `Some(Some(value))` means "set to value".
+In a PATCH-like update API a plain `Option<T>` collapses "leave this field alone" and "explicitly clear this field" into one state. `Option<Option<T>>` recovers the third state — but only if you wire up the deserializer, because serde's default maps a JSON `null` straight to the *outer* `None`, making it indistinguishable from an omitted field. Codex routes these fields through `serde_with::rust::double_option` so `None` = omitted (leave unchanged), `Some(None)` = JSON `null` (clear), and `Some(Some(v))` = set.
 
-**Incorrect (plain Option collapses "unchanged" and "clear"):**
+**Incorrect (plain Option, or a bare `Option<Option<T>>` without the helper):**
 
 ```rust
-#[derive(Deserialize)]
-pub struct OverrideTurnContext {
-    service_tier: Option<ServiceTier>,
-}
-// Sending {"service_tier": null} looks the same as omitting the field.
-// Caller must invent a sentinel to mean "clear".
+// Both of these collapse "clear" into "unchanged":
+service_tier: Option<String>,           // {"service_tier": null} == field omitted
+service_tier: Option<Option<String>>,   // null still deserializes to the OUTER None
 ```
 
-**Correct (double Option via serde_with):**
+**Correct (double-option helper wired via deserialize_with):**
 
 ```rust
-// protocol/src/protocol.rs
-/// Optional service tier override for this turn.
-///
-/// Use `Some(Some(value))` to set a specific tier for this turn,
-/// `Some(None)` to explicitly clear the tier for this turn, or `None`
-/// to keep the existing session preference.
-#[serde(default, skip_serializing_if = "Option::is_none")]
-service_tier: Option<Option<ServiceTier>>,
+// app-server-protocol/src/protocol/v2/thread.rs
+#[serde(
+    default,
+    deserialize_with = "crate::protocol::serde_helpers::deserialize_double_option",
+    serialize_with = "crate::protocol::serde_helpers::serialize_double_option",
+    skip_serializing_if = "Option::is_none"
+)]
+pub service_tier: Option<Option<String>>,
 
-// app-server-protocol/src/protocol/serde_helpers.rs — centralized helper
-pub fn deserialize_double_option<'de, T, D>(
-    deserializer: D,
-) -> Result<Option<Option<T>>, D::Error>
-where
-    T: Deserialize<'de>,
-    D: Deserializer<'de>,
-{
-    Deserialize::deserialize(deserializer).map(Some)
+// app-server-protocol/src/protocol/serde_helpers.rs — one shared implementation
+pub fn deserialize_double_option<'de, T, D>(d: D) -> Result<Option<Option<T>>, D::Error>
+where T: Deserialize<'de>, D: Deserializer<'de> {
+    serde_with::rust::double_option::deserialize(d)
 }
 ```
 
-This only appears on the mutation-shaped APIs (`UserTurn`, `OverrideTurnContext`, `ThreadStartParams`). The helper module in `app-server-protocol/src/protocol/serde_helpers.rs` centralizes the `deserialize_double_option` / `serialize_double_option` pair so every call site points at the same implementation — no inventing a `FieldAction<T> { Unchanged, Clear, Set(T) }` enum that requires three mappings per update.
+`#[serde(default)]` supplies the omitted → `None` case; `deserialize_double_option` forces a present-but-`null` value to `Some(None)` instead of letting it fold back to `None`. Centralizing the helper in `serde_helpers.rs` means every mutation-shaped field (`ThreadStartParams`, `TurnOptions`, process/realtime params) shares one implementation — no per-field `FieldAction<T> { Unchanged, Clear, Set(T) }` enum with three mappings each.
 
-Reference: `codex-rs/protocol/src/protocol.rs:438`, `codex-rs/app-server-protocol/src/protocol/serde_helpers.rs`.
+Reference: `codex-rs/app-server-protocol/src/protocol/v2/thread.rs:100`, `codex-rs/app-server-protocol/src/protocol/serde_helpers.rs:16`.

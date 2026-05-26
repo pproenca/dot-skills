@@ -52,4 +52,4 @@ fn append_capped(dst: &mut Vec<u8>, src: &[u8], max_bytes: usize) {
 
 The "keep draining after cap" rule is load-bearing: stop reading and a long-running child process deadlocks on its own full pipe, hanging the agent forever.
 
-Reference: `codex-rs/core/src/unified_exec/head_tail_buffer.rs:65`, `codex-rs/core/src/exec.rs:747`.
+Reference: `codex-rs/core/src/unified_exec/head_tail_buffer.rs:65`, `codex-rs/core/src/exec.rs:856`.

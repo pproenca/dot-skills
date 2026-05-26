@@ -23,7 +23,7 @@ async fn dispatch_tool_call(
 **Correct (trace default, info for network boundary, skip_all):**
 
 ```rust
-// core/src/codex.rs — internal code path
+// core/src/session/turn.rs — internal code path
 #[instrument(
     level = "trace",
     skip_all,
@@ -62,4 +62,4 @@ pub async fn build_tool_call(/* ... */) -> ToolResult { /* ... */ }
 
 The `err` argument is the idiomatic shortcut for "if this function returns `Err`, record it on the span automatically" — no manual error logging. Fields use `%` (Display) not `?` (Debug) for paths and ids, because Display is bounded where Debug can explode. `turn.has_metadata_header = ... .is_some()` is a booleanization pattern — the field is always present with cardinality 2, never the raw header value.
 
-Reference: `codex-rs/core/src/client.rs:1040`, `codex-rs/core/src/codex.rs:6752`.
+Reference: `codex-rs/core/src/client.rs:1121`, `codex-rs/core/src/session/turn.rs:892`.

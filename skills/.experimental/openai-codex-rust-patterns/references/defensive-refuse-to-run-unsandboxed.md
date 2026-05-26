@@ -40,4 +40,4 @@ let Some(legacy_root) = legacy_writable_roots.iter().find(|candidate| {
 
 `refusing to run unsandboxed` appears verbatim in every refusal message across the sandbox backends, turning it into an audit grep. When ops debugs a blocked command, the error says exactly which primitive the backend lacks — not "permission denied" or "sandbox failed" which look like transient errors worth retrying.
 
-Reference: `codex-rs/core/src/exec.rs:1005`, `codex-rs/core/src/exec.rs:1072`.
+Reference: `codex-rs/core/src/exec.rs:1053`, `codex-rs/core/src/exec.rs:1094`.

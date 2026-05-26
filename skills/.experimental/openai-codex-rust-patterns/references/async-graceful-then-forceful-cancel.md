@@ -50,4 +50,4 @@ async fn handle_task_abort(
 
 `task.done.notified()` is the task's way of volunteering that it reached its cleanup tail; `handle.abort()` is the hard kill. Both always run — `abort()` is a no-op if the task already returned.
 
-Reference: `codex-rs/core/src/tasks/mod.rs:568`.
+Reference: `codex-rs/core/src/tasks/mod.rs:846`.

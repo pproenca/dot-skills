@@ -21,7 +21,7 @@ let child = trace_span!(parent: &parent, "tool_call", tool_name = ?event.tool);
 **Correct (Empty placeholder, record when facts arrive):**
 
 ```rust
-// core/src/codex.rs
+// core/src/session/turn.rs
 let receiving_span = trace_span!("receiving_stream");
 let handle_responses = trace_span!(
     parent: &receiving_span,
@@ -66,4 +66,4 @@ dispatch_span.record("aborted", true);
 
 `field::Empty` is load-bearing — tracing-subscriber will not emit the field if `record` is never called, so empty placeholders reserve schema slots without producing null-like noise. The `aborted = false` default plus a single `record("aborted", true)` on cancel is how Codex tracks abort rates without a counter.
 
-Reference: `codex-rs/core/src/codex.rs:7593`, `codex-rs/otel/src/events/session_telemetry.rs:292`.
+Reference: `codex-rs/core/src/session/turn.rs:1750`, `codex-rs/otel/src/events/session_telemetry.rs:401`.

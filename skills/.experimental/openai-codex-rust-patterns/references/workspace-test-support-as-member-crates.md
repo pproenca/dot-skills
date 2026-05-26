@@ -53,4 +53,4 @@ core_test_support = { workspace = true }
 
 The test-support crate uses snake_case (`core_test_support`) to signal it's internal; the `[lib] path = "lib.rs"` pulls the library root out of a `src/` subdirectory; it is NOT a member of `[workspace] members` but *is* registered in `[workspace.dependencies]`. `app_test_support` itself depends on `core_test_support`, proving these test crates compose into a helper pyramid just like production crates.
 
-Reference: `codex-rs/Cargo.toml:105`, `codex-rs/core/tests/common/Cargo.toml:1`.
+Reference: `codex-rs/Cargo.toml:239`, `codex-rs/core/tests/common/Cargo.toml:2`.

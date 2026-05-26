@@ -1,6 +1,6 @@
 ---
 title: Treat SSE streams as idle-timeout with a required terminator
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: prevents long turns from being killed by wall-clock deadlines and silent half-closes
 tags: proto, streaming, sse, timeouts
 ---
@@ -56,4 +56,4 @@ loop {
 
 The missing-terminator error maps to `CodexErr::Stream`, which `is_retryable()` reports as `true` — so the session loop auto-retries half-closes instead of surfacing a mystery. The stream is bridged to the consumer via a bounded `mpsc::channel(1600)` rather than exposed as a raw `futures::Stream`, giving proper backpressure and an explicit close signal.
 
-Reference: `codex-rs/codex-api/src/sse/responses.rs:367`, `codex-rs/protocol/src/error.rs:71`.
+Reference: `codex-rs/codex-api/src/sse/responses.rs:399`, `codex-rs/protocol/src/error.rs:78`.

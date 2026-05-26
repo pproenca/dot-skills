@@ -56,4 +56,4 @@ pub enum CodexErr {
 
 `rate_limits` is boxed to keep the enum variant small enough to pass the workspace's `large-error-threshold = 256` clippy lint. Tests assert against `err.plan_type` and `err.resets_at` directly; the UI still gets `err.to_string()`.
 
-Reference: `codex-rs/protocol/src/error.rs:441`.
+Reference: `codex-rs/protocol/src/error.rs:450`.

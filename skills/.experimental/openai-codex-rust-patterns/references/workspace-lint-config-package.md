@@ -58,4 +58,4 @@ large-error-threshold = 256
 
 `large-error-threshold = 256` is a subtle choice that gates `result_large_err` up from the default to allow rich `thiserror` enums. `disallowed-methods` is the architectural enforcement mechanism — banning direct `Color::Rgb` frees code review to focus on logic.
 
-Reference: `codex-rs/Cargo.toml:363`, `codex-rs/clippy.toml:1`, `codex-rs/core/src/lib.rs:1`.
+Reference: `codex-rs/Cargo.toml:432`, `codex-rs/clippy.toml:1`, `codex-rs/core/src/lib.rs:6`.

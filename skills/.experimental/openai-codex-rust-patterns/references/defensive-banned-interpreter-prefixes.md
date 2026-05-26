@@ -40,4 +40,4 @@ if BANNED_PREFIX_SUGGESTIONS.iter().any(|banned| {
 
 The match is exact-length and exact-sequence — `python3 script.py` is still policy-able (different length), but `python3 -c` is not. Adding a new interpreter takes one line in a central list, not a code audit across every call site.
 
-Reference: `codex-rs/core/src/exec_policy.rs:50`, `codex-rs/core/src/exec_policy.rs:711`.
+Reference: `codex-rs/core/src/exec_policy.rs:52`, `codex-rs/core/src/exec_policy.rs:876`.

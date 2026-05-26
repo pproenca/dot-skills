@@ -46,4 +46,4 @@ if supports_argv0 {
 
 The temp dir is `chmod 0700` and locked via `fs2::try_lock` so a janitor thread can clean stale siblings without racing live sessions. Windows, which lacks good symlinks, falls back to generated `.bat` stubs that exec the main binary.
 
-Reference: `codex-rs/arg0/src/lib.rs:53`, `codex-rs/linux-sandbox/src/linux_run_main.rs:497`.
+Reference: `codex-rs/arg0/src/lib.rs:54`, `codex-rs/linux-sandbox/src/linux_run_main.rs:422`.

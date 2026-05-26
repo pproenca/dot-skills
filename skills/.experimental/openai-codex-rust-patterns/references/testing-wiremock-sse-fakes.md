@@ -36,7 +36,7 @@ pub fn sse(events: Vec<Value>) -> String {
     out
 }
 
-// core/src/codex_tests_guardian.rs
+// core/src/session/tests/guardian_tests.rs
 let _request_log = mount_sse_once(
     &server,
     sse(vec![
@@ -49,4 +49,4 @@ let _request_log = mount_sse_once(
 
 `mount_sse_once` returns a `ResponseMock` handle; the same handle then lets the test assert what Codex actually *sent* — bidirectional coverage. Every test exercises the HTTP layer, serde, retry, and the SSE parser for free. No test in the codebase mocks a trait for the model client.
 
-Reference: `codex-rs/core/tests/common/responses.rs:566`, `codex-rs/core/src/codex_tests_guardian.rs:49`.
+Reference: `codex-rs/core/tests/common/responses.rs:600`, `codex-rs/core/src/session/tests/guardian_tests.rs:74`.

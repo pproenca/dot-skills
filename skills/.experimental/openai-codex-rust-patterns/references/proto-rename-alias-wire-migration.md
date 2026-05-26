@@ -1,6 +1,6 @@
 ---
 title: Pair rename and alias to migrate wire names without breaking clients
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: prevents flag-day migrations by keeping old wire names as read-only aliases
 tags: proto, serde, versioning, backcompat
 ---
@@ -34,4 +34,4 @@ TurnComplete(TurnCompleteEvent),
 
 The Rust identifier (`TurnStarted`) is decoupled from both wire names — renaming internally is free. A doc comment records which name is v1 and which is v2, so future grep-and-refactor passes can find the migration sites. Other files use `#[serde(default, alias = "agent_type")]` when field names (not variants) migrate the same way.
 
-Reference: `codex-rs/protocol/src/protocol.rs:1395`.
+Reference: `codex-rs/protocol/src/protocol.rs:1174`.

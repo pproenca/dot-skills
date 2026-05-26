@@ -5,7 +5,7 @@ This document defines the category structure, impact levels, and file-name prefi
 ## 1. Defensive Coding & Panic Discipline (defensive)
 
 **Impact:** CRITICAL
-**Description:** Patterns that prevent panics in production and turn "should never happen" into grepable tombstones. Codex cannot crash when a tool handler sees malformed input, a subprocess spawns a grandchild, or a sandbox backend cannot enforce the requested policy — so the defensive rules are load-bearing for service availability.
+**Description:** Patterns that prevent panics in production and turn "should never happen" into grepable tombstones. Codex cannot crash when a tool handler sees malformed input, a subprocess spawns a grandchild, a lock is poisoned by another task, or a sandbox backend cannot enforce the requested policy — so the defensive rules are load-bearing for service availability. Also covers treating loaded plugins as untrusted input.
 
 ## 2. Error Handling & Result Discipline (errors)
 
@@ -15,39 +15,44 @@ This document defines the category structure, impact levels, and file-name prefi
 ## 3. Async, Concurrency & Cancellation (async)
 
 **Impact:** HIGH
-**Description:** Tokio patterns for long-lived agents where tasks must clean up reliably, cancellation must win race ties, and channels must balance throughput against responsiveness. Covers Arc<AbortOnDropHandle>, CancellationToken discipline, and the bounded-vs-unbounded channel split.
+**Description:** Tokio patterns for long-lived agents where tasks must clean up reliably, cancellation must win race ties, and channels must balance throughput against responsiveness. Covers AbortOnDropHandle, CancellationToken discipline, and the bounded-vs-unbounded channel split.
 
 ## 4. Sandboxing & Process Isolation (sandbox)
 
 **Impact:** HIGH
-**Description:** Cross-platform sandbox patterns from running LLM-generated commands under Seatbelt, Landlock, seccomp, and Windows restricted tokens. Policy-as-data, argv[0] multiplexing, staged restrictions, and refusing to run when enforcement is impossible.
+**Description:** Cross-platform sandbox patterns from running LLM-generated commands under Seatbelt, Landlock, seccomp, and Windows restricted tokens. Policy-as-data, argv[0] multiplexing, staged restrictions, refusing to run when enforcement is impossible, and resolving hostnames to defeat DNS-rebinding bypass of an egress allowlist.
 
-## 5. Type Design & Invariants (types)
+## 5. Secrets & Process Hardening (secrets)
 
 **Impact:** HIGH
-**Description:** Newtype, enum, and trait patterns that encode invariants at compile time — thread-local RAII for serde context, dyn-safe adapter traits for async registries, try_from-driven validation, and forward-compatible enum variants.
+**Description:** Patterns for protecting credentials and the process itself, drawn from the responses-api proxy, `process-hardening`, and the auth crates. Reading a secret into a single zeroized, mlock'd copy; `#[ctor]` pre-main hardening that fails closed; and hand-written `Debug` impls that elide credentials so they never reach a log.
 
-## 6. Testing Architecture (testing)
+## 6. Type Design & Invariants (types)
+
+**Impact:** HIGH
+**Description:** Newtype, enum, and trait patterns that encode invariants at compile time — thread-local RAII for serde context, try_from-driven validation, and forward-compatible enum variants.
+
+## 7. Testing Architecture (testing)
 
 **Impact:** MEDIUM-HIGH
-**Description:** Test organization patterns from a codebase with 5700-line test files. Sibling `foo_tests.rs` files via `#[path]`, wiremock-based fakes for SSE streams, AtomicBool test opt-ins, closure-based config builders, insta snapshot tests for Ratatui, and start_paused deterministic timing.
+**Description:** Test organization patterns from a codebase with multi-thousand-line test files. Sibling `foo_tests.rs` files via `#[path]`, wiremock-based fakes for SSE streams, AtomicBool test opt-ins, insta snapshot tests for Ratatui, and start_paused deterministic timing.
 
-## 7. Protocol & Serde Design (proto)
+## 8. Protocol & Serde Design (proto)
 
 **Impact:** MEDIUM-HIGH
-**Description:** Serde-based protocol patterns for a JSON-RPC-like wire format with streaming, experimental fields, and forward compatibility — macro-generated dispatchers, Option<Option<T>>, rename+alias migration, and runtime experimental gating.
+**Description:** Serde-based protocol patterns for a JSON-RPC-like wire format with streaming, experimental fields, and forward compatibility — macro-generated dispatchers, Option<Option<T>>, rename+alias migration, runtime experimental gating, and removed-feature tombstones for config round-tripping.
 
-## 8. Workspace & Crate Organization (workspace)
+## 9. Workspace & Crate Organization (workspace)
 
 **Impact:** MEDIUM
-**Description:** Cargo workspace patterns from a 75-crate monorepo with zero per-crate features, a single source of truth for dependency versions, layered transport/api/core crates, and workspace-level lint enforcement via clippy.toml.
+**Description:** Cargo workspace patterns from a ~100-crate monorepo with near-zero per-crate features, layered transport/api/core crates, test-support as member crates, utils microcrate fan-out, and workspace-level lint enforcement via clippy.toml.
 
-## 9. Observability & Tracing (otel)
+## 10. Observability & Tracing (otel)
 
 **Impact:** MEDIUM
 **Description:** tracing and OpenTelemetry patterns for services with privacy constraints — log-only vs trace-safe targets, field::Empty placeholders, W3C traceparent propagation across env vars and RPC envelopes, and trace-level `#[instrument]` as the default.
 
-## 10. TUI (Ratatui) Rendering (tui)
+## 11. TUI (Ratatui) Rendering (tui)
 
 **Impact:** MEDIUM
 **Description:** Ratatui patterns from a streaming LLM TUI — two-gear hysteresis chunking, frame-request coalescing, panic-hook terminal restoration, unbracketed-paste burst detection, and pausing the event stream before a subprocess handoff.

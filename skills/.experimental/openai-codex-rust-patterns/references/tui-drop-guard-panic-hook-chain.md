@@ -1,6 +1,6 @@
 ---
 title: Restore terminal state via a Drop guard and chained panic hook
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: prevents wedged terminals that require manual `reset` after a panic
 tags: tui, terminal, panic, raii
 ---
@@ -56,4 +56,4 @@ impl Drop for TerminalRestoreGuard {
 
 There are *two* layered panic hooks — `tui::init` installs one to restore the terminal, and `run` adds a tracing hook on top. Both chain the previous one. The `Drop for TerminalRestoreGuard` means you can `return Err(...)` from anywhere without leaving raw mode on. The `active: bool` gate also lets explicit early restore (before exec-ing `git commit` into the same terminal) not double-fire.
 
-Reference: `codex-rs/tui/src/tui.rs:101`, `codex-rs/tui/src/lib.rs:1019`.
+Reference: `codex-rs/tui/src/tui.rs:462`, `codex-rs/tui/src/lib.rs:1304`.

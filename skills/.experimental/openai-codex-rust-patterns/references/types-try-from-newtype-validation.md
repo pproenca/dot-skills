@@ -51,4 +51,4 @@ impl TryFrom<String> for AgentPath {
 
 The derived `Deserialize` automatically invokes `TryFrom<String>`, which calls `validate_absolute_path`. There is no constructor that bypasses validation — not even a private one. `#[ts(type = "string")]` and `#[schemars(with = "String")]` keep the type-export story consistent across TypeScript and JSON Schema, so consumers see a plain string, not an opaque newtype wrapper.
 
-Reference: `codex-rs/protocol/src/agent_path.rs:9`.
+Reference: `codex-rs/protocol/src/agent_path.rs:12`.

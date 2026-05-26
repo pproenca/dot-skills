@@ -46,4 +46,4 @@ Err(RefreshTokenError::Transient(other)) => {
 
 `Permanent` maps to a dedicated user-facing variant; `Transient` routes through `CodexErr::Io`, which `is_retryable()` reports as `true`. The retry loop handles it automatically — the two paths never need a shared conditional.
 
-Reference: `codex-rs/login/src/auth/manager.rs:88`, `codex-rs/core/src/client.rs:1754`.
+Reference: `codex-rs/login/src/auth/manager.rs:102`, `codex-rs/core/src/client.rs:2011`.

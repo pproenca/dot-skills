@@ -47,4 +47,4 @@ async fn await_output(
 
 The killing order matters too: `kill_child_process_group(&mut child)` runs before `child.start_kill()` so the grandchildren get a SIGKILL through the process group, and the drain timeout is the belt-and-braces safety net if that fails.
 
-Reference: `codex-rs/core/src/exec.rs:73`, `codex-rs/core/src/exec.rs:1263`.
+Reference: `codex-rs/core/src/exec.rs:81`, `codex-rs/core/src/exec.rs:1391`.

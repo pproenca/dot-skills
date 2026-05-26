@@ -58,4 +58,4 @@ return Err(ApplyPatchError::IoError(IoError {
 
 `#[source]` (not `#[from]`) on the field is deliberate — the derivation intentionally does not auto-wrap raw `io::Error` into `IoError`; that is what the hand-written `From` is for, so the default context is visible at the boundary. The custom `PartialEq` uses `source.to_string()` because `io::Error` does not implement `PartialEq`.
 
-Reference: `codex-rs/apply-patch/src/lib.rs:58`, `codex-rs/apply-patch/src/invocation.rs:177`.
+Reference: `codex-rs/apply-patch/src/lib.rs:82`, `codex-rs/apply-patch/src/invocation.rs:192`.

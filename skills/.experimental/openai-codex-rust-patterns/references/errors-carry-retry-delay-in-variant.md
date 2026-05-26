@@ -33,7 +33,7 @@ pub enum CodexErr {
     /* other variants */
 }
 
-// core/src/codex.rs — retry loop reads the hint directly
+// core/src/session/turn.rs — retry loop reads the hint directly
 let delay = match &err {
     CodexErr::Stream(_, requested_delay) => {
         requested_delay.unwrap_or_else(|| backoff(retries))
@@ -45,4 +45,4 @@ tokio::time::sleep(delay).await;
 
 The two-tuple variant `Stream(String, Option<Duration>)` is unusual — most thiserror users would define a struct variant. The positional form makes the "this carries a delay hint" fact visible at every construction site.
 
-Reference: `codex-rs/protocol/src/error.rs:78`, `codex-rs/core/src/codex.rs:6862`.
+Reference: `codex-rs/protocol/src/error.rs:79`, `codex-rs/core/src/session/turn.rs:993`.

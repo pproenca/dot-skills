@@ -58,6 +58,6 @@ pub fn on_plain_char(
 }
 ```
 
-The `PasteBurst` never touches the textarea itself — it only returns decisions, and `ChatComposer` interprets them. That is why it is unit-testable. A specific pitfall is spelled out in `docs/tui-chat-composer.md`: `clear_window_after_non_char` clears the last timestamp, so if you call it while `buffer` is non-empty without flushing first, the buffered text will never flush. The rule: flush before clearing, always.
+The `PasteBurst` never touches the textarea itself — it only returns decisions, and `ChatComposer` interprets them. That is why it is unit-testable. A specific pitfall: `clear_window_after_non_char` clears the last timestamp, so if you call it while `buffer` is non-empty without flushing first, the buffered text never flushes. The rule: flush before clearing, always.
 
-Reference: `codex-rs/tui/src/bottom_pane/paste_burst.rs:148`, `codex-rs/docs/tui-chat-composer.md`.
+Reference: `codex-rs/tui/src/bottom_pane/paste_burst.rs:157`.

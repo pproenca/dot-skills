@@ -53,4 +53,4 @@ tokio::time::advance(Duration::from_secs(1)).await;
 
 The `yield_now()` between `spawn` and `advance` is load-bearing — without it, the spawned task has not yet registered its timer and `advance` is a no-op. This is the specific tokio idiom for paused-runtime tests and is not well documented.
 
-Reference: `codex-rs/cloud-requirements/src/lib.rs:1308`, `codex-rs/cloud-requirements/src/lib.rs:1343`.
+Reference: `codex-rs/cloud-requirements/src/lib.rs:1534`, `codex-rs/cloud-requirements/src/lib.rs:1545`.

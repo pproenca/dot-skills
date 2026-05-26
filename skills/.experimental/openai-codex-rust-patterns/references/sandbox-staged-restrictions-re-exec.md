@@ -49,4 +49,4 @@ if network_seccomp_mode.is_some()
 
 `apply_sandbox_policy_to_current_thread` is applied to the current *thread*, not the process — so it only affects the about-to-exec path and cannot leak into the outer process. The sandbox helper is literally the same ELF as the Codex CLI — work is selected by argv flags.
 
-Reference: `codex-rs/linux-sandbox/src/linux_run_main.rs:138`, `codex-rs/linux-sandbox/src/landlock.rs:56`.
+Reference: `codex-rs/linux-sandbox/src/linux_run_main.rs:178`, `codex-rs/linux-sandbox/src/landlock.rs:61`.

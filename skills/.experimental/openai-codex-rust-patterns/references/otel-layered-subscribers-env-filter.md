@@ -71,4 +71,4 @@ let _ = tracing_subscriber::registry()
 
 `FmtSpan::NEW | FmtSpan::CLOSE` emits one record at span entry and one at close — giving timing for every instrumented function without writing any `info!("started")` / `info!("done")` pairs. `try_init` (vs `init`) is used because tests may have already set a subscriber.
 
-Reference: `codex-rs/tui/src/lib.rs:898`, `codex-rs/app-server/src/lib.rs:489`.
+Reference: `codex-rs/tui/src/lib.rs:1202`, `codex-rs/app-server/src/lib.rs:619`.

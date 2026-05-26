@@ -1,6 +1,6 @@
 ---
 title: Stack HTTP layers as transport, api, and core crates
-impact: MEDIUM-HIGH
+impact: MEDIUM
 impactDescription: enables client crate reuse and prevents business logic from pulling in retries
 tags: workspace, layering, architecture, crates
 ---

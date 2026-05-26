@@ -47,4 +47,4 @@ let handle = tokio::spawn(async move {
 
 The local `is_cancelled()` check after `run(...)` is how Codex decides whether to emit the completion event: "finished normally" and "finished via cancellation" are both "the future returned" — the token is how you distinguish them.
 
-Reference: `codex-rs/core/src/codex_delegate.rs:116`, `codex-rs/core/src/tasks/mod.rs:284`.
+Reference: `codex-rs/core/src/codex_delegate.rs:119`, `codex-rs/core/src/tasks/mod.rs:388`.

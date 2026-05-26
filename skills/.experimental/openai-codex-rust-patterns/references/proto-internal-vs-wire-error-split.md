@@ -1,6 +1,6 @@
 ---
 title: Split internal error enums from wire error enums
-impact: HIGH
+impact: MEDIUM-HIGH
 impactDescription: enables internal error refactors without breaking the stable wire contract
 tags: proto, errors, api-design, versioning
 ---
@@ -51,7 +51,7 @@ impl CodexErr {
     }
 }
 
-// app-server-protocol/src/protocol/v2.rs — wire, frozen shape
+// app-server-protocol/src/protocol/v2/shared.rs — wire, frozen shape
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq, JsonSchema, TS)]
 #[serde(rename_all = "camelCase")]
 pub enum CodexErrorInfo {
@@ -67,4 +67,4 @@ pub enum CodexErrorInfo {
 
 You can refactor `CodexErr` freely (add fields, reshape tuples, swap underlying libraries) and only the translator cares — the wire protocol stays frozen. The two types never share a derive chain; there is no `From` conversion between them, only the explicit `to_codex_protocol_error()` method.
 
-Reference: `codex-rs/protocol/src/error.rs:213`, `codex-rs/app-server-protocol/src/protocol/v2.rs:147`.
+Reference: `codex-rs/protocol/src/error.rs:220`, `codex-rs/app-server-protocol/src/protocol/v2/shared.rs:71`.

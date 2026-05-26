@@ -51,4 +51,4 @@ let base = ensure_denybin(&["ssh", "scp"], None)?;
 
 The `io_uring` denial is the most surprising one — io_uring has historically been a seccomp bypass path because submissions are queued asynchronously rather than through direct syscalls. Proxy-routed mode inverts the `AF_UNIX` rule and *denies* `AF_UNIX` so a process cannot smuggle traffic through a Unix-socket bridge.
 
-Reference: `codex-rs/linux-sandbox/src/landlock.rs:185`, `codex-rs/windows-sandbox-rs/src/env.rs:123`.
+Reference: `codex-rs/linux-sandbox/src/landlock.rs:187`, `codex-rs/windows-sandbox-rs/src/env.rs:129`.

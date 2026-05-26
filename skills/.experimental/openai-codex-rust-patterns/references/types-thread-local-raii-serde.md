@@ -66,4 +66,6 @@ impl<'de> Deserialize<'de> for AbsolutePathBuf {
 
 The guard is a zero-sized struct — it carries no data, only manages the TLS slot lifetime. Failing when no guard is active is deliberate: you cannot silently produce an invalid `AbsolutePathBuf`.
 
-Reference: `codex-rs/utils/absolute-path/src/lib.rs:235`.
+Reach for this only when the deserialization is single-threaded and runs on the thread that created the guard — the context lives in thread-local storage, so it is invisible to a multi-threaded or work-stealing deserializer and is not inherited by spawned tasks. When several callers need *different* bases concurrently, fall back to `DeserializeSeed`; the TLS guard trades that flexibility for not having to thread a seed type through every nested struct.
+
+Reference: `codex-rs/utils/absolute-path/src/lib.rs:334`.
