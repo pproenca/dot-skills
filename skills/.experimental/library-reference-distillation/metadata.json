@@ -1,0 +1,17 @@
+{
+  "name": "library-reference-distillation",
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Skill Authoring Methodology",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Methodology distillation of the conventions that hold across shipped library-reference distillation skills (nuqs, zod, react-hook-form, effect-ts, emilkowal-animations) — the archetype that turns one external library into an idiomatic-usage rule pack. 7 rules across 4 orthogonal categories — Source Selection, Versioning, Rule Shape, Metadata Discipline — each naming a wrong default the author makes when starting a new library-reference skill, the convention that corrects it, and a concrete trace from an existing skill showing the convention in use. The skill is the meta-archetype playbook above /dev-skill:new and /dev-skill:ingest — it does not generate skills, it constrains the editorial decisions that the generator cannot make. Sibling playbooks for code-atlas, methodology, scaffolder, and runbook archetypes are still to be extracted.",
+  "references": [
+    "https://nuqs.dev/docs",
+    "https://zod.dev/api",
+    "https://react-hook-form.com/docs",
+    "https://effect.website/docs",
+    "https://emilkowal.ski/ui"
+  ]
+}

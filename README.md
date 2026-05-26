@@ -129,6 +129,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [js-google](skills/.experimental/js-google) | JavaScript style and best practices based on Google's official JavaScript Style Guide |
 | [jscodeshift](skills/.experimental/jscodeshift) | jscodeshift codemod development best practices from Facebook/Meta |
 | [knip-deadcode](skills/.experimental/knip-deadcode) | Knip dead code detection best practices for JavaScript and TypeScript projects |
+| [library-reference-distillation](skills/.experimental/library-reference-distillation) | Use this skill when starting a new library-reference distillation skill — one that turns an.. |
 | [linguistic-semantic-algorithms](skills/.experimental/linguistic-semantic-algorithms) | Use this skill whenever mapping out an unfamiliar codebase, hunting bugs across many files,.. |
 | [marketplace-personalisation](skills/.experimental/marketplace-personalisation) | Use this skill whenever designing, building, debugging, reviewing, or improving a.. |
 | [marketplace-pre-member-personalisation](skills/.experimental/marketplace-pre-member-personalisation) | Use this skill whenever designing, building, reviewing, or diagnosing the pre-member journey of.. |
