@@ -73,6 +73,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [clean-code](skills/.experimental/clean-code) | Use when writing, reviewing, or refactoring code for maintainability and readability |
 | [cli-for-agents](skills/.experimental/cli-for-agents) | Use this skill whenever designing, building, or reviewing a command-line tool that AI agents or.. |
 | [cli-review-runner](skills/.experimental/cli-review-runner) | Use this skill whenever reviewing, auditing, or grading a command-line tool for.. |
+| [code-distill](skills/.experimental/code-distill) | Use this skill to distill code patterns on demand from a specific GitHub codebase, given a.. |
 | [code-map-visualization](skills/.experimental/code-map-visualization) | Use this skill whenever rendering, styling, or making interactive a visualisation of a codebase.. |
 | [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codebase-comprehension-algorithms](skills/.experimental/codebase-comprehension-algorithms) | Use this skill whenever mapping an unfamiliar codebase into feature/business domains — answering.. |
