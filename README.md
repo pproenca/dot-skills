@@ -151,6 +151,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [pt-irs-runbook](skills/.experimental/pt-irs-runbook) | Use this skill when navigating Portuguese personal income tax (IRS / Código do IRS) or filing a.. |
 | [pulumi](skills/.experimental/pulumi) | Pulumi infrastructure as code performance and reliability guidelines |
 | [python-pep-author](skills/.experimental/python-pep-author) | Use this skill whenever the user wants to write, draft, or structure a Python Enhancement.. |
+| [radical-simplification](skills/.experimental/radical-simplification) | Use this skill when stuck on a complex problem, when a proposed design feels overengineered,.. |
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
 | [rails-design-system](skills/.experimental/rails-design-system) | Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal.. |
 | [rails-hotwire](skills/.experimental/rails-hotwire) | Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive,.. |
