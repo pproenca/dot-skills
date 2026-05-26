@@ -89,6 +89,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [diataxis](skills/.experimental/diataxis) | Use whenever writing, editing, restructuring, or reviewing technical documentation — READMEs,.. |
 | [django-recommender-search-backend-patterns](skills/.experimental/django-recommender-search-backend-patterns) | Use this skill when building, reviewing, or refactoring a Django backend that fan-outs to.. |
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
+| [docs-search](skills/.experimental/docs-search) | Use this skill when an agent needs to look up an answer in a library's official documentation —.. |
 | [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |
 | [drizzle-sqlite-scaffold](skills/.experimental/drizzle-sqlite-scaffold) | Use this skill whenever scaffolding Drizzle ORM + SQLite boilerplate — a new.. |
 | [drizzle-sqlite](skills/.experimental/drizzle-sqlite) | Use this skill whenever writing, reviewing, or refactoring Drizzle ORM code targeting SQLite.. |
