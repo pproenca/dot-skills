@@ -50,3 +50,6 @@ temp/
 .codex/
 .opencode/
 .agent/
+
+# Skill eval workspaces (process artifacts, not skill content)
+skills/**/*-workspace/
