@@ -1,8 +1,7 @@
 ---
 name: react-19-component-scaffolder
-description: Use this skill whenever scaffolding new React 19 / React 19.2 code in TypeScript — components, Server Component pages, client islands, form actions with useActionState, context providers, custom hooks, reducers, or document metadata + resource hints. Generates production-grade code that follows React 19 idioms (ref-as-prop, <Context value={...}>, useActionState, inline metadata, useSyncExternalStore) and refuses deprecated React 18 patterns (forwardRef, <Context.Provider>, useFormState, react-dom/test-utils). Trigger even when the user says "create a component", "new page", "add a form", "new hook", or "scaffold X" without explicitly mentioning React 19.
+description: Scaffolds React 19 / React 19.2 code in TypeScript — components, Server Component pages, client islands, form actions with useActionState, context providers, custom hooks, reducers, or document metadata + resource hints. Generates production-grade code that follows React 19 idioms (ref-as-prop, <Context value={...}>, useActionState, inline metadata, useSyncExternalStore) and refuses deprecated React 18 patterns (forwardRef, <Context.Provider>, useFormState, react-dom/test-utils). Trigger even when the user says "create a component", "new page", "add a form", "new hook", or "scaffold X" without explicitly mentioning React 19.
 ---
-
 # React 19 Component Scaffolder
 
 Generate React 19/19.2 components, pages, hooks, and supporting files from parameterized templates. Every template enforces the patterns codified in the sibling `react` skill — refs as regular props (never `forwardRef`), Context rendered directly as provider (never `.Provider`), form actions with `useActionState` + `useFormStatus`, inline document metadata, `useSyncExternalStore` for external subscriptions, and YMNNAE-compliant hook bodies.

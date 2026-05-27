@@ -1,8 +1,7 @@
 ---
 name: nextjs-bundle-optimizer
-description: Use this skill whenever a Next.js 16 app needs smaller bundles or faster builds — even if the user doesn't say "optimize" explicitly. Triggers on phrases like "First Load JS is huge", "bundle size", "build takes too long", "page is slow to TTI", "reduce bundle", "tree-shake", or when the user shares output from `next experimental-analyze` / `@next/bundle-analyzer`. Runs a data-driven iteration loop — measure baseline → analyze top offenders → apply ONE recipe → re-measure → verify nothing broke (build + types + tests + no regression) → commit or revert. Built for Next.js 16 with Turbopack default, and falls back to webpack-mode tooling when the project hasn't migrated yet.
+description: "Next.js 16 bundle-size and build-time optimization — runs a data-driven iteration loop: measure baseline → analyze top offenders → apply ONE recipe → re-measure → verify nothing broke (build + types + tests + no regression) → commit or revert. Built for Next.js 16 with Turbopack default, and falls back to webpack-mode tooling when the project hasn't migrated yet. Triggers on phrases like \"First Load JS is huge\", \"bundle size\", \"build takes too long\", \"page is slow to TTI\", \"reduce bundle\", \"tree-shake\", or when the user shares output from `next experimental-analyze` / `@next/bundle-analyzer` — even if the user doesn't say \"optimize\" explicitly."
 ---
-
 # Next.js Bundle & Build-Time Optimizer
 
 Data-driven optimization loop for Next.js 16 applications. The skill orchestrates `next experimental-analyze`, builds, type checks, and tests to make verifiable improvements one change at a time.

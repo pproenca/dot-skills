@@ -1,16 +1,7 @@
 ---
 name: pt-irs-runbook
-description: >-
-  Use this skill when navigating Portuguese personal income tax (IRS / Código do
-  IRS) or filing a Modelo 3 return — determining tax residency (Art. 16),
-  classifying income by category (rental/Anexo F, capital gains/Anexo G,
-  employment/Anexo A, self-employment/Anexo B, pensions, foreign income/Anexo J),
-  choosing the right annexes, applying current Art. 72 autonomous rates, and
-  meeting Portal das Finanças deadlines. Covers residents and non-residents,
-  including landlords with Portuguese-source rental income and double-taxation
-  relief. Portugal-specific; not a substitute for a contabilista certificado.
+description: Portuguese personal income tax (IRS / Código do IRS) and Modelo 3 filing — determining tax residency (Art. 16), classifying income by category (rental/Anexo F, capital gains/Anexo G, employment/Anexo A, self-employment/Anexo B, pensions, foreign income/Anexo J), choosing the right annexes, applying current Art. 72 autonomous rates, and meeting Portal das Finanças deadlines. Covers residents and non-residents, including landlords with Portuguese-source rental income and double-taxation relief. Portugal-specific; not a substitute for a contabilista certificado.
 ---
-
 # Portugal IRS Filing Runbook
 
 A diagnostic runbook for Portuguese personal income tax (IRS). Each *symptom* is a

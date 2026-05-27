@@ -1,8 +1,7 @@
 ---
 name: cli-review-runner
-description: Use this skill whenever reviewing, auditing, or grading a command-line tool for agent-friendliness - it runs a black-box test suite against a target CLI and reports per-rule pass/fail from the cli-for-agents 45-rule catalog. Trigger even if the user doesn't explicitly say "agent-friendly" - apply whenever they ask "is mycli good for agents?", "review this CLI", "grade my cli against the rules", "check if this tool is safe to automate", or "audit command-line design". Companion to the cli-for-agents distillation skill.
+description: Black-box CLI grading harness — runs a test suite against a target CLI and reports per-rule pass/fail from the cli-for-agents 45-rule catalog. Use when reviewing, auditing, or grading a command-line tool for agent-friendliness. Trigger even if the user doesn't explicitly say "agent-friendly" — apply whenever they ask "is mycli good for agents?", "review this CLI", "grade my cli against the rules", "check if this tool is safe to automate", or "audit command-line design". Companion to the cli-for-agents distillation skill.
 ---
-
 # cli-review-runner
 
 Automates the 10-item agent-friendliness audit from [cli-for-agents](../cli-for-agents/SKILL.md). Runs black-box probes against a target CLI and emits a structured report mapping each finding to a rule ID (e.g., `help-examples-in-help`, `err-non-zero-exit-codes`, `safe-dry-run-flag`). Default mode is read-only - probes never run destructive verbs with real arguments.

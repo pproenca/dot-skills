@@ -1,8 +1,7 @@
 ---
 name: nuqs-codemod-runner
-description: Use this skill whenever a codebase has nuqs code that may be stuck on pre-v2.5 patterns — deprecated `throttleMs`, hand-rolled setTimeout/useState debounce around `useQueryState`, unchecked `parseAsJson` casts, unversioned `nuqs/adapters/react-router` imports, or `ParserBuilder<T>` type references. The skill scans the repo, produces a dry-run report, asks for confirmation, applies AST codemods, then runs `tsc --noEmit` + the user's lint as a gate. Trigger even if the user only mentions "upgrade nuqs" or "migrate to nuqs v2.5+" without naming the specific patterns — they almost always exist in pre-v2.5 codebases.
+description: Migrates a nuqs codebase off pre-v2.5 patterns — deprecated `throttleMs`, hand-rolled setTimeout/useState debounce around `useQueryState`, unchecked `parseAsJson` casts, unversioned `nuqs/adapters/react-router` imports, or `ParserBuilder<T>` type references. Scans the repo, produces a dry-run report, asks for confirmation, applies AST codemods, then runs `tsc --noEmit` + the user's lint as a gate. Trigger even if the user only mentions "upgrade nuqs" or "migrate to nuqs v2.5+" without naming the specific patterns — they almost always exist in pre-v2.5 codebases.
 ---
-
 # nuqs Codemod Runner
 
 Migrate a codebase from pre-v2.5 nuqs patterns to current v2.5–v2.8 idioms. The skill is **read-only by default** — it never modifies files without an explicit confirmation step, and refuses to run on a dirty git working tree.

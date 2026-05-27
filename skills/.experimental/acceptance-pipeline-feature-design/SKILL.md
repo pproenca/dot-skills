@@ -1,8 +1,7 @@
 ---
 name: acceptance-pipeline-feature-design
-description: Use this skill when designing new features, extensions, or modifications to Uncle Bob's Acceptance Pipeline Specification. Triggers on requests to extend the pipeline with new mutation strategies, Gherkin syntax support, report formats, pipeline stages, IR fields, or handler patterns. Also trigger when someone asks "how would I add X to the acceptance pipeline" or discusses spec-level changes to the parser, generator, runtime, mutator, or reporter components — even if they don't explicitly say "feature design." Works in tandem with the acceptance-pipeline-catalog skill, which provides the baseline spec reference.
+description: Designs new features, extensions, or modifications to Uncle Bob's Acceptance Pipeline Specification — new mutation strategies, Gherkin syntax support, report formats, pipeline stages, IR fields, or handler patterns. Trigger when someone asks "how would I add X to the acceptance pipeline" or discusses spec-level changes to the parser, generator, runtime, mutator, or reporter components — even if they don't explicitly say "feature design." Works in tandem with the acceptance-pipeline-catalog skill, which provides the baseline spec reference.
 ---
-
 # Acceptance Pipeline Feature Design
 
 Guides agents through designing new features that extend Uncle Bob's Acceptance Pipeline Specification. Produces spec-quality output — language-neutral, implementation-agnostic, with precise behavioral requirements — that matches the style and rigor of the original spec.

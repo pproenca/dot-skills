@@ -1,8 +1,7 @@
 ---
 name: better-auth-scaffold
-description: Use this skill whenever scaffolding a Better Auth setup in a Next.js (App Router) + Drizzle project — adding lib/auth.ts, lib/auth-client.ts, the /api/auth/[...all] route handler, middleware.ts, .env.example, and a permissions module. Produces convention-enforced templates for three plugin presets (minimal, social, advanced with twoFactor+magicLink). Trigger even when the user doesn't explicitly say "scaffold" — phrases like "set up Better Auth", "wire up auth", "initialize auth in this project", or "add auth to Next.js" should pull this in. Pairs with the `better-auth` skill, which covers the rules these templates encode.
+description: Scaffolds a Better Auth setup in a Next.js (App Router) + Drizzle project — lib/auth.ts, lib/auth-client.ts, the /api/auth/[...all] route handler, middleware.ts, .env.example, and a permissions module. Produces convention-enforced templates for three plugin presets (minimal, social, advanced with twoFactor+magicLink). Trigger even when the user doesn't explicitly say "scaffold" — phrases like "set up Better Auth", "wire up auth", "initialize auth in this project", or "add auth to Next.js" should pull this in. Pairs with the `better-auth` skill, which covers the rules these templates encode.
 ---
-
 # Better Auth Scaffold (Next.js + Drizzle)
 
 Parameterized templates for bootstrapping a Better Auth setup in a Next.js App Router project using the Drizzle adapter. Each template enforces the conventions documented in [`references/conventions.md`](references/conventions.md) — file layout, plugin ordering, env handling, runtime selection.

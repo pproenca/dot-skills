@@ -1,8 +1,7 @@
 ---
 name: nuqs-scaffolder
-description: Use this skill whenever you need to add URL-state filters to a Next.js page, build a typed `searchParams.ts` parser map, or wire up a `<Filters />` client component backed by `useQueryStates`. From a single JSON spec, generates four files in lockstep — client parser map, server loader/cache/serializer, client component, and Vitest test — all sharing the same parser definitions per the nuqs Standard Schema pattern. Trigger even when the user only says "add filters to /search" or "I need a typed query string for this page" — both are exactly this skill's job.
+description: Scaffolds URL-state filters for a Next.js page — typed `searchParams.ts` parser map and a `<Filters />` client component backed by `useQueryStates`. From a single JSON spec, generates four files in lockstep — client parser map, server loader/cache/serializer, client component, and Vitest test — all sharing the same parser definitions per the nuqs Standard Schema pattern. Trigger even when the user only says "add filters to /search" or "I need a typed query string for this page" — both are exactly this skill's job.
 ---
-
 # nuqs Scaffolder
 
 Generate a coherent set of nuqs files from one spec. The skill is **template-driven** — you read the spec, copy the templates, and substitute placeholders. No build step, no codegen runtime; the templates ARE the artifact.

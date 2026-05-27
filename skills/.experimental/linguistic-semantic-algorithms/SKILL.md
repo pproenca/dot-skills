@@ -1,8 +1,7 @@
 ---
 name: linguistic-semantic-algorithms
-description: Use this skill whenever mapping out an unfamiliar codebase, hunting bugs across many files, scoping a new feature, identifying domain entities, or analyzing commit history — covers 40 algorithms across topic modelling, semantic embeddings, code graphs, repository mining, clone detection, IR-based bug localization, identifier linguistics, and complexity metrics. Trigger even if the user doesn't explicitly mention algorithms — apply when they ask "where does X live in this codebase?", "what is this codebase about?", "find duplicated logic", "what changed recently?", "who owns this code?", or "is this function risky?".
+description: Mapping out an unfamiliar codebase via NLP and graph algorithms — 40 algorithms across topic modelling, semantic embeddings, code graphs, repository mining, clone detection, IR-based bug localization, identifier linguistics, and complexity metrics. Trigger when hunting bugs across many files, scoping a new feature, identifying domain entities, or analyzing commit history — even if the user doesn't explicitly mention algorithms — apply when they ask "where does X live in this codebase?", "what is this codebase about?", "find duplicated logic", "what changed recently?", "who owns this code?", or "is this function risky?".
 ---
-
 # pproenca Linguistic and Semantic Algorithms Best Practices
 
 Reference of 40 algorithms an agent should reach for when extracting structure, meaning, history, or risk signals from source code and commit data. Categories are ordered by **insight-per-effort** — how much non-obvious truth the technique exposes relative to how easy it is to apply. The first two categories target the highest-leverage questions: *what business entities live in this code?* and *where else does this concept already exist?* — questions that grep and intuition cannot answer.

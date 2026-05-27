@@ -1,8 +1,7 @@
 ---
 name: dx-harness
-description: Use this skill whenever the user mentions developer-experience friction, slow onboarding, repeated manual setup steps, missing bootstrap/reset/seed scripts, undiscoverable conventions, or asks to audit/fix/maintain a repository's dev harness. Triggers on phrases like "audit dx", "fix dev friction", "time to first commit", "set up the harness", "I keep doing X manually", "every time I reset the db I have to...", and on new-repo bootstrapping. Even if the user doesn't say "DX" — if they describe a repeated manual chore in their dev loop, this skill applies. The skill audits the repo, scores findings, scaffolds canonical fixes (bootstrap.sh, reset.sh, seed.sh, AGENTS.md, task-runner entries), then verifies the harness end-to-end in a scratch worktree against a 60-second time-to-first-commit target.
+description: Developer-experience friction auditing and fixing — slow onboarding, repeated manual setup steps, missing bootstrap/reset/seed scripts, undiscoverable conventions. Audits the repo, scores findings, scaffolds canonical fixes (bootstrap.sh, reset.sh, seed.sh, AGENTS.md, task-runner entries), then verifies the harness end-to-end in a scratch worktree against a 60-second time-to-first-commit target. Triggers on phrases like "audit dx", "fix dev friction", "time to first commit", "set up the harness", "I keep doing X manually", "every time I reset the db I have to...", and on new-repo bootstrapping. Even if the user doesn't say "DX" — if they describe a repeated manual chore in their dev loop, this skill applies.
 ---
-
 # DX Harness
 
 Audits, scaffolds, and maintains the developer-experience harness of a repository. The harness is the meta-tooling that makes a dev loop fast: one-command bootstrap, one-command reset, one-command seed, discoverable conventions, agent-friendly entry points.

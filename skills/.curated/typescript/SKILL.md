@@ -1,8 +1,7 @@
 ---
 name: typescript
-description: This skill should be used when the user asks to "optimize TypeScript performance", "speed up tsc compilation", "configure tsconfig.json", "fix type errors", "improve async patterns", or encounters TS errors (TS2322, TS2339, "is not assignable to"). Also triggers on .ts, .tsx, .d.ts file work involving type definitions, module organization, or memory management. Does NOT cover TypeScript basics, framework-specific patterns, or testing.
+description: TypeScript performance, tsconfig, type errors, async patterns — triggered when the user asks to "optimize TypeScript performance", "speed up tsc compilation", "configure tsconfig.json", "fix type errors", "improve async patterns", or encounters TS errors (TS2322, TS2339, "is not assignable to"). Also triggers on .ts, .tsx, .d.ts file work involving type definitions, module organization, or memory management. Does NOT cover TypeScript basics, framework-specific patterns, or testing.
 ---
-
 # TypeScript Best Practices
 
 Comprehensive performance optimization guide for TypeScript applications. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

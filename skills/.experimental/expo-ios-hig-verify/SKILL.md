@@ -1,8 +1,7 @@
 ---
 name: expo-ios-hig-verify
-description: Use this skill to verify that an Expo / React Native iOS app follows Apple Human Interface Guidelines and native-feel best practices — it statically scans the codebase for the most common non-native patterns (Material component kits, JS navigators instead of native stack/tabs, PanResponder, disabled font scaling, hardcoded hex colors, unvirtualized lists) and reports each violation with file:line and a link to the rule. Trigger whenever the user asks to check, lint, audit, or review an Expo iOS app for HIG compliance or "native feel," or before shipping/merging Expo iOS UI. Pairs with the expo-ios-hig rules skill (it checks what that skill teaches) and the expo-ios-screen-scaffolder.
+description: Static scan of an Expo / React Native iOS app for non-native patterns — Material component kits, JS navigators instead of native stack/tabs, PanResponder, disabled font scaling, hardcoded hex colors, unvirtualized lists — reports each violation with file:line and a link to the rule. Trigger when the user asks to check, lint, audit, or review an Expo iOS app for HIG compliance or "native feel," or before shipping/merging Expo iOS UI. Pairs with the expo-ios-hig rules skill (it checks what that skill teaches) and the expo-ios-screen-scaffolder.
 ---
-
 # Expo iOS HIG Verifier
 
 A read-only static checker that scans an Expo (React Native) project for violations of the `expo-ios-hig` rules and reports them grouped by severity, with `file:line` locations and links to the rule that explains the fix. It is the automated counterpart to the `expo-ios-hig` reference skill: that skill teaches the rules; this one checks them.

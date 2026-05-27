@@ -1,8 +1,7 @@
 ---
 name: diagram-quality
-description: Use this skill whenever calling agent-uml MCP tools (design_create, diagram_upsert, design_feedback, design_export) to render PlantUML diagrams on the collaborative canvas. Covers three tiers — rendering safety (syntax that prevents HTTP 400 blank canvas), conversation mechanics (when to push a version vs ask a question, what to write in the message parameter), and design effectiveness (decomposition thresholds, cross-diagram traceability, export readiness). Trigger even when the task seems simple — a missing `as alias` makes elements un-annotatable, and a skinparam mismatch makes diagrams unreadable on the warm #f4f1ec canvas.
+description: "PlantUML diagram quality on the agent-uml collaborative canvas — three tiers: rendering safety (syntax that prevents HTTP 400 blank canvas), conversation mechanics (when to push a version vs ask a question, what to write in the message parameter), and design effectiveness (decomposition thresholds, cross-diagram traceability, export readiness). Trigger whenever calling agent-uml MCP tools (design_create, diagram_upsert, design_feedback, design_export) — even when the task seems simple, since a missing `as alias` makes elements un-annotatable and a skinparam mismatch makes diagrams unreadable."
 ---
-
 # agent-uml Diagram Quality Best Practices
 
 Make the human-Claude design conversation converge faster on the agent-uml canvas.

@@ -1,8 +1,7 @@
 ---
 name: better-auth
-description: Use this skill whenever writing, reviewing, or migrating Better Auth code in TypeScript — setting up the auth instance, picking adapters, wiring framework route handlers, configuring sessions and cookies, adding plugins (2FA, organization, admin, magicLink, JWT), or porting from NextAuth/Auth.js, Clerk, Auth0, or Supabase Auth. Covers Next.js, SvelteKit, Hono, Express, Nuxt, Astro, and React/Vue/Svelte clients. Trigger even when the user doesn't explicitly mention Better Auth but is working on TypeScript authentication, session cookies, OAuth providers, or auth-library migration. Contains 42 rules organized by impact across 8 categories.
+description: Better Auth in TypeScript — setting up the auth instance, picking adapters, wiring framework route handlers, configuring sessions and cookies, adding plugins (2FA, organization, admin, magicLink, JWT), or porting from NextAuth/Auth.js, Clerk, Auth0, or Supabase Auth. Covers Next.js, SvelteKit, Hono, Express, Nuxt, Astro, and React/Vue/Svelte clients. Trigger when writing, reviewing, or migrating Better Auth code — and even when the user doesn't explicitly mention Better Auth but is working on TypeScript authentication, session cookies, OAuth providers, or auth-library migration. Contains 42 rules organized by impact across 8 categories.
 ---
-
 # Better Auth Best Practices
 
 Implementation and migration guide for [Better Auth](https://www.better-auth.com), the framework-agnostic TypeScript authentication and authorization library. This skill contains 42 rules organized by impact across 8 categories, derived from the official documentation and migration guides.

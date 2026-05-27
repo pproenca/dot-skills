@@ -1,8 +1,7 @@
 ---
 name: rust-write-tests
-description: Skill for writing expert-level Rust tests. Teaches the "What Could Break?" framework, five transformations from superficial to expert tests, flake hunting protocol, intent-based assertions, naming conventions, and a mandatory self-review checklist. Triggers on writing Rust tests, designing test cases, improving test quality, or reviewing test coverage.
+description: Expert-level Rust testing — the "What Could Break?" framework, five transformations from superficial to expert tests, flake hunting protocol, intent-based assertions, naming conventions, and a mandatory self-review checklist. Triggers on writing Rust tests, designing test cases, improving test quality, or reviewing test coverage.
 ---
-
 # Rust Test Writing Skill
 
 Write tests that catch real bugs. Every test must guard a specific invariant -- not just prove the code "works."

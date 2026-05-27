@@ -1,8 +1,7 @@
 ---
 name: react-hook-form-audit
-description: Use this skill to audit a Next.js (App Router, 14/15+) codebase for React Hook Form anti-patterns — watch() at form root, Controller inlined in parent, async submit without try/catch, missing setError on server failures, RHF in non-"use client" files, RHF mixed with useActionState, schemas defined inside components, useFieldArray without field.id keys, register({ disabled }) for visual disabling. Trigger when the user asks to audit/review/lint RHF usage, find form anti-patterns, or run a quality check on forms — even if they don't say "react-hook-form" by name, if they mention auditing forms in a Next.js project, use this skill. Read-only; emits a markdown report with file:line citations linking back to the companion `react-hook-form` distillation skill.
+description: Audits a Next.js (App Router, 14/15+) codebase for React Hook Form anti-patterns — watch() at form root, Controller inlined in parent, async submit without try/catch, missing setError on server failures, RHF in non-"use client" files, RHF mixed with useActionState, schemas defined inside components, useFieldArray without field.id keys, register({ disabled }) for visual disabling. Read-only; emits a markdown report with file:line citations linking back to the companion `react-hook-form` distillation skill. Trigger when the user asks to audit/review/lint RHF usage, find form anti-patterns, or run a quality check on forms — even if they don't say "react-hook-form" by name; if they mention auditing forms in a Next.js project, use this skill.
 ---
-
 # React Hook Form Audit for Next.js
 
 Static-analysis audit that detects 15 React Hook Form anti-patterns in Next.js App Router codebases. Combines ripgrep (fast pass for regex-detectable rules) with ts-morph (AST pass for structural rules). Outputs a markdown report grouped by severity, with file:line references and links back to the companion `react-hook-form` distillation skill.

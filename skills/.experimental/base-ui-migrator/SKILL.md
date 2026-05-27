@@ -1,8 +1,7 @@
 ---
 name: base-ui-migrator
-description: Use this skill whenever the user wants to migrate React UI code to Base UI (`@base-ui/react`) — replacing bespoke modals, custom dropdowns, raw `<dialog>`/`<select>` elements, ad-hoc popovers/menus/tooltips, or other component libraries (Radix UI, Headless UI, Reach UI). Triggers on phrases like "migrate to base-ui", "use base-ui instead of X", "replace this dialog/popover/menu with base-ui", or when scanning a React codebase for components Base UI can replace. The skill ships a 37-component catalog (snapshotted from base-ui.com/llms.txt) and scripts to refresh it, scan for migration candidates, and verify the migration compiles. Trigger even if the user only mentions one component (e.g., "swap this modal for base-ui dialog") — the workflow scales from one file to a whole repo.
+description: Migrates React UI code to Base UI (`@base-ui/react`) — replacing bespoke modals, custom dropdowns, raw `<dialog>`/`<select>` elements, ad-hoc popovers/menus/tooltips, or other component libraries (Radix UI, Headless UI, Reach UI). Ships a 37-component catalog (snapshotted from base-ui.com/llms.txt) and scripts to refresh it, scan for migration candidates, and verify the migration compiles. Triggers on phrases like "migrate to base-ui", "use base-ui instead of X", "replace this dialog/popover/menu with base-ui", or when scanning a React codebase for components Base UI can replace. Trigger even if the user only mentions one component (e.g., "swap this modal for base-ui dialog") — the workflow scales from one file to a whole repo.
 ---
-
 # Base UI Migrator
 
 Automated workflow that converts bespoke React UI primitives and other component libraries to [Base UI](https://base-ui.com) (`@base-ui/react`).

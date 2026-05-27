@@ -1,8 +1,7 @@
 ---
 name: stripe-inspired-api-design-rules
-description: Use this skill whenever designing, reviewing, or refactoring a JSON HTTP API — covers resource modeling, identifier schemes, URL structure, request/response wire format, pagination, errors, idempotency, versioning, naming, webhooks, and authentication. Triggers on tasks involving OpenAPI specs, API design reviews, schema decisions, endpoint shaping, error envelope design, webhook delivery, or any "is this API well-designed" question. Apply even when the user doesn't mention Stripe by name — the rules are general API-design principles distilled from the Stripe API, which is the industry's most-copied reference.
+description: JSON HTTP API design rules distilled from Stripe — resource modeling, identifier schemes, URL structure, request/response wire format, pagination, errors, idempotency, versioning, naming, webhooks, and authentication. Triggers on tasks involving OpenAPI specs, API design reviews, schema decisions, endpoint shaping, error envelope design, webhook delivery, or any "is this API well-designed" question. Apply when designing, reviewing, or refactoring a JSON HTTP API — even when the user doesn't mention Stripe by name, since the rules are general API-design principles distilled from the industry's most-copied reference.
 ---
-
 # Stripe-Inspired API Design Best Practices
 
 A reference distillation of the design conventions behind Stripe's API — the most widely admired and copied JSON HTTP API in the industry. Contains 52 actionable rules across 8 categories, prioritised by how irreversibly a wrong decision cascades through every endpoint, every SDK, and every client integration. Each rule explains the WHY, shows incorrect-vs-correct code, and links to the canonical source.
