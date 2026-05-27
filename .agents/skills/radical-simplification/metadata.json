@@ -1,0 +1,28 @@
+{
+  "name": "radical-simplification",
+  "version": "0.2.0",
+  "organization": "dot-skills",
+  "technology": "Problem-Solving Methodology",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "May 2026",
+  "abstract": "Methodology distillation of the documented cognitive moves used by mathematicians, physicists, and software engineers known for collapsing complex problems into simple solutions — Pólya, Feynman, Hamming, Brooks, Knuth, Dijkstra, Lamport, Tao, Grothendieck, Munger, and Hofstadter. 20 rules across 9 orthogonal categories — Reframe, Clarify, Reduce, Decompose, Invert, Constrain, Transfer, Generalize, Audit — each naming a specific wrong default a capable model has when facing complexity, the cognitive move that corrects it, and a concrete engineering example showing the move applied. The skill is the thinking layer above refactoring and review — how to arrive at a simple shape, not how to refactor toward one.",
+  "references": [
+    "https://en.wikipedia.org/wiki/How_to_Solve_It",
+    "https://www.cs.virginia.edu/~robins/YouAndYourResearch.html",
+    "https://en.wikipedia.org/wiki/No_Silver_Bullet",
+    "https://dl.acm.org/doi/10.1145/356635.356640",
+    "https://dl.acm.org/doi/10.1145/361598.361623",
+    "https://dl.acm.org/doi/10.1145/363235.363259",
+    "https://www.microsoft.com/en-us/research/publication/state-the-problem-before-presenting-the-solution/",
+    "https://en.wikipedia.org/wiki/Dimensional_analysis",
+    "https://en.wikipedia.org/wiki/Feynman%27s_Lost_Lecture",
+    "https://terrytao.wordpress.com/",
+    "https://fs.blog/great-talks/a-lesson-on-elementary-worldly-wisdom/",
+    "https://en.wikipedia.org/wiki/Alexander_Grothendieck#The_rising_sea_metaphor",
+    "https://en.wikipedia.org/wiki/The_Psychology_of_Invention_in_the_Mathematical_Field",
+    "https://www.basicbooks.com/titles/douglas-hofstadter/surfaces-and-essences/9780465018475/",
+    "https://www.physics.umd.edu/perg/fermi/fermi.htm",
+    "https://pragprog.com/titles/tpp20/the-pragmatic-programmer-20th-anniversary-edition/"
+  ]
+}
