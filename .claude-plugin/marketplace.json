@@ -1,7 +1,7 @@
 {
   "plugins": [
     {
-      "name": "references",
+      "name": "curated-references",
       "source": "./skills/.curated",
       "skills": [
         "./debug",
@@ -37,7 +37,7 @@
       ]
     },
     {
-      "name": "workflows",
+      "name": "curated-workflows",
       "source": "./skills/.curated",
       "skills": [
         "./ios-taste",
@@ -48,7 +48,7 @@
       ]
     },
     {
-      "name": "extractors",
+      "name": "curated-extractors",
       "source": "./skills/.curated",
       "skills": [
         "./feature-arch",
@@ -57,22 +57,16 @@
       ]
     },
     {
-      "name": "experimental",
+      "name": "experimental-references",
       "source": "./skills/.experimental",
       "skills": [
         "./12-factor-app",
         "./37signals-rails",
         "./acceptance-pipeline-catalog",
-        "./acceptance-pipeline-feature-design",
         "./algorithmic-complexity-review",
         "./app-planner",
         "./ast-grep",
-        "./audio-voice-recovery",
-        "./base-ui-migrator",
         "./better-auth",
-        "./better-auth-scaffold",
-        "./bug-review",
-        "./build-mcp-server",
         "./chat-apps-ui-sdk",
         "./chrome-extension",
         "./chrome-extension-ui",
@@ -80,51 +74,36 @@
         "./clean-code",
         "./clean-code-ts-react",
         "./cli-for-agents",
-        "./cli-review-runner",
         "./code-distill",
         "./code-map-visualization",
         "./code-simplifier",
         "./codebase-comprehension-algorithms",
         "./codemod",
-        "./codemod-react-pipeline",
         "./codex-goals",
-        "./complexity-optimizer",
         "./computer-science-algorithms",
         "./design-review",
         "./design-to-react-algorithms",
         "./deterministic-metric-design",
-        "./dev-rfc",
         "./diagram-quality",
-        "./diataxis",
-        "./django-recommender-search-backend-patterns",
         "./dockerfile-optimise",
-        "./docs-search",
         "./domain-architect",
         "./drizzle-sqlite",
-        "./drizzle-sqlite-scaffold",
-        "./dx-harness",
         "./effect-ts",
         "./emilkowal-animations",
-        "./eval-mcp",
         "./exec-plan",
         "./expo-design-system",
-        "./expo-design-system-scaffolder",
         "./expo-ios-hig",
-        "./expo-ios-hig-verify",
-        "./expo-ios-screen-scaffolder",
         "./expo-react-native-coder",
         "./expo-react-native-performance",
         "./feature-spec",
         "./fog-of-war-js-ts",
         "./framer-motion",
         "./geohash-spatial-code-maps",
-        "./graph-schema",
         "./harness-engineering",
         "./human-copywrite",
         "./humanize",
         "./implementation-design-patterns",
         "./implementation-design-patterns-python",
-        "./inngest-nextjs-patterns",
         "./io-bound-data-processing",
         "./ios-animations",
         "./ios-chaos-monkey",
@@ -145,11 +124,8 @@
         "./marketplace-pre-member-personalisation",
         "./marketplace-recsys-feature-engineering",
         "./marketplace-search-recsys-planning",
-        "./metric-validation-harness",
         "./migrate-js-to-modern-typescript",
-        "./nextjs-bundle-optimizer",
         "./nextjs-ppr-patterns",
-        "./nginx-c-module-debug",
         "./nginx-c-module-design",
         "./nginx-c-module-perf",
         "./nginx-c-modules",
@@ -159,11 +135,8 @@
         "./opensearch-personalize-caching-strategies",
         "./opinionated-nextjs-patterns",
         "./orval",
-        "./pt-irs-runbook",
         "./pulumi",
-        "./python-pep-author",
         "./radical-simplification",
-        "./rails-application-ui-blocks",
         "./rails-design-system",
         "./rails-hotwire",
         "./react-fetch-cache-patterns",
@@ -182,9 +155,6 @@
         "./tailwind-refactor",
         "./tailwind-responsive-ui",
         "./tailwind-ui-refactor",
-        "./theory-of-constraints",
-        "./threat-model",
-        "./threat-patch",
         "./ts-google",
         "./typescript-advanced-patterns",
         "./typescript-refactor",
@@ -197,6 +167,54 @@
         "./webpack-plugin-recipes",
         "./wxt-browser-extensions",
         "./zustand"
+      ]
+    },
+    {
+      "name": "experimental-workflows",
+      "source": "./skills/.experimental",
+      "skills": [
+        "./acceptance-pipeline-feature-design",
+        "./audio-voice-recovery",
+        "./base-ui-migrator",
+        "./bug-review",
+        "./build-mcp-server",
+        "./cli-review-runner",
+        "./codemod-react-pipeline",
+        "./complexity-optimizer",
+        "./dev-rfc",
+        "./dx-harness",
+        "./eval-mcp",
+        "./expo-ios-hig-verify",
+        "./metric-validation-harness",
+        "./nextjs-bundle-optimizer",
+        "./python-pep-author",
+        "./rails-application-ui-blocks",
+        "./threat-model",
+        "./threat-patch"
+      ]
+    },
+    {
+      "name": "experimental-runbooks",
+      "source": "./skills/.experimental",
+      "skills": [
+        "./diataxis",
+        "./docs-search",
+        "./graph-schema",
+        "./nginx-c-module-debug",
+        "./pt-irs-runbook",
+        "./theory-of-constraints"
+      ]
+    },
+    {
+      "name": "experimental-extractors",
+      "source": "./skills/.experimental",
+      "skills": [
+        "./better-auth-scaffold",
+        "./django-recommender-search-backend-patterns",
+        "./drizzle-sqlite-scaffold",
+        "./expo-design-system-scaffolder",
+        "./expo-ios-screen-scaffolder",
+        "./inngest-nextjs-patterns"
       ]
     }
   ]

@@ -58,35 +58,44 @@ function listSkills(dir) {
     .sort();
 }
 
+// Plugin slugs are prefixed with `curated-` / `experimental-` so the picker's
+// alphabetical sort (vercel-labs/skills add.ts:1192-1196 — sorts groups by
+// pluginName.localeCompare) puts the curated tier first ('c' < 'e').
+// Within each tier the picker re-sorts alphabetically (extractors/references/
+// runbooks/workflows). That ordering is fixed by the CLI; we cannot override it.
+function classify(baseDir, names) {
+  const groups = { references: [], workflows: [], runbooks: [], extractors: [] };
+  for (const name of names) {
+    const plugin = DISCIPLINE_TO_PLUGIN[detectDiscipline(join(baseDir, name))];
+    groups[plugin].push(`./${name}`);
+  }
+  return groups;
+}
+
+function buildPlugins(tier, baseRel, groups) {
+  return Object.entries(groups)
+    .filter(([, paths]) => paths.length > 0)
+    .map(([disc, paths]) => ({
+      name: `${tier}-${disc}`,
+      source: baseRel,
+      skills: paths,
+    }));
+}
+
 const curated = listSkills(CURATED_DIR);
 const experimental = listSkills(EXPERIMENTAL_DIR);
-
-const curatedGroups = { references: [], workflows: [], runbooks: [], extractors: [] };
-for (const name of curated) {
-  const plugin = DISCIPLINE_TO_PLUGIN[detectDiscipline(join(CURATED_DIR, name))];
-  curatedGroups[plugin].push(`./${name}`);
-}
+const curatedGroups = classify(CURATED_DIR, curated);
+const experimentalGroups = classify(EXPERIMENTAL_DIR, experimental);
 
 const plugins = [
-  ...Object.entries(curatedGroups)
-    .filter(([, paths]) => paths.length > 0)
-    .map(([name, paths]) => ({ name, source: "./skills/.curated", skills: paths })),
+  ...buildPlugins("curated", "./skills/.curated", curatedGroups),
+  ...buildPlugins("experimental", "./skills/.experimental", experimentalGroups),
 ];
-
-if (experimental.length > 0) {
-  plugins.push({
-    name: "experimental",
-    source: "./skills/.experimental",
-    skills: experimental.map((n) => `./${n}`),
-  });
-}
 
 mkdirSync(OUT_DIR, { recursive: true });
 writeFileSync(OUT_FILE, JSON.stringify({ plugins }, null, 2) + "\n");
 
-const counts = {
-  ...Object.fromEntries(Object.entries(curatedGroups).map(([k, v]) => [k, v.length])),
-  experimental: experimental.length,
-};
 console.log(`Wrote ${OUT_FILE}`);
-console.log(`Skills: ${curated.length + experimental.length} total — ${JSON.stringify(counts)}`);
+console.log(`Skills: ${curated.length + experimental.length} total`);
+console.log("  curated:", Object.fromEntries(Object.entries(curatedGroups).map(([k, v]) => [k, v.length])));
+console.log("  experimental:", Object.fromEntries(Object.entries(experimentalGroups).map(([k, v]) => [k, v.length])));
