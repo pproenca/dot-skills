@@ -1,0 +1,17 @@
+{
+  "version": "0.1.0",
+  "organization": "MDN / TC39 / Mostly Adequate Guide",
+  "technology": "TypeScript Functional Patterns",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Implementation guide for the functional patterns that supersede or supplement Gang of Four classes in idiomatic TypeScript: higher-order functions, lambdas-as-arguments, pipelines, function composition, stream methods (map/filter/flatMap/reduce), closures-as-data, and lambda placement (module scope vs nested vs inline). Each rule names the GoF or imperative anti-pattern it replaces and states when the class form still wins (serialization, runtime registry, typed inter-pattern relations, cross-cutting state). Sibling to implementation-design-patterns — read this skill when the answer in TypeScript is a function, not a class.",
+  "references": [
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array",
+    "https://github.com/tc39/proposal-iterator-helpers",
+    "https://mostly-adequate.gitbook.io/mostly-adequate-guide/",
+    "https://github.com/tc39/proposal-pipeline-operator",
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures"
+  ],
+  "category": "Design Patterns"
+}

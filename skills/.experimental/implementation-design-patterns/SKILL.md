@@ -81,6 +81,10 @@ Several patterns share a structural shape but solve different problems. Read eac
 - **Composite vs. Decorator** — both wrap children recursively. *Composite* sums or aggregates child results. *Decorator* adds responsibilities and passes through.
 - **Chain of Responsibility vs. Command vs. Mediator vs. Observer** — all connect senders and receivers. *CoR* passes a request along a chain. *Command* makes the request a first-class object. *Mediator* centralizes mutual communication. *Observer* establishes one-publisher-to-many-subscribers notification.
 
+## Related Skills
+
+- **[`implementation-functional-patterns`](../implementation-functional-patterns/SKILL.md)** — TypeScript's functional answer (HOFs, lambdas, pipelines, streams, composition) for problems where this catalog reaches for a class. Most Strategy / Iterator / Command / Chain-of-Responsibility / Decorator / Template-Method shapes have a lighter functional form in idiomatic TS; consult it before introducing a new class hierarchy.
+
 ## References
 
 1. [Refactoring Guru — Design Patterns Catalog](https://refactoring.guru/design-patterns/catalog)
