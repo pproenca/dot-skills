@@ -24,7 +24,7 @@ Methodology distillation of the generic moves an agent makes when distilling cod
 3. [Filter](references/_sections.md#3-filter)
    - 3.1 [Cut boilerplate, legacy paths, and test scaffolding to surface the load-bearing pattern](references/filter-load-bearing.md)
 4. [Capture](references/_sections.md#4-capture)
-   - 4.1 [After a successful session, write a thin code-topography record to registry](references/capture-registry-record.md)
+   - 4.1 [Write the code section of knowledge/libraries/<library>.md after a successful session](references/capture-registry-record.md)
 
 ---
 

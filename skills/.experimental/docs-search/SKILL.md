@@ -1,11 +1,11 @@
 ---
 name: docs-search
-description: Use this skill when an agent needs to look up an answer in a library's official documentation — API behavior, version-specific changes, idiomatic usage, or why production diverges from docs — independent of which library. Distills the generic navigation moves shared across libraries — classify the question before searching (changelog vs API reference vs idiom vs known-bug), check llms.txt before scraping HTML, pin to the user's version before reading reference pages, read changelog first for "did X change" questions, treat examples/ dirs as truth for idioms, and fall back to GitHub issues / status page / Discord when docs match but reality doesn't. Per-library topography (root URLs, changelog, version model, samples-repo) lives in registry/ as thin reference data, not as separate skills. Triggers on "where in <library> docs", "look this up in <library>", "did <library> change X", "docs say X but code does Y", and any prompt where the next move is to consult a library's official documentation.
+description: Use this skill when an agent needs to look up an answer in a library's official documentation — API behavior, version-specific changes, idiomatic usage, or why production diverges from docs — independent of which library. Distills the generic navigation moves shared across libraries — classify the question before searching (changelog vs API reference vs idiom vs known-bug), check llms.txt before scraping HTML, pin to the user's version before reading reference pages, read changelog first for "did X change" questions, treat examples/ dirs as truth for idioms, and fall back to GitHub issues / status page / Discord when docs match but reality doesn't. Per-library topography lives in the shared /knowledge/libraries/ graph as thin reference data, alongside code-distill's section. Triggers on "where in <library> docs", "look this up in <library>", "did <library> change X", "docs say X but code does Y", and any prompt where the next move is to consult a library's official documentation.
 ---
 
 # Docs Search — Navigation Methodology for Official Library Documentation
 
-Methodology distillation of the generic moves an agent makes when reaching for a library's official documentation. Not a per-library skill — one skill plus a thin topography registry, because 90% of the work is the same regardless of which library you're searching.
+Methodology distillation of the generic moves an agent makes when reaching for a library's official documentation. Not a per-library skill — one skill plus a thin per-library record in the shared knowledge graph ([`/knowledge/libraries/`](../../../knowledge/)), because 90% of the work is the same regardless of which library you're searching.
 
 This is the **navigation layer** that sits next to [`library-reference-distillation`](../library-reference-distillation/SKILL.md). That skill is for *authoring* a full library-ref rule pack when you have time to extract idioms. This skill is for *just looking something up* when you don't — a lighter-weight, faster-to-author alternative whose unit of growth is a ~30-line topography record, not a full rule pack.
 
@@ -70,13 +70,15 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 
 ### 4. Capture for Reuse
 
-- [`capture-registry-record`](references/capture-registry-record.md) — After a successful lookup against a new library, write a topography record at `registry/<library>.md` so future lookups skip the discovery phase
+- [`capture-registry-record`](references/capture-registry-record.md) — After a successful lookup against a new library, write the `docs:` section of `knowledge/libraries/<library>.md` so future lookups skip the discovery phase
 
-## Registry
+## Knowledge Store
 
-Per-library topography records live in [`registry/`](registry/). Each record is a thin reference document (~30 lines) capturing the library's docs root, API reference path, changelog URL, version model, samples repo, known landmarks, and AI-canonical artifacts (llms.txt presence). See [`registry/README.md`](registry/README.md) for the format.
+Per-library topography records live in the repo-root shared knowledge graph at [`/knowledge/libraries/`](../../../knowledge/libraries/). The same files are written by [`code-distill`](../code-distill/SKILL.md) — each skill owns one section (`docs:` for this skill, `code:` for `code-distill`) and never overwrites the other. See [`knowledge/README.md`](../../../knowledge/README.md) for the merged schema, wiki-link conventions, and the merge discipline.
 
-The registry is **intentionally empty at v0.1.0**. First entries are added when a real lookup demands one, not pre-emptively. If you find yourself adding a record for a library you have not actually queried, stop — wait for the real need.
+The knowledge store is **intentionally empty at v0.1.0**. First entries are added when a real lookup demands one, not pre-emptively. If you find yourself adding a record for a library you have not actually queried, stop — wait for the real need.
+
+**Read discipline**: when the user names a library, do exactly `read knowledge/libraries/<slug>.md`. Never scan `knowledge/libraries/` to "see what's available" — the filename is the index, and lazy access is what keeps per-invocation token cost bounded regardless of knowledge-store size.
 
 ## Related Skills
 

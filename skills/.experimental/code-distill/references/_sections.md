@@ -62,7 +62,9 @@ makes the pattern work) and rejecting noise (re-exports, builders, helpers,
 **Description:** Recording topography findings so the next lookup is cheaper.
 The default failure mode is treating each session as one-shot, then
 re-discovering the same repo URL, branch, SHA, folder map, and naming
-conventions next time. Covers writing a thin code-topography record to
-`registry/<library>.md` at the end of a successful session — and graduating
-a library to a full static code-atlas skill when it has been queried more
-than ~3 times.
+conventions next time. Covers writing the `code:` section of the shared
+knowledge file at `knowledge/libraries/<library>.md` at the end of a
+successful session — and graduating a library to a full static code-atlas
+skill when it has been queried more than ~3 times. The file is shared with
+`docs-search`, which writes the `docs:` section — each skill owns one
+section and never overwrites the other.

@@ -1,11 +1,11 @@
 ---
 name: code-distill
-description: Use this skill to distill code patterns on demand from a specific GitHub codebase, given a focused query — "how does shadcn/ui implement the design system", "how does opencode use effect-ts", "how does base-ui handle composition" — when no pre-distilled static rule pack exists yet. Distills the generic pattern-extraction moves — classify the query before grepping (component / composition / state / effect / error / build / routing), grep before reading whole files, treat tests and examples/ as canonical intent, follow imports outward for the public surface, follow usages inward for variants, filter boilerplate / legacy / test scaffolding to surface load-bearing code, and capture findings to registry/ so the next lookup skips discovery. Dynamic light sibling of static code-atlas skills (opencode-ts, openai-codex-rust-patterns, nextjs-ppr-patterns). Triggers on "show me how <library> implements X", "find the <pattern> in <repo>", "distill <library>", and ad-hoc /distill-<library>-style invocations.
+description: Use this skill to distill code patterns on demand from a specific GitHub codebase, given a focused query — "how does shadcn/ui implement the design system", "how does opencode use effect-ts", "how does base-ui handle composition" — when no pre-distilled static rule pack exists yet. Distills the generic pattern-extraction moves — classify the query before grepping (component / composition / state / effect / error / build / routing), grep before reading whole files, treat tests and examples/ as canonical intent, follow imports outward for the public surface, follow usages inward for variants, filter boilerplate / legacy / test scaffolding to surface load-bearing code, and capture findings to /knowledge/libraries/ for reuse. Dynamic light sibling of static code-atlas skills (opencode-ts, openai-codex-rust-patterns, nextjs-ppr-patterns). Triggers on "show me how <library> implements X", "find the <pattern> in <repo>", "distill <library>", and ad-hoc /distill-<library>-style invocations.
 ---
 
 # Code-Distill — Pattern Extraction Methodology for GitHub Codebases
 
-Methodology distillation of the generic moves an agent makes when distilling code patterns on demand from a specific GitHub codebase, given a focused query. Not a per-library skill — one skill plus a thin code-topography registry, because 90% of the work is the same regardless of which repo.
+Methodology distillation of the generic moves an agent makes when distilling code patterns on demand from a specific GitHub codebase, given a focused query. Not a per-library skill — one skill plus a thin per-library record in the shared knowledge graph ([`/knowledge/libraries/`](../../../knowledge/)), because 90% of the work is the same regardless of which repo.
 
 This is the **dynamic light sibling** of your static code-atlas distillations: `opencode-ts`, `openai-codex-rust-patterns`, `nextjs-ppr-patterns`. Those skills are heavy curated outputs — they distilled patterns from a single repo ahead of time. This skill is the on-demand alternative: when no static skill exists for the library yet, point at the repo and let the methodology run.
 
@@ -70,17 +70,19 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 
 ### 4. Capture
 
-- [`capture-registry-record`](references/capture-registry-record.md) — At end of a successful session, write a thin code-topography record to `registry/<library>.md` (repo URL, branch, SHA, folder map, naming conventions, AGENTS.md flag, samples-dir location) so the next lookup skips discovery
+- [`capture-registry-record`](references/capture-registry-record.md) — At end of a successful session, write the `code:` section of `knowledge/libraries/<library>.md` (repo URL, branch, SHA, folder map, naming conventions, AGENTS.md flag, samples-dir location) so the next lookup skips discovery
 
-## Registry
+## Knowledge Store
 
-Per-library code topography records live in [`registry/`](registry/). Each record is a thin reference document (~30 lines) capturing the repo's docs/code layout: default branch, last-verified SHA, where components / state / tests / effects live, naming conventions, presence of AGENTS.md or CONTRIBUTING.md. See [`registry/README.md`](registry/README.md) for the format.
+Per-library code topography records live in the repo-root shared knowledge graph at [`/knowledge/libraries/`](../../../knowledge/libraries/). The same files are written by [`docs-search`](../docs-search/SKILL.md) — each skill owns one section (`code:` for this skill, `docs:` for `docs-search`) and never overwrites the other. See [`knowledge/README.md`](../../../knowledge/README.md) for the merged schema, wiki-link conventions, and the merge discipline.
 
-The registry is **intentionally empty at v0.1.0**. The radical-simplification recommendation that produced this skill said: do not pre-empt; add the first entry from a real lookup. If you find yourself adding a record for a repo you have not actually queried, stop — wait for the real need.
+The knowledge store is **intentionally empty at v0.1.0**. The radical-simplification recommendation that produced this skill said: do not pre-empt; add the first entry from a real lookup. If you find yourself adding a record for a repo you have not actually queried, stop — wait for the real need.
+
+**Read discipline**: when the user names a library, do exactly `read knowledge/libraries/<slug>.md`. Never scan `knowledge/libraries/` to "see what's available" — the filename is the index, and lazy access is what keeps per-invocation token cost bounded regardless of knowledge-store size.
 
 ## Related Skills
 
-- [`docs-search`](../docs-search/SKILL.md) — Symmetric sibling for **documentation** instead of source code; same shape (methodology + registry); use docs-search when the question is "where is X documented", code-distill when the question is "how is X implemented"
+- [`docs-search`](../docs-search/SKILL.md) — Symmetric sibling for **documentation** instead of source code; same shape (methodology + shared knowledge graph); writes the `docs:` section of the same `knowledge/libraries/<lib>.md` files this skill writes the `code:` section of
 - [`library-reference-distillation`](../library-reference-distillation/SKILL.md) — Authoring playbook for full library-ref rule packs from upstream docs; the heavy docs-source sibling
 - (Future) **code-atlas-distillation** — Not yet built. Authoring playbook for full static code-atlas skills like `opencode-ts`. Extract when you ship your 4th or 5th static code-atlas skill and the empirical patterns are observable.
 - [`opencode-ts`](../opencode-ts/SKILL.md), [`openai-codex-rust-patterns`](../openai-codex-rust-patterns/SKILL.md), [`nextjs-ppr-patterns`](../nextjs-ppr-patterns/SKILL.md) — Heavy curated outputs for specific libraries; use them in preference to this skill when they exist

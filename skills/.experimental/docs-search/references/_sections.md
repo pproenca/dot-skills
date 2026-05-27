@@ -56,5 +56,7 @@ examples-over-prose move for idiom questions.
 topography so the next agent doesn't redo the discovery work. The default
 failure mode is treating each lookup as one-shot, then re-discovering the
 same root URL, changelog path, and samples repo next time. Covers writing
-a thin topography record to `registry/<library>.md` once you've found the
-canonical entry points.
+the `docs:` section of `knowledge/libraries/<library>.md` (the repo-root
+shared knowledge graph) once you've found the canonical entry points. The
+file is shared with `code-distill`, which writes the `code:` section — each
+skill owns one section and never overwrites the other.

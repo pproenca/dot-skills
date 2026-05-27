@@ -24,7 +24,7 @@ Methodology distillation of the generic moves that turn 'I need to look this up'
    - 3.1 [For idiom questions, read examples and samples before prose docs](references/fall-samples-over-prose.md)
    - 3.2 [When docs match the code but reality doesn't, check GitHub issues, status, and forum](references/fall-known-issues.md)
 4. [Capture for Reuse](references/_sections.md#4-capture-for-reuse)
-   - 4.1 [After a successful lookup, write a thin topography record to registry](references/capture-registry-record.md)
+   - 4.1 [Write the docs section of knowledge/libraries/<library>.md after a successful lookup](references/capture-registry-record.md)
 
 ---
 

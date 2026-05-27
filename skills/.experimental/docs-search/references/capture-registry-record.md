@@ -1,64 +1,74 @@
 ---
-title: After a successful lookup, write a thin topography record to registry
-tags: capture, registry, reuse
+title: Write the docs section of knowledge/libraries/<library>.md after a successful lookup
+tags: capture, knowledge, reuse, merge-discipline
 ---
 
-## After a successful lookup, write a thin topography record to registry
+## Write the docs section of knowledge/libraries/<library>.md after a successful lookup
 
-By default each doc lookup is one-shot — the agent discovers the docs root, the changelog URL, the samples repo, and whether `llms.txt` exists, then loses all of that when the session ends. The next agent re-discovers the same facts. The move is to **capture topography findings in `registry/<library>.md` immediately after a successful lookup**, so subsequent lookups skip the discovery phase. The registry is the cumulative memory of every doc-search that has run.
+By default each doc lookup is one-shot — the agent discovers the docs root, the changelog URL, the samples repo, and whether `llms.txt` exists, then loses all of that when the session ends. The next agent re-discovers the same facts. The move is to **capture topography findings in the shared knowledge graph at `knowledge/libraries/<library>.md` (docs: section only)** immediately after a successful lookup. The same file is shared with `code-distill` — it owns the `code:` section, this skill owns the `docs:` section, neither overwrites the other.
 
 ```text
-When to write a registry record (apply at end of a real lookup):
+When to write (apply at end of a real successful lookup):
 
-  - You searched a library's docs and succeeded → write the entry
+  - You searched a library's docs and got the right answer → write
   - You probed for llms.txt (found or not) → record the result
-  - You determined the version selector convention → record it
-  - You found the canonical changelog/samples URLs → record them
+  - You found the canonical changelog / samples / upgrades URLs → record
 
-  DO NOT write a record from training-data knowledge alone. Entries
-  are grounded observations from real WebFetches, not recall. If
-  you didn't actually consult the source during this session, do
-  not invent the record.
+DO NOT write from training-data knowledge alone. Entries are grounded
+observations from real WebFetches, not recall.
 
-The minimum-viable record (~30 lines, see registry/README.md):
+The docs section of the knowledge record:
+```
 
-  ---
-  library: stripe
-  docs-root: https://stripe.com/docs
-  llms-txt: null                    # probed YYYY-MM-DD, none yet
+```yaml
+---
+library: stripe                       # filename stem, kebab-case
+last-verified-date: YYYY-MM-DD        # update on every write
+
+# Shared metadata (any writer may merge into these lists)
+uses: []                              # libraries this library depends on
+implements: []                        # patterns it implements ([[wiki-links]])
+notable-landmarks:
+  - /docs/error-codes (canonical error reference)
+  - stripe-mock (local test server)
+
+# This skill owns the docs: section
+docs:
+  root: https://stripe.com/docs
+  llms-txt: null                      # probed YYYY-MM-DD, none yet
   api-reference: /docs/api
   changelog: https://stripe.com/changelog
-  version-model: dated              # e.g. 2023-10-16
+  version-model: dated                # semver | dated | unversioned
   version-selector: api-version URL param
   upgrades: https://stripe.com/docs/upgrades
   samples-repo: https://github.com/stripe-samples
   status-page: https://status.stripe.com
-  discord-or-forum: null            # has Slack-style community
-  notable-landmarks:
-    - /docs/error-codes (canonical error reference)
-    - stripe-mock (local test server)
-    - Workbench (in-product API explorer)
-  last-verified: YYYY-MM-DD
-  ---
+  discord-or-forum: null
 
-What to refresh and when:
-
-  - On every lookup for this library: re-check changelog URL
-    still resolves; re-probe llms.txt if it was previously null
-    and more than 90 days have passed
-  - When the library ships a major version: full re-verification
-    of all URLs (docs sites are reorganized at major version bumps)
-  - When a lookup fails because a recorded URL 404s: update the
-    record in the same session that hit the failure
-
-What NOT to put in registry:
-
-  - Idiomatic rules (those belong in a full library-reference
-    distillation skill, see [[library-reference-distillation]])
-  - API method documentation (the docs themselves are the source)
-  - Opinions about the library
+# code-distill writes the code: section; do not touch it from here
+---
 ```
 
-The mechanical trigger: at the end of any successful doc-search session for a library that does not yet have a registry record, write one before closing out. The work to write the record was already done during the lookup — capturing it costs seconds and saves the next agent minutes.
+The merge discipline (CRITICAL):
 
-Reference: [The library-reference-distillation skill's `meta-references-checksum` rule — same discipline applied to a different artifact](../../library-reference-distillation/references/meta-references-checksum.md)
+- If the file does not exist → create it with `library:`, shared metadata, and `docs:` only
+- If the file exists with no `docs:` section → add `docs:` only; do not modify `code:` or other sections
+- If the file exists with `docs:` already → update fields under `docs:` and refresh `last-verified-date`; never overwrite the whole file blindly
+- For shared list fields (`uses`, `implements`, `notable-landmarks`): merge by union; do not replace
+
+When to refresh:
+
+- On every lookup for this library: re-check changelog URL still resolves; re-probe `llms.txt` if previously null and ≥ 90 days have passed; bump `last-verified-date`
+- On major library version bump: full re-verification of all URLs (docs sites get reorganized)
+- When a lookup fails because a recorded URL 404s: update in the same session that hit the failure
+
+What NOT to write here:
+
+- Idiomatic rules (those go in a full library-reference distillation skill — see [`library-reference-distillation`](../../library-reference-distillation/SKILL.md))
+- API method documentation (the library's docs are the source)
+- Opinions or recommendations about the library
+- The `code:` section — that is owned by [`code-distill`](../../code-distill/SKILL.md)
+
+The mechanical trigger: at the end of any successful doc-search session for a library whose `docs:` section is missing from `knowledge/libraries/`, write it before closing out. Discovery was already done during the lookup; capturing costs seconds.
+
+Reference: [knowledge/README.md — full schema and merge discipline](../../../../knowledge/README.md)
