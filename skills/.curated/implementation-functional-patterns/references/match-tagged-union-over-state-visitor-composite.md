@@ -120,7 +120,7 @@ Each "visitor" is just a function. Composite is the same shape with a recursive 
 
 ### Related
 
-- GoF class forms collapsed: [`behavioral-state`](../../../.experimental/implementation-design-patterns/references/behavioral-state.md), [`behavioral-visitor`](../../../.experimental/implementation-design-patterns/references/behavioral-visitor.md), [`structural-composite`](../../../.experimental/implementation-design-patterns/references/structural-composite.md)
+- GoF class forms collapsed: [`behavioral-state`](../../implementation-design-patterns/references/behavioral-state.md), [`behavioral-visitor`](../../implementation-design-patterns/references/behavioral-visitor.md), [`structural-composite`](../../implementation-design-patterns/references/structural-composite.md)
 - Adjacent: closures that *carry* state are a different shape — see [`closure-as-command`](closure-as-command.md)
 - The factory function that *produces* tagged values: [`create-factory-function-over-factory-classes`](create-factory-function-over-factory-classes.md)
 

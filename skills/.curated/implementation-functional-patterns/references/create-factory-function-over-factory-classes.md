@@ -113,7 +113,7 @@ The class-based `Cloneable` interface and `Memento` save/restore methods are noi
 
 ### Related
 
-- GoF class forms collapsed: [`creational-factory-method`](../../../.experimental/implementation-design-patterns/references/creational-factory-method.md), [`creational-abstract-factory`](../../../.experimental/implementation-design-patterns/references/creational-abstract-factory.md), [`creational-prototype`](../../../.experimental/implementation-design-patterns/references/creational-prototype.md), [`behavioral-memento`](../../../.experimental/implementation-design-patterns/references/behavioral-memento.md)
+- GoF class forms collapsed: [`creational-factory-method`](../../implementation-design-patterns/references/creational-factory-method.md), [`creational-abstract-factory`](../../implementation-design-patterns/references/creational-abstract-factory.md), [`creational-prototype`](../../implementation-design-patterns/references/creational-prototype.md), [`behavioral-memento`](../../implementation-design-patterns/references/behavioral-memento.md)
 - The match function that *consumes* tagged objects: [`match-tagged-union-over-state-visitor-composite`](match-tagged-union-over-state-visitor-composite.md)
 - For module-scope unique values (Singleton): [`create-module-scope-over-singleton`](create-module-scope-over-singleton.md)
 

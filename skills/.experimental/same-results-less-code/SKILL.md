@@ -29,7 +29,7 @@ Use this skill when:
 
 - Mechanical cleanup that a linter or formatter already does (unused imports, dead exports, style) — use `knip`, `eslint`, `ruff`, or `prettier`/`black` instead.
 - Algorithmic complexity / performance tuning — use [`complexity-optimizer`](../complexity-optimizer/) for that.
-- General cleanup of recently modified code regardless of mental-model gaps — use [`code-simplifier`](../code-simplifier/).
+- General cleanup of recently modified code regardless of mental-model gaps — use [`code-simplifier`](../../.curated/code-simplifier/).
 
 ## Rule Categories by Priority
 
@@ -142,7 +142,7 @@ When asked to review or refactor code with this skill:
 
 ## Related Skills
 
-- [`code-simplifier`](../code-simplifier/) — Mechanical simplification (naming, dead code, nesting). Complementary first pass.
+- [`code-simplifier`](../../.curated/code-simplifier/) — Mechanical simplification (naming, dead code, nesting). Complementary first pass.
 - [`complexity-optimizer`](../complexity-optimizer/) — Algorithmic/performance complexity. Different axis.
 - [`refactor`](../refactor/) — General-purpose refactoring workflow.
 - [`clean-code`](../clean-code/) — Broader clean-code principles. This skill is the narrower, judgment-focused subset.

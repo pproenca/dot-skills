@@ -83,7 +83,7 @@ Several patterns share a structural shape but solve different problems. Read eac
 
 ## Related Skills
 
-- **[`implementation-functional-patterns`](../../.curated/implementation-functional-patterns/SKILL.md)** — TypeScript's functional answer (HOFs, lambdas, pipelines, streams, composition) for problems where this catalog reaches for a class. Most Strategy / Iterator / Command / Chain-of-Responsibility / Decorator / Template-Method shapes have a lighter functional form in idiomatic TS; consult it before introducing a new class hierarchy.
+- **[`implementation-functional-patterns`](../implementation-functional-patterns/SKILL.md)** — TypeScript's functional answer (HOFs, lambdas, pipelines, streams, composition) for problems where this catalog reaches for a class. Most Strategy / Iterator / Command / Chain-of-Responsibility / Decorator / Template-Method shapes have a lighter functional form in idiomatic TS; consult it before introducing a new class hierarchy.
 
 ## References
 

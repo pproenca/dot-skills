@@ -123,7 +123,7 @@ The native `Proxy` handles arbitrary property names without a class declaring ea
 
 ### Related
 
-- GoF class form: [`structural-proxy`](../../../.experimental/implementation-design-patterns/references/structural-proxy.md)
+- GoF class form: [`structural-proxy`](../../implementation-design-patterns/references/structural-proxy.md)
 - For multiple stacked wrappers (Decorator): [`pipe-compose-over-decorator`](pipe-compose-over-decorator.md)
 - For interface translation (Adapter): [`wrap-function-over-adapter-and-facade`](wrap-function-over-adapter-and-facade.md)
 - For shared cached instances (Flyweight): [`cache-weakmap-over-flyweight`](cache-weakmap-over-flyweight.md)

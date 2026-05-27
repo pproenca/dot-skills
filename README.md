@@ -9,10 +9,14 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 
 | Skill | Description |
 |-------|-------------|
+| [code-simplifier](skills/.curated/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [debug](skills/.curated/debug) | Comprehensive debugging methodology for finding and fixing bugs |
+| [design-review](skills/.curated/design-review) | Structured UI design review — existing code (React/JSX, CSS, Tailwind) and, when behaviour.. |
+| [deterministic-metric-design](skills/.curated/deterministic-metric-design) | Inventing deterministic metrics — turning a fuzzy property like 'maintainability', 'risk', or.. |
 | [expo-ui](skills/.curated/expo-ui) | Library reference for @expo/ui SwiftUI components on iOS — covers Host boundaries, modifier.. |
 | [expo](skills/.curated/expo) | Expo React Native performance optimization guidelines |
 | [feature-arch](skills/.curated/feature-arch) | React feature-based architecture guidelines for scalable applications |
+| [implementation-design-patterns](skills/.curated/implementation-design-patterns) | Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from.. |
 | [implementation-functional-patterns](skills/.curated/implementation-functional-patterns) | TypeScript's functional answers to the 22 Gang of Four classes — factory functions (Factory.. |
 | [ios-taste](skills/.curated/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
 | [msw](skills/.curated/msw) | MSW (Mock Service Worker) best practices for API mocking in tests |
@@ -77,16 +81,13 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [cli-review-runner](skills/.experimental/cli-review-runner) | Black-box CLI grading harness — runs a test suite against a target CLI and reports per-rule.. |
 | [code-distill](skills/.experimental/code-distill) | On-demand pattern extraction from a specific GitHub codebase, given a focused query — "how does.. |
 | [code-map-visualization](skills/.experimental/code-map-visualization) | Rendering and perception layer for codebase-as-geohash-map visualisations — choosing what to.. |
-| [code-simplifier](skills/.experimental/code-simplifier) | Code simplification skill for improving clarity, consistency, and maintainability while.. |
 | [codebase-comprehension-algorithms](skills/.experimental/codebase-comprehension-algorithms) | Mapping an unfamiliar codebase into feature/business domains — answering "what is this about",.. |
 | [codemod-react-pipeline](skills/.experimental/codemod-react-pipeline) | Guided, scripted pipeline for running JSX/TSX/React codemods safely across large legacy codebases |
 | [codemod](skills/.experimental/codemod) | Codemod (JSSG, ast-grep, workflows) best practices for writing efficient, safe, and maintainable.. |
 | [codex-goals](skills/.experimental/codex-goals) | Patterns and anti-patterns for using OpenAI Codex Goals — the persistent objectives feature.. |
 | [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
 | [computer-science-algorithms](skills/.experimental/computer-science-algorithms) | Choosing or implementing an algorithm or data structure — asymptotic complexity, data-structure.. |
-| [design-review](skills/.experimental/design-review) | Structured UI design review — existing code (React/JSX, CSS, Tailwind) and, when behaviour.. |
 | [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Reverse-engineering a Sketch file (or Figma export with similar shape) into pixel-perfect React.. |
-| [deterministic-metric-design](skills/.experimental/deterministic-metric-design) | Inventing deterministic metrics — turning a fuzzy property like 'maintainability', 'risk', or.. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [diagram-quality](skills/.experimental/diagram-quality) | "PlantUML diagram quality on the agent-uml collaborative canvas — three tiers: rendering safety.. |
 | [diataxis](skills/.experimental/diataxis) | Use whenever writing, editing, restructuring, or reviewing technical documentation — READMEs,.. |
@@ -117,7 +118,6 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [human-copywrite](skills/.experimental/human-copywrite) | "User-facing copy — UI strings, documentation, marketing, release notes, error messages,.. |
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
 | [implementation-design-patterns-python](skills/.experimental/implementation-design-patterns-python) | Implementation guide for the 22 Gang of Four design patterns in idiomatic modern Python (3.10+),.. |
-| [implementation-design-patterns](skills/.experimental/implementation-design-patterns) | Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from.. |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Inngest event-driven functions in a Next.js (App Router) project — creating the client, the.. |
 | [io-bound-data-processing](skills/.experimental/io-bound-data-processing) | Processing, transforming, or moving datasets that may exceed RAM on a single low-compute box —.. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |

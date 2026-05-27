@@ -133,7 +133,7 @@ The bus is the mediator. No `class FormMediator { onCountryChanged() … onCurre
 
 ### Related
 
-- GoF class forms collapsed: [`behavioral-mediator`](../../../.experimental/implementation-design-patterns/references/behavioral-mediator.md), [`behavioral-observer`](../../../.experimental/implementation-design-patterns/references/behavioral-observer.md)
+- GoF class forms collapsed: [`behavioral-mediator`](../../implementation-design-patterns/references/behavioral-mediator.md), [`behavioral-observer`](../../implementation-design-patterns/references/behavioral-observer.md)
 - For tagged state transitions inside one component (State, not Observer): [`match-tagged-union-over-state-visitor-composite`](match-tagged-union-over-state-visitor-composite.md)
 - For closures stored in a queue (Command, not Observer): [`closure-as-command`](closure-as-command.md)
 

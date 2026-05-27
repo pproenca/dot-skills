@@ -83,6 +83,6 @@ The reader sees the early-exit and the laziness explicitly. The `for-of` driver 
 
 - Adjacent stream rule for transforming finite collections: [`stream-flatmap-over-nested-loops`](stream-flatmap-over-nested-loops.md)
 - Avoiding the multi-pass cost when laziness isn't enough: [`stream-prefer-single-pass-over-chained-passes`](stream-prefer-single-pass-over-chained-passes.md)
-- GoF class form: [`behavioral-iterator`](../../../.experimental/implementation-design-patterns/references/behavioral-iterator.md) — Iterator-as-a-class is the eager imperative ancestor of these generators
+- GoF class form: [`behavioral-iterator`](../../implementation-design-patterns/references/behavioral-iterator.md) — Iterator-as-a-class is the eager imperative ancestor of these generators
 
 Reference: [TC39 — Iterator Helpers proposal](https://github.com/tc39/proposal-iterator-helpers) · [MDN — Iterator protocol](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols)

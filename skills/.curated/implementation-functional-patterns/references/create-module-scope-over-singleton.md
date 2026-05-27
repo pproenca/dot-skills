@@ -102,7 +102,7 @@ function lazy<T>(f: () => T): () => T {
 
 ### Related
 
-- GoF class form: [`creational-singleton`](../../../.experimental/implementation-design-patterns/references/creational-singleton.md)
+- GoF class form: [`creational-singleton`](../../implementation-design-patterns/references/creational-singleton.md)
 - Factory functions that create *fresh* objects (the non-singleton case): [`create-factory-function-over-factory-classes`](create-factory-function-over-factory-classes.md)
 - Caching arbitrary keyed values rather than a single instance: [`cache-weakmap-over-flyweight`](cache-weakmap-over-flyweight.md)
 

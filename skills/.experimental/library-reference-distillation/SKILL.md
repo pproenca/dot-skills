@@ -75,7 +75,7 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 
 - [`radical-simplification`](../../.curated/radical-simplification/SKILL.md) — The thinking layer above this skill; this playbook is itself an instance of the "reduce → constrain → name the invariant" moves applied to skill-authoring
 - [`skill-authoring`](../../.curated/skill-authoring/SKILL.md) — Cross-archetype skill-authoring conventions; this skill is the library-reference specialization
-- [`deterministic-metric-design`](../deterministic-metric-design/SKILL.md) — Methodology-distillation sibling; demonstrates the same archetype patterns applied to a different archetype (proves the per-archetype playbook idea generalizes)
+- [`deterministic-metric-design`](../../.curated/deterministic-metric-design/SKILL.md) — Methodology-distillation sibling; demonstrates the same archetype patterns applied to a different archetype (proves the per-archetype playbook idea generalizes)
 
 ## Authoring Note
 

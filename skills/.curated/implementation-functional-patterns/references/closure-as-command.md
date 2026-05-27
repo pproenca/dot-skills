@@ -78,7 +78,7 @@ The captured `user.email`, `user.id`, etc. are closed over at the time of `push`
 
 ### Related
 
-- GoF class form: [`behavioral-command`](../../../.experimental/implementation-design-patterns/references/behavioral-command.md)
+- GoF class form: [`behavioral-command`](../../implementation-design-patterns/references/behavioral-command.md)
 - Higher-order-function counterpart for one-shot operations: [`hof-lambda-as-strategy`](hof-lambda-as-strategy.md)
 
 Reference: [MDN — Closures](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Closures)

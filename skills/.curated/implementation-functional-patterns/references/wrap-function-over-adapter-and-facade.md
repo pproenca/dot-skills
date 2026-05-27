@@ -113,7 +113,7 @@ A factory function returns an object of methods — same DI capability, no class
 
 ### Related
 
-- GoF class forms collapsed: [`structural-adapter`](../../../.experimental/implementation-design-patterns/references/structural-adapter.md), [`structural-facade`](../../../.experimental/implementation-design-patterns/references/structural-facade.md)
+- GoF class forms collapsed: [`structural-adapter`](../../implementation-design-patterns/references/structural-adapter.md), [`structural-facade`](../../implementation-design-patterns/references/structural-facade.md)
 - For substitute-and-control-access (Proxy, distinct from Adapter/Facade): [`wrap-proxy-native-or-hof`](wrap-proxy-native-or-hof.md)
 - For adding behavior layers (Decorator): [`pipe-compose-over-decorator`](pipe-compose-over-decorator.md)
 

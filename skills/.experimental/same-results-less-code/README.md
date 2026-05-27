@@ -142,6 +142,6 @@ node ~/.claude/plugins/cache/dot-claude/dev-skill/*/scripts/build-agents-md.js .
 | Skill | Operates on | What it catches |
 |-------|-------------|-----------------|
 | `eslint` / `knip` / `ruff` / `tsc` | Syntax / types | Unused code, style, type errors |
-| [`code-simplifier`](../code-simplifier/) | Mechanical form | Naming, nesting, dead code, idioms |
+| [`code-simplifier`](../../.curated/code-simplifier/) | Mechanical form | Naming, nesting, dead code, idioms |
 | [`complexity-optimizer`](../complexity-optimizer/) | Algorithms | O(n²) → O(n log n), N+1 queries |
 | **`same-results-less-code`** | **Mental model** | **Wrong frame, hidden duplication, derived state, speculative generality** |

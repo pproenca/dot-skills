@@ -98,7 +98,7 @@ Each step is independently testable as a pure function. Reordering is editing a 
 
 ### Related
 
-- GoF class form: [`behavioral-chain-of-responsibility`](../../../.experimental/implementation-design-patterns/references/behavioral-chain-of-responsibility.md)
+- GoF class form: [`behavioral-chain-of-responsibility`](../../implementation-design-patterns/references/behavioral-chain-of-responsibility.md)
 - Function composition with type narrowing: [`pipe-compose-over-decorator`](pipe-compose-over-decorator.md) *(planned)*
 
 Reference: [MDN — `Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce)

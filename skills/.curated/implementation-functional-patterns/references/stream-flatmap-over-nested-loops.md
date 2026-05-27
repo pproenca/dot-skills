@@ -61,7 +61,7 @@ The chained form reads top-down as "users → their orders → their line items"
 
 ### Related
 
-- GoF class form: [`behavioral-iterator`](../../../.experimental/implementation-design-patterns/references/behavioral-iterator.md) — a custom Iterator class to walk a tree is rarely needed when `flatMap` covers the same job
+- GoF class form: [`behavioral-iterator`](../../implementation-design-patterns/references/behavioral-iterator.md) — a custom Iterator class to walk a tree is rarely needed when `flatMap` covers the same job
 - Aggregation cousin: `reduce` for fold-to-single-value (counts, sums, groups)
 
 Reference: [MDN — `Array.prototype.flatMap`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
