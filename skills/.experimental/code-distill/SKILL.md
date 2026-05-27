@@ -35,6 +35,7 @@ The four categories are orthogonal moves. Match the symptom to the move:
 | About to grep blindly, query is vague | **Find** | [`find-classify-query`](references/find-classify-query.md) |
 | About to read a whole file before locating the pattern | **Find** (grep) | [`find-grep-before-read`](references/find-grep-before-read.md) |
 | Found a candidate file; not sure if it's idiomatic | **Find** (tests) | [`find-tests-show-intent`](references/find-tests-show-intent.md) |
+| About to scan knowledge/libraries/ before reading the named entry | **Find** (bounded read) | [`find-bounded-knowledge-read`](references/find-bounded-knowledge-read.md) |
 | Found the implementation; need to map its public surface | **Trace** (outward) | [`trace-imports-outward`](references/trace-imports-outward.md) |
 | Have the public surface; need to see variants & evolution | **Trace** (inward) | [`trace-usages-inward`](references/trace-usages-inward.md) |
 | Buried in boilerplate, legacy paths, test scaffolding | **Filter** | [`filter-load-bearing`](references/filter-load-bearing.md) |
@@ -46,7 +47,7 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 
 | # | Category | Prefix | Move | Rules |
 |---|----------|--------|------|-------|
-| 1 | Find | `find` | Locate the right code given the query | 3 |
+| 1 | Find | `find` | Locate the right code given the query; bounded read of knowledge | 4 |
 | 2 | Trace | `trace` | Follow imports and usages to map the pattern | 2 |
 | 3 | Filter | `filter` | Cut noise to surface load-bearing pattern | 1 |
 | 4 | Capture | `capture` | Write code topography to registry/ for reuse | 1 |
@@ -58,6 +59,7 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 - [`find-classify-query`](references/find-classify-query.md) — Classify the query (component / composition / state / effect / error / build / routing) before grepping; the classification picks the grep targets and folder hints
 - [`find-grep-before-read`](references/find-grep-before-read.md) — Grep narrowly first to pinpoint files; never start by reading whole files
 - [`find-tests-show-intent`](references/find-tests-show-intent.md) — Tests, `examples/`, and `e2e/` dirs are the authors' canonical demonstration of intent; consult them before forming a hypothesis from prose
+- [`find-bounded-knowledge-read`](references/find-bounded-knowledge-read.md) — Filename is the index: read only `knowledge/libraries/<slug>.md`, never scan the dir; bounds per-invocation token cost regardless of knowledge-store size
 
 ### 2. Trace
 

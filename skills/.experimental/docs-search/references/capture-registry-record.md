@@ -44,6 +44,7 @@ docs:
   samples-repo: https://github.com/stripe-samples
   status-page: https://status.stripe.com
   discord-or-forum: null
+  lookup-count: 1                     # incremented every successful session
 
 # code-distill writes the code: section; do not touch it from here
 ---
@@ -53,7 +54,7 @@ The merge discipline (CRITICAL):
 
 - If the file does not exist → create it with `library:`, shared metadata, and `docs:` only
 - If the file exists with no `docs:` section → add `docs:` only; do not modify `code:` or other sections
-- If the file exists with `docs:` already → update fields under `docs:` and refresh `last-verified-date`; never overwrite the whole file blindly
+- If the file exists with `docs:` already → update fields under `docs:`, **increment `docs.lookup-count`**, refresh `last-verified-date`; never overwrite the whole file blindly
 - For shared list fields (`uses`, `implements`, `notable-landmarks`): merge by union; do not replace
 
 When to refresh:
@@ -62,6 +63,12 @@ When to refresh:
 - On major library version bump: full re-verification of all URLs (docs sites get reorganized)
 - When a lookup fails because a recorded URL 404s: update in the same session that hit the failure
 
+**The graduation rule.** When `docs.lookup-count >= 3` on a single library, the library has earned a full library-reference distillation rule pack (sibling of `nuqs`, `zod`, `react-hook-form`, `effect-ts`, `emilkowal-animations`). Author it using the [`library-reference-distillation`](../../library-reference-distillation/SKILL.md) playbook. Once shipped:
+
+1. **Delete the `docs:` section** of `knowledge/libraries/<library>.md` (or delete the whole file if `code:` is also absent or already graduated)
+2. Add the library to this skill's "When NOT to Apply" with a pointer to the new static skill
+3. The library moves out of this light layer into the heavy layer (full library-reference distillation output)
+
 What NOT to write here:
 
 - Idiomatic rules (those go in a full library-reference distillation skill — see [`library-reference-distillation`](../../library-reference-distillation/SKILL.md))
@@ -69,6 +76,6 @@ What NOT to write here:
 - Opinions or recommendations about the library
 - The `code:` section — that is owned by [`code-distill`](../../code-distill/SKILL.md)
 
-The mechanical trigger: at the end of any successful doc-search session for a library whose `docs:` section is missing from `knowledge/libraries/`, write it before closing out. Discovery was already done during the lookup; capturing costs seconds.
+The mechanical trigger: at the end of any successful doc-search session for a library whose `docs:` section is missing from `knowledge/libraries/`, write it before closing out. If the section exists, increment `docs.lookup-count` and refresh `last-verified-date`. Discovery was already done during the lookup; capturing costs seconds.
 
 Reference: [knowledge/README.md — full schema and merge discipline](../../../../knowledge/README.md)

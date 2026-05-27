@@ -53,6 +53,7 @@ docs:
   version-model: semver
   upgrades: null
   status-page: null
+  lookup-count: 1                        # incremented on every docs-search session
 
 # Code topography — written by code-distill
 code:
@@ -115,7 +116,9 @@ If a skill needs to update a section it doesn't own (rare; cross-skill correctio
 
 - **Creation** — a library file is created when a skill (`docs-search` or `code-distill`) does a real successful lookup against that library. Never pre-empt.
 - **Growth** — incremental. Each successful lookup may refresh `last-verified-date` and (for code) increment `code.lookup-count`.
-- **Graduation** — when `code.lookup-count >= 3`, the library has earned a full static code-atlas skill (sibling of `opencode-ts`). Once that skill ships, **delete** this library file and add the library to `code-distill`'s "When NOT to Apply" pointing at the new static skill. The light-layer entry is retired.
+- **Graduation (code side)** — when `code.lookup-count >= 3`, the library has earned a full static code-atlas skill (sibling of `opencode-ts`). Once that skill ships, **delete the code: section** (or the whole file if there's no `docs:` section either) and add the library to `code-distill`'s "When NOT to Apply" pointing at the new static skill.
+- **Graduation (docs side)** — when `docs.lookup-count >= 3`, the library has earned a full library-reference distillation rule pack (sibling of `nuqs`, `zod`, `react-hook-form`). Author it using the [`library-reference-distillation`](../skills/.experimental/library-reference-distillation/SKILL.md) playbook. Once shipped, **delete the docs: section** (or the whole file if `code:` is also gone) and add the library to `docs-search`'s "When NOT to Apply" pointing at the new static skill.
+- **Both sides graduated** — if both `docs:` and `code:` graduate to their respective heavy skills, delete the knowledge entry entirely; both heavy skills subsume the topography.
 - **Eviction** — a library file with `last-verified-date` > 90 days old AND no relations (no `uses`, `implements`, `similar-to`, no inbound wiki-links) is a candidate for deletion. Stale + unconnected = no signal. Delete rather than maintain.
 
 ## Reading from knowledge

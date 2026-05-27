@@ -17,6 +17,7 @@ Methodology distillation of the generic moves that turn 'I need to look this up'
 1. [Choose Source](references/_sections.md#1-choose-source)
    - 1.1 [Classify the question before searching — changelog, reference, idiom, or known-bug](references/src-decision-tree.md)
    - 1.2 [Probe llms.txt before scraping HTML — AI-canonical format takes priority](references/src-llms-txt-first.md)
+   - 1.3 [Read only the named knowledge entry; never scan knowledge/libraries/](references/src-bounded-knowledge-read.md)
 2. [Match Version](references/_sections.md#2-match-version)
    - 2.1 [Find the version selector before reading any reference page](references/ver-find-selector.md)
    - 2.2 [Read the changelog before the reference for "did X change" questions](references/ver-changelog-first.md)

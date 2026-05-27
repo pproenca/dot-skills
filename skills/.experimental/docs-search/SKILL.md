@@ -34,6 +34,7 @@ The four categories are orthogonal moves. Match the symptom to the move:
 |---------|-----------|--------------------|
 | Question is vague — "search the docs for X" | **Choose Source** | [`src-decision-tree`](references/src-decision-tree.md) |
 | About to scrape HTML; haven't checked for AI-canonical format | **Choose Source** (llms.txt) | [`src-llms-txt-first`](references/src-llms-txt-first.md) |
+| About to scan knowledge/libraries/ before reading the named entry | **Choose Source** (bounded read) | [`src-bounded-knowledge-read`](references/src-bounded-knowledge-read.md) |
 | Reading latest docs but user may be on older version | **Match Version** | [`ver-find-selector`](references/ver-find-selector.md) |
 | Question is "did X change since I upgraded?" | **Match Version** (changelog) | [`ver-changelog-first`](references/ver-changelog-first.md) |
 | Docs match but production behavior doesn't | **Fall Back** | [`fall-known-issues`](references/fall-known-issues.md) |
@@ -46,7 +47,7 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 
 | # | Category | Prefix | Move | Rules |
 |---|----------|--------|------|-------|
-| 1 | Choose Source | `src` | Classify the question; check for AI-canonical format first | 2 |
+| 1 | Choose Source | `src` | Classify the question; check llms.txt; bounded read of knowledge | 3 |
 | 2 | Match Version | `ver` | Pin to the user's version; consult changelog before reference | 2 |
 | 3 | Fall Back | `fall` | Known issues when docs contradict reality; examples over prose for idioms | 2 |
 | 4 | Capture for Reuse | `capture` | Record topography in registry/ so the next lookup is faster | 1 |
@@ -57,6 +58,7 @@ For category overviews and ordering rationale, see [`references/_sections.md`](r
 
 - [`src-decision-tree`](references/src-decision-tree.md) — Classify the question (API behavior / changelog / idiom / known-bug / migration) before picking a section; "search the docs" is not a plan
 - [`src-llms-txt-first`](references/src-llms-txt-first.md) — Probe `<docs-root>/llms.txt` or `/llms-full.txt` before scraping HTML; AI-canonical format if it exists
+- [`src-bounded-knowledge-read`](references/src-bounded-knowledge-read.md) — Filename is the index: read only `knowledge/libraries/<slug>.md`, never scan the dir; bounds per-invocation token cost regardless of knowledge-store size
 
 ### 2. Match Version
 
