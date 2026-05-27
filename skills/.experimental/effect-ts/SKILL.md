@@ -1,19 +1,10 @@
 ---
 name: effect-ts
-description: >
-  Use this skill whenever writing, reviewing, debugging, or refactoring TypeScript code that uses
-  the Effect-TS library. Trigger when you see imports from `effect`, `effect/*`, or any `@effect/*`
-  scoped package (schema, platform, sql, opentelemetry, cli, cluster, rpc, vitest). Trigger on
-  Effect-specific constructs: Effect.gen generators, Schema.Struct/Schema.Class definitions,
-  Layer/Context.Tag/Service patterns, Effect.pipe pipelines, Data.TaggedError/Data.Class error
-  types, Ref/Queue/PubSub/Deferred concurrency primitives, Match module, Config providers,
-  Scope/Exit/Cause/Runtime patterns, or any code using Effect's typed error channel (E parameter).
-  Also trigger when the user asks about Effect patterns, migration from Promises/fp-ts/neverthrow
-  to Effect, or how to structure an Effect application. Do NOT trigger for React's useEffect,
-  Redux side effects, or general English usage of "effect" unless the context clearly involves
-  the Effect-TS library.
+description: |
+  Use this skill whenever writing, reviewing, debugging, or refactoring TypeScript code that uses the Effect-TS library. Trigger when you see imports from `effect`, `effect/*`, or any `@effect/*` scoped package (schema, platform, sql, opentelemetry, cli, cluster, rpc, vitest). Trigger on Effect-specific constructs: Effect.gen generators, Schema.Struct/Schema.Class definitions, Layer/Context.Tag/Service patterns, Effect.pipe pipelines, Data.TaggedError/Data.Class error types, Ref/Queue/PubSub/Deferred concurrency primitives, Match module, Config providers, Scope/Exit/Cause/Runtime patterns, or any code using Effect's typed error channel (E parameter). Also trigger when the user asks about Effect patterns, migration from Promises/fp-ts/neverthrow to Effect, or how to structure an Effect application. Do NOT trigger for React's useEffect, Redux side effects, or general English usage of "effect" unless the context clearly involves the Effect-TS library.
+metadata:
+  internal: true
 ---
-
 # Effect TypeScript Best Practices
 
 Effect is a TypeScript library for building complex, type-safe applications with structured

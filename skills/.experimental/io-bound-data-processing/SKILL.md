@@ -1,8 +1,9 @@
 ---
 name: io-bound-data-processing
 description: Use this skill when processing, transforming, or moving datasets that may exceed RAM on a single low-compute box — covers memory discipline (streaming, generators, dtype shrinkage), I/O access patterns (sequential vs random, mmap, async), data formats (Parquet vs CSV vs JSON, predicate pushdown), chunking & batching, spill-to-disk (external merge sort, DuckDB/Polars), pipelining (bounded queues, backpressure, checkpointing), codec selection (zstd/lz4/gzip), concurrency for I/O-bound workloads (asyncio, threads, prefetch), and observability (iowait vs CPU%, rows/sec, py-spy/strace). Trigger on "process a large file", "stream this", "out-of-core", "OOM kill", "this is slow", or code with `pd.read_csv` of multi-GB files, `requests.get(...).content` on big bodies, `BytesIO` on unbounded inputs, per-row INSERTs, sequential `requests.get` loops, falling `tqdm` rates — even if I/O or memory isn't mentioned. Complement to computer-science-algorithms.
+metadata:
+  internal: true
 ---
-
 # Community I/O-bound data processing on constrained resources Best Practices
 
 A reference for engineers processing datasets larger than RAM on a single low-compute box. Organized by execution-lifecycle impact: rules near the top of the table govern *whether the job runs at all*; rules near the bottom shave the last 10 %. Optimize from the top of the waterfall.

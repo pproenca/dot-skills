@@ -1,8 +1,9 @@
 ---
 name: uniwind
 description: Uniwind best practices for React Native styling with Tailwind CSS. This skill should be used when writing, reviewing, or refactoring React Native code using Uniwind. Triggers on tasks involving Uniwind, className styling, Tailwind in React Native, NativeWind migration, or theming.
+metadata:
+  internal: true
 ---
-
 # Uniwind Best Practices
 
 Comprehensive performance optimization and best practices guide for Uniwind - the fastest Tailwind CSS bindings for React Native. Contains 45+ rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

@@ -1,8 +1,9 @@
 ---
 name: algorithmic-complexity-review
 description: Use this skill whenever writing, reviewing, or refactoring code where algorithmic complexity (Big-O) matters — finding nested loops, N+1 queries, exponential recursion, quadratic string builds, and other accidental complexity blowups. Covers Python, JavaScript/TypeScript, Java, Go, and similar languages. Trigger even when the user doesn't mention "Big-O" explicitly — if they're reviewing code for performance, refactoring a hot path, asking "why is this slow," or working with data that scales (loops, recursions, collections, ORM access), apply this skill to classify the time/space complexity and suggest the fix. Especially trigger on tasks like "review for performance," "find slow code," "make this faster," "this code is O(n²)," or when reading code that processes collections.
+metadata:
+  internal: true
 ---
-
 # dot-skills Algorithmic Complexity (Big-O) Best Practices
 
 Find, classify, and fix algorithmic complexity (Big-O) problems in code — language-agnostic. The 39 rules across 8 categories cover the patterns responsible for the vast majority of accidental quadratic, exponential, and N+1 blowups in production code: nested iteration, loop-invariant I/O, data-structure mismatch, recursion explosions, redundant computation, collection-building anti-patterns, search/sort selection, and space traps.

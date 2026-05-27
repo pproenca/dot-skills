@@ -1,8 +1,9 @@
 ---
 name: swift-refactor
 description: Swift and SwiftUI refactoring patterns aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture (Airbnb + OLX SPM layout). Enforces @Observable ViewModels/coordinators, App-target `DependencyContainer` + route shells, Domain repository/coordinator/error-routing protocols, and Data-owned I/O with stale-while-revalidate plus optimistic queued sync boundaries. Use when refactoring existing SwiftUI code into the clinic architecture.
+metadata:
+  internal: true
 ---
-
 # Swift/SwiftUI Refactor (Modular MVVM-C)
 
 Comprehensive refactoring guide for migrating Swift/SwiftUI code to modular MVVM-C with local SPM package boundaries and App-target composition root wiring.

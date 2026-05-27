@@ -1,8 +1,9 @@
 ---
 name: web-rules
 description: Strict design and UX rules for React 19 + Next.js 16 (App Router) + Tailwind CSS 4. Covers navigation, interaction design, accessibility, user feedback, UX patterns, and visual design. Use when designing, building, or reviewing any user-facing web feature on this stack. Trigger when the user asks to "build a settings page", "add a dialog", "design this form", "review for accessibility", "fix dark mode", or any Next.js App Router / React 19 / Tailwind UI task. Also trigger when the user says output "looks off", "isn't accessible", or "doesn't follow best practices."
+metadata:
+  internal: true
 ---
-
 # React 19 + Next.js 16 + Tailwind CSS Best Practices
 
 Comprehensive strict-rules reference for web apps built on React 19, the Next.js 16 App Router, and Tailwind CSS 4. Contains 34 rules across 6 categories. Each rule is stated as an Always/Never directive with a quantified impact, an incorrect example, and a correct example.

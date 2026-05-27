@@ -1,8 +1,9 @@
 ---
 name: marketplace-personalisation
 description: Use this skill whenever designing, building, debugging, reviewing, or improving a personalisation or recommendation system for a two-sided trust marketplace built on AWS Personalize — covers event tracking, dataset and schema design, two-sided matching, cold start, feedback loops, bias control, recipe selection, serving-time re-ranking, observability, and a diagnostic playbook for existing systems. Trigger even when the user does not explicitly mention "AWS Personalize" but is working on recommendations, ranking, search, homepage personalisation, or anything that matches seekers and providers across a trust-based catalog.
+metadata:
+  internal: true
 ---
-
 # Marketplace Engineering Two-Sided Personalisation Best Practices
 
 Comprehensive guide for designing, building and improving personalisation and recommendation

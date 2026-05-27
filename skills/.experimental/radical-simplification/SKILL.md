@@ -1,8 +1,9 @@
 ---
 name: radical-simplification
 description: Use this skill when stuck on a complex problem, when a proposed design feels overengineered, when reviewing code that has accreted accidental complexity, or when the user wants an elegant solution to a hard engineering or product problem. Distills the documented cognitive moves — reframe, clarify, reduce, decompose, invert, constrain, transfer, generalize, audit — used as a working method by mathematicians, physicists, and software engineers known for collapsing hard problems into simple solutions (Pólya, Feynman, Hamming, Brooks, Knuth, Dijkstra, Lamport, Tao, Grothendieck, Munger, Hofstadter). Triggers on phrases like "this feels too complicated", "we are going in circles", "there must be a simpler way", "interview me about this plan", "find the underlying problem", and on stuck-state moments where forward search has run out and the agent needs a different angle.
+metadata:
+  internal: true
 ---
-
 # Radical Simplification — Cognitive Moves for Collapsing Complex Problems
 
 Distillation of the documented working method of mathematicians, physicists, and engineers who consistently turn complex problems into simple solutions. The skill is not a step list — it is a toolbox of **cognitive moves**, each correcting a specific wrong default a capable model has when faced with complexity. The moves are mostly orthogonal; pick the one that matches the symptom.

@@ -1,8 +1,9 @@
 ---
 name: knip-deadcode
 description: Knip dead code detection best practices for JavaScript and TypeScript projects. Use when configuring Knip, analyzing unused code, setting up CI integration, or cleaning up codebases. Triggers on knip.json, dead code, unused exports, unused dependencies, bundle optimization.
+metadata:
+  internal: true
 ---
-
 # Community Knip Dead Code Detection Best Practices
 
 Comprehensive guide for detecting and removing dead code in JavaScript and TypeScript projects using Knip. Contains 43 rules across 8 categories, prioritized by impact to guide configuration, CI integration, and cleanup workflows.

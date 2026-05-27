@@ -1,8 +1,9 @@
 ---
 name: codebase-comprehension-algorithms
 description: Use this skill whenever mapping an unfamiliar codebase into feature/business domains — answering "what is this about", "which files implement feature X", "where is the architectural spine", or reviewing a refactor that crosses module boundaries. 47 algorithms across 9 categories — graph construction (omnipresent filter, multilayer, SCC), lexical preprocessing (Samurai, TF-IDF), community detection (Leiden, Infomap, SBM, MCL, Walktrap, spectral, HDBSCAN), architecture recovery (Bunch+MQ, ACDC, Limbo, Reflexion, DSM), topic modelling (LDA, LSI, NMF, HDP), evolutionary coupling (Gall, ROSE), information-theoretic (NCD, MI, MDL, naturalness), centrality (PageRank, HITS, betweenness, TextRank), validation (MoJoFM, ARI/NMI, resolution limit, consensus, co-change prediction, ablation). Trigger without explicit "clustering" mention — codebase grokking, dependency mapping, domain extraction, architecture-recovery validation all apply.
+metadata:
+  internal: true
 ---
-
 # Community Codebase Comprehension And Domain Mapping Algorithms Best Practices
 
 A practitioner-oriented reference of the **algorithms that work for mapping a codebase into understandable feature/business domains**. Most of these techniques live in the Software Architecture Recovery and Mining Software Repositories literatures and are invisible to working engineers — yet they're the right tools for the job a coding agent is asked to do every day: *"what does this codebase do, and where?"*

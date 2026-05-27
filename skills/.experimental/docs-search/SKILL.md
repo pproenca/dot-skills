@@ -1,8 +1,9 @@
 ---
 name: docs-search
 description: Use this skill when an agent needs to look up an answer in a library's official documentation — API behavior, version-specific changes, idiomatic usage, or why production diverges from docs — independent of which library. Distills the generic navigation moves shared across libraries — classify the question before searching (changelog vs API reference vs idiom vs known-bug), check llms.txt before scraping HTML, pin to the user's version before reading reference pages, read changelog first for "did X change" questions, treat examples/ dirs as truth for idioms, and fall back to GitHub issues / status page / Discord when docs match but reality doesn't. Per-library topography lives in the shared /knowledge/libraries/ graph as thin reference data, alongside code-distill's section. Triggers on "where in <library> docs", "look this up in <library>", "did <library> change X", "docs say X but code does Y", and any prompt where the next move is to consult a library's official documentation.
+metadata:
+  internal: true
 ---
-
 # Docs Search — Navigation Methodology for Official Library Documentation
 
 Methodology distillation of the generic moves an agent makes when reaching for a library's official documentation. Not a per-library skill — one skill plus a thin per-library record in the shared knowledge graph ([`/knowledge/libraries/`](../../../knowledge/)), because 90% of the work is the same regardless of which library you're searching.

@@ -1,8 +1,9 @@
 ---
 name: nginx-c-module-perf
 description: nginx C module performance optimization and reliability guidelines based on the official nginx development guide. This skill should be used when optimizing nginx C modules for throughput, latency, memory efficiency, and operational resilience. Triggers on tasks involving buffer optimization, connection tuning, shared memory contention, error recovery, timeout strategy, caching implementation, worker process tuning, or logging performance in nginx C modules.
+metadata:
+  internal: true
 ---
-
 # nginx.org C Module Performance & Reliability Best Practices
 
 Comprehensive performance optimization and reliability guide for nginx C modules, derived from the official nginx development documentation and production engineering experience. Contains 43 rules across 8 categories, prioritized by impact to guide automated optimization and resilience improvements.

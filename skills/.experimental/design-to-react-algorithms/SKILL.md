@@ -1,8 +1,9 @@
 ---
 name: design-to-react-algorithms
 description: Use this skill whenever reverse-engineering a Sketch file (or Figma export with similar shape) into pixel-perfect React + CSS — covers the iteration mental model, tree reconstruction, layout inference algorithms, geometry math, visual-regression diffing, and the style/typography/path conversions that make "improvement without regression" enforceable. Trigger even if the user doesn't explicitly mention "algorithms" but is converting a design source into web code, building a design-to-code pipeline, or struggling to make incremental fidelity improvements without breaking previously-converted output.
+metadata:
+  internal: true
 ---
-
 # dot-skills Design-to-React Conversion Best Practices
 
 The reverse-engineering pipeline that converts Sketch files into pixel-perfect React + CSS, **with regression-safe iteration as the load-bearing constraint**. The skill is organized around the cascade effect of design-to-code conversion: a wrong call in stage N corrupts every output from stage N+1 onward, so categories are ordered by how much downstream they own.

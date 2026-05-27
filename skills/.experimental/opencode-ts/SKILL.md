@@ -1,8 +1,9 @@
 ---
 name: opencode-ts
 description: Write and refactor TypeScript code in repos that use Effect-TS services, Effect Schema, event-sourced persistence, and barrel-module architecture. Use this skill when implementing features, fixing bugs, writing tests, or refactoring in opencode or any TypeScript codebase built on the same stack (Effect DI via Context.Service, Drizzle ORM, Hono routes, Bun runtime). Triggers on tasks involving Effect services, Context.Service / Layer modules, Effect Schema definitions, SyncEvent patterns, tool implementations, test writing, or code review in Effect-based TypeScript projects.
+metadata:
+  internal: true
 ---
-
 # Opencode TypeScript
 
 Code like the opencode core team. This skill contains real code extracted from the repo — complete implementations, not abstract rules. Follow the workflow below based on your task.

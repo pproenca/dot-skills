@@ -1,8 +1,9 @@
 ---
 name: chrome-extension
 description: Chrome Extensions (Manifest V3) performance and code quality guidelines. Use when writing, reviewing, or refactoring Chrome extension code including service workers, content scripts, message passing, storage APIs, TypeScript patterns, and testing.
+metadata:
+  internal: true
 ---
-
 # Chrome Extension Best Practices
 
 Comprehensive performance and code quality guide for Chrome Extensions (Manifest V3). Contains 67 rules across 12 categories, prioritized by impact to guide automated refactoring and code generation.

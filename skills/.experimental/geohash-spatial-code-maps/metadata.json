@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "organization": "Geohash & Spatial Code Maps",
   "technology": "Geohash (TypeScript & Rust)",
   "discipline": "distillation",

@@ -1,8 +1,9 @@
 ---
 name: human-copywrite
 description: Use this skill whenever writing, editing, or reviewing user-facing copy — UI strings, documentation, marketing, release notes, error messages, onboarding flows, blog posts, or anything that a person will read. Distilled from the Apple Style Guide (June 2025), it covers voice and tone (active voice, present tense, second person, no jargon), punctuation, capitalization, hyphenation rules for compound modifiers, when to spell out numbers, units of measure, UI vocabulary (button vs control vs sheet vs popover), Apple product and feature naming, technical notation for developer docs, and international style for localization. Trigger this even if the user doesn't explicitly mention "style guide" or "copywriting" — any time the deliverable is human-readable text, the rules here apply. Especially valuable when the user is writing instructions, naming UI elements, or deciding how to format a number, date, or unit.
+metadata:
+  internal: true
 ---
-
 # Human Copywrite
 
 Editorial style and usage guidance distilled from the Apple Style Guide (June 2025). Use it whenever you're producing text a human will read.

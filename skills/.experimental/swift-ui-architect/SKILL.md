@@ -1,8 +1,9 @@
 ---
 name: swift-ui-architect
 description: Opinionated SwiftUI architecture enforcement for iOS 26 / Swift 6.2 clinic modular MVVM-C apps using local SPM package boundaries. Enforces App-target `DependencyContainer` + route shells, @Observable ViewModels/coordinators, Domain repository/coordinator/error-routing protocols, Data-owned I/O, stale-while-revalidate reads, and optimistic queued sync. Use when writing, reviewing, or refactoring SwiftUI architecture, navigation, dependency wiring, or repository boundaries.
+metadata:
+  internal: true
 ---
-
 # SwiftUI Modular MVVM-C Architecture
 
 Opinionated architecture enforcement for SwiftUI clinic-style apps. This skill aligns to the iOS 26 / Swift 6.2 clinic architecture: modular MVVM-C in local SPM packages, concrete coordinators and route shells in the App target, pure Domain protocols, and Data as the only I/O layer.

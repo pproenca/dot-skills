@@ -1,8 +1,9 @@
 ---
 name: clean-code
 description: Use when writing, reviewing, or refactoring code for maintainability and readability. Triggers on code reviews, naming discussions, function design, error handling, and test writing. Based on Robert C. Martin's Clean Code handbook with modern corrections.
+metadata:
+  internal: true
 ---
-
 # Robert C. Martin (Uncle Bob) Clean Code Best Practices
 
 Comprehensive software craftsmanship guide based on Robert C. Martin's "Clean Code: A Handbook of Agile Software Craftsmanship", updated with modern corrections where the original 2008 advice has been superseded. Contains 48 rules across 10 categories, prioritized by impact to guide code reviews, refactoring decisions, and new development. Examples are primarily in Java but principles are language-agnostic.

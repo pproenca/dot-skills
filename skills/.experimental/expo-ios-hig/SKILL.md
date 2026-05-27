@@ -1,8 +1,9 @@
 ---
 name: expo-ios-hig
 description: Use this skill whenever building, reviewing, or refactoring an Expo / React Native app's iOS interface so it feels like a genuine iOS 26 app under Apple's Human Interface Guidelines — native navigation (Expo Router native stack and tabs), platform controls (Alert, ActionSheetIOS, SF Symbols via expo-symbols), safe areas, dark mode, Dynamic Type, haptics, Liquid Glass, accessibility, and 60fps motion. Trigger even when the user does not say "HIG" or "native feel" but is writing TSX screens, navigation, lists, forms, or styling for iOS in Expo. Covers the architecture and styling decisions made in React Native/TypeScript; for the @expo/ui SwiftUI component API use the expo-ui skill, and for native Swift use ios-hig.
+metadata:
+  internal: true
 ---
-
 # Expo iOS HIG Best Practices
 
 Design rules for building iOS 26 apps in **Expo (React Native)** that feel genuinely native under Apple's Human Interface Guidelines. Contains **46 rules across 8 categories**, prioritized by how much each decision affects native feel and HIG compliance. Every example is **TSX/Expo** — the decisions you make in React Native and TypeScript, not Swift.

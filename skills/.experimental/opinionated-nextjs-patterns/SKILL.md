@@ -1,8 +1,9 @@
 ---
 name: opinionated-nextjs-patterns
 description: Use this skill when writing, reviewing, or refactoring any Next.js 16 (App Router) codebase that wants an opinionated, backend-agnostic architecture — covers authorization at the data layer, server-side loading with cache() and Promise.all, mutations through a typed next-safe-action client and typed route handlers, client/server boundaries ('use client' at leaves + TanStack Query), forms with React Hook Form + Zod, UI via shadcn/ui + Tailwind + Base UI + next-intl, request handling in proxy.ts (Next.js 16's renamed middleware), and a Turbo monorepo of @app/* packages confining the backend behind one data-access package. Examples use Supabase as the concrete backend but every rule states the transferable principle; multi-tenant SaaS modeling is an optional category. Trigger on server actions, route handlers, RSC vs 'use client' placement, TanStack Query, React Hook Form/Zod, proxy.ts, monorepo package layout, or any code generation in this stack — even when the user doesn't say "patterns" or "best practices".
+metadata:
+  internal: true
 ---
-
 # Opinionated Next.js 16 Patterns
 
 Implementation-pattern reference for **Next.js 16 (App Router)** codebases that want a single, opinionated architecture. Contains **50 rules across 8 categories**, prioritised by execution-lifecycle cascade impact — authorization and (optional) tenant modeling first, then the request boundary, server fetching, mutations, client boundaries, architecture, and UI conventions.

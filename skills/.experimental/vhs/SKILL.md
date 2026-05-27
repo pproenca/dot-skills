@@ -1,8 +1,9 @@
 ---
 name: vhs
 description: VHS terminal recording best practices from Charmbracelet (formerly charmbracelet-vhs). This skill should be used when writing, reviewing, or editing VHS tape files to create professional terminal GIFs and videos. Triggers on tasks involving .tape files, VHS configuration, terminal recording, demo creation, or CLI documentation.
+metadata:
+  internal: true
 ---
-
 # Charmbracelet VHS Best Practices
 
 Comprehensive best practices guide for VHS terminal recordings, maintained by Charmbracelet. Contains 47 rules across 8 categories, prioritized by impact to guide creation of professional, portable, and optimized terminal demos.

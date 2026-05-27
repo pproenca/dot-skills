@@ -1,8 +1,9 @@
 ---
 name: library-reference-distillation
 description: Use this skill when starting a new library-reference distillation skill — one that turns an external library (nuqs, zod, framer-motion, msw, react-hook-form, emilkowal-animations) into an idiomatic-usage rule pack — or when evolving one against a new upstream release. Distills the conventions empirically shared across shipped library-ref skills in this repo — the source-priority ladder (docs → blog/changelog → issues → types → examples), version pinning that inverts with API velocity, the universal 4-tier category ladder (CRITICAL setup → HIGH isolation → MEDIUM composition → LOW edge cases), the 4-slot When-to-Apply template, the failure-gap exemplar heuristic (privilege production lessons over API restatement), and metadata.references[] as cite-set checksum. Triggers on "I want to write a skill for library X", "refresh against new upstream", "where should I source rules from", "what categories should this skill have", and on /dev-skill:new for a library-reference distillation.
+metadata:
+  internal: true
 ---
-
 # Library-Reference Distillation — Archetype Playbook
 
 Methodology distillation of the conventions that hold across shipped **library-reference distillations** in this repo — the archetype that turns one external library into an idiomatic-usage rule pack. Not a generator; a constraint set on the editorial decisions `/dev-skill:new` cannot make for you.

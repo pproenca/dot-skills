@@ -1,8 +1,9 @@
 ---
 name: marketplace-pre-member-personalisation
 description: Use this skill whenever designing, building, reviewing, or diagnosing the pre-member journey of a two-sided trust marketplace — from anonymous landing through onboarding, registration, and the paid-membership paywall. Covers anonymous signal inference, what pet owners specifically need to validate before paying (safety, availability, competence, effort, local cost comparison), what pet sitters specifically need to validate (opportunity, first-stay path, daily commitment, hidden costs), information-asymmetry closure, progressive profile building, social proof, conversion psychology, onboarding intent capture, identity stitching, and pre-member measurement. Triggers on tasks involving visitor-to-member conversion, anonymous personalisation, onboarding flow design, paywall timing, pre-member ranking, or any question about what a pet owner or pet sitter needs to see before paying. Use this skill BEFORE marketplace-personalisation and marketplace-search-recsys-planning.
+metadata:
+  internal: true
 ---
-
 # Marketplace Engineering Two-Sided Pre-Member Personalisation Best Practices
 
 Comprehensive design and diagnostic guide for the pre-member journey of a two-sided

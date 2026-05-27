@@ -1,8 +1,9 @@
 ---
 name: implementation-design-patterns
 description: Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from refactoring.guru. Use this skill when writing, refactoring, or reviewing TypeScript that exhibits a pattern-shaped problem — class-explosion from inheritance, conditionals switching on type, tight coupling to concrete classes, tree-shaped models, runtime algorithm selection, undo/redo, snapshot-and-restore, state-dependent behavior, subscriber notification, or hiding subsystem complexity. Each pattern entry includes intent, problem, solution, applicability (when to use AND when NOT to use), a runnable TypeScript example, implementation steps, pros/cons, and relations to sibling patterns. Trigger even when no pattern is named — cues like "class getting unwieldy," "giant switch," "swap implementations at runtime," "combinatorial subclasses," "need undo," or "traverse a tree" are pattern-shaped. Covers all 5 Creational, 7 Structural, and 10 Behavioral GoF patterns.
+metadata:
+  internal: true
 ---
-
 # TypeScript Design Patterns Best Practices (Refactoring Guru)
 
 Implementation reference for the 22 Gang of Four design patterns in TypeScript, distilled from refactoring.guru. Each of the **22 pattern files across 3 categories** captures intent, problem, solution, applicability, a runnable TypeScript example, implementation steps, pros/cons, and relations to sibling patterns.

@@ -1,8 +1,9 @@
 ---
 name: openai-codex-rust-patterns
 description: OpenAI Codex Rust coding patterns distilled from the codex-rs workspace. Use this skill whenever writing, reviewing, or refactoring Rust code — especially for async agents, CLI tools, sandboxing, secret handling, Ratatui TUIs, JSON-RPC protocols, tokio-based services, or any codebase that needs defensive panic discipline. Trigger even when the user does not explicitly mention Codex, because the patterns generalize to any production Rust workspace. Covers async cancellation, error enum design, process sandboxing, DNS-rebinding defense, credential hardening (zeroize/mlock/ctor), Cargo workspace architecture, wiremock-based fakes, insta snapshot testing, OpenTelemetry tracing, and Ratatui rendering.
+metadata:
+  internal: true
 ---
-
 # OpenAI Codex Rust Best Practices
 
 Distilled from [`openai/codex`](https://github.com/openai/codex) `codex-rs/` — a 119-crate, 2,008-file Rust workspace that ships the Codex CLI coding agent. Contains 63 rules across 11 categories, each citing the exact file in codex-rs where the pattern lives, so you can write Rust the way its top contributors (Michael Bolin, jif-oai, Ahmed Ibrahim, Eric Traut, Pavel Krymets) actually ship it. Citations were refreshed against `main` at commit `8a94430` (2026-05-25).

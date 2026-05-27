@@ -1,0 +1,63 @@
+{
+  "metadata": {
+    "pluginRoot": "./skills/.curated"
+  },
+  "plugins": [
+    {
+      "name": "references",
+      "source": ".",
+      "skills": [
+        "./debug",
+        "./expo",
+        "./expo-ui",
+        "./msw",
+        "./mui-base",
+        "./nextjs",
+        "./nuqs",
+        "./playwright",
+        "./python",
+        "./rails-dev",
+        "./rails-testing",
+        "./react",
+        "./react-hook-form",
+        "./refactor",
+        "./restful-hateoas",
+        "./ruby-optimise",
+        "./ruby-refactor",
+        "./rust-refactor",
+        "./rust-write-tests",
+        "./shadcn",
+        "./skill-authoring",
+        "./tailwind",
+        "./tanstack-query",
+        "./tdd",
+        "./terminal-ui",
+        "./think",
+        "./typescript",
+        "./ui-design",
+        "./vitest",
+        "./zod"
+      ]
+    },
+    {
+      "name": "workflows",
+      "source": ".",
+      "skills": [
+        "./ios-taste",
+        "./nuqs-codemod-runner",
+        "./react-hook-form-audit",
+        "./rust-implement",
+        "./web-taste"
+      ]
+    },
+    {
+      "name": "extractors",
+      "source": ".",
+      "skills": [
+        "./feature-arch",
+        "./nuqs-scaffolder",
+        "./react-19-component-scaffolder"
+      ]
+    }
+  ]
+}

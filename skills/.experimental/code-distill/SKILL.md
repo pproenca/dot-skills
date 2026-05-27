@@ -1,8 +1,9 @@
 ---
 name: code-distill
 description: Use this skill to distill code patterns on demand from a specific GitHub codebase, given a focused query — "how does shadcn/ui implement the design system", "how does opencode use effect-ts", "how does base-ui handle composition" — when no pre-distilled static rule pack exists yet. Distills the generic pattern-extraction moves — classify the query before grepping (component / composition / state / effect / error / build / routing), grep before reading whole files, treat tests and examples/ as canonical intent, follow imports outward for the public surface, follow usages inward for variants, filter boilerplate / legacy / test scaffolding to surface load-bearing code, and capture findings to /knowledge/libraries/ for reuse. Dynamic light sibling of static code-atlas skills (opencode-ts, openai-codex-rust-patterns, nextjs-ppr-patterns). Triggers on "show me how <library> implements X", "find the <pattern> in <repo>", "distill <library>", and ad-hoc /distill-<library>-style invocations.
+metadata:
+  internal: true
 ---
-
 # Code-Distill — Pattern Extraction Methodology for GitHub Codebases
 
 Methodology distillation of the generic moves an agent makes when distilling code patterns on demand from a specific GitHub codebase, given a focused query. Not a per-library skill — one skill plus a thin per-library record in the shared knowledge graph ([`/knowledge/libraries/`](../../../knowledge/)), because 90% of the work is the same regardless of which repo.

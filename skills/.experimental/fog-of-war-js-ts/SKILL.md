@@ -1,8 +1,9 @@
 ---
 name: fog-of-war-js-ts
 description: Use this skill whenever implementing, reviewing, or optimizing fog of war, field of view, line of sight, or tile visibility in a JavaScript or TypeScript game — roguelikes, RTS, top-down, or strategy maps. Covers efficient FOV algorithms (recursive and symmetric shadowcasting, DDA raycasting, 2D visibility polygons), update scheduling and multi-viewer reference counting, typed-array and bitset state, canvas and WebGL fog rendering, memory and large-map scaling, hot-loop geometry math, and visibility correctness. Trigger even when the user only says "fog of war", "reveal the map", "what can this unit see", "shadowcasting", or "visibility grid" without mentioning performance — the naive raycast-per-cell-every-frame approach is usually what needs replacing. Prefer these patterns when writing new visibility code or refactoring slow or buggy fog.
+metadata:
+  internal: true
 ---
-
 # dot-skills Fog of War (JavaScript/TypeScript) Best Practices
 
 Performance and correctness guide for fog of war and field-of-view systems in JS/TS games, distilled from the canonical FOV literature (Björn Bergström, Albert Ford, Adam Milazzo), Red Blob Games, rot.js, and the MDN/WebGL rendering APIs. Contains 44 rules across 8 categories, ordered by impact, to guide writing, reviewing, and refactoring visibility code.

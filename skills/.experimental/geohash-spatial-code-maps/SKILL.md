@@ -1,8 +1,9 @@
 ---
 name: geohash-spatial-code-maps
 description: Use this skill whenever implementing, reviewing, or debugging geohash encoding/decoding in TypeScript or Rust — bit interleaving, the base32 alphabet, precision and cell geometry, neighbour/adjacency computation, proximity and bounding-box queries, and geohash-backed spatial indexing. Also use it for the "codebase as a navigable 2D map" pattern — projecting a codebase into a coordinate plane, geohashing it so prefixes become business-domain regions, and navigating it like Google Maps (zoom, tiles, level-of-detail, clustering, deep links). Trigger even when the user does not say "geohash" — if the work involves spatial hashing, Morton/Z-order codes, proximity search on lat/lon, or mapping and visualising code structure spatially, this is the skill. Contains 42 impact-ordered rules with TypeScript and Rust examples.
+metadata:
+  internal: true
 ---
-
 # Geohash & Spatial Code Maps Best Practices
 
 How to implement geohashes correctly in TypeScript and Rust, how to query and index them at scale, and how to apply them to the "codebase as a navigable 2D map" pattern — projecting code into a plane so geohash prefixes become domain regions you can fly through like Google Maps. Contains 42 rules across 8 categories, prioritised by impact.

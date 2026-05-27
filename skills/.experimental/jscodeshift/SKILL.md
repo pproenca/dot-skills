@@ -1,8 +1,9 @@
 ---
 name: jscodeshift
 description: jscodeshift codemod development best practices from Facebook/Meta. This skill should be used when writing, reviewing, or debugging jscodeshift codemods. Triggers on tasks involving AST transformation, code migration, automated refactoring, or codemod development.
+metadata:
+  internal: true
 ---
-
 # Facebook/Meta jscodeshift Best Practices
 
 Comprehensive best practices guide for jscodeshift codemod development, designed for AI agents and LLMs. Contains 40 rules across 8 categories, prioritized by impact from critical (parser configuration, AST traversal) to incremental (advanced patterns). Each rule includes detailed explanations, real-world examples, and specific impact metrics.

@@ -1,8 +1,9 @@
 ---
 name: diataxis
 description: Use whenever writing, editing, restructuring, or reviewing technical documentation — READMEs, API docs, guides, tutorials, reference, onboarding, or developer docs of any kind — to apply the Diátaxis framework, which splits content into four modes (tutorials, how-to guides, reference, explanation) that each serve a distinct user need. Trigger even when the user just says "write docs", "document this", "improve the README", or "our docs are confusing" without naming Diátaxis or documentation types. Use it to decide WHAT KIND of doc to write (via the compass), to diagnose docs that feel bloated, mix instruction with reference, or leave users unable to get started or find facts, and to improve docs in small safe iterations. Especially when you are unsure whether something belongs in a tutorial vs how-to vs reference vs explanation, or when one page is trying to do all four at once.
+metadata:
+  internal: true
 ---
-
 # Diátaxis
 
 A runbook for producing and fixing technical documentation with the **Diátaxis** framework. Diátaxis splits documentation into four modes — **tutorials, how-to guides, reference, explanation** — because they answer four different user needs that pull in opposite directions. The single idea that makes it work:

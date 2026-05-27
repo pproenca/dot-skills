@@ -1,8 +1,9 @@
 ---
 name: theory-of-constraints
 description: Apply the Theory of Constraints (Goldratt's Five Focusing Steps) to find and fix the single bottleneck that caps a process, workflow, pipeline, or Agent Skill/plugin's throughput. Use whenever optimizing speed, lead time, cost, or token/context budget of a system — CI/build pipelines, dev value streams (idea→review→merge→ship), an Agent Skill's trigger/context flow, or runtime code paths — ESPECIALLY when you don't know where to optimize, a local speedup didn't improve the whole, work piles up at a stage, everything is busy but little ships, adding capacity didn't help, or a policy/rule (not a resource) is the limiter. It locates the constraint with measurement, then prescribes exploit → subordinate → elevate → repeat, and stops you optimizing non-constraints (the "mirage of the non-bottleneck"). Trigger even when the user just says "speed this up", "why is this slow", or "make this more efficient" without mentioning constraints or bottlenecks.
+metadata:
+  internal: true
 ---
-
 # Theory of Constraints
 
 A diagnostic runbook for optimizing any process — a CI/build pipeline, a dev value stream, an Agent Skill or plugin, or a runtime code path — through Eliyahu Goldratt's Theory of Constraints (ToC).

@@ -1,8 +1,9 @@
 ---
 name: swift-data
 description: SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps. Use when writing, reviewing, or refactoring @Model entities, repository implementations, stale-while-revalidate reads, optimistic queued writes, sync/retry behavior, and SwiftUI integration that keeps SwiftData types inside Data-only boundaries.
+metadata:
+  internal: true
 ---
-
 # SwiftData Best Practices — Modular MVVM-C Data Layer
 
 Comprehensive data modeling, persistence, sync architecture, and error handling guide for SwiftData aligned with the clinic modular MVVM-C stack.

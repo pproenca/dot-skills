@@ -1,8 +1,9 @@
 ---
 name: ios-navigation
 description: Opinionated SwiftUI navigation enforcement for iOS 26 / Swift 6.2 clinic modular MVVM-C apps. Enforces Domain coordinator protocols, App-target `DependencyContainer` + concrete coordinators + route shells, `NavigationPath` ownership, coordinator-owned modal state, deep-link/state-restoration readiness, and stale-while-revalidate/optimistic queued flow compatibility. Use when designing or refactoring clinic navigation flows.
+metadata:
+  internal: true
 ---
-
 # iOS Navigation (Modular MVVM-C)
 
 Opinionated navigation enforcement for SwiftUI apps using the clinic modular architecture. Focus on coordinator + route shell wiring, feature isolation, and resilient push/sheet/deep-link flows.

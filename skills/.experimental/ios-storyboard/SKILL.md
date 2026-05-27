@@ -1,8 +1,9 @@
 ---
 name: ios-storyboard
 description: Legacy interoperability skill for Storyboard and Interface Builder maintenance in iOS 26 / Swift 6.2 clinic codebases. Use only for migration or maintenance of existing storyboard screens; not for new SwiftUI clinic feature development. Triggers on Auto Layout, segues, size classes, IB accessibility, storyboard merge conflicts, and storyboard-to-SwiftUI migration tasks.
+metadata:
+  internal: true
 ---
-
 # iOS Storyboard Best Practices
 
 Legacy interoperability guidance for storyboard-heavy code that still exists in clinic projects. Not for new SwiftUI clinic feature development.

@@ -1,8 +1,9 @@
 ---
 name: tailwind-responsive-ui
 description: Responsive UI transformation patterns for Tailwind CSS applications. This skill should be used when making interfaces responsive, refactoring layouts for multiple screen sizes, or reviewing responsive Tailwind code. Triggers on tasks involving breakpoint strategy, layout adaptation, responsive spacing, fluid typography, mobile navigation, touch interaction, responsive media, or data table responsiveness.
+metadata:
+  internal: true
 ---
-
 # Community Responsive UI Tailwind CSS Best Practices
 
 Comprehensive responsive transformation guide for Tailwind CSS applications, based on Refactoring UI by Adam Wathan & Steve Schoger and modern responsive design patterns. Contains 49 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

@@ -1,8 +1,9 @@
 ---
 name: inngest-nextjs-patterns
 description: Use this skill whenever scaffolding Inngest event-driven functions in a Next.js (App Router) project — creating the client, the /api/inngest route handler, typed events with Zod schemas, durable event-triggered functions, scheduled cron functions, or fan-out orchestrators. Trigger even if the user just says "add a background job", "process this async", "schedule X every hour", or "send an event when Y happens" in a Next.js codebase — these all map to Inngest patterns. Also trigger when reviewing existing Inngest code to enforce event-naming, function-id stability, and step-idempotency conventions.
+metadata:
+  internal: true
 ---
-
 # Inngest + Next.js Patterns
 
 Templates and conventions for building event-driven, durable background work on Inngest from a Next.js App Router project. The skill enforces the conventions Inngest's own docs use (decentralized `eventType()` schemas, kebab-case stable function IDs, idempotent steps) so that retries, replays, and concurrency controls actually do what they advertise.

@@ -1,8 +1,9 @@
 ---
 name: rails-design-system
 description: Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal abstraction. This skill should be used when creating or refactoring Rails views, partials, components, form builders, helpers, Stimulus controllers, Turbo Frames, Turbo Streams, or design tokens. Triggers on tasks involving ERB partials, Turbo navigation, Turbo Streams, ViewComponent, Phlex, Tailwind design tokens, custom form builders, view helpers, Stimulus behaviors, Import Maps, Lookbook previews, or design system consistency audits.
+metadata:
+  internal: true
 ---
-
 # Community Ruby on Rails Design System Best Practices
 
 Comprehensive design system guide for Ruby on Rails applications, maintained by Community. Contains 51 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation. Covers the full Rails frontend stack: Turbo (Drive, Frames, Streams), Stimulus, ERB partials, design tokens, form builders, and view helpers. Complements `rails-dev` (controllers, models, queries) and `tailwind` (CSS patterns) by covering the systematic UI component architecture layer.

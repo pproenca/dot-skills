@@ -1,8 +1,9 @@
 ---
 name: drizzle-sqlite-scaffold
 description: Use this skill whenever scaffolding Drizzle ORM + SQLite boilerplate — a new `drizzle.config.ts`, a singleton client with the right pragmas, per-table schema files with explicit primary keys/indexed foreign keys/relations()/inferred types, per-table repository modules with `.returning()` + `inArray()` + `.onConflictDoUpdate()`, or drizzle-zod validators. Produces convention-enforced templates for three drivers (better-sqlite3, libsql/Turso, bun:sqlite). Trigger even when the user doesn't say "scaffold" — phrases like "add a table for X", "set up Drizzle in this project", "wire up SQLite", "create a CRUD module for X", or "bootstrap the DB layer" should pull this in. Pairs with the `drizzle-sqlite` skill, which covers the 45 rules these templates encode — read it when an exception is required.
+metadata:
+  internal: true
 ---
-
 # Drizzle SQLite Scaffold
 
 Parameterized templates for bootstrapping Drizzle + SQLite in a fresh project, or adding a new table/repository to an existing one. Every output bakes in the conventions documented in [`references/conventions.md`](references/conventions.md) — explicit primary keys, indexed foreign keys, `relations()` declarations, `$inferSelect`/`$inferInsert` exports, timestamp_ms dates, boolean-mode bools, WAL + `foreign_keys=ON` + `busy_timeout` pragmas, singleton client with HMR guard, and CRUD helpers using `.returning()` + `inArray()` + `.onConflictDoUpdate()`.

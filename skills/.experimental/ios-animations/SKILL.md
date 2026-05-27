@@ -1,8 +1,9 @@
 ---
 name: ios-animations
 description: Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2) covering motion tokens, spring physics, gesture continuity, spatial transitions, micro-interactions, and accessibility. Enforces @Equatable on animated views and keeps animation state aligned with Domain/Data feature boundaries. Use when writing, reviewing, or refactoring SwiftUI animation code under the clinic modular MVVM-C architecture.
+metadata:
+  internal: true
 ---
-
 # dot-skills — Airbnb iOS SwiftUI Animations Best Practices
 
 Opinionated, strict animation craft guide for SwiftUI iOS 26 / Swift 6.2 apps. Contains 50 rules across 8 categories, prioritized by impact. Derived from Airbnb Engineering motion patterns, Apple WWDC sessions, and Apple Human Interface Guidelines. Mandates @Equatable on every animated view, motion tokens for all spring/timing values, and design system tokens for layout.

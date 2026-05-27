@@ -8,8 +8,9 @@ description: |
   Triggers: "create a plan", "write a plan", "start plan", "continue plan", "resume plan",
   "finish plan", "complete plan", multi-step features, refactors, or tasks spanning sessions.
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash
+metadata:
+  internal: true
 ---
-
 # ExecPlan — Lifecycle Management
 
 **Announce at start:** "Using the exec-plan skill."

@@ -1,8 +1,9 @@
 ---
 name: code-simplifier
 description: Code simplification skill for improving clarity, consistency, and maintainability while preserving exact behavior. Use when simplifying code, reducing complexity, cleaning up recent changes, applying refactoring patterns, or improving readability. Triggers on tasks involving code cleanup, simplification, refactoring, or readability improvements.
+metadata:
+  internal: true
 ---
-
 # Community Code Simplification Best Practices
 
 Comprehensive code simplification guide for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact from critical (context discovery, behavior preservation) to incremental (language idioms). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics.

@@ -1,8 +1,9 @@
 ---
 name: expo-design-system-scaffolder
 description: Use this skill to scaffold new Expo / React Native design system components that obey the expo-design-system rules by construction — a variant-driven pressable primitive, a slot-based card surface, a typed text primitive, a labeled form field, a FlashList entity screen, a theme token group, and a Storybook variant catalog. Trigger whenever the user wants to create, add, generate, or scaffold a new shared UI component, primitive, design token group, or screen for the clinic mobile app, even if they don't mention the design system — the generated code uses Unistyles v3 variants instead of style props, ref-as-prop, design tokens, built-in accessibility, and web/iOS parity (`_web` hover/focus/cursor on interactive primitives), so it follows expo-design-system without rework. Output is TSX/TS using react-native-unistyles.
+metadata:
+  internal: true
 ---
-
 # Expo Design System Scaffolder
 
 Parameterized templates that generate Expo / React Native design system components which start

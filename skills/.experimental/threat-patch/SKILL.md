@@ -1,8 +1,9 @@
 ---
 name: threat-patch
 description: Use this skill to remediate security findings by producing minimal, surgical code patches. Triggers on 'patch security findings', 'fix vulnerabilities', 'remediate findings', 'threat patch', or when the user provides a findings.json (from threat-model), a Codex security findings CSV, a THREAT-MODEL.md, or individual vulnerability descriptions and wants them fixed. Also trigger when reviewing code flagged by a security scanner and the user wants actionable fixes rather than just reports.
+metadata:
+  internal: true
 ---
-
 # Threat Patch
 
 Reads security findings and produces minimal, surgical code patches with structured documentation. Fixes are code-grounded — each patch targets specific files and functions identified in the finding. Output includes a summary, validation steps, and the code changes.

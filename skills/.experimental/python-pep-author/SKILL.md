@@ -1,21 +1,10 @@
 ---
 name: python-pep-author
-description: >
-  Use this skill whenever the user wants to write, draft, or structure a Python
-  Enhancement Proposal (PEP) — proposing a Python language feature, a standard
-  library change, an interoperability standard, or an informational/process
-  document for the Python community. Trigger on "write a PEP", "draft a PEP",
-  "propose a Python feature", "create a Python Enhancement Proposal", "PEP
-  template", or when someone is preparing a proposal for the Python Discourse
-  or python-dev. Covers all three PEP types (Standards Track, Informational,
-  Process): choosing the right type, scaffolding a valid reStructuredText
-  pep-NNNN file, filling each required section to the acceptance bar, linting
-  the headers, and navigating the sponsor / submission / Steering Council
-  review process. Use it even if the user only says "PEP" or doesn't mention
-  reStructuredText — the headers, sections, and process are exactly what trips
-  PEP authors up.
+description: |
+  Use this skill whenever the user wants to write, draft, or structure a Python Enhancement Proposal (PEP) — proposing a Python language feature, a standard library change, an interoperability standard, or an informational/process document for the Python community. Trigger on "write a PEP", "draft a PEP", "propose a Python feature", "create a Python Enhancement Proposal", "PEP template", or when someone is preparing a proposal for the Python Discourse or python-dev. Covers all three PEP types (Standards Track, Informational, Process): choosing the right type, scaffolding a valid reStructuredText pep-NNNN file, filling each required section to the acceptance bar, linting the headers, and navigating the sponsor / submission / Steering Council review process. Use it even if the user only says "PEP" or doesn't mention reStructuredText — the headers, sections, and process are exactly what trips PEP authors up.
+metadata:
+  internal: true
 ---
-
 # Write a Python Enhancement Proposal (PEP)
 
 A PEP is the design document the Python community uses to propose a new language

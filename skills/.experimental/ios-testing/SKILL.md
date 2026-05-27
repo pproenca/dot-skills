@@ -1,8 +1,9 @@
 ---
 name: ios-testing
 description: Testing practices for iOS 26 / Swift 6.2 clinic modular MVVM-C applications. Covers unit/UI/snapshot testing, protocol-based mocks, async actor isolation, and dependency-injected test architecture aligned with Domain protocols, App-target composition, and Data-owned I/O boundaries. Use when writing, reviewing, or refactoring tests for ios-* and swift-* clinic modules.
+metadata:
+  internal: true
 ---
-
 # iOS Testing Best Practices
 
 Comprehensive testing guide for iOS and Swift applications, written at principal engineer level. Contains 44 rules across 8 categories, prioritized by impact to guide test architecture decisions, test authoring patterns, and CI infrastructure.

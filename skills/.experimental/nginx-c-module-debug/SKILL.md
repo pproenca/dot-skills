@@ -1,8 +1,9 @@
 ---
 name: nginx-c-module-debug
 description: nginx C module debugging guidelines based on the official nginx development guide. This skill should be used when debugging nginx C module crashes, memory bugs, request flow issues, or production problems. Triggers on tasks involving segfault analysis, coredump debugging, GDB inspection, memory leak detection, request phase tracing, AddressSanitizer setup, or nginx module troubleshooting.
+metadata:
+  internal: true
 ---
-
 # nginx.org C Module Debugging Best Practices
 
 Comprehensive debugging guide for nginx C modules, derived from the official nginx development documentation and production debugging experience. Contains 45 rules across 8 categories, prioritized by impact to guide systematic diagnosis of crashes, memory bugs, and behavioral issues in nginx modules.

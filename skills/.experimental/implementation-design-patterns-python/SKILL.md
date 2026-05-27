@@ -1,8 +1,9 @@
 ---
 name: implementation-design-patterns-python
 description: Implementation guide for the 22 Gang of Four design patterns in idiomatic modern Python (3.10+), distilled from refactoring.guru. Use when writing, refactoring, or reviewing Python with a pattern-shaped problem — class-explosion from inheritance, conditionals switching on type, tight coupling to concrete classes, tree-shaped models, runtime algorithm selection, undo/redo, state-dependent behavior, or hiding subsystem complexity. Each entry leads with the Pythonic form (functions, dataclasses, Protocol, singledispatch, match, generators, copy/replace) and falls back to the class-based GoF structure only when identity, state, or dispatch require it. Includes intent, applicability (when to use AND when NOT to), a runnable example, steps, pros/cons, and relations. Trigger even when no pattern is named — cues like "too many constructor params," "giant if/elif," "swap behavior at runtime," "need undo," or "walk a tree" are pattern-shaped. Covers all 5 Creational, 7 Structural, and 10 Behavioral GoF patterns.
+metadata:
+  internal: true
 ---
-
 # Python Design Patterns Best Practices (Refactoring Guru)
 
 Implementation reference for the 22 Gang of Four design patterns in **idiomatic modern Python (3.10+)**, distilled from refactoring.guru. Each of the **22 pattern files across 3 categories** captures intent, problem, solution, applicability (when to use AND when NOT to), a runnable Python example with output, implementation steps, pros/cons, and relations to sibling patterns.

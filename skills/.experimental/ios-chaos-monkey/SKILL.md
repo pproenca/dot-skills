@@ -1,8 +1,9 @@
 ---
 name: ios-chaos-monkey
 description: Crash-hunter skill for iOS 26 / Swift 6.2 clinic-architecture codebases that finds and fixes concurrency, memory, and I/O bugs using TDD. Covers data races, actor isolation, retain cycles, SwiftData context misuse, and sync-related failures in Domain/Data/App boundaries. Use when debugging crashes or hard-to-reproduce failures in ios-* and swift-* clinic modules.
+metadata:
+  internal: true
 ---
-
 # iOS Chaos Monkey — Crash-Hunter Best Practices
 
 Adversarial crash-hunting guide for iOS and Swift applications. Contains 47 rules across 8 categories, prioritized by crash severity. Every rule follows TDD: dangerous code first, a failing test that proves the bug, then the fix that makes the test pass.

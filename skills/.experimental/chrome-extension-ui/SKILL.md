@@ -1,8 +1,9 @@
 ---
 name: chrome-extension-ui
 description: Chrome Extensions UX/UI design and implementation guidelines for popups, side panels, content scripts, and options pages. Triggers on tasks involving browser extension UI, manifest v3, chrome APIs.
+metadata:
+  internal: true
 ---
-
 # Chrome Extensions UX/UI Best Practices
 
 Comprehensive UX/UI design guide for Chrome Extensions, optimized for Manifest V3. Contains 42 rules across 8 categories, prioritized by impact to guide extension UI development and code review.

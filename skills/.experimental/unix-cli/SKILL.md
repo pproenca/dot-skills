@@ -1,8 +1,9 @@
 ---
 name: unix-cli
 description: UNIX command-line interface guidelines for building tools that follow POSIX conventions, proper exit codes, stream handling, and the UNIX philosophy. This skill should be used when writing, reviewing, or designing CLI tools to ensure they integrate properly with the UNIX tool chain. Triggers on tasks involving CLI tools, command-line arguments, exit codes, stdout/stderr, signals, or shell scripts.
+metadata:
+  internal: true
 ---
-
 # UNIX/POSIX Standards CLI Best Practices
 
 Comprehensive guidelines for building command-line tools that follow UNIX conventions, designed for AI agents and LLMs. Contains 44 rules across 8 categories, prioritized by impact from critical (argument handling, exit codes, output streams) to incremental (configuration and environment).

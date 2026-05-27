@@ -1,8 +1,9 @@
 ---
 name: js-google
 description: JavaScript style and best practices based on Google's official JavaScript Style Guide. This skill should be used when writing, reviewing, or refactoring JavaScript code to ensure consistent style and prevent common bugs. Triggers on tasks involving JavaScript, ES6, modules, JSDoc, naming conventions, or code formatting.
+metadata:
+  internal: true
 ---
-
 # Google JavaScript Best Practices
 
 Comprehensive JavaScript style and best practices guide based on Google's official JavaScript Style Guide, designed for AI agents and LLMs. Contains 47 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

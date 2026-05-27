@@ -1,8 +1,9 @@
 ---
 name: typescript-advanced-patterns
 description: Use this skill when writing, reviewing, or designing advanced TypeScript code — type-level programming, library/DSL APIs, declaration merging, modern language features at depth (decorators, using, const T, NoInfer, variance), and feature implementation patterns built on advanced types. Trigger on tasks involving recursive conditional types, infer patterns, mapped-type key remapping, variadic tuples, fluent builders with phantom state, schema-first inference (Zod/Valibot), end-to-end-typed API clients, finite state machines, module augmentation, and library-publishing concerns. Trigger even when the user does not say "advanced" — if the work involves type-level algorithms, library-author API design, or going beyond surface-level uses of TS 5.x features, this is the skill. Assumes the reader has absorbed the `typescript-refactor` skill — this one extends those patterns at depth, never restates them.
+metadata:
+  internal: true
 ---
-
 # TypeScript Advanced Patterns Best Practices
 
 Type-level programming, library-author idioms, and feature-implementation patterns that go beyond surface uses of TypeScript 5.x. Contains 40 rules across 5 categories, prioritised by impact on consumer codebases.
