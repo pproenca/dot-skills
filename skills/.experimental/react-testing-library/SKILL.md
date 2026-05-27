@@ -1,9 +1,8 @@
 ---
 name: react-testing-library
 description: React Testing Library best practices for writing maintainable, user-centric tests. Use when writing, reviewing, or refactoring RTL tests. Triggers on test files, testing patterns, getBy/queryBy queries, userEvent, waitFor, and component testing.
-metadata:
-  internal: true
 ---
+
 # React Testing Library Best Practices
 
 Comprehensive testing guide for React components using Testing Library, designed for AI agents and LLMs. Contains 43 rules across 9 categories, prioritized by impact to guide test writing and code review.

@@ -1,9 +1,8 @@
 ---
 name: cli-for-agents
 description: Use this skill whenever designing, building, or reviewing a command-line tool that AI agents or automation will invoke — covers non-interactive flags, layered --help with examples, stdin/pipeline composition, actionable errors, idempotency, dry-run, destructive-action safety, and predictable command structure. Trigger even if the user doesn't explicitly say "agent-friendly" — apply whenever they are writing `--help` text, adding a new subcommand, designing error messages, or reviewing a CLI's UX.
-metadata:
-  internal: true
 ---
+
 # Agent-Friendly CLI Design Best Practices
 
 Prescriptive design and review standards for Command-Line Interface Design targeting AI agents and scripts, not just humans typing at a prompt. Human-oriented CLIs often block agents: interactive prompts, huge upfront docs, help text without copy-pasteable examples, error messages without fixes, no dry-run mode. This skill prioritizes rules by blast radius — from "the agent cannot use this CLI at all" (CRITICAL) to "the agent has to read help one extra time" (MEDIUM).

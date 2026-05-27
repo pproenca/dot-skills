@@ -1,10 +1,17 @@
 ---
 name: dev-rfc
-description: |
-  Create well-structured RFCs and technical proposals for software projects. Use this skill whenever the user wants to write an RFC, technical proposal, design doc, architecture doc, or system design overview. Also trigger when the user says things like "write an RFC", "I need to propose a new system", "create a technical proposal", "document the architecture", "write up the design", "I need a design doc", or "explain the system architecture in a doc". Even if they just say "RFC", "design doc", or "arch doc", use this skill. Covers both RFCs (proposing what to build) and architecture docs (documenting an existing codebase).
-metadata:
-  internal: true
+description: >
+  Create well-structured RFCs and technical proposals for software projects.
+  Use this skill whenever the user wants to write an RFC, technical proposal,
+  design doc, architecture doc, or system design overview. Also trigger when the
+  user says things like "write an RFC", "I need to propose a new system",
+  "create a technical proposal", "document the architecture", "write up the design",
+  "I need a design doc", or "explain the system architecture in a doc".
+  Even if they just say "RFC", "design doc", or "arch doc", use this skill.
+  Covers both RFCs (proposing what to build) and architecture docs (documenting
+  an existing codebase).
 ---
+
 # Dev RFC Skill
 
 Write RFCs and technical proposals that serve two purposes: **aligning stakeholders on what to build and why** (RFCs), and **helping engineers understand how a system works** (architecture docs). Most real proposals blend both — the skill helps you pick the right sections for the situation.

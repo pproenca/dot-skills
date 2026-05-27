@@ -1,9 +1,8 @@
 ---
 name: codemod-react-pipeline
 description: Guided, scripted pipeline for running JSX/TSX/React codemods safely across large legacy codebases. Use when you need to scaffold a codemod, dry-run it, validate its findings, and apply it across many files (50 to 100k+) without breaking the build. Walks the full inner/outer loop with the Codemod CLI (JSSG, ast-grep, workflows). Triggers on large-scale refactor, legacy React migration, codemod a prop/API change, migrate components across the codebase, run a codemod safely, batched/resumable codemod apply, dry-run a codemod.
-metadata:
-  internal: true
 ---
+
 # Codemod React Pipeline
 
 A safe, repeatable workflow for applying **JSX / TSX / React codemods to large legacy

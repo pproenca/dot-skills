@@ -1,9 +1,8 @@
 ---
 name: 37signals-rails
 description: 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the Fizzy/Basecamp/HEY codebase. This skill should be used when writing, reviewing, or refactoring Ruby on Rails code following the 37signals philosophy — vanilla Rails, CRUD controllers, rich domain models, concerns, no service objects, Hotwire, Turbo, Stimulus, Solid Queue, Solid Cache, Solid Cable, multi-tenancy, Minitest, custom auth, or DHH conventions.
-metadata:
-  internal: true
 ---
+
 # 37signals Rails Best Practices
 
 Comprehensive coding principles and conventions for Ruby on Rails applications, as practiced at 37signals (Basecamp, HEY, Fizzy). Contains 56 rules across 8 categories, prioritized by architectural impact. Derived from official 37signals sources: the Fizzy codebase, STYLE.md, AGENTS.md, the Rails Doctrine, DHH's "On Writing Software Well" series, and the unofficial 37signals style guide (265 Fizzy PRs).

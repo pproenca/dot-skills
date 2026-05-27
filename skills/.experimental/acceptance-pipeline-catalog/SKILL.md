@@ -1,9 +1,8 @@
 ---
 name: acceptance-pipeline-catalog
 description: Use when implementing, reviewing, or debugging a Gherkin acceptance-test pipeline with mutation testing. Covers parser, JSON IR, generator, runtime, step handlers, test runner, mutator, value mutation rules, execution, result classification, reporting, project layout, conformance, and agent setup. Based on Uncle Bob's Acceptance Pipeline Specification. Trigger even when the user mentions Gherkin parsing, acceptance test generation, mutation testing for acceptance tests, or building a portable test pipeline.
-metadata:
-  internal: true
 ---
+
 # Robert C. Martin Acceptance Pipeline Best Practices
 
 Language-neutral specification for a portable acceptance-test pipeline: Gherkin feature files to JSON IR to generated acceptance tests to mutation testing. Based on Robert C. Martin's Acceptance Pipeline Specification. Contains ~50 rules across 14 categories, prioritized by impact.

@@ -1,9 +1,8 @@
 ---
 name: rails-hotwire
 description: Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive, Turbo Frames, Turbo Streams, Turbo 8 morphing, and Stimulus controllers. This skill should be used when writing, reviewing, or refactoring Hotwire-powered Rails code to ensure optimal patterns for navigation, partial page updates, real-time broadcasting, morphing, Stimulus controller design, error handling, and progressive enhancement. Triggers on tasks involving Turbo Frames, Turbo Streams, Turbo Drive, broadcasts, morphing, Stimulus controllers, ActionCable, turbo_stream_from, turbo_frame_tag, data-controller, data-action, or Hotwire performance. Complementary to rails-dev, rails-testing, rails-design-system, ruby-optimise, and ruby-refactor skills.
-metadata:
-  internal: true
 ---
+
 # Community Rails Hotwire Best Practices
 
 Comprehensive guide for building interactive Rails applications with Hotwire (Turbo + Stimulus), maintained by Community. Contains 53 rules across 9 categories, prioritized by impact to guide automated refactoring and code generation. Follows the DHH "One Person Framework" philosophy: the server renders HTML, Turbo makes it feel like an SPA, Stimulus adds the sprinkle of JS where needed.

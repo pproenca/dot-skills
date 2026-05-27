@@ -1,5 +1,5 @@
 {
-  "version": "0.1.2",
+  "version": "0.1.1",
   "organization": "Code Map Visualization",
   "technology": "Code-as-Geohash-Map Rendering (TypeScript, Canvas2D + WebGL/deck.gl)",
   "discipline": "distillation",

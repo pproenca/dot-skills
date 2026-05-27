@@ -1,9 +1,8 @@
 ---
 name: storybook
 description: Use whenever creating, configuring, or extending Storybook for a TS/React component library — covers main.ts/preview.ts setup, CSF3 story authoring, args/argTypes/controls, decorators and providers, MSW and module mocking, play-function interaction tests via the Vitest addon, the @storybook/addon-a11y workflow (axe-core), autodocs vs MDX docs, design tokens, Figma linking, Chromatic deployment, and on-demand build performance. Triggers on tasks like "write a story", "set up Storybook", "configure addon-a11y", "fix this play function", "deploy Storybook", "test Storybook in CI" — even when the user doesn't say "storybook" but is editing `*.stories.tsx`, `.storybook/main.ts`, or `.storybook/preview.ts`. Targets Storybook 9+/10 (modern `storybook/test` import, Vitest addon, CSF3 + `satisfies Meta`). Does NOT cover generic React patterns (use the `react` skill), generic Testing Library queries (use `react-testing-library`), or WCAG primer (points at addon-a11y + axe rule config).
-metadata:
-  internal: true
 ---
+
 # dot-skills Storybook Best Practices
 
 Comprehensive guide for using Storybook 9+ as the workshop *and* test bench for a TypeScript/React component library. **52 rules across 8 categories**, ordered by the lifecycle of a component in your design system: a wrong `.storybook/main.ts` cascades into every story; a malformed CSF Meta blocks autodocs, controls, tests, and the a11y panel for that file.

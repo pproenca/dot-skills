@@ -1,9 +1,8 @@
 ---
 name: ios-design
 description: SwiftUI interface implementation patterns aligned with the iOS 26 / Swift 6.2 clinic modular MVVM-C architecture, grounded in Creative Selection and Design Like Apple principles. Use when building new SwiftUI views/screens while respecting Domain/Data boundaries, App-target route-shell navigation, and production-grade accessibility/interaction standards.
-metadata:
-  internal: true
 ---
+
 # Apple SwiftUI iOS Design Best Practices
 
 A builder's guide for implementing Apple-quality iOS interfaces in SwiftUI, grounded in two foundational design texts:

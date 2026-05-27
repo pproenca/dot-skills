@@ -1,9 +1,8 @@
 ---
 name: django-recommender-search-backend-patterns
 description: Use this skill when building, reviewing, or refactoring a Django backend that fan-outs to recommendation services (AWS Personalize, Databricks Model Serving, internal microservices) or serves OpenSearch-backed search/feed endpoints. Covers fan-out orchestration (asyncio.gather, deadline propagation, partial results, async client reuse), external service protection (timeouts, circuit breakers, jittered retry, bulkheads, rate limits), OpenSearch query patterns (search_after, _source filtering, function_score, aliases, routing, bool.filter), result blending (score normalization, MMR, dedup, cold-start), Redis caching (stampede protection, model-versioned keys, two-tier, negative), resilience (partial-response envelope, stale-on-error, graceful degradation), async (sync_to_async, async ORM, uvicorn, contextvars, disconnect cancellation), and DRF response shape (cursor pagination, ETag, throttling). Triggers even without explicit "scale" cues. Includes 5 scaffolding templates.
-metadata:
-  internal: true
 ---
+
 # Experimental Django Recommender + Search Backend Best Practices
 
 Implementation patterns for a Django backend serving mixed-results recommendations (Personalize / Databricks / microservice fan-out) and OpenSearch-backed search/feeds. **48 rules across 8 categories**, ordered by execution lifecycle impact — earlier categories cascade through everything downstream.

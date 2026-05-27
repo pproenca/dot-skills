@@ -1,9 +1,8 @@
 ---
 name: react-optimise
 description: Application-level React performance optimization covering React Compiler mastery, bundle optimization, rendering performance, data fetching, Core Web Vitals, state subscriptions, profiling, and memory management. Use when optimizing React app performance, analyzing bundle size, improving Core Web Vitals, or profiling render bottlenecks. Complements the react skill (API-level patterns) with holistic performance strategies. Does NOT cover React 19 API usage (see react skill) or Next.js-specific features (see nextjs-16-app-router skill).
-metadata:
-  internal: true
 ---
+
 # React Optimise Best Practices
 
 Application-level performance optimization guide for React applications. Contains 43 rules across 8 categories, prioritized by impact from critical (React Compiler, bundle optimization) to incremental (memory management).

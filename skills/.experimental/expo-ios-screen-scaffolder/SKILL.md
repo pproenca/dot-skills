@@ -1,9 +1,8 @@
 ---
 name: expo-ios-screen-scaffolder
 description: Use this skill to scaffold new Expo (React Native) iOS screens that follow Apple Human Interface Guidelines by construction — list, detail, form, modal sheet, native tabs layout, and settings screens, each wired with native navigation, FlashList, safe-area insets, semantic colors, SF Symbols, haptics, and empty/loading states. Trigger whenever the user wants to create, add, generate, or scaffold a new Expo screen, route, tab layout, or form for iOS, even if they don't mention HIG — the generated code follows the expo-ios-hig rules so it passes expo-ios-hig-verify without rework. Each screen is TSX for Expo Router, not Swift.
-metadata:
-  internal: true
 ---
+
 # Expo iOS Screen Scaffolder
 
 Parameterized templates that generate HIG-compliant Expo Router screens. Every template produces a screen that is native-by-construction — native navigation, virtualized lists, safe areas, semantic colors, SF Symbols, haptics, and honest empty states — so new screens start correct instead of being retrofitted. Each generated file cites the `expo-ios-hig` rules it satisfies.

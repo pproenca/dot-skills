@@ -1,9 +1,8 @@
 ---
 name: ios-design-system
 description: Clinic-architecture-aligned iOS design system engineering for SwiftUI (iOS 26 / Swift 6.2) covering token architecture, color/typography/spacing systems, component style libraries, asset governance, and theming. Enforces @Equatable on views and keeps design-system usage compatible with Feature-to-Domain+DesignSystem boundaries. Use when building or refactoring DesignSystem infrastructure for the clinic modular MVVM-C stack.
-metadata:
-  internal: true
 ---
+
 # Airbnb iOS Design System Best Practices
 
 Opinionated, strict design system engineering for SwiftUI iOS 26 / Swift 6.2 apps. Contains 50 rules across 8 categories, prioritized by impact. Derived from Airbnb's Design Language System (DLS), Airbnb Swift Style Guide, Apple Human Interface Guidelines, and WWDC sessions. Mandates @Equatable on every view, @Observable for state, and style protocols as the primary component API.

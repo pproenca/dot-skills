@@ -1,9 +1,8 @@
 ---
 name: tailwind-refactor
 description: Tailwind CSS code refactoring patterns for v4 migration and anti-pattern cleanup. This skill should be used when refactoring Tailwind utility classes, migrating from v3 to v4, cleaning up deprecated utilities, consolidating verbose class patterns, or removing code smells — all without changing the visual output. Triggers on tasks involving Tailwind CSS cleanup, v4 migration, class refactoring, @apply removal, or utility modernization.
-metadata:
-  internal: true
 ---
+
 # Community Tailwind CSS Refactoring Best Practices
 
 Comprehensive code quality refactoring guide for Tailwind CSS applications targeting v4. Contains 50 rules across 8 categories, prioritized by migration urgency. Every transformation preserves the existing look and feel — this skill is purely about cleaner code, modern syntax, and v4 compatibility.

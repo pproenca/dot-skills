@@ -1,9 +1,8 @@
 ---
 name: ts-google
 description: Google TypeScript style guide for writing clean, consistent, type-safe code. This skill should be used when writing, reviewing, or refactoring TypeScript code. Triggers on TypeScript files, type annotations, module imports, class design, and code style decisions.
-metadata:
-  internal: true
 ---
+
 # Google TypeScript Best Practices
 
 Comprehensive TypeScript style guide based on Google's internal standards, designed for AI agents and LLMs. Contains 45 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

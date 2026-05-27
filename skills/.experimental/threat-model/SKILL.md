@@ -1,9 +1,8 @@
 ---
 name: threat-model
 description: Use this skill whenever performing security threat modeling, attack surface mapping, or trust boundary analysis on a codebase. Triggers on 'threat model', 'security review', 'attack surface', 'trust boundaries', or when assessing a project's security posture. Also trigger when the user is about to build security-sensitive features (auth, crypto, file I/O, network services, native bridges) and needs to understand the threat landscape first — even if they don't explicitly say "threat model." Also triggers on 'what changed' or 'diff analysis' for incremental security review of recent commits.
-metadata:
-  internal: true
 ---
+
 # Threat Model
 
 Produces structured, evidence-backed security threat models for any codebase. Goes beyond surface enumeration by tracing untrusted data through actual code paths, clustering findings by root cause, and constructing exploit chains that combine individual findings into higher-severity attack paths.

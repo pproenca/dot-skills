@@ -1,9 +1,8 @@
 ---
 name: swift-optimise
 description: Swift 6.2 and SwiftUI performance optimization for iOS 26 clinic architecture codebases. Covers async/await concurrency patterns, Sendable/actor isolation, view/render performance, and animation performance while preserving modular MVVM-C boundaries across App, Feature, Domain, and Data layers. Use when profiling or optimizing Swift/SwiftUI behavior in clinic modules.
-metadata:
-  internal: true
 ---
+
 # Apple Swift/SwiftUI Performance Optimization Best Practices
 
 Comprehensive guide for Swift and SwiftUI performance optimization. Contains 19 rules across 3 categories covering modern concurrency, render performance, and animation performance. Targets iOS 26 / Swift 6.2 with @Observable and Swift 6 strict concurrency.

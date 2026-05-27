@@ -1,9 +1,8 @@
 ---
 name: eval-mcp
 description: Use this skill when the user asks to "evaluate MCP tools", "test tool selection", "improve tool descriptions", "check MCP schema quality", "eval my MCP server", or wants to measure whether Claude uses their MCP tools correctly. Tests tool selection accuracy, analyzes schema quality, and iteratively optimizes descriptions. Companion to build-mcp-server.
-metadata:
-  internal: true
 ---
+
 # Evaluate MCP Tools
 
 Tool descriptions are prompt engineering — they land directly in Claude's context window and determine whether Claude picks the right tool with the right arguments. This skill makes tool quality **measurable and improvable** instead of guesswork.

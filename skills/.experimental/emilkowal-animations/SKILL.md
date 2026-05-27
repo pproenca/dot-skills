@@ -1,9 +1,8 @@
 ---
 name: emilkowal-animations
 description: Emil Kowalski's animation best practices for web interfaces. Use when writing, reviewing, or implementing animations in React, CSS, or Framer Motion. Triggers on tasks involving transitions, easing, gestures, toasts, drawers, or motion.
-metadata:
-  internal: true
 ---
+
 # Emil Kowalski Animation Best Practices
 
 Comprehensive animation guide for web interfaces based on Emil Kowalski's teachings, open-source libraries (Sonner, Vaul), and his [animations.dev](https://animations.dev) course. Contains 58 rules across 8 categories, prioritized by impact.

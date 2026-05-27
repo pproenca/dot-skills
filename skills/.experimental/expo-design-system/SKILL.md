@@ -1,9 +1,8 @@
 ---
 name: expo-design-system
 description: Airbnb-DLS-aligned design system engineering for Expo / React Native apps targeting both web and native iOS, built on Unistyles v3, Reanimated, Skia, and FlashList. Use whenever building, reviewing, or refactoring shared UI — design tokens, theming, variant-driven component APIs, typography, spacing, cross-platform web/iOS parity, native-feel performance, or complex surfaces like calendars and drawing canvases (examples use a clinic app). Covers token architecture, theming, component API contracts (variants over style props), web/iOS parity (Unistyles `_web` hover/focus/cursor, Platform splits, one shared theme), the Unistyles styling engine, and governance. Trigger even when the user does not say "design system" but is creating or changing reusable React Native components, tokens, theme code, or making a component behave natively on both web and iOS. Teaches how to BUILD the design system; pair with expo-react-native-coder for features and expo-ios-hig for iOS native-feel decisions.
-metadata:
-  internal: true
 ---
+
 # Airbnb DLS Expo React Native Design System Best Practices
 
 Opinionated, strict design system engineering for Expo / React Native apps on the New Architecture, targeting both web and native iOS. Contains 63 rules across 11 categories, prioritized by impact. Derived from Airbnb's Design Language System (DLS), the Unistyles v3 documentation, and the React Native ecosystem (Reanimated, Gesture Handler, Skia, FlashList, Expo SDK). The styling engine is Unistyles v3; the component API follows the Airbnb DLS pattern of variant props over style escape hatches.

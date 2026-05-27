@@ -1,9 +1,8 @@
 ---
 name: expo-react-native-coder
 description: Comprehensive Expo React Native feature development guide. This skill should be used when building mobile app screens, navigation, data fetching, authentication, deep linking, or native UX patterns with Expo. Triggers on tasks involving Expo Router, React Native components, mobile forms, or app configuration.
-metadata:
-  internal: true
 ---
+
 # Expo React Native Coder Best Practices
 
 Comprehensive feature development guide for Expo React Native applications. Contains 50 rules across 10 categories, covering everything from project setup to testing. Includes production-ready code templates for common features.

@@ -1,9 +1,8 @@
 ---
 name: ast-grep
 description: ast-grep rule writing and usage best practices. This skill should be used when writing, reviewing, or debugging ast-grep rules for code search, linting, and transformation. Triggers on tasks involving YAML rules, pattern syntax, meta variables, constraints, or code rewriting.
-metadata:
-  internal: true
 ---
+
 # ast-grep Community Best Practices
 
 Comprehensive best practices guide for ast-grep rule writing and usage, maintained by the ast-grep community. Contains 46 rules across 8 categories, prioritized by impact to guide automated rule generation and code transformation.

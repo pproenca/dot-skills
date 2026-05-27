@@ -1,9 +1,8 @@
 ---
 name: webpack-plugin-authoring
 description: Use this skill whenever writing, reviewing, or debugging webpack 5 plugins — covers hook selection (compiler vs compilation, tap vs tapAsync, processAssets stages), the asset pipeline (emitAsset, source classes, info metadata, source maps), watch-mode and persistent caching (file/context/missing/buildDependencies), plugin lifecycle (constructor purity, multi-compiler isolation, shutdown cleanup), schema-utils validation, WebpackError reporting, jest-worker parallelism, and compatibility patterns (compiler.webpack namespace, peerDependencies, getCompilationHooks WeakMap). Trigger even if the user doesn't explicitly mention "best practices" — anytime an `apply(compiler)` method is being written, hooks are being tapped, or a plugin imports from `webpack-sources`, the rules in this skill apply. Patterns are drawn from production plugins like mini-css-extract-plugin, terser-webpack-plugin, compression-webpack-plugin, and Next.js's webpack plugins.
-metadata:
-  internal: true
 ---
+
 # dot-skills Webpack 5 Plugins Best Practices
 
 Comprehensive guide for writing correct, performant webpack 5 plugins. Contains 44 rules across 8 categories (8 hook + 7 asset + 5 cache + 5 life + 4 schema + 5 diag + 5 perf + 5 compat = 44), ordered by the authoring lifecycle: hook choice is the foundation, then asset manipulation, then caching/watch-mode correctness, then lifecycle hygiene, then user-facing concerns (schema validation, error reporting), then performance, then packaging.

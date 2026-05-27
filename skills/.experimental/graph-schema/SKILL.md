@@ -1,9 +1,8 @@
 ---
 name: graph-schema
 description: Graph database schema design and data modeling expert. Use when designing, reviewing, or refactoring graph database schemas (Neo4j, Memgraph, Neptune, etc.). Triggers on graph modeling, node/relationship design, Cypher schema, property graph design, knowledge graph modeling, or when translating a domain into a graph structure. Focuses primarily on data modeling correctness — understanding the user's goal and translating it into the right graph structure — with performance as a secondary concern.
-metadata:
-  internal: true
 ---
+
 # dot-skills Graph Database Schema Design Best Practices
 
 Comprehensive graph database data modeling guide for property graphs (Neo4j, Memgraph, Amazon Neptune, etc.). Contains 46 rules across 8 categories, prioritized by modeling impact from critical (entity classification, relationship design) to incremental (scale and evolution). Each rule includes detailed explanations, real-world Cypher examples comparing incorrect vs. correct models, and specific impact descriptions.

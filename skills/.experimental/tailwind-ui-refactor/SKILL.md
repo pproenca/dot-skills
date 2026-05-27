@@ -1,9 +1,8 @@
 ---
 name: tailwind-ui-refactor
 description: Refactoring UI design patterns for Tailwind CSS applications. This skill should be used when writing, reviewing, or refactoring HTML with Tailwind utility classes to improve visual hierarchy, spacing, typography, color, depth, and polish. Triggers on tasks involving UI cleanup, design review, Tailwind refactoring, component styling, or visual improvements.
-metadata:
-  internal: true
 ---
+
 # Refactoring UI Tailwind CSS Best Practices
 
 Comprehensive UI refactoring guide based on Refactoring UI by Adam Wathan & Steve Schoger, implemented with Tailwind CSS utility classes. Contains 52 rules across 9 categories, prioritized by design impact to guide automated refactoring and code generation. Uses Tailwind CSS v4 syntax (v3 notes provided where syntax differs).

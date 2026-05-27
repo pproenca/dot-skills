@@ -1,9 +1,8 @@
 ---
 name: nginx-c-modules
 description: nginx C module development guidelines based on the official nginx development guide. This skill should be used when writing, reviewing, or refactoring nginx C modules to ensure correct memory management, request lifecycle handling, and event-driven patterns. Triggers on tasks involving nginx module development, ngx_http_module_t, handler/filter/upstream implementation, pool allocation, or nginx configuration directives.
-metadata:
-  internal: true
 ---
+
 # nginx.org C Module Development Best Practices
 
 Comprehensive development guide for nginx C modules, derived from the official nginx development documentation and community expertise. Contains 49 rules across 8 categories, prioritized by impact to guide correct module implementation and prevent common crashes, memory leaks, and undefined behavior.

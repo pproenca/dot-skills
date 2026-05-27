@@ -1,9 +1,8 @@
 ---
 name: webpack-plugin-recipes
 description: Use whenever you face a webpack-build problem that ends with needing to write a plugin — 26 production-shaped recipes covering bundle-size budgets, forbidden architectural imports, env-var validation, secret-leak prevention, build-info injection, asset manifests, license walking, SRI hashes, virtual modules (Vite-style), filesystem routing (Next.js-style), generated barrels, runtime-driven TS types, library replacement (react→preact), debug-stripping, conditional polyfills, dynamic banners, feature flags, build-duration regression tracking, desktop/Slack notifications, changed-chunks diffing, browser auto-open, gzip/brotli pre-compression, image optimization, type-based dist layout, empty-chunk cleanup, cache-busting query strings. Each recipe is a complete working plugin drawn from production patterns at Next.js, Storybook, webpack-contrib. Trigger when the user asks how to do X with webpack or whether a plugin exists for X. Companion to webpack-plugin-authoring.
-metadata:
-  internal: true
 ---
+
 # dot-skills Webpack 5 Plugins Best Practices
 
 Cookbook of 26 production-shaped webpack 5 plugins, organized by the problem they solve. Each recipe starts with a clearly defined problem statement ("here's what hurts without this"), shows the naive non-plugin approach, then provides a complete working plugin (60-150 lines) with explanation, variations, and "when NOT to use" guidance.

@@ -1,9 +1,8 @@
 ---
 name: typescript-refactor
 description: TypeScript and TSX refactoring and modernization guidelines from a principal specialist perspective, current to TypeScript 6.0 and React 19. This skill should be used when refactoring, reviewing, or modernizing TypeScript or React/TSX code for type safety, compiler performance, and idiomatic patterns. Triggers on tasks involving type architecture, narrowing, generics, discriminated unions, error handling, React component and hook typing, or migration to modern TypeScript features (satisfies, using, const type parameters, inferred type predicates, isolatedDeclarations, erasable syntax, import attributes).
-metadata:
-  internal: true
 ---
+
 # TypeScript Refactor Best Practices
 
 Comprehensive TypeScript and TSX refactoring and modernization guide designed for AI agents and LLMs. Contains 47 rules across 9 categories, prioritized by impact to guide automated refactoring, code review, and code generation. Current to TypeScript 6.0 and React 19.

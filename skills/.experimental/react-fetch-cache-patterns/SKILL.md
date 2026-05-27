@@ -1,9 +1,8 @@
 ---
 name: react-fetch-cache-patterns
 description: Use this skill whenever building, reviewing, or refactoring React components that fetch data from APIs — especially at scale (recommender carousels, infinite feeds, pages with many parallel fetches, dashboards). Covers request orchestration (parallelism, batching, deduplication), cache strategy (keys, normalization, staleTime, SWR), backend protection (concurrency caps, debounce/throttle, jittered retries, circuit breakers), prefetching (route loaders, hover/intent, idle, server hydration), failure resilience (AbortController, timeouts, error boundaries, stale fallback, idempotent mutations), and feed/carousel patterns (virtualization, cursor pagination, summary/detail split). Trigger even if the user doesn't explicitly mention "performance" or "scale" — any non-trivial React data-fetching code benefits from these patterns. Includes 5 ready-to-use scaffolding templates (resource query hook, carousel data loader, infinite feed, hover-prefetch link, request collapser).
-metadata:
-  internal: true
 ---
+
 # Experimental React Data Fetching & Caching Best Practices
 
 Implementation patterns for React applications that fetch and cache many API requests without overwhelming the backend. **48 rules across 8 categories**, ordered by execution lifecycle impact — earlier categories cascade through everything downstream. Templates show both library-based (TanStack Query, SWR) **and library-free** (pure React + AbortController) implementations so the patterns are usable regardless of stack constraints.

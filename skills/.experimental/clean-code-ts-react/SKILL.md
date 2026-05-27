@@ -1,9 +1,8 @@
 ---
 name: clean-code-ts-react
 description: Use when writing, reviewing, or refactoring TypeScript or React code for craftsmanship — naming, function and component shape, error handling, data modeling, tests, and abstraction. Translates Robert C. Martin's Clean Code principles into modern TS+React idioms (TS 5.x, React 19), with first-class "When NOT to apply" guidance and a Meta category for principle conflicts (DRY vs SRP, small functions vs deep modules, type safety vs ergonomics). Triggers on code review, refactoring for clarity, naming, function/component design, "is this clean?", "make this more readable", "right abstraction?" — even when the user doesn't say "clean code". Does NOT cover React-specific APIs (RSC, hooks API surface) — use the `react` skill. Does NOT cover TS compiler perf or tsconfig — use the `typescript` skill.
-metadata:
-  internal: true
 ---
+
 # Robert C. Martin (Uncle Bob) TypeScript 5.x + React 19 Best Practices
 
 Craftsmanship principles from Robert C. Martin's *Clean Code* (2008), re-expressed for modern TypeScript and React. Contains **61 rules across 11 categories**, prioritized by cognitive cost across a code change's lifetime. Examples use TS 5.x and React 19 idioms — but the rules are about timeless principles, not specific APIs.

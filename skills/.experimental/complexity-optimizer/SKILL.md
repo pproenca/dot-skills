@@ -1,9 +1,8 @@
 ---
 name: complexity-optimizer
 description: Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or implement safe optimizations without breaking behavior. Use when the user asks to scan many files, find inefficient loops, nested iteration, repeated scans, costly rendering/recomputation, N+1 queries, avoidable O(n^2) or O(n) operations, or reduce complexity such as O(n^2) to O(n log n) / O(n), while preserving tests, APIs, outputs, and maintainability.
-metadata:
-  internal: true
 ---
+
 # Complexity Optimizer
 
 Find algorithmic complexity hotspots in a codebase and produce a structured report. Optionally implement low-risk optimizations after explicit consent.

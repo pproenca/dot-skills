@@ -1,9 +1,8 @@
 ---
 name: zustand
 description: Zustand state management best practices for React applications. Use when writing, reviewing, or refactoring Zustand stores to ensure optimal performance and maintainability. Triggers on tasks involving state management, stores, selectors, re-renders, and Zustand patterns.
-metadata:
-  internal: true
 ---
+
 # Community Zustand Best Practices
 
 Comprehensive performance and architecture guide for Zustand state management in React applications. Contains 43 rules across 8 categories, prioritized by impact from critical (store architecture, selector optimization) to incremental (advanced patterns).

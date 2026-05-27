@@ -1,12 +1,25 @@
 ---
 name: harness-engineering
-description: |
-  Set up or update the agent-first engineering harness for any repository. Implements the complete scaffolding that makes AI coding agents effective: knowledge maps (AGENTS.md as a concise TOC), structured documentation, architecture boundaries, enforcement rules (.harness/*.yml specs), quality scoring, and process patterns for agent-driven development.
-  Use this skill whenever someone wants to make a repo agent-ready, set up AGENTS.md or docs/ structure, define domain boundaries or golden principles, generate .harness/ configuration, audit agent readiness, or update an existing harness. Also trigger when a user reports problems with agent effectiveness, context management, or architectural drift — these are symptoms of a missing or stale harness.
-  Trigger on: "harness this repo", "set up harness", "agent-first setup", "make this agent-ready", "update the harness", "assess agent readiness", "set up AGENTS.md", "organize for agents", or any discussion about structuring a codebase for AI agent workflows.
-metadata:
-  internal: true
+description: >
+  Set up or update the agent-first engineering harness for any repository.
+  Implements the complete scaffolding that makes AI coding agents effective:
+  knowledge maps (AGENTS.md as a concise TOC), structured documentation,
+  architecture boundaries, enforcement rules (.harness/*.yml specs), quality
+  scoring, and process patterns for agent-driven development.
+
+  Use this skill whenever someone wants to make a repo agent-ready, set up
+  AGENTS.md or docs/ structure, define domain boundaries or golden principles,
+  generate .harness/ configuration, audit agent readiness, or update an
+  existing harness. Also trigger when a user reports problems with agent
+  effectiveness, context management, or architectural drift — these are
+  symptoms of a missing or stale harness.
+
+  Trigger on: "harness this repo", "set up harness", "agent-first setup",
+  "make this agent-ready", "update the harness", "assess agent readiness",
+  "set up AGENTS.md", "organize for agents", or any discussion about
+  structuring a codebase for AI agent workflows.
 ---
+
 # Harness: Agent-First Engineering Scaffolding
 
 The harness is the scaffolding that makes coding agents effective in a repository.

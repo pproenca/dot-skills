@@ -1,9 +1,8 @@
 ---
 name: shell
 description: Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts. Use when writing, reviewing, or refactoring shell scripts, Dockerfile RUN commands, Makefile recipes, CI pipeline scripts, cron jobs, or systemd ExecStart directives. Triggers on bash, sh, POSIX, ShellCheck, error handling, quoting, variables, set -euo pipefail.
-metadata:
-  internal: true
 ---
+
 # Shell Scripts Best Practices (Community)
 
 Comprehensive best practices guide for shell scripting, designed for AI agents and LLMs. Contains 49 rules across 9 categories, prioritized by impact from critical (safety, portability) to incremental (style). Each rule includes detailed explanations, real-world examples comparing incorrect vs. correct implementations, and specific impact metrics.

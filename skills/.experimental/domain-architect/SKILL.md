@@ -1,11 +1,23 @@
 ---
 name: domain-architect
-description: |
-  Discovers business domains in a Swift codebase by tracing what users can DO — not by reading folder names or architecture docs. Maps each domain's vertical slice (Types → Config → Repo → Service → Runtime → UI), identifies providers (external SDK bridges), and separates cross-cutting concerns. Produces a domain map that drives all downstream decisions: folder structure, SPM targets, enforcement specs, migration plans. Use this skill whenever the user wants to understand their codebase domains, find what's cross-cutting vs domain-specific, restructure a Swift project, figure out where code belongs, or map a product's capabilities to architectural boundaries. Triggers on "what are my domains", "where does this belong", "map this codebase", "what's cross-cutting", "organize this project", "is this a domain or infra", "restructure this", "architecture review", or any request to understand the business domain structure of a Swift codebase.
+description: >
+  Discovers business domains in a Swift codebase by tracing what users
+  can DO — not by reading folder names or architecture docs. Maps each
+  domain's vertical slice (Types → Config → Repo → Service → Runtime → UI),
+  identifies providers (external SDK bridges), and separates cross-cutting
+  concerns. Produces a domain map that drives all downstream decisions:
+  folder structure, SPM targets, enforcement specs, migration plans.
+  Use this skill whenever the user wants to understand their codebase
+  domains, find what's cross-cutting vs domain-specific, restructure a
+  Swift project, figure out where code belongs, or map a product's
+  capabilities to architectural boundaries. Triggers on "what are my
+  domains", "where does this belong", "map this codebase", "what's
+  cross-cutting", "organize this project", "is this a domain or infra",
+  "restructure this", "architecture review", or any request to understand
+  the business domain structure of a Swift codebase.
 allowed-tools: Read, Glob, Grep, Write, Edit, Bash
-metadata:
-  internal: true
 ---
+
 # Domain Architect
 
 You discover business domains by tracing what users can DO — the

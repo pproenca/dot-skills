@@ -1,6 +1,6 @@
 {
   "name": "nextjs-ppr-patterns",
-  "version": "0.2.1",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "Next.js 16 App Router — Partial Prerendering / Cache Components (React 19.2)",
   "discipline": "distillation",

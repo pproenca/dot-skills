@@ -1,9 +1,8 @@
 ---
 name: ios-xcode
 description: Xcode setup and tooling guidance for iOS 26 / Swift 6.2 clinic modular MVVM-C projects covering project configuration, SwiftData container wiring, testing, debugging, profiling, and distribution workflows. Use when configuring App-target infrastructure or day-to-day tooling around clinic architecture modules.
-metadata:
-  internal: true
 ---
+
 # iOS Xcode & Tooling Best Practices
 
 Comprehensive guide for Xcode project configuration, SwiftData persistence, testing, debugging, profiling, and app distribution. Contains 19 rules across 6 categories.

@@ -1,9 +1,8 @@
 ---
 name: audio-voice-recovery
 description: Audio forensics and voice recovery guidelines for CSI-level audio analysis. This skill should be used when recovering voice from low-quality or low-volume audio, enhancing degraded recordings, performing forensic audio analysis, or transcribing difficult audio. Triggers on tasks involving audio enhancement, noise reduction, voice isolation, forensic authentication, or audio transcription.
-metadata:
-  internal: true
 ---
+
 # Forensic Audio Research Audio Voice Recovery Best Practices
 
 Comprehensive audio forensics and voice recovery guide providing CSI-level capabilities for recovering voice from low-quality, low-volume, or damaged audio recordings. Contains 45 rules across 8 categories, prioritized by impact to guide audio enhancement, forensic analysis, and transcription workflows.

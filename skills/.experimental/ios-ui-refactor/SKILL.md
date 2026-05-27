@@ -1,9 +1,8 @@
 ---
 name: ios-ui-refactor
 description: Principal-level SwiftUI UI review and refactoring patterns for iOS 26 / Swift 6.2 clinic-architecture apps, grounded in Rams, Segall, and Edson principles. Use when auditing or improving existing SwiftUI screens, transitions, animations, and visual systems while preserving brand identity and respecting clinic Domain/Data/App boundaries.
-metadata:
-  internal: true
 ---
+
 # Apple HIG SwiftUI iOS 26 / Swift 6.2 Best Practices
 
 A principal designer's lens for evaluating and refactoring SwiftUI interfaces to Apple-quality standards, grounded in Rams, Segall, and Edson. Contains 51 rules across 8 categories, each grounded in specific principles from three foundational design texts:

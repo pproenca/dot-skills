@@ -1,9 +1,8 @@
 ---
 name: metric-validation-harness
 description: Use this skill to empirically validate a software metric before trusting or optimizing it — point it at any candidate metric (a command that takes a path and prints one number) plus a corpus, and it runs experiments that try to falsify each property a good metric must have. Checks determinism (same input, same number across runs and hash seeds), invariance to cosmetic edits (also an anti-gaming probe), monotonicity under construct-increasing edits, discrimination, robustness on edge inputs, near-linear tractability, and construct validity (convergent, discriminant vs LOC, predictive AUC, lift over a baseline). Trigger whenever someone proposes, reviews, tunes, or ships a metric, score, or index, asks "is this metric any good", suspects a score tracks LOC or jumps between runs, or builds a deterministic optimization target. It is the empirical companion to the deterministic-metric-design skill and is read-only.
-metadata:
-  internal: true
 ---
+
 # Metric Validation Harness
 
 Point this harness at a candidate metric and a corpus, and it runs experiments that try to **falsify** each property a trustworthy, optimizable metric must have. It is the empirical companion to `deterministic-metric-design`: that skill tells you to *prove* monotonicity, invariance, determinism, and construct validity; this skill *runs the experiment* and reports PASS/FAIL, each result mapped to the design-skill category it checks.

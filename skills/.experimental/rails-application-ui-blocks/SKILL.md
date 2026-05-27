@@ -1,9 +1,8 @@
 ---
 name: rails-application-ui-blocks
 description: Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from templates/application-ui. Use when requests mention ERB views, Rails partials, admin/dashboard screens, Tailwind UI assembly, or replacing custom markup with existing premium blocks while preserving behavior, accessibility, and Turbo/Stimulus hooks.
-metadata:
-  internal: true
 ---
+
 # Rails Application UI Blocks
 
 Use this skill to choose, adapt, and integrate premium UI blocks from `templates/application-ui` into Rails views.

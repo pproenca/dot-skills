@@ -1,9 +1,8 @@
 ---
 name: same-results-less-code
 description: Use this skill whenever reviewing, refactoring, or simplifying code with the goal of producing the same behaviour in fewer, clearer lines — covers the judgment gaps that linters cannot catch (reinvention, wrong frame, hidden duplication, derived state, procedural rebuilds, speculative generality, defensive excess, type-system underuse). Trigger even when the user doesn't explicitly ask for "simplification" but is reviewing code, refactoring, or asking "is there a shorter way to write this?" — this skill complements knip/eslint/ruff/tsc by focusing on the conceptual modelling layer those tools cannot see.
-metadata:
-  internal: true
 ---
+
 # Community Refactoring Best Practices: Same Results, Less Code
 
 Code-review and refactoring guide focused on the parts of code volume that come from **judgment and modelling gaps** — wrong abstraction choices, hidden semantic duplication, defensive habits, premature generality. This skill deliberately skips what linters and tools like `knip`, `eslint`, `ruff`, `tsc --noUnusedLocals`, or formatters already catch. It is the second pass: after the mechanical cleanup, what remains?

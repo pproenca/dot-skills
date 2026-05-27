@@ -1,9 +1,8 @@
 ---
 name: chat-apps-ui-sdk
 description: Use this skill whenever building, reviewing, or designing apps that render interactive UI directly inside ChatGPT or Claude — i.e. OpenAI Apps SDK apps, MCP Apps (the @modelcontextprotocol/ext-apps standard), or MCP-UI components, with a Next.js/React server. Covers the MCP tool and resource architecture, the window.openai / ui-bridge data flow, widget state, sandbox/CSP security, display modes, visual design, and directory submission. Trigger even when the user only says "chat app", "ChatGPT widget", "Claude app", "render UI in chat", "window.openai", "createUIResource", "outputTemplate", or "MCP app UI" without naming a specific SDK.
-metadata:
-  internal: true
 ---
+
 # Chat Apps UI SDK Best Practices
 
 A reference for building beautiful, review-ready apps that render interactive UI inside the chat surface of ChatGPT and Claude. As of January 2026 these platforms share one foundation — the **MCP Apps** standard (`@modelcontextprotocol/ext-apps`), rendered by Claude, ChatGPT, VS Code, and Goose. The **OpenAI Apps SDK** is a superset adding the `window.openai` bridge, and **MCP-UI** (`@mcp-ui/server` / `@mcp-ui/client`) is the community implementation. This skill contains 46 rules across 8 categories, ordered by impact so the highest-leverage decisions come first.

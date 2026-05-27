@@ -1,9 +1,8 @@
 ---
 name: dockerfile-optimise
 description: Dockerfile optimization guidelines from official Docker documentation. This skill should be used when writing, reviewing, or refactoring Dockerfiles to ensure optimal build time, image size, security, and robustness. Triggers on tasks involving Dockerfile creation, Docker image builds, container optimization, multi-stage builds, build cache, or Docker security hardening.
-metadata:
-  internal: true
 ---
+
 # Dockerfile Optimization Best Practices
 
 Comprehensive Dockerfile optimization guide sourced exclusively from official Docker documentation. Contains 48 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

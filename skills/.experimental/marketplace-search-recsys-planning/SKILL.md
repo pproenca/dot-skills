@@ -1,9 +1,8 @@
 ---
 name: marketplace-search-recsys-planning
 description: Use this skill whenever planning, designing, reviewing, or improving search and recommendation systems for a two-sided trust marketplace built on OpenSearch — covers user-intent framing, product-surface architecture, index design, query understanding, retrieval strategy, ranking, search-plus-recs blending, measurement, and a dashboard-and-alerting layer for ongoing decision making. Triggers on tasks involving marketplace search, homefeeds, ranking, relevance tuning, OpenSearch query DSL, analyzers, synonyms, golden sets, NDCG, A/B testing, or diagnosing an existing retrieval system. Use this skill BEFORE marketplace-personalisation when planning new work; hand off when the diagnosed bottleneck is personalisation-specific.
-metadata:
-  internal: true
 ---
+
 # Marketplace Engineering Two-Sided Search and Recsys Planning Best Practices
 
 Comprehensive planning, design and diagnostic guide for search and recommendation systems

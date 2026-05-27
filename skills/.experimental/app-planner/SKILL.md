@@ -1,10 +1,17 @@
 ---
 name: app-planner
-description: |
-  Produces a design-plan (living document like an exec-plan) that maps an app domain to feature groups using Apple Design DNA patterns. Each feature group becomes a milestone buildable in one ios-taste session. Use when the user describes an app idea, domain, or workflow and needs a structured plan before building. Triggers on "plan this app", "what features does X need", "design plan", "feature breakdown", "what screens do I need", or any pre-build planning question. Also trigger when the user provides workflow notes or user interview results. CRITICAL: This skill produces a DESIGN-PLAN document only. It does NOT generate SwiftUI code, layouts, or visual design.
-metadata:
-  internal: true
+description: >
+  Produces a design-plan (living document like an exec-plan) that maps an app
+  domain to feature groups using Apple Design DNA patterns. Each feature group
+  becomes a milestone buildable in one ios-taste session. Use when the user
+  describes an app idea, domain, or workflow and needs a structured plan before
+  building. Triggers on "plan this app", "what features does X need", "design
+  plan", "feature breakdown", "what screens do I need", or any pre-build
+  planning question. Also trigger when the user provides workflow notes or
+  user interview results. CRITICAL: This skill produces a DESIGN-PLAN document
+  only. It does NOT generate SwiftUI code, layouts, or visual design.
 ---
+
 # App Planner
 
 You produce a **design-plan** — a living document in the same format as

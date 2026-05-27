@@ -1,9 +1,8 @@
 ---
 name: migrate-js-to-modern-typescript
 description: Use this skill whenever migrating a JavaScript codebase to TypeScript, converting .js files to .ts, adding types to existing JS, or tightening a loosely-typed TS project toward strict mode. Covers tsconfig and allowJs strategy, incremental strict-flag ratcheting (noImplicitAny, strictNullChecks, noUncheckedIndexedAccess), typing public surfaces, replacing `any` and unsafe casts with `unknown` and narrowing, validating runtime boundaries (JSON, env, API responses), converting CommonJS to ESM and prototypes to classes, and the build/CI changes a migration needs. Trigger even when the user only says "add types", "turn on strict mode", or "convert this file to TypeScript", and especially on a mixed JS/TS repo. Distinct from general TypeScript refactoring — this is the migration act itself, performed file by file while keeping the build green.
-metadata:
-  internal: true
 ---
+
 # JavaScript to TypeScript Migration Best Practices
 
 Guide for taking a JavaScript codebase to strict, modern TypeScript without a big-bang rewrite. Contains 42 rules across 7 categories, prioritized by impact to drive an incremental, file-by-file migration that keeps the build compiling at every step.

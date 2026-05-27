@@ -140,7 +140,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [metric-validation-harness](skills/.experimental/metric-validation-harness) | Use this skill to empirically validate a software metric before trusting or optimizing it —.. |
 | [migrate-js-to-modern-typescript](skills/.experimental/migrate-js-to-modern-typescript) | Use this skill whenever migrating a JavaScript codebase to TypeScript, converting .js files to.. |
 | [nextjs-bundle-optimizer](skills/.experimental/nextjs-bundle-optimizer) | Use this skill whenever a Next.js 16 app needs smaller bundles or faster builds — even if the.. |
-| [nextjs-ppr-patterns](skills/.experimental/nextjs-ppr-patterns) | Use this skill when building, reviewing, or refactoring Next.js 16 App Router pages that mix.. |
+| [nextjs-ppr-patterns](skills/.experimental/nextjs-ppr-patterns) | "Use this skill when building, reviewing, or refactoring Next.js 16 App Router pages that mix.. |
 | [nginx-c-module-debug](skills/.experimental/nginx-c-module-debug) | nginx C module debugging guidelines based on the official nginx development guide |
 | [nginx-c-module-design](skills/.experimental/nginx-c-module-design) | nginx C module directive design guidelines for creating admin-friendly configuration interfaces |
 | [nginx-c-module-perf](skills/.experimental/nginx-c-module-perf) | nginx C module performance optimization and reliability guidelines based on the official nginx.. |

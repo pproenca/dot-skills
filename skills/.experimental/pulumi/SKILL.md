@@ -1,9 +1,8 @@
 ---
 name: pulumi
 description: Pulumi infrastructure as code performance and reliability guidelines. This skill should be used when writing, reviewing, or refactoring Pulumi code to ensure optimal deployment performance and infrastructure reliability. Triggers on tasks involving Pulumi stacks, components, state management, secrets configuration, resource lifecycle options, or CI/CD automation.
-metadata:
-  internal: true
 ---
+
 # Pulumi Best Practices
 
 Comprehensive performance and reliability guide for Pulumi infrastructure as code, designed for AI agents and LLMs. Contains 46 rules across 8 categories, prioritized by impact to guide automated refactoring and code generation.

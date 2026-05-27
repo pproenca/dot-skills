@@ -1,9 +1,8 @@
 ---
 name: ios-hig
 description: Apple Human Interface Guidelines for iOS 26 / Swift 6.2 clinic-architecture apps. Covers navigation, interaction design, accessibility, feedback states, UX patterns, and visual design for SwiftUI implementations that follow App-target coordinators/route shells and Domain/Data boundaries. Use when designing or reviewing HIG-compliant experiences in the clinic modular MVVM-C stack.
-metadata:
-  internal: true
 ---
+
 # Apple iOS HIG Best Practices
 
 Comprehensive guide for Apple Human Interface Guidelines compliance in iOS apps built with SwiftUI. Contains 34 rules across 6 categories covering navigation, interaction design, accessibility, user feedback, UX patterns, and visual design.

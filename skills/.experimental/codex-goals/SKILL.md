@@ -1,9 +1,8 @@
 ---
 name: codex-goals
 description: Patterns and anti-patterns for using OpenAI Codex Goals — the persistent objectives feature introduced in Codex 0.128.0. Use this skill whenever writing, reviewing, or debugging a `/goal` invocation, deciding whether a task should be a Goal at all, drafting a research Goal that needs an evidence ledger, or diagnosing a Goal that completed against the wrong surface. Triggers on `/goal`, "Codex Goal", "Codex goals", "persistent objective", "evidence-based completion", "iteration policy", "blocked stop condition", or any user message describing a multi-turn Codex task with a defined finish line. Trigger even if the user doesn't explicitly mention Goals — if they're typing "/goal" or asking Codex to "keep going until X", this skill applies.
-metadata:
-  internal: true
 ---
+
 # OpenAI Codex Goals Best Practices
 
 Reference for writing and managing Codex Goals — the persistent objective feature introduced in Codex 0.128.0. "Best practices" here means the patterns and anti-patterns that determine whether a Goal completes against the right evidence vs. silently against the wrong surface. Contains 31 rules across 8 categories, ordered by how much they affect whether a Goal completes correctly. Derived from the official OpenAI cookbook article ["Using Goals in Codex"](https://developers.openai.com/cookbook/examples/codex/using_goals_in_codex).
