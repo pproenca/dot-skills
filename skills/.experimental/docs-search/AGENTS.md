@@ -1,6 +1,6 @@
 # Documentation Navigation Methodology
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 dot-skills  
 May 2026
 
@@ -8,7 +8,7 @@ May 2026
 
 ## Abstract
 
-Methodology distillation of the generic moves that turn 'I need to look this up' into a fast, version-correct answer from a library's official documentation — independent of which library. 7 rules across 4 orthogonal categories — Choose Source, Match Version, Fall Back, Capture for Reuse — each naming a wrong default an agent makes when reaching for docs (treating all questions as 'search docs', ignoring llms.txt, reading latest docs while user is on an older version, re-reading docs when reality contradicts them, preferring prose over examples, redoing lookup work next time). Per-library facts live in a topography registry (registry/<lib>.md) so the methodology is shared once and per-library overlay is thin reference data — collapses the 'one skill per library' trap. Registry is intentionally empty at v0.1.0; first entry should be grounded in a real lookup, not pre-empted.
+Methodology distillation of the generic moves that turn 'I need to look this up' into a fast, version-correct answer from a library's official documentation — independent of which library. 8 rules across 4 orthogonal categories — Choose Source, Match Version, Fall Back, Capture for Reuse — each naming a wrong default an agent makes when reaching for docs (treating all questions as 'search docs', ignoring llms.txt, reading latest docs while user is on an older version, re-reading docs when reality contradicts them, preferring prose over examples, redoing lookup work next time). Per-library facts live in a topography registry (registry/<lib>.md) so the methodology is shared once and per-library overlay is thin reference data — collapses the 'one skill per library' trap. Registry is intentionally empty at v0.1.0; first entry should be grounded in a real lookup, not pre-empted.
 
 ---
 

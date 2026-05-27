@@ -1,12 +1,12 @@
 {
   "name": "code-distill",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "Source-Code Pattern Extraction Methodology",
   "discipline": "distillation",
   "type": "code-quality",
   "date": "May 2026",
-  "abstract": "Methodology distillation of the generic moves an agent makes when distilling code patterns on demand from a specific GitHub codebase, given a focused query (e.g. 'how does shadcn/ui implement the design system', 'how does opencode use effect-ts', 'how does base-ui handle composition'). 7 rules across 4 orthogonal categories — Find, Trace, Filter, Capture — each naming a wrong default an agent makes when reaching for unfamiliar code (reading whole files before grepping, ignoring tests as canonical intent, conflating boilerplate with load-bearing pattern, treating each lookup as one-shot). Per-library code topography (repo URL, default branch, last-verified SHA, folder map, naming conventions, AGENTS.md flags) lives in registry/<lib>.md as ~30-line frontmatter — the dynamic light sibling of static code-atlas distillations (opencode-ts, openai-codex-rust-patterns, nextjs-ppr-patterns). Registry is intentionally empty at v0.1.0; first entry should be grounded in a real session.",
+  "abstract": "Methodology distillation of the generic moves an agent makes when distilling code patterns on demand from a specific GitHub codebase, given a focused query (e.g. 'how does shadcn/ui implement the design system', 'how does opencode use effect-ts', 'how does base-ui handle composition'). 8 rules across 4 orthogonal categories — Find, Trace, Filter, Capture — each naming a wrong default an agent makes when reaching for unfamiliar code (reading whole files before grepping, ignoring tests as canonical intent, conflating boilerplate with load-bearing pattern, treating each lookup as one-shot). Per-library code topography (repo URL, default branch, last-verified SHA, folder map, naming conventions, AGENTS.md flags) lives in registry/<lib>.md as ~30-line frontmatter — the dynamic light sibling of static code-atlas distillations (opencode-ts, openai-codex-rust-patterns, nextjs-ppr-patterns). Registry is intentionally empty at v0.1.0; first entry should be grounded in a real session.",
   "references": [
     "https://github.com/BurntSushi/ripgrep",
     "https://diataxis.fr/"
