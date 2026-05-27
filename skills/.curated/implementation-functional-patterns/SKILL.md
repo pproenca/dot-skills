@@ -5,7 +5,7 @@ description: TypeScript's functional answers to the 22 Gang of Four classes — 
 
 # TypeScript Functional Patterns
 
-Implementation reference for the functional shapes that supersede the Gang of Four catalog in idiomatic TypeScript. Sibling to [`implementation-design-patterns`](../implementation-design-patterns/SKILL.md): read that one when the answer is a class, this one when the answer is a function, a tagged union, or a small data structure.
+Implementation reference for the functional shapes that supersede the Gang of Four catalog in idiomatic TypeScript. Sibling to [`implementation-design-patterns`](../../.experimental/implementation-design-patterns/SKILL.md): read that one when the answer is a class, this one when the answer is a function, a tagged union, or a small data structure.
 
 TypeScript has first-class functions, discriminated unions, structural typing, and zero ceremony around closures. That means the 22 GoF patterns — written in the catalog as class hierarchies because the source material targets Java/C# — collapse to far fewer functional shapes in real TS code. Several patterns share a functional answer: tagged unions cover State, Visitor, and Composite; factory functions cover Factory Method, Abstract Factory, Prototype, and Memento; event emitters cover Mediator and Observer; wrapper functions cover Adapter and Facade. This skill names those collapses, the placement rules they imply, and the performance trade-offs.
 
@@ -130,7 +130,7 @@ The full mapping from each Gang of Four pattern to its functional answer in idio
 
 ## How to Choose: Class vs Function
 
-The class form (see [`implementation-design-patterns`](../implementation-design-patterns/SKILL.md)) earns its overhead when **at least one** of these is true:
+The class form (see [`implementation-design-patterns`](../../.experimental/implementation-design-patterns/SKILL.md)) earns its overhead when **at least one** of these is true:
 
 - **Serialization** — Commands or Mementos that must survive a process restart or cross a wire
 - **Runtime registry / introspection** — the system enumerates known strategies, displays them in a picker, or attaches metadata

@@ -88,7 +88,7 @@ The knowledge store is **intentionally empty at v0.1.0**. The radical-simplifica
 - (Future) **code-atlas-distillation** — Not yet built. Authoring playbook for full static code-atlas skills like `opencode-ts`. Extract when you ship your 4th or 5th static code-atlas skill and the empirical patterns are observable.
 - [`opencode-ts`](../opencode-ts/SKILL.md), [`openai-codex-rust-patterns`](../openai-codex-rust-patterns/SKILL.md), [`nextjs-ppr-patterns`](../nextjs-ppr-patterns/SKILL.md) — Heavy curated outputs for specific libraries; use them in preference to this skill when they exist
 - [`codebase-comprehension-algorithms`](../codebase-comprehension-algorithms/SKILL.md) — Heavy algorithmic toolkit (Leiden, MoJoFM, SBM) for full-codebase domain mapping; orthogonal to focused-query extraction
-- [`radical-simplification`](../radical-simplification/SKILL.md) — Thinking layer above this skill; this skill itself is the third instance of the "constrain → name the invariant" move applied to the recurring "N skills per X" trap
+- [`radical-simplification`](../../.curated/radical-simplification/SKILL.md) — Thinking layer above this skill; this skill itself is the third instance of the "constrain → name the invariant" move applied to the recurring "N skills per X" trap
 
 ## Authoring Note
 

@@ -117,7 +117,7 @@ Each `this:` constraint enforces that the previous step ran. `new Query(...)` pe
 
 ### Related
 
-- GoF class form: [`creational-builder`](../../implementation-design-patterns/references/creational-builder.md)
+- GoF class form: [`creational-builder`](../../../.experimental/implementation-design-patterns/references/creational-builder.md)
 - Factories that don't need step-by-step construction: [`create-factory-function-over-factory-classes`](create-factory-function-over-factory-classes.md)
 - The `Partial<T>` and `Required<T>` utility types: see TS Handbook
 

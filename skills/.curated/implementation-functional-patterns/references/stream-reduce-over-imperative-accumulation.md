@@ -76,7 +76,7 @@ const byCustomer = orders.reduce<Record<string, Order[]>>((acc, o) => {
 
 ### Related
 
-- GoF class form: [`behavioral-iterator`](../../implementation-design-patterns/references/behavioral-iterator.md) — folding a tree via Visitor is the class equivalent of `reduce`
+- GoF class form: [`behavioral-iterator`](../../../.experimental/implementation-design-patterns/references/behavioral-iterator.md) — folding a tree via Visitor is the class equivalent of `reduce`
 - One-to-many transforms: [`stream-flatmap-over-nested-loops`](stream-flatmap-over-nested-loops.md)
 - When the chain has three passes: [`stream-prefer-single-pass-over-chained-passes`](stream-prefer-single-pass-over-chained-passes.md)
 

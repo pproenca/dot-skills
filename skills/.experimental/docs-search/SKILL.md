@@ -84,7 +84,7 @@ The knowledge store is **intentionally empty at v0.1.0**. First entries are adde
 ## Related Skills
 
 - [`library-reference-distillation`](../library-reference-distillation/SKILL.md) — Authoring playbook for full library-ref rule packs (the heavier sibling); when a full library-ref skill ships for library X, retire the registry entry for X
-- [`radical-simplification`](../radical-simplification/SKILL.md) — The thinking layer above this skill; this skill itself is an instance of the "constrain → name the invariant" move applied to the question "how do I look this up?"
+- [`radical-simplification`](../../.curated/radical-simplification/SKILL.md) — The thinking layer above this skill; this skill itself is an instance of the "constrain → name the invariant" move applied to the question "how do I look this up?"
 - [`init`](../../.curated/init/SKILL.md) (and similar) — When the lookup is *about your own codebase*, that's a different problem; this skill is for external library docs
 
 ## Authoring Note

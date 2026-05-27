@@ -136,7 +136,7 @@ Each wrapper is interchangeable with the base type (it returns a `RequestHandler
 
 ### Related
 
-- GoF class form: [`structural-decorator`](../../implementation-design-patterns/references/structural-decorator.md)
+- GoF class form: [`structural-decorator`](../../../.experimental/implementation-design-patterns/references/structural-decorator.md)
 - Linear data pipelines (different shape, same machinery): [`pipe-pipeline-over-chain-of-responsibility`](pipe-pipeline-over-chain-of-responsibility.md)
 - HOF as the building block of any wrapper: [`hof-lambda-as-strategy`](hof-lambda-as-strategy.md)
 

@@ -13,6 +13,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [expo-ui](skills/.curated/expo-ui) | Library reference for @expo/ui SwiftUI components on iOS — covers Host boundaries, modifier.. |
 | [expo](skills/.curated/expo) | Expo React Native performance optimization guidelines |
 | [feature-arch](skills/.curated/feature-arch) | React feature-based architecture guidelines for scalable applications |
+| [implementation-functional-patterns](skills/.curated/implementation-functional-patterns) | TypeScript's functional answers to the 22 Gang of Four classes — factory functions (Factory.. |
 | [ios-taste](skills/.curated/ios-taste) | Designs iOS 18+ SwiftUI experiences with real taste — starting from user goals, not pixels |
 | [msw](skills/.curated/msw) | MSW (Mock Service Worker) best practices for API mocking in tests |
 | [mui-base](skills/.curated/mui-base) | MUI Base UI style guidelines for building headless React component libraries |
@@ -22,6 +23,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [nuqs](skills/.curated/nuqs) | nuqs (type-safe URL query state) best practices for Next.js and other React frameworks |
 | [playwright](skills/.curated/playwright) | Playwright testing best practices for Next.js applications |
 | [python](skills/.curated/python) | Python 3.11+ performance optimization guidelines |
+| [radical-simplification](skills/.curated/radical-simplification) | Cognitive moves for collapsing complexity — reframe, clarify, reduce, decompose, invert,.. |
 | [rails-dev](skills/.curated/rails-dev) | Ruby on Rails performance and maintainability optimization guidelines for building backend APIs.. |
 | [rails-testing](skills/.curated/rails-testing) | Ruby on Rails testing best practices for writing effective, maintainable test suites with RSpec |
 | [react-19-component-scaffolder](skills/.curated/react-19-component-scaffolder) | Scaffolds React 19 / React 19.2 code in TypeScript — components, Server Component pages, client.. |
@@ -116,7 +118,6 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
 | [implementation-design-patterns-python](skills/.experimental/implementation-design-patterns-python) | Implementation guide for the 22 Gang of Four design patterns in idiomatic modern Python (3.10+),.. |
 | [implementation-design-patterns](skills/.experimental/implementation-design-patterns) | Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from.. |
-| [implementation-functional-patterns](skills/.experimental/implementation-functional-patterns) | TypeScript's functional answers to the 22 Gang of Four classes — factory functions (Factory.. |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Inngest event-driven functions in a Next.js (App Router) project — creating the client, the.. |
 | [io-bound-data-processing](skills/.experimental/io-bound-data-processing) | Processing, transforming, or moving datasets that may exceed RAM on a single low-compute box —.. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
@@ -155,7 +156,6 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [pt-irs-runbook](skills/.experimental/pt-irs-runbook) | Portuguese personal income tax (IRS / Código do IRS) and Modelo 3 filing — determining tax.. |
 | [pulumi](skills/.experimental/pulumi) | Pulumi infrastructure as code performance and reliability guidelines |
 | [python-pep-author](skills/.experimental/python-pep-author) | "Drafting Python Enhancement Proposals (PEPs) — proposing a Python language feature, a standard.. |
-| [radical-simplification](skills/.experimental/radical-simplification) | Cognitive moves for collapsing complexity — reframe, clarify, reduce, decompose, invert,.. |
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
 | [rails-design-system](skills/.experimental/rails-design-system) | Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal.. |
 | [rails-hotwire](skills/.experimental/rails-hotwire) | Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive,.. |

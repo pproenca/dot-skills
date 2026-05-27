@@ -106,9 +106,9 @@ For category overviews and the ordering rationale, see [`references/_sections.md
 
 ## Related Skills
 
-- [`code-simplifier`](../code-simplifier/SKILL.md) — Refactoring patterns once the right approach is known (this skill ends, that one begins)
-- [`deterministic-metric-design`](../deterministic-metric-design/SKILL.md) — Applies this methodology to the specific problem of inventing metrics
-- [`design-review`](../design-review/SKILL.md) — Applies this methodology to the specific problem of reviewing UI
+- [`code-simplifier`](../../.experimental/code-simplifier/SKILL.md) — Refactoring patterns once the right approach is known (this skill ends, that one begins)
+- [`deterministic-metric-design`](../../.experimental/deterministic-metric-design/SKILL.md) — Applies this methodology to the specific problem of inventing metrics
+- [`design-review`](../../.experimental/design-review/SKILL.md) — Applies this methodology to the specific problem of reviewing UI
 
 ## Authoring Note
 

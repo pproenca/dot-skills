@@ -5,7 +5,7 @@ tags: hof, strategy-alternative, comparator, predicate, transformer
 
 ## Pass a lambda instead of defining a Strategy class when variation is one function
 
-A model trained on Java/C# Strategy examples will reach for a `Strategy` interface, two `ConcreteStrategy` classes, and a `Context` that holds one. In TypeScript, the equivalent when the strategy has **one method and no internal state** is a function-typed parameter. The class form survives only when the strategy carries configuration, lifecycle, or is enumerated by a registry — see the Strategy pattern entry in [`implementation-design-patterns`](../../implementation-design-patterns/references/behavioral-strategy.md) for those cases.
+A model trained on Java/C# Strategy examples will reach for a `Strategy` interface, two `ConcreteStrategy` classes, and a `Context` that holds one. In TypeScript, the equivalent when the strategy has **one method and no internal state** is a function-typed parameter. The class form survives only when the strategy carries configuration, lifecycle, or is enumerated by a registry — see the Strategy pattern entry in [`implementation-design-patterns`](../../../.experimental/implementation-design-patterns/references/behavioral-strategy.md) for those cases.
 
 ### Shapes to recognize
 
@@ -81,7 +81,7 @@ The named type `InvoiceComparator` is the interface; named consts are the implem
 
 ### Related
 
-- GoF class form: [`behavioral-strategy`](../../implementation-design-patterns/references/behavioral-strategy.md)
+- GoF class form: [`behavioral-strategy`](../../../.experimental/implementation-design-patterns/references/behavioral-strategy.md)
 - Closures that carry state are not "strategies with state" — see [`closure-as-command`](closure-as-command.md) for the data-carrying-function counterpart
 
 Reference: [Mostly Adequate Guide — Ch. 4 "Curry"](https://mostly-adequate.gitbook.io/mostly-adequate-guide/ch04)

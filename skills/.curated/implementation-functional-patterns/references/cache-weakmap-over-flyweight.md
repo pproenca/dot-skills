@@ -106,7 +106,7 @@ When an `AstNode` becomes unreachable elsewhere, its `RenderedOutput` entry is g
 
 ### Related
 
-- GoF class form: [`structural-flyweight`](../../implementation-design-patterns/references/structural-flyweight.md)
+- GoF class form: [`structural-flyweight`](../../../.experimental/implementation-design-patterns/references/structural-flyweight.md)
 - For single-instance objects (Singleton): [`create-module-scope-over-singleton`](create-module-scope-over-singleton.md)
 - For interface translation (Adapter/Facade): [`wrap-function-over-adapter-and-facade`](wrap-function-over-adapter-and-facade.md)
 
