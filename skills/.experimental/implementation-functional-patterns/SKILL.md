@@ -23,13 +23,13 @@ TypeScript has first-class functions, structural typing, and zero ceremony aroun
 
 ## Rule Categories
 
-| # | Category | Impact | Theme |
-|---|----------|--------|-------|
-| 1 | **Higher-order functions** (`hof`) | HIGH | Pass a function instead of a class |
-| 2 | **Pipelines & composition** (`pipe`) | HIGH | Compose small functions into bigger ones |
-| 3 | **Stream methods** (`stream`) | HIGH | `map`/`filter`/`flatMap`/`reduce` over imperative loops |
-| 4 | **Placement & identity** (`place`) | HIGH | Where the lambda lives controls behavior |
-| 5 | **Closures as data** (`closure`) | MEDIUM | Functions that carry their state |
+| # | Category | Impact | Rules | Theme |
+|---|----------|--------|-------|-------|
+| 1 | **Higher-order functions** (`hof`) | HIGH | 1 | Pass a function instead of a class |
+| 2 | **Pipelines & composition** (`pipe`) | HIGH | 2 | Compose small functions into bigger ones |
+| 3 | **Stream methods** (`stream`) | HIGH | 4 | `map`/`filter`/`flatMap`/`reduce` / lazy iteration over imperative loops |
+| 4 | **Placement & identity** (`place`) | HIGH | 1 | Where the lambda lives controls behavior |
+| 5 | **Closures as data** (`closure`) | MEDIUM | 1 | Functions that carry their state |
 
 ## How to Use
 
@@ -46,10 +46,14 @@ TypeScript has first-class functions, structural typing, and zero ceremony aroun
 ### 2. Pipelines & composition
 
 - [`pipe-pipeline-over-chain-of-responsibility`](references/pipe-pipeline-over-chain-of-responsibility.md) — `pipe(validate, authorize, parse)(req)` or an array fold of handlers, instead of a linked list of `Handler` classes. *"My CoR chain handlers each do one transform and pass the result along."* — **HIGH**
+- [`pipe-compose-over-decorator`](references/pipe-compose-over-decorator.md) — `compose(withLogging, withCache, withAuth)(handler)` — each wrapper is `(handler) => handler`, not a `Decorator` class. Right-to-left order reads top-down like the class stack. *"I want to add logging + caching + auth around this handler."* — **HIGH**
 
 ### 3. Stream methods
 
 - [`stream-flatmap-over-nested-loops`](references/stream-flatmap-over-nested-loops.md) — `.flatMap` for one-to-many transforms instead of `for` + `push` or `map().reduce(concat)`. *"For each user, expand to all their orders, then collect."* — **HIGH**
+- [`stream-reduce-over-imperative-accumulation`](references/stream-reduce-over-imperative-accumulation.md) — `reduce` / `Object.groupBy` / `Map.groupBy` instead of `let acc = …; for (…) acc[…] = …`. The most common functional pattern in real TS: sums, counts, indexes, histograms. *"I'm building up a total / index / grouped map in a loop."* — **HIGH**
+- [`stream-lazy-iteration-for-large-or-infinite`](references/stream-lazy-iteration-for-large-or-infinite.md) — Generators or TC39 Iterator helpers (`Iterator.from(arr).filter(p).take(10).toArray()`) when only a prefix of results is needed. O(matched-needed) instead of O(n). *"First N matches from a huge or unbounded source."* — **HIGH**
+- [`stream-prefer-single-pass-over-chained-passes`](references/stream-prefer-single-pass-over-chained-passes.md) — Collapse `.filter().map().filter()` into one `reduce` or `for-of` when the input is large or the chain is hot. Three passes → one; halves peak memory; 2–5× faster in measured hot paths. *"This chain runs on every request / render over thousands of items."* — **HIGH**
 
 ### 4. Placement & identity
 

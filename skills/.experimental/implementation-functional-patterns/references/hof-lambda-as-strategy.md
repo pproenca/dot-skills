@@ -60,6 +60,18 @@ const overdue = sortInvoices(invoices, byDueDate);
 
 The named type `InvoiceComparator` is the interface; named consts are the implementations; the call site reads identically to the class version with none of the ceremony. Adding a new sort order is one line, not one file.
 
+### Common pitfalls
+
+- **The strategy lambda captures mutable outer state.** `let multiplier = 1; const scale: Strategy = (x) => x * multiplier` looks like a strategy but its behavior changes silently when `multiplier` is reassigned elsewhere. Either close over a `const`, or accept the mutable state as an argument.
+- **Inline strategy lambda inside JSX/loops.** Passing `<Sortable comparator={(a, b) => a.x - b.x}>` creates a new function identity each render. If the consumer memoizes on the comparator (e.g., caches a sorted result), the cache busts. Move the comparator to module scope or use a stable reference — see [`place-module-scope-pure-transformers`](place-module-scope-pure-transformers.md).
+- **Two strategies that look equal aren't `===` equal.** `(x) => x.id === byId` and `(x) => x.id === byId` are different references. Don't compare strategy lambdas for equality; identify them by a separate tag or name when you need that.
+
+### Performance trade-offs
+
+- **Time:** function call vs method call is the same on modern V8; both inline equivalently in hot paths.
+- **Memory:** a closure holding zero captures is comparable to a class instance with zero fields — both small. The class wins one field per per-call constructor invocation (the `private strategy` field); the closure wins by not allocating the wrapper at all when you pass the lambda directly.
+- **Code size:** the functional form is meaningfully smaller — ~5 lines per strategy vs ~10 for the class form. In a tree-shaken bundle, unused functional strategies disappear; unused class methods don't if the class is referenced.
+
 ### When NOT to apply (keep the class)
 
 - The strategy holds configuration shared across calls (`new TaxStrategy(region, year)` where `region` and `year` are reused on many invocations)

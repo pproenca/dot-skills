@@ -56,6 +56,19 @@ for (const run of afterCommit) run();
 
 The captured `user.email`, `user.id`, etc. are closed over at the time of `push` — the same semantic as the class constructor. Adding a new deferred action is one line at the call site, not a new file.
 
+### Common pitfalls
+
+- **Capturing a mutable reference, not a value.** `for (const u of newUsers) afterCommit.push(() => welcome(u))` — with `const` of `for-of`, each iteration has its own `u` binding, so the closures capture distinct users. With `var` (or a reused `let` outside the loop), every closure captures the *same* reference, which by call time has moved to the last user. Always use `const` in `for-of` or `forEach`; never `var` for the loop variable.
+- **Lost stack traces on async failures.** If the closure throws asynchronously (`() => fetch(url).then(...)`) and you never `await` it, the rejection is unhandled and the originating call site is lost. The class form keeps the construction call site somewhere in its constructor — closures don't. Either `await` each closure or `Promise.allSettled` the lot and log failures.
+- **Memory: closures keep their entire enclosing scope alive.** A closure pushed onto `afterCommit` that uses `user.email` keeps the *entire* `user` object reachable (and anything the user object references) until the closure runs and is released. For long-lived queues (background jobs, deferred-until-shutdown), this can leak. Pull out the small set of fields you actually need: `() => emailClient.send(email, subject, body)` not `() => emailClient.send(user.email, ...)`.
+- **The closure name is empty.** A stack trace through `afterCommit[2]()` shows an anonymous function; debugging is harder than with a named class. Use named function expressions when the queue is long-lived: `afterCommit.push(function sendWelcomeEmail() { … })`.
+
+### Performance trade-offs
+
+- **Time:** closure call vs class method call — same on V8 once optimized.
+- **Memory per item:** closure ≈ class instance with same captures. Both hold references to captured/passed values. Class instances additionally have a prototype chain reference (small, usually shared and free).
+- **GC behavior:** for fire-and-forget queues this is moot — both forms get collected after `run()`. For long-lived queues, the over-capture footgun above is the real risk; size your closures intentionally.
+
 ### When NOT to apply (keep the Command class)
 
 - **Undo/redo:** undo requires the inverse operation tied to the forward one. A `Command` class with paired `execute()` and `undo()` keeps them together; closures fragment the inverse logic

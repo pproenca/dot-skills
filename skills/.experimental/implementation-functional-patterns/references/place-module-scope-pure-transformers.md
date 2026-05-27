@@ -52,6 +52,20 @@ function InvoiceRow({ amount, currency, onSelect }: Props) {
 
 `formatPrice` is now a pure two-argument function at module scope: identity-stable, importable, testable in isolation, and not a dependency of the effect. The effect fires only when the data actually changes.
 
+### Common pitfalls
+
+- **Inline arrows inside `.map(...)` in JSX rendering a list.** `arr.map(item => <Row onClick={() => handle(item.id)} />)` allocates `arr.length` closures *per parent render*. For a list of 1000 rows re-rendering on parent state change, that's 1000 closures per render. Either rely on React Compiler v1.0 (which auto-memoizes), or define `Row` to take `itemId` and pass `handle` as a stable prop: `<Row itemId={item.id} onClick={handle} />` with `Row` calling `onClick(itemId)` internally.
+- **`useCallback` on a function that doesn't capture anything.** `const fmt = useCallback((n: number) => n.toFixed(2), [])` — empty deps array means the function never changes, but `useCallback` still allocates a Memo cell each render. The honest fix is module-scope: `const fmt = (n: number) => n.toFixed(2)` at the top of the file. `useCallback` is for *captured* closures whose identity you need stable, not for hand-holding pure functions.
+- **`useMemo` returning a function.** `const fn = useMemo(() => () => doThing(x), [x])` is a roundabout `useCallback`. Use `useCallback(() => doThing(x), [x])` directly — same meaning, less noise.
+- **Module scope vs hook scope for "config-like" helpers.** If the helper depends on a runtime config that's the same for the whole app (theme, locale, feature flags loaded at boot), module scope is still right. If the config genuinely varies per render (per-user, per-route), capture it in the hook or pass it as an argument.
+
+### Performance trade-offs
+
+- **Identity stability is binary.** Either the consumer ( `memo`, `useEffect` deps, `useMemo` deps) skips re-run or it doesn't. A pure transformer at module scope skips correctly; the same transformer in component body never does.
+- **Allocation per render:** one closure per inline lambda per component render. For a TSX file with 5 inline lambdas in 100 rendered rows, that's 500 closures per parent render. The cost per closure is tiny (~50 bytes), but the GC pressure compounds; in dev mode (with React strict-mode double-renders), it doubles.
+- **React Compiler v1.0 changes the rules.** With the compiler enabled, most inline lambdas in component bodies are auto-memoized. The "module-scope pure transformers" rule still applies because (a) tree-shaking, (b) testability, (c) covers projects without the compiler, but the urgency drops in compiler-enabled code.
+- **Tree-shakability:** module-scope pure functions used only by one component get tree-shaken if that component isn't imported. Nested-in-component lambdas don't have that property — they're inside the component's closure.
+
 ### When NOT to apply (keep it nested)
 
 - The lambda *does* capture something from the component's render (a state value, a prop, a ref's current, a hook return) — hoisting breaks correctness. Pass the captured value as an argument and the rest of the rule still applies

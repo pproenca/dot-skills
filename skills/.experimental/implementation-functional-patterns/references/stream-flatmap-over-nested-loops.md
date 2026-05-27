@@ -39,10 +39,24 @@ function allOrderLineItems(users: User[]): LineItem[] {
 
 The chained form reads top-down as "users → their orders → their line items" — the same way the type names compose. The imperative version forces the reader to track `items.push` across three nesting levels and confirm nothing else mutates the accumulator.
 
+### Common pitfalls
+
+- **`flatMap` with `async` returns `Promise[]`, not `Promise<flat[]>`.** `arr.flatMap(async x => fetch(x))` produces an array of promises that flattens by one level into… still an array of promises. Use `Promise.all(arr.map(...))` for parallel awaiting, or `for await…of` for sequential. The model frequently writes this anti-pattern when porting imperative async loops.
+- **`map().flat()` is two passes.** Equivalent to `flatMap` only if you don't need `flat(N)` for depth > 1. Default to `flatMap`; reach for `flat(N)` only when the nesting depth is the explicit thing you're collapsing.
+- **`flatMap` doesn't preserve indices.** If the outer-index of the originating row matters downstream, capture it inside the mapping (`users.flatMap((u, i) => u.orders.map(o => ({ ...o, userIndex: i })))`) — `flatMap` itself doesn't expose the path.
+- **Empty arrays are silent.** `users.flatMap(u => u.orders)` over a user with no orders just skips that user; you lose the row. Use `.map(u => ({ user: u, orders: u.orders }))` if you want to preserve the parent.
+
+### Performance trade-offs
+
+- **Time:** `flatMap` is O(n + total-output) — the inner walks dominate. Tight nested `for-of` loops with `push` are typically **1.5–3× faster** on V8 for large inputs (10k+ rows), mostly due to closure allocation and intermediate-array setup.
+- **Allocations:** `flatMap` allocates one intermediate array per level. Three-deep `flatMap` allocates 3 arrays; the nested loop allocates 1.
+- **Readability vs throughput trade-off:** the chained `flatMap` form costs 1.5–3× CPU and proportional GC. For a per-render UI transform of a few hundred items, this is unmeasurable. For a server hot path over 100k+ items, the loop wins. Profile, don't guess.
+- **For huge inputs:** consider switching to iterator helpers (`Iterator.from(arr).flatMap(...)`) which avoids intermediate arrays — see [`stream-lazy-iteration-for-large-or-infinite`](stream-lazy-iteration-for-large-or-infinite.md).
+
 ### When NOT to apply (keep the loop)
 
 - The body has meaningful side effects that benefit from early-`break` (writing to a stream, awaiting one network call at a time, stopping on first match) — `for...of` plus `break` is correct; `flatMap` doesn't short-circuit
-- Performance matters and the inputs are very large — `flatMap` allocates intermediate arrays at each level. A single typed loop with a preallocated buffer can be ~2–5× faster in tight hot paths. Measure first; the cleanest code wins until profiling proves otherwise
+- Performance matters and the inputs are very large — see Performance trade-offs above
 - The transform is asynchronous and order-sensitive — use `for...of` with `await`, not `flatMap` of promises (which gives `Promise[]`, not `Promise<flat[]>`)
 
 ### Related

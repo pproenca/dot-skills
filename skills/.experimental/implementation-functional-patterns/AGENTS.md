@@ -1,6 +1,6 @@
 # TypeScript Functional Patterns
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 MDN / TC39 / Mostly Adequate Guide  
 May 2026
 
@@ -18,8 +18,12 @@ Implementation guide for the functional patterns that supersede or supplement Ga
    - 1.1 [Pass a lambda instead of defining a Strategy class when variation is one function](references/hof-lambda-as-strategy.md)
 2. [Pipelines and composition](references/_sections.md#2-pipelines-and-composition) — **HIGH**
    - 2.1 [Compose a request pipeline as pipe(handler, handler, handler) instead of linked Handler classes](references/pipe-pipeline-over-chain-of-responsibility.md)
+   - 2.2 [Compose wrappers as compose(withCache, withLogging, withAuth)(handler) instead of Decorator classes](references/pipe-compose-over-decorator.md)
 3. [Stream methods](references/_sections.md#3-stream-methods) — **HIGH**
-   - 3.1 [Use flatMap for one-to-many transforms instead of nested loops or map().reduce(concat)](references/stream-flatmap-over-nested-loops.md)
+   - 3.1 [Collapse .filter().map().filter() chains into a single pass when the input is large or the chain is hot](references/stream-prefer-single-pass-over-chained-passes.md)
+   - 3.2 [Use flatMap for one-to-many transforms instead of nested loops or map().reduce(concat)](references/stream-flatmap-over-nested-loops.md)
+   - 3.3 [Use generators or Iterator helpers for early-exit over large or infinite sequences](references/stream-lazy-iteration-for-large-or-infinite.md)
+   - 3.4 [Use reduce / Object.groupBy / Map.groupBy for aggregation instead of imperative accumulators](references/stream-reduce-over-imperative-accumulation.md)
 4. [Placement and identity](references/_sections.md#4-placement-and-identity) — **HIGH**
    - 4.1 [Place pure transformer lambdas at module scope, not inside a component or hook](references/place-module-scope-pure-transformers.md)
 5. [Closures and data-carrying functions](references/_sections.md#5-closures-and-data-carrying-functions) — **MEDIUM**

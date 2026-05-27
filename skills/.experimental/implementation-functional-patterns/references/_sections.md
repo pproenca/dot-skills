@@ -10,24 +10,24 @@ These patterns are the functional counterparts to the Gang of Four catalog cover
 ## 1. Higher-order functions (hof)
 
 **Impact:** HIGH
-**Description:** Three rules for the central move of functional design: pass a function instead of a class. Replaces Strategy, Template Method, and most "interface with one method" abstractions. Apply whenever variation is a single algorithm step and the variant has no internal state of its own.
+**Description:** The central move of functional design: pass a function instead of a class. Replaces Strategy, Template Method, and most "interface with one method" abstractions. Apply whenever variation is a single algorithm step and the variant has no internal state of its own.
 
 ## 2. Pipelines and composition (pipe)
 
 **Impact:** HIGH
-**Description:** Three rules for composing small functions into bigger ones: `pipe`, `compose`, and method chains. Replaces Chain of Responsibility (linked handler classes), Decorator (wrapper classes), and the imperative "build up a result through a sequence of mutations" anti-pattern. Apply when each step takes the previous step's output and produces the next input.
+**Description:** Composing small functions into bigger ones: `pipe` for forward data flow, `compose` for wrapper layering. Replaces Chain of Responsibility (linked handler classes) and Decorator (wrapper classes). Apply when each step takes the previous step's output and produces the next input, or when several cross-cutting concerns wrap the same operation.
 
 ## 3. Stream methods (stream)
 
 **Impact:** HIGH
-**Description:** Four rules on `map`, `filter`, `flatMap`, `reduce`, and generator-based lazy iteration. Replaces Iterator-as-a-class and most imperative `for` loops with an accumulator. Apply when transforming or aggregating collections; reach for generators when the upstream is infinite or expensive.
+**Description:** `map`, `filter`, `flatMap`, `reduce`, lazy iterators, and the big-O of how they chain. Replaces Iterator-as-a-class and most imperative `for` loops with an accumulator. Apply when transforming or aggregating collections; reach for lazy iteration (generators / TC39 Iterator helpers) when the upstream is large, infinite, or expensive; collapse to a single pass when the chain is hot or the data is large.
 
 ## 4. Placement and identity (place)
 
 **Impact:** HIGH
-**Description:** Three rules on *where* you put the lambda: module scope, function scope, or inline in JSX / a hook deps array. Placement controls referential identity (which determines memo/effect-dep behavior), closure capture (which determines correctness), and tree-shakability. Apply on every function definition decision in a TSX or hot-path file.
+**Description:** *Where* you put the lambda: module scope, function scope, or inline in JSX / a hook deps array. Placement controls referential identity (which determines memo/effect-dep behavior), closure capture (which determines correctness), tree-shakability, and per-render allocation cost. Apply on every function-definition decision in a TSX or hot-path file.
 
 ## 5. Closures and data-carrying functions (closure)
 
 **Impact:** MEDIUM
-**Description:** Two rules on using closures to carry state with behavior — the lightweight alternative to Command, Memento, and small object-with-one-method classes. Apply when the captured state is purely local and never needs to be serialized, inspected, or composed across instances.
+**Description:** Using closures to carry state with behavior — the lightweight alternative to Command, Memento, and small object-with-one-method classes. Apply when the captured state is purely local and never needs to be serialized, inspected, or composed across instances.

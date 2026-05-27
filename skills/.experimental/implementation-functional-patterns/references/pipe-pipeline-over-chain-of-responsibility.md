@@ -76,6 +76,19 @@ const result = handle(rawRequest);
 
 Each step is independently testable as a pure function. Reordering is editing a `pipe` argument list, not rewiring object graph. The `pipe` helper is six lines; many projects already have one in `fp-ts`, `Effect`, `lodash/fp`, or `remeda`.
 
+### Common pitfalls
+
+- **`pipe` cannot short-circuit cleanly.** Throwing inside a step works but uses exceptions for control flow. The functional answer is a `Result<T, E>` / `Either` type carried through the pipe — every step pattern-matches on it. Libraries (Effect, fp-ts, neverthrow) provide this; rolling your own for one project is rarely worth it.
+- **Async steps need an async pipe.** A `reduce` over `Promise<T>` doesn't await; you'll thread `Promise<Request>` instead of `Request`. Either use `async function pipe` that `await`s, or rely on a library's `pipe` that knows about promises. The same lambda that works sync may silently break the chain when you `async` it.
+- **Type narrowing across steps is hard to express with raw `reduce`.** `pipe(authenticate, ...)` where `authenticate: Request → AuthenticatedRequest` can't propagate the narrowed type through plain `reduce`. Use overloads (one per arity) or library `pipe` helpers that already do this.
+- **Don't reach for `pipe` for two steps.** `parseBody(authenticate(req))` is clear. Composition pays off at three or more steps.
+
+### Performance trade-offs
+
+- **Time:** identical to chained method calls — n function invocations either way.
+- **Memory:** one closure per `pipe` step at composition time; class form allocates one instance per step. Comparable.
+- **The cost is in the libraries.** Importing Effect or fp-ts for one `pipe` is overkill (~tens of KB); a six-line `pipe` helper is free.
+
 ### When NOT to apply (keep the chain)
 
 - A handler must decide at runtime whether to pass the request along *or short-circuit and return early* — `pipe` always runs every step (though early-throw still works, `Result`/`Either` types handle this functionally; see Effect/fp-ts)
