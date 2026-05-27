@@ -116,7 +116,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [humanize](skills/.experimental/humanize) | Remove signs of AI-generated writing from text |
 | [implementation-design-patterns-python](skills/.experimental/implementation-design-patterns-python) | Implementation guide for the 22 Gang of Four design patterns in idiomatic modern Python (3.10+),.. |
 | [implementation-design-patterns](skills/.experimental/implementation-design-patterns) | Implementation guide for the 22 Gang of Four design patterns in TypeScript, distilled from.. |
-| [implementation-functional-patterns](skills/.experimental/implementation-functional-patterns) | TypeScript's functional patterns that supersede Gang of Four classes — higher-order functions,.. |
+| [implementation-functional-patterns](skills/.experimental/implementation-functional-patterns) | TypeScript's functional answers to the 22 Gang of Four classes — factory functions (Factory.. |
 | [inngest-nextjs-patterns](skills/.experimental/inngest-nextjs-patterns) | Inngest event-driven functions in a Next.js (App Router) project — creating the client, the.. |
 | [io-bound-data-processing](skills/.experimental/io-bound-data-processing) | Processing, transforming, or moving datasets that may exceed RAM on a single low-compute box —.. |
 | [ios-animations](skills/.experimental/ios-animations) | Clinic-architecture-aligned iOS animation craft guidelines for SwiftUI (iOS 26 / Swift 6.2).. |
