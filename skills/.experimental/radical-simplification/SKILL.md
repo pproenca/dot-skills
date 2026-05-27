@@ -1,6 +1,6 @@
 ---
 name: radical-simplification
-description: Use this skill when stuck on a complex problem, when a proposed design feels overengineered, when reviewing code that has accreted accidental complexity, or when the user wants an elegant solution to a hard engineering or product problem. Distills the documented cognitive moves — reframe, reduce, decompose, invert, constrain, transfer, generalize, audit — used as a working method by mathematicians, physicists, and software engineers known for collapsing hard problems into simple solutions (Pólya, Feynman, Hamming, Brooks, Knuth, Dijkstra, Lamport, Tao, Grothendieck, Munger, Hofstadter). Triggers on phrases like "this feels too complicated", "we are going in circles", "there must be a simpler way", "make it elegant", "find the underlying problem", and on stuck-state moments where forward search has run out and the agent needs a different angle.
+description: Use this skill when stuck on a complex problem, when a proposed design feels overengineered, when reviewing code that has accreted accidental complexity, or when the user wants an elegant solution to a hard engineering or product problem. Distills the documented cognitive moves — reframe, clarify, reduce, decompose, invert, constrain, transfer, generalize, audit — used as a working method by mathematicians, physicists, and software engineers known for collapsing hard problems into simple solutions (Pólya, Feynman, Hamming, Brooks, Knuth, Dijkstra, Lamport, Tao, Grothendieck, Munger, Hofstadter). Triggers on phrases like "this feels too complicated", "we are going in circles", "there must be a simpler way", "interview me about this plan", "find the underlying problem", and on stuck-state moments where forward search has run out and the agent needs a different angle.
 ---
 
 # Radical Simplification — Cognitive Moves for Collapsing Complex Problems
@@ -15,6 +15,7 @@ Use this skill when:
 
 - The user says the problem feels too complicated, that the team is going in circles, or that there must be a simpler way
 - A proposed design has accreted parameters, dependencies, or branches and feels overengineered
+- A plan has been drafted but unresolved decisions remain, and the agent is about to commit to assumed answers
 - A bug investigation has tried several variants of the same approach without progress
 - A review surfaces complexity that may be accidental (Brooks) rather than essential
 - The agent is asked to find an elegant solution to a hard engineering or product problem
@@ -25,11 +26,12 @@ This skill is **not** for cleaning up code that already does the right thing —
 
 ## How to Use
 
-The eight categories are orthogonal cognitive moves. Match the move to the symptom:
+The nine categories are orthogonal cognitive moves. Match the move to the symptom:
 
 | Symptom | Reach for | First rule to read |
 |---------|-----------|--------------------|
 | Solving feels off — maybe the wrong problem | **Frame** | [`frame-restate-problem`](references/frame-restate-problem.md) |
+| Plan drafted but unresolved decisions remain | **Clarify** | [`clarify-interview-one-at-a-time`](references/clarify-interview-one-at-a-time.md) |
 | Drowning in cases, parameters, branches | **Reduce** | [`reduce-toy-case-first`](references/reduce-toy-case-first.md) |
 | Parts are tangled; changes ripple | **Decompose** | [`decomp-orthogonal-axes`](references/decomp-orthogonal-axes.md) |
 | Forward search is exponential or stuck | **Invert** | [`invert-work-backwards`](references/invert-work-backwards.md) |
@@ -45,13 +47,14 @@ For category overviews and the ordering rationale, see [`references/_sections.md
 | # | Category | Prefix | Move | Rules |
 |---|----------|--------|------|-------|
 | 1 | Reframe the Problem | `frame` | Restate, separate essential from accidental, find the decision | 3 |
-| 2 | Reduce to the Smallest Case | `reduce` | Toy case, limit cases, Pareto compression | 3 |
-| 3 | Decompose Along Orthogonal Axes | `decomp` | Orthogonal axes, WHAT vs HOW | 2 |
-| 4 | Invert the Search | `invert` | Work backwards, assume failure | 2 |
-| 5 | Constrain with Invariants and Symmetries | `constrain` | Name the invariant, dimensional check | 2 |
-| 6 | Transfer From Another Domain | `transfer` | Cross-domain analogue, vocabulary lock-in | 2 |
-| 7 | Generalize Until the Problem Dissolves | `gen` | Rising sea | 1 |
-| 8 | Audit Your Own Understanding | `audit` | Feynman, name the confusion, Fermi check | 3 |
+| 2 | Clarify Through Interview | `clarify` | One-at-a-time questions with recommended answers; read the source before asking | 2 |
+| 3 | Reduce to the Smallest Case | `reduce` | Toy case, limit cases, Pareto compression | 3 |
+| 4 | Decompose Along Orthogonal Axes | `decomp` | Orthogonal axes, WHAT vs HOW | 2 |
+| 5 | Invert the Search | `invert` | Work backwards, assume failure | 2 |
+| 6 | Constrain with Invariants and Symmetries | `constrain` | Name the invariant, dimensional check | 2 |
+| 7 | Transfer From Another Domain | `transfer` | Cross-domain analogue, vocabulary lock-in | 2 |
+| 8 | Generalize Until the Problem Dissolves | `gen` | Rising sea | 1 |
+| 9 | Audit Your Own Understanding | `audit` | Feynman, name the confusion, Fermi check | 3 |
 
 ## Quick Reference
 
@@ -61,37 +64,42 @@ For category overviews and the ordering rationale, see [`references/_sections.md
 - [`frame-essential-vs-accidental`](references/frame-essential-vs-accidental.md) — Brooks's distinction: name each piece of complexity as inherent or layered-on
 - [`frame-find-decision-point`](references/frame-find-decision-point.md) — Find the decision the answer must change; answer that, not the literal question
 
-### 2. Reduce to the Smallest Case
+### 2. Clarify Through Interview
+
+- [`clarify-interview-one-at-a-time`](references/clarify-interview-one-at-a-time.md) — Walk the design tree one branch at a time; every question paired with your recommended answer so the user reviews a position, not generates one
+- [`clarify-prefer-source-over-asking`](references/clarify-prefer-source-over-asking.md) — If a grep, file read, or runtime check would answer it, do that — only ask what the source cannot tell you
+
+### 3. Reduce to the Smallest Case
 
 - [`reduce-toy-case-first`](references/reduce-toy-case-first.md) — Solve n=1 fully before generalizing; the structure of the big problem becomes visible
 - [`reduce-limit-cases`](references/reduce-limit-cases.md) — Probe zero, infinity, empty, identity to expose where the design degrades
 - [`reduce-pareto-compress`](references/reduce-pareto-compress.md) — Design for the 20% of inputs that produce 80% of the result
 
-### 3. Decompose Along Orthogonal Axes
+### 4. Decompose Along Orthogonal Axes
 
 - [`decomp-orthogonal-axes`](references/decomp-orthogonal-axes.md) — Axes are correct when changing one does not force changing another; verbs over today's nouns
 - [`decomp-what-vs-how`](references/decomp-what-vs-how.md) — Write the WHAT before debating the HOW; the spec is the referee
 
-### 4. Invert the Search
+### 5. Invert the Search
 
 - [`invert-work-backwards`](references/invert-work-backwards.md) — When forward search is exponential, ask what must be true one step before the goal
 - [`invert-assume-failure`](references/invert-assume-failure.md) — Write the postmortem before writing the design (Munger's inversion)
 
-### 5. Constrain with Invariants and Symmetries
+### 6. Constrain with Invariants and Symmetries
 
 - [`constrain-name-the-invariant`](references/constrain-name-the-invariant.md) — The property that does not change is often the answer in disguise
 - [`constrain-dimensional-check`](references/constrain-dimensional-check.md) — Mismatched units, types, or categories are bugs before they are runtime failures
 
-### 6. Transfer From Another Domain
+### 7. Transfer From Another Domain
 
 - [`transfer-cross-domain-analogue`](references/transfer-cross-domain-analogue.md) — Search for the structural twin in another domain; the twin's solution often transplants
 - [`transfer-suspect-vocabulary-lock-in`](references/transfer-suspect-vocabulary-lock-in.md) — Suffix accretion (`Manager`, `Helper`, `Coordinator`) signals the original noun is wrong
 
-### 7. Generalize Until the Problem Dissolves
+### 8. Generalize Until the Problem Dissolves
 
 - [`gen-rising-sea`](references/gen-rising-sea.md) — Grothendieck's rising sea; the more abstract version is sometimes the easier one — but only if it has *fewer* concepts, not more
 
-### 8. Audit Your Own Understanding
+### 9. Audit Your Own Understanding
 
 - [`audit-feynman-technique`](references/audit-feynman-technique.md) — Unfold technical shorthand into beginner-vocabulary sentences; the hand-waves are the gaps
 - [`audit-name-the-confusion`](references/audit-name-the-confusion.md) — When stuck, name what you do not know — do not retry variants of the same approach
