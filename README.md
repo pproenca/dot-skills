@@ -113,6 +113,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [fog-of-war-js-ts](skills/.experimental/fog-of-war-js-ts) | Fog of war, field of view, line of sight, and tile visibility in JavaScript or TypeScript games.. |
 | [framer-motion](skills/.experimental/framer-motion) | Framer Motion performance optimization guidelines |
 | [geohash-spatial-code-maps](skills/.experimental/geohash-spatial-code-maps) | Geohash encoding/decoding in TypeScript or Rust — bit interleaving, the base32 alphabet,.. |
+| [go-process-cli](skills/.experimental/go-process-cli) | Write Go CLIs that manage processes and workloads — daemons, supervisors, job runners, deploy.. |
 | [graph-schema](skills/.experimental/graph-schema) | Graph database schema design and data modeling expert |
 | [harness-engineering](skills/.experimental/harness-engineering) | Set up or update the agent-first engineering harness for any repository |
 | [human-copywrite](skills/.experimental/human-copywrite) | "User-facing copy — UI strings, documentation, marketing, release notes, error messages,.. |

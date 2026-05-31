@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Go",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "May 2026",
+  "abstract": "Distilled patterns for Go CLIs that manage processes and concurrent workloads — daemons, supervisors, job runners, deploy tools. Targets Go 1.22+ on Unix-like systems and corrects the specific standard-library defaults that go wrong in this domain: catching SIGTERM (not just Ctrl-C) via signal.NotifyContext, killing children gracefully with exec.Cmd Cancel/WaitDelay before SIGKILL, signalling whole process groups so grandchildren don't orphan, avoiding os/exec pipe deadlocks, bounding concurrency with errgroup so a goroutine-per-task doesn't become a process-per-task, threading context for cancellation, funnelling exit through run() error so defers run, choosing stdlib flag vs cobra and wiring ExecuteContext, and supervising state (signal-0 liveness, atomic PID files, zombie reaping, structured slog). Each rule names the wrong default it corrects, shows one canonical example, and cites the primary source.",
+  "references": [
+    "https://pkg.go.dev/os/signal#NotifyContext",
+    "https://pkg.go.dev/os/exec",
+    "https://pkg.go.dev/golang.org/x/sync/errgroup",
+    "https://pkg.go.dev/context",
+    "https://pkg.go.dev/log/slog",
+    "https://go.dev/blog/pipelines",
+    "https://cobra.dev/"
+  ]
+}
