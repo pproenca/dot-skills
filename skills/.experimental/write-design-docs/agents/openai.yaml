@@ -1,0 +1,4 @@
+interface:
+  display_name: "Write Design Docs"
+  short_description: "Draft focused software design docs"
+  default_prompt: "Use $write-design-docs to draft a design doc for this software project."
