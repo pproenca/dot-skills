@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Elixir / OTP / Ecto / Phoenix",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "July 2026",
+  "abstract": "Adversarial, architecture-level review and refactoring of Elixir on the BEAM: names the alien mental model existing code betrays (OO/enterprise layering, processes-as-objects, anemic data, defensive control flow, imperative iteration, needless metaprogramming) and prescribes the deep, layer-flattening refactor back to idiomatic Elixir. The diagnostic counterpart to greenfield idiom advice.",
+  "references": [
+    "https://hexdocs.pm/elixir/design-anti-patterns.html",
+    "https://hexdocs.pm/elixir/code-anti-patterns.html",
+    "https://hexdocs.pm/elixir/process-anti-patterns.html",
+    "https://hexdocs.pm/elixir/macro-anti-patterns.html",
+    "https://hexdocs.pm/elixir/protocols.html",
+    "https://hexdocs.pm/elixir/Enum.html",
+    "https://hexdocs.pm/ecto/Ecto.Repo.html",
+    "https://hexdocs.pm/ecto/Ecto.Changeset.html",
+    "https://hexdocs.pm/phoenix/contexts.html",
+    "https://hexdocs.pm/mox/Mox.html",
+    "https://www.erlang.org/doc/apps/stdlib/ets.html",
+    "https://www.theerlangelist.com/article/spawn_or_not",
+    "https://pragprog.com/titles/jgotp/designing-elixir-systems-with-otp/"
+  ]
+}

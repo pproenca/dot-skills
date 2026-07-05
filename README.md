@@ -62,6 +62,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [37signals-rails](skills/.experimental/37signals-rails) | 37signals Rails coding principles and conventions from DHH, Jorge Manrubia, and the.. |
 | [acceptance-pipeline-catalog](skills/.experimental/acceptance-pipeline-catalog) | Use when implementing, reviewing, or debugging a Gherkin acceptance-test pipeline with mutation.. |
 | [acceptance-pipeline-feature-design](skills/.experimental/acceptance-pipeline-feature-design) | Designs new features, extensions, or modifications to Uncle Bob's Acceptance Pipeline.. |
+| [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill when reviewing or refactoring existing Elixir/OTP/Ecto/Phoenix code that carries.. |
 | [algorithmic-complexity-review](skills/.experimental/algorithmic-complexity-review) | Algorithmic complexity (Big-O) review — finding nested loops, N+1 queries, exponential.. |
 | [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
