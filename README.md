@@ -169,6 +169,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [search-ios26-docs](skills/.experimental/search-ios26-docs) | Search and inspect local iOS 26 SDK documentation and Swift interfaces, especially SwiftUI and.. |
 | [search-macos26-docs](skills/.experimental/search-macos26-docs) | Search and inspect local macOS 26 SDK documentation and Swift interfaces, especially SwiftUI,.. |
 | [shell](skills/.experimental/shell) | Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts |
+| [staff-level-elixir](skills/.experimental/staff-level-elixir) | Use this skill when writing, reviewing, or refactoring Elixir, OTP, Ecto, or Phoenix/LiveView code |
 | [storybook](skills/.experimental/storybook) | Use whenever creating, configuring, or extending Storybook for a TS/React component library —.. |
 | [stripe-inspired-api-design-rules](skills/.experimental/stripe-inspired-api-design-rules) | JSON HTTP API design rules distilled from Stripe — resource modeling, identifier schemes, URL.. |
 | [swift-data](skills/.experimental/swift-data) | SwiftData persistence and data-layer architecture for iOS 26 / Swift 6.2 clinic modular MVVM-C apps |

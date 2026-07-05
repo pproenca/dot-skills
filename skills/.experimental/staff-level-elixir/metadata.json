@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Elixir / OTP / Ecto / Phoenix",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "July 2026",
+  "abstract": "Staff-level judgment for Elixir on the BEAM: corrects the wrong defaults a capable model makes in process/OTP design, error handling and let-it-crash, everyday idioms, concurrency, Ecto data access, and Phoenix/LiveView.",
+  "references": [
+    "https://hexdocs.pm/elixir/process-anti-patterns.html",
+    "https://hexdocs.pm/elixir/design-anti-patterns.html",
+    "https://hexdocs.pm/elixir/code-anti-patterns.html",
+    "https://hexdocs.pm/elixir/macro-anti-patterns.html",
+    "https://hexdocs.pm/elixir/Task.html",
+    "https://hexdocs.pm/elixir/Stream.html",
+    "https://hexdocs.pm/elixir/String.html#to_existing_atom/1",
+    "https://www.erlang.org/doc/system/binaryhandling.html",
+    "https://www.erlang.org/doc/apps/stdlib/ets.html",
+    "https://hexdocs.pm/credo/Credo.Check.Refactor.PipeChainStart.html",
+    "https://hexdocs.pm/ecto/Ecto.Multi.html",
+    "https://hexdocs.pm/ecto/Ecto.Repo.html",
+    "https://hexdocs.pm/ecto/Ecto.Changeset.html#unique_constraint/3",
+    "https://hexdocs.pm/phoenix/contexts.html",
+    "https://hexdocs.pm/phoenix_live_view/Phoenix.LiveView.html"
+  ]
+}
