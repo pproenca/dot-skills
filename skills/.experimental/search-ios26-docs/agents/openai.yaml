@@ -1,0 +1,4 @@
+interface:
+  display_name: "Search iOS 26 Docs"
+  short_description: "Search local iOS 26 SDK symbols and SwiftUI docs"
+  default_prompt: "Use $search-ios26-docs to find current iOS 26 SwiftUI APIs, signatures, availability, and local symbol documentation."

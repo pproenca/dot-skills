@@ -1,0 +1,14 @@
+{
+  "name": "search-macos26-docs",
+  "version": "1.0.0",
+  "organization": "dot-skills",
+  "technology": "macOS 26 SDK / Swift interfaces",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "July 2026",
+  "abstract": "Local SDK documentation search skill for inspecting macOS 26 frameworks, Swift interfaces, symbol availability, module discovery, and SDK-specific declarations through bundled Python helpers and end-to-end tests.",
+  "references": [
+    "Local Xcode macOS SDK documentation archives",
+    "Local Xcode Swift module interfaces"
+  ]
+}

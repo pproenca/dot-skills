@@ -11,6 +11,18 @@
       "sourceType": "github",
       "skillPath": "skills/.experimental/radical-simplification/SKILL.md",
       "computedHash": "576237d0f9898d83289d50efd79ea1b74fcbbae71ae15b9dfce554d86edece7f"
+    },
+    "search-ios26-docs": {
+      "source": "pproenca/dot-skills",
+      "sourceType": "github",
+      "skillPath": "skills/.experimental/search-ios26-docs/SKILL.md",
+      "computedHash": "fd6d17d8b7347c763156d4975e873fc4ed5b562bd0d5e075151e3bf9233c1e14"
+    },
+    "search-macos26-docs": {
+      "source": "pproenca/dot-skills",
+      "sourceType": "github",
+      "skillPath": "skills/.experimental/search-macos26-docs/SKILL.md",
+      "computedHash": "16da5b599fd74f6a5f1fb2a1a7cad1f4afcce238e083b65cc625e68578ca37ab"
     }
   }
 }

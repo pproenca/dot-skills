@@ -166,6 +166,8 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [react-refactor](skills/.experimental/react-refactor) | Architectural refactoring guide for React applications covering component architecture, state.. |
 | [react-testing-library](skills/.experimental/react-testing-library) | React Testing Library best practices for writing maintainable, user-centric tests |
 | [same-results-less-code](skills/.experimental/same-results-less-code) | Same behaviour in fewer, clearer lines — covers the judgment gaps that linters cannot catch.. |
+| [search-ios26-docs](skills/.experimental/search-ios26-docs) | Search and inspect local iOS 26 SDK documentation and Swift interfaces, especially SwiftUI and.. |
+| [search-macos26-docs](skills/.experimental/search-macos26-docs) | Search and inspect local macOS 26 SDK documentation and Swift interfaces, especially SwiftUI,.. |
 | [shell](skills/.experimental/shell) | Shell scripting best practices for writing safe, portable, and maintainable bash/sh scripts |
 | [storybook](skills/.experimental/storybook) | Use whenever creating, configuring, or extending Storybook for a TS/React component library —.. |
 | [stripe-inspired-api-design-rules](skills/.experimental/stripe-inspired-api-design-rules) | JSON HTTP API design rules distilled from Stripe — resource modeling, identifier schemes, URL.. |
@@ -189,6 +191,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [web-rules](skills/.experimental/web-rules) | Strict design and UX rules for React 19 + Next.js 16 (App Router) + Tailwind CSS 4 |
 | [webpack-plugin-authoring](skills/.experimental/webpack-plugin-authoring) | Writing webpack 5 plugins — hook selection (compiler vs compilation, tap vs tapAsync,.. |
 | [webpack-plugin-recipes](skills/.experimental/webpack-plugin-recipes) | Use whenever you face a webpack-build problem that ends with needing to write a plugin — 26.. |
+| [write-design-docs](skills/.experimental/write-design-docs) | Write, revise, or review software design documents using Malte Ubl's "Design Docs at Google".. |
 | [wxt-browser-extensions](skills/.experimental/wxt-browser-extensions) | WXT browser extension performance optimization guidelines |
 | [zustand](skills/.experimental/zustand) | Zustand state management best practices for React applications |
 <!-- SKILLS-TABLE:END -->
