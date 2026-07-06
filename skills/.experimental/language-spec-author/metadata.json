@@ -1,0 +1,16 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Formal language & DSL specification",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "July 2026",
+  "abstract": "Guides an author end-to-end from a rough idea for a domain-specific, query, config, or protocol language to a complete, implementable specification — grilling the user dimension by dimension (purpose, lexical grammar, syntactic grammar, semantic model, validation, execution, output, conformance) until another developer could build a conforming implementation from the document alone. The completeness bar and formal notation are distilled from the GraphQL specification.",
+  "references": [
+    "https://spec.graphql.org/draft/",
+    "https://github.com/graphql/graphql-spec",
+    "https://spec.graphql.org/draft/#sec-Appendix-Notation-Conventions",
+    "https://spec.graphql.org/draft/#sec-Appendix-Conformance",
+    "https://tools.ietf.org/html/rfc2119"
+  ]
+}
