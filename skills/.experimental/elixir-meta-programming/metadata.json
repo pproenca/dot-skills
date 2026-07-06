@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Elixir metaprogramming (macros & DSLs)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "July 2026",
+  "abstract": "How to build Elixir macros and declarative DSLs correctly once one is warranted: corrects the wrong defaults a model makes with quote/unquote hygiene and evaluation, the accumulate-attribute + @before_compile DSL pattern, and compile-time validation. Complements the anti-macro gate in staff-level-elixir and adversarial-elixir.",
+  "references": [
+    "https://elixir.hexdocs.pm/domain-specific-languages.html",
+    "https://elixir.hexdocs.pm/quote-and-unquote.html",
+    "https://elixir.hexdocs.pm/macros.html",
+    "https://elixir.hexdocs.pm/Kernel.SpecialForms.html#quote/2",
+    "https://elixir.hexdocs.pm/Macro.html#escape/1",
+    "https://elixir.hexdocs.pm/Macro.Env.html",
+    "https://elixir.hexdocs.pm/Module.html#module-compile-callbacks",
+    "https://elixir.hexdocs.pm/Kernel.html#defguard/1",
+    "https://hexdocs.pm/elixir/macro-anti-patterns.html",
+    "https://hexdocs.pm/ecto/Ecto.Schema.html#module-reflection"
+  ]
+}

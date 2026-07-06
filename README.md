@@ -100,6 +100,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [drizzle-sqlite](skills/.experimental/drizzle-sqlite) | Drizzle ORM targeting SQLite (better-sqlite3, libsql/Turso, bun:sqlite, Cloudflare D1,.. |
 | [dx-harness](skills/.experimental/dx-harness) | Developer-experience friction auditing and fixing — slow onboarding, repeated manual setup.. |
 | [effect-ts](skills/.experimental/effect-ts) | Effect-TS library usage in TypeScript — Effect.gen generators, Schema.Struct/Schema.Class.. |
+| [elixir-meta-programming](skills/.experimental/elixir-meta-programming) | Use this skill when building an Elixir macro or a declarative DSL — a schema/spec/route/workflow.. |
 | [emilkowal-animations](skills/.experimental/emilkowal-animations) | Emil Kowalski's animation best practices for web interfaces |
 | [eval-mcp](skills/.experimental/eval-mcp) | Measures whether Claude uses an MCP server's tools correctly — tests tool selection accuracy,.. |
 | [exec-plan](skills/.experimental/exec-plan) | Manage the lifecycle of ExecPlans — self-contained, living specifications for multi-step work |
