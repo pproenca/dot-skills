@@ -1,15 +1,15 @@
 # Sections
 
 This file defines the categories and their order. The prefix in parentheses is
-the filename prefix that groups rules. Order categories by **importance** — the
-architectural mistakes with the widest blast radius (and the biggest refactor
-payoff) go first.
+the filename prefix that groups rules. Categories are ordered by **importance** —
+the architectural mistakes with the widest blast radius go first; the verdict
+report's fix list follows this order.
 
-This is an adversarial review/refactor skill for correctness and architecture,
-not a performance skill, so there are no impact tiers. Each rule names an alien
-mental model — imported from OO/enterprise or imperative ecosystems — and the
-refactor that collapses it back to idiomatic Elixir, up to and including deleting
-a whole layer.
+This is a pass/fail review gate, not a performance skill, so there are no impact
+tiers. Each rule names an alien mental model — imported from OO/enterprise or
+imperative ecosystems — and carries an **Evidence of violation** paragraph: the
+artifact evidence that decides PASS/FAIL/N/A, with carve-outs that must be
+claimed with citable evidence (fail closed otherwise).
 
 ---
 
