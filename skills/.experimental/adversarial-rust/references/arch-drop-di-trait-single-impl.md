@@ -1,41 +1,54 @@
 ---
 title: Delete the dependency-injection trait with one implementation
-tags: arch, traits, dependency-injection, generics
+tags: arch, traits, dependency-injection, concrete-types
 ---
 
 ## Delete the dependency-injection trait with one implementation
 
-Ported from Java/C#, an `IUserService`-style trait defined so the "real" struct can be "injected" taxes the whole call graph: every caller grows a `<S: UserService>` parameter or pays a `Box<dyn UserService>` allocation, and the swappability it pretends to buy — a second implementation — never arrives. Traits exist to share behavior across *multiple* types; a single-impl trait shares nothing and exists only to be mocked, which Rust codebases do better with fakes at the real process boundary (a wiremock HTTP fake, a temp-dir filesystem) than with a hand-rolled mock of their own internals. Use the concrete type directly; introduce the trait on the day a second implementation actually exists.
+Ported from Java/C#, an `IUserService`-style trait defined so the "real" struct can be "injected" taxes the whole call graph — every caller grows a type parameter or pays a `Box<dyn>` allocation — and the swappability it pretends to buy never arrives. codex-rs runs a ~125-crate production agent with its load-bearing types fully concrete: `ModelClient` is a plain struct (no `trait ModelClient` or `dyn ModelClient` exists anywhere in the workspace), `AuthManager` is a concrete struct shared as `Arc<AuthManager>`, and `Session` is passed as bare `&Session` to 97 call sites in `core/src`. The concrete type is the seam; introduce a trait the day a second implementation actually exists.
 
 **Incorrect (a trait whose only reason to exist is injection):**
 
 ```rust
-trait UserStore {
-    fn find(&self, id: u64) -> Option<User>;
+trait ModelApi {
+    fn stream(&self, prompt: &str) -> Vec<String>;
 }
 
-struct PgUserStore { pool: PgPool }
-
-impl UserStore for PgUserStore {
-    fn find(&self, id: u64) -> Option<User> { /* ... */ }
+struct ModelClient {
+    base_url: String,
 }
 
-// Every consumer now carries the type parameter for one impl.
-struct SignupFlow<S: UserStore> { store: S }
+impl ModelApi for ModelClient {
+    fn stream(&self, prompt: &str) -> Vec<String> {
+        vec![format!("{}: {prompt}", self.base_url)]
+    }
+}
+
+// Every consumer now carries the parameter for exactly one impl.
+struct Turn<M: ModelApi> {
+    client: M,
+}
 ```
 
-**Correct (the concrete type is the seam):**
+**Correct (the concrete type is the seam — how codex-rs ships `ModelClient`):**
 
 ```rust
-struct PgUserStore { pool: PgPool }
-
-impl PgUserStore {
-    fn find(&self, id: u64) -> Option<User> { /* ... */ }
+#[derive(Debug, Clone)]
+struct ModelClient {
+    base_url: String,
 }
 
-struct SignupFlow { store: PgUserStore }
+impl ModelClient {
+    fn stream(&self, prompt: &str) -> Vec<String> {
+        vec![format!("{}: {prompt}", self.base_url)]
+    }
+}
+
+struct Turn {
+    client: ModelClient,
+}
 ```
 
-**When a trait IS right:** two or more real implementations exist today (Postgres and in-memory both shipped, not "someday"); the trait crosses a crate boundary where downstream crates genuinely plug in their own types; or the single real implementation cannot run under test at all — codex-rs keeps `EventSource` (live crossterm terminal events) and `KeyringStore` (the OS credential store) as one-real-impl seams for exactly this reason. Exhaust the real-boundary fakes first — `testing-wiremock-sse-fakes` and `testing-atomic-bool-test-opt-in` in the sibling `openai-codex-rust-patterns` skill — and reach for the trait only when no such boundary exists.
+**When a trait IS right:** codex-rs keeps trait seams exactly where the real implementation cannot run under test or where the host genuinely plugs in its own type — `EventSource` (live crossterm terminal events; one real impl + one channel-fed `FakeEventSource`), `KeyringStore` (the OS credential store; `DefaultKeyringStore` + an in-memory `MockKeyringStore`), `TimeProvider` (clock injection), `HttpTransport` (one real `ReqwestTransport`, ten test fakes), and the genuinely open host boundaries `ThreadStore`/`ExecBackend`. Every one of these is an I/O edge with a shipped second implementation — not an internal service wrapped "for testability".
 
-Reference: [The Rust Book — Traits: Defining Shared Behavior](https://doc.rust-lang.org/book/ch10-02-traits.html)
+Reference: [codex-rs core/src/client.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/client.rs#L252), [codex-rs keyring-store/src/lib.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/keyring-store/src/lib.rs#L42), [codex-rs tui/src/tui/event_stream.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/tui/src/tui/event_stream.rs#L43)

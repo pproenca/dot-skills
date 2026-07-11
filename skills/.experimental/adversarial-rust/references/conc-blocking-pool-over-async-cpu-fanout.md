@@ -1,38 +1,49 @@
 ---
-title: Offload CPU-bound work to the blocking pool, not a fleet of async tasks
-tags: conc, spawn-blocking, cpu-bound, parallelism
+title: Run CPU-bound fan-out on a bounded thread pool behind one spawn_blocking
+tags: conc, cpu-bound, thread-pool, cancellation
 ---
 
-## Offload CPU-bound work to the blocking pool, not a fleet of async tasks
+## Run CPU-bound fan-out on a bounded thread pool behind one spawn_blocking
 
-Spawning a tokio task per chunk to parallelize hashing, compression, or image resizing treats async as a parallelism tool — the JavaScript habit where the event loop is the only concurrency you have. Async buys concurrent *waiting*; CPU-bound tasks never wait, so they occupy the runtime's few worker threads, starve the I/O tasks the runtime exists to serve, and add `JoinHandle`/`.await` ceremony around what is a plain loop. The runtime already has a home for work that won't yield: `spawn_blocking` moves the computation onto the dedicated blocking pool, where it can grind away without stalling a single I/O task — and since each `spawn_blocking` call gets its own thread from that pool, concurrent requests still spread across cores.
-
-**Incorrect (compute squatting on the I/O runtime):**
+Async fan-out — spawning a tokio task per item of CPU work — is the JavaScript reflex applied to computation: async buys *concurrent waiting*, and CPU work never waits, so the tasks just occupy runtime workers and starve I/O. codex-rs contains no rayon and no async CPU fan-out; its one genuinely parallel CPU workload (fuzzy file search: directory walk + scoring) runs on dedicated OS threads — the `ignore` crate's parallel walker plus worker threads over crossbeam channels — bounded by `cores.min(MAX_THREADS)`, cancellable through a shared flag polled by workers, and the async world reaches it through a single `spawn_blocking` call.
 
 ```rust
-async fn thumbnail_all(images: Vec<Image>) -> Vec<Thumbnail> {
-    let mut handles = Vec::new();
-    for img in images {
-        handles.push(tokio::spawn(async move { resize(img) })); // no await inside
-    }
-    let mut out = Vec::new();
-    for h in handles {
-        out.push(h.await.unwrap());
-    }
-    out
+use std::sync::atomic::{AtomicBool, Ordering};
+use std::sync::Arc;
+
+struct FileSearchResults {
+    matches: Vec<String>,
 }
-```
 
-**Correct (compute handed to the blocking pool):**
+/// Synchronous, thread-pooled search — the async runtime never sees the CPU work.
+fn run_search(query: String, threads: usize, cancel_flag: Arc<AtomicBool>) -> FileSearchResults {
+    let workers: Vec<_> = (0..threads)
+        .map(|_| {
+            let cancel = Arc::clone(&cancel_flag);
+            let query = query.clone();
+            std::thread::spawn(move || {
+                let mut matches = Vec::new();
+                while !cancel.load(Ordering::Relaxed) {
+                    matches.push(query.clone());
+                    break; // walk/score work elided
+                }
+                matches
+            })
+        })
+        .collect();
+    let matches = workers.into_iter().filter_map(|w| w.join().ok()).flatten().collect();
+    FileSearchResults { matches }
+}
 
-```rust
-async fn thumbnail_all(images: Vec<Image>) -> Vec<Thumbnail> {
-    tokio::task::spawn_blocking(move || images.into_iter().map(resize).collect())
+/// The single async entry point — how codex-rs invokes fuzzy file search.
+async fn fuzzy_file_search(query: String, cancel_flag: Arc<AtomicBool>) -> FileSearchResults {
+    let threads = std::thread::available_parallelism().map_or(2, |n| n.get()).min(8);
+    tokio::task::spawn_blocking(move || run_search(query, threads, cancel_flag))
         .await
-        .expect("thumbnail worker panicked")
+        .unwrap_or(FileSearchResults { matches: Vec::new() })
 }
 ```
 
-The `expect` is the sanctioned kind: the join fails only if the worker panicked, which is a bug, not an outcome to handle. If one request must saturate every core by itself — a genuinely data-parallel hot loop, not just "work to get off the runtime" — put a rayon `par_iter` inside that single `spawn_blocking` so the compute pool and the I/O runtime each do their own job; most services never reach that point.
+The three load-bearing choices: thread count bounded by cores (unbounded fan-out buys contention, not speed), cancellation as a shared `AtomicBool` the workers poll (async cancellation cannot reach into compute threads), and exactly one `spawn_blocking` bridge so the runtime schedules around the whole computation as a single blocking unit.
 
-Reference: [tokio::task::spawn_blocking](https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html) · [Alice Ryhl — Async: What is blocking?](https://ryhl.io/blog/async-what-is-blocking/)
+Reference: [codex-rs file-search/src/lib.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/file-search/src/lib.rs#L205), [codex-rs app-server/src/fuzzy_file_search.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/app-server/src/fuzzy_file_search.rs#L41)

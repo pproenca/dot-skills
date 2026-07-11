@@ -1,31 +1,51 @@
 ---
-title: Parse into validated newtypes at the boundary — don't re-validate Strings
+title: Parse once into a newtype; signatures carry the proof
 tags: type, newtype, parse-dont-validate, validation
 ---
 
-## Parse into validated newtypes at the boundary — don't re-validate Strings
+## Parse once into a newtype; signatures carry the proof
 
-Threading raw `String`/`u64` values through the core and calling `validate_email(&s)` wherever someone remembers is primitive obsession plus validate-don't-parse: the check's result is thrown away, so nothing stops an unvalidated value from reaching a function that assumes validity — every signature says `String`, and they all lie about what they accept. Parse once at the boundary into a newtype whose constructor is the *only* way to obtain one; from then on `EmailAddress` in a signature is a compiler-enforced proof the check happened, and the core stops defensively re-checking.
+Passing domain values as raw `String`/`PathBuf` forces every function to choose between re-validating (scattered, drifting checks) and trusting (unchecked assumptions) — the classic validate-everywhere failure. codex-rs parses untrusted input **once** at the boundary into a newtype whose existence is the proof: `ThreadId` wraps a `Uuid` and its deserializer goes through `Uuid::parse_str`; `AgentPath(String)` uses `#[serde(try_from = "String")]` so even serde cannot construct an unvalidated value; `ProfileV2Name` charset-checks in `FromStr`, so the `--profile` CLI arg is validated before any code builds a file path from it. Interior functions take `&AgentPath` and validate nothing.
+
+**Incorrect (raw primitive; every consumer re-validates or trusts):**
 
 ```rust
-pub struct EmailAddress(String); // field private: TryFrom is the only door
+fn load_agent(path: &str) -> Result<String, String> {
+    // Am I the one who must check this? Did my caller already?
+    if !path.starts_with('/') {
+        return Err(format!("not absolute: {path}"));
+    }
+    Ok(format!("loaded {path}"))
+}
+```
 
-impl TryFrom<String> for EmailAddress {
-    type Error = InvalidEmail;
+**Correct (parse at the boundary; the type is the proof — how codex-rs ships `AgentPath`):**
 
-    fn try_from(raw: String) -> Result<Self, InvalidEmail> {
-        if raw.split_once('@').is_some_and(|(l, d)| !l.is_empty() && d.contains('.')) {
-            Ok(EmailAddress(raw))
-        } else {
-            Err(InvalidEmail)
+```rust
+struct AgentPath(String);
+
+impl AgentPath {
+    fn from_string(path: String) -> Result<Self, String> {
+        if !path.starts_with('/') {
+            return Err(format!("not absolute: {path}"));
         }
+        Ok(Self(path))
     }
 }
 
-// Boundary parses; the core takes proof, not promises.
-pub fn invite(email: EmailAddress, team: TeamId) { /* no re-validation */ }
+impl std::str::FromStr for AgentPath {
+    type Err = String;
+    fn from_str(s: &str) -> Result<Self, String> {
+        Self::from_string(s.to_string())
+    }
+}
+
+// Interior code cannot receive an unvalidated path.
+fn load_agent(path: &AgentPath) -> String {
+    format!("loaded {}", path.0)
+}
 ```
 
-Pair `TryFrom` with `#[serde(try_from = "String")]` so deserialization runs the same validation — the sibling skill's `types-try-from-newtype-validation` shows the codex-rs version of that wiring.
+**When NOT to newtype:** where no invariant exists. codex-rs deliberately leaves model names and provider ids as raw `String` (`Config.model: Option<String>`, `model_provider_id: String`) — they are opaque tokens handed to a backend, with nothing to validate. A newtype earns its ceremony by carrying a parse; wrapping every string is cargo cult in the other direction.
 
-Reference: [Alexis King — Parse, don't validate](https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/) · [Rust API Guidelines — C-NEWTYPE](https://rust-lang.github.io/api-guidelines/type-safety.html#newtypes-provide-static-distinctions-c-newtype)
+Reference: [codex-rs protocol/src/agent_path.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/agent_path.rs#L9), [codex-rs protocol/src/thread_id.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/thread_id.rs#L11), [codex-rs protocol/src/config_types.rs `ProfileV2Name`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/config_types.rs#L98)

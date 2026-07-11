@@ -1,35 +1,42 @@
 ---
-title: Move blocking work out of async fns — spawn_blocking or async primitives
-tags: conc, async, blocking, tokio
+title: Blocking work moves to spawn_blocking; an async fn never blocks its worker
+tags: conc, spawn-blocking, async, blocking-io
 ---
 
-## Move blocking work out of async fns — spawn_blocking or async primitives
+## Blocking work moves to spawn_blocking; an async fn never blocks its worker
 
-`std::thread::sleep`, `std::fs::read`, a synchronous DB driver, or a long CPU crunch inside an `async fn` is thread-per-request thinking on a runtime that isn't one: tokio multiplexes many tasks onto a few worker threads, so one blocked task freezes *every* task scheduled on that worker — the service doesn't slow down, whole connections stall. The fix is per kind of work: an async equivalent when one exists (`tokio::time::sleep`, `tokio::fs`, an async driver), `spawn_blocking` for irreducibly synchronous calls, and a dedicated compute path (see `conc-blocking-pool-over-async-cpu-fanout`) for CPU-bound loops.
+Thread-per-request habits call blocking APIs — synchronous file I/O, file locks, compression, a blocking HTTP `recv()` loop — directly inside `async fn`, which stalls the runtime worker and every task multiplexed onto it. codex-rs wraps every such operation in `tokio::task::spawn_blocking` at ~50 production sites: git operations via gix, advisory-file-lock appends to message history (the doc comment states the policy: "performed inside `spawn_blocking` so the caller's async runtime is not blocked"), zstd rollout materialization, the synchronous OAuth callback server, and atomic config-file writes. Its `execpolicy` crate even documents the convention for callers: wrap the sync API in `spawn_blocking` from async contexts.
 
-**Incorrect (one task blocks a worker thread for everyone):**
+**Incorrect (a sync durable write on the async worker thread):**
 
 ```rust
-async fn export_report(db_path: &Path) -> Result<Report, ExportError> {
-    std::thread::sleep(Duration::from_secs(1));          // parks the worker
-    let bytes = std::fs::read(db_path)?;                 // blocking syscall
-    Ok(parse_report(&bytes))
+use std::io::Write;
+
+async fn append_history(path: std::path::PathBuf, line: String) -> std::io::Result<()> {
+    let mut file = std::fs::OpenOptions::new().append(true).create(true).open(&path)?;
+    file.write_all(line.as_bytes())?;
+    file.sync_all()?; // fsync stalls this worker — and every task on it
+    Ok(())
 }
 ```
 
-**Correct (the worker stays free to run other tasks):**
+**Correct (the blocking section becomes a closure on the blocking pool — how codex-rs appends message history):**
 
 ```rust
-async fn export_report(db_path: &Path) -> Result<Report, ExportError> {
-    tokio::time::sleep(Duration::from_secs(1)).await;
-    let bytes = tokio::fs::read(db_path).await?;
-    let report = tokio::task::spawn_blocking(move || parse_report(&bytes))
-        .await
-        .map_err(|_| ExportError::ParserPanicked)?;
-    Ok(report)
+use std::io::Write;
+
+async fn append_history(path: std::path::PathBuf, line: String) -> std::io::Result<()> {
+    tokio::task::spawn_blocking(move || -> std::io::Result<()> {
+        let mut file = std::fs::OpenOptions::new().append(true).create(true).open(&path)?;
+        file.write_all(line.as_bytes())?;
+        file.sync_all()?; // blocks a blocking-pool thread; the runtime keeps running
+        Ok(())
+    })
+    .await
+    .map_err(std::io::Error::other)?
 }
 ```
 
-The rule of thumb from the tokio maintainers: an async fn should not spend more than ~10–100µs between `.await`s without yielding. If a call has no `.await` and takes longer, it belongs behind `spawn_blocking`.
+Ordinary one-shot file reads/writes can use `tokio::fs` directly (codex-rs does, 16 sites in `core`); `spawn_blocking` earns its ceremony when the operation *holds* — an advisory file lock with retries (the real message-history implementation), an fsync, a compression stream, a server loop — or when wrapping a whole synchronous helper. The pairing rule: `std::fs` lives inside `spawn_blocking` closures and sync helpers; async fns call `tokio::fs` or the wrapper.
 
-Reference: [Alice Ryhl — Async: What is blocking?](https://ryhl.io/blog/async-what-is-blocking/)
+Reference: [codex-rs message-history/src/lib.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/message-history/src/lib.rs#L154), [codex-rs git-utils/src/baseline.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/git-utils/src/baseline.rs#L69), [codex-rs rollout/src/compression.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/rollout/src/compression.rs#L67)

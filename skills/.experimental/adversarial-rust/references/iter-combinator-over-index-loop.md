@@ -1,33 +1,47 @@
 ---
-title: Replace index loops and mut accumulators with iterator chains
-tags: iter, iterators, combinators, loops
+title: Name the transformation with a combinator, not an index loop
+tags: iter, combinators, index-loops, enumerate
 ---
 
-## Replace index loops and mut accumulators with iterator chains
+## Name the transformation with a combinator, not an index loop
 
-`for i in 0..items.len()` with `items[i]`, and `let mut result = Vec::new()` + push inside an `if`, are C/Python transliterations: they re-implement `filter`, `map`, and `sum` by hand, pay a bounds check per index, and force the reader to reverse-engineer the transformation from loop mechanics. The named combinator *states* the transformation, borrows correctly by construction, and compiles to the same or better code — iterators are one of Rust's documented zero-cost abstractions.
+C and Python transliterate into `for i in 0..v.len()` with `v[i]` (a bounds check and an off-by-one risk per access) and `let mut acc` + push loops that re-implement `map`/`filter`/`partition` anonymously. codex-rs bans the re-implementations mechanically — the workspace denies `manual_map`, `manual_filter`, `manual_find`, `manual_flatten`, `manual_retain`, `manual_try_fold` and seven more `manual_*` lints — and in its production code `.enumerate()` (~280 uses) dwarfs the handful of loops that index elements by `0..len()`. The combinator names the transformation: a reviewer reads `partition` and knows the shape of the result without simulating the loop.
 
-**Incorrect (the reader simulates the loop to learn it's a filter-map):**
+**Incorrect (anonymous re-implementation of partition):**
 
 ```rust
-let mut refunds = Vec::new();
-for i in 0..orders.len() {
-    if orders[i].status == Status::Returned {
-        refunds.push(orders[i].total * REFUND_RATE);
+struct ModelPreset {
+    model: String,
+}
+
+fn split_presets(presets: Vec<ModelPreset>) -> (Vec<ModelPreset>, Vec<ModelPreset>) {
+    let mut auto_presets = Vec::new();
+    let mut other_presets = Vec::new();
+    for i in 0..presets.len() {
+        if presets[i].model.starts_with("auto") {
+            auto_presets.push(ModelPreset { model: presets[i].model.clone() });
+        } else {
+            other_presets.push(ModelPreset { model: presets[i].model.clone() });
+        }
     }
+    (auto_presets, other_presets)
 }
 ```
 
-**Correct (the transformation, named):**
+**Correct (the combinator is the name — how codex-rs splits model presets):**
 
 ```rust
-let refunds: Vec<Cents> = orders
-    .iter()
-    .filter(|o| o.status == Status::Returned)
-    .map(|o| o.total * REFUND_RATE)
-    .collect();
+struct ModelPreset {
+    model: String,
+}
+
+fn split_presets(presets: Vec<ModelPreset>) -> (Vec<ModelPreset>, Vec<ModelPreset>) {
+    presets
+        .into_iter()
+        .partition(|preset| preset.model.starts_with("auto"))
+}
 ```
 
-**When a loop IS right:** early exit with side effects, mutating in place across multiple bindings, or genuinely index-coupled access (windows over two arrays — though check `zip`/`windows`/`chunks` first). A plain `for item in &items` is fine; the smell is *indices and accumulators* re-deriving a named combinator.
+**When a plain `for` loop IS right** — codex-rs's surviving loops fall in four buckets: the body must `.await` per item (turn-lifecycle notifications), the body is side-effecting fallible I/O with `?` and no produced value (terminal drawing), the index *is* the datum (screen-cell coordinates, sliding windows), or a foreign API is by-index (`ZipArchive::by_index`, Windows ACL FFI). "Do this N times" retry loops (`for attempt in 0..=max_attempts`) are also loops, not iteration over data.
 
-Reference: [The Rust Book — Comparing Performance: Loops vs. Iterators](https://doc.rust-lang.org/book/ch13-04-performance.html)
+Reference: [codex-rs tui/src/chatwidget/model_popups.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/tui/src/chatwidget/model_popups.rs#L85), [codex-rs Cargo.toml workspace lints](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/Cargo.toml#L473), [codex-rs core/src/tasks/lifecycle.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/tasks/lifecycle.rs#L15)

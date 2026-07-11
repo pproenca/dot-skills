@@ -1,31 +1,62 @@
 ---
-title: Return Result for expected failures — unwrap only where Err proves a bug
-tags: flow, result, unwrap, panics
+title: Expected failures travel as Result; unwrap only with a written proof
+tags: flow, unwrap, result, lints
 ---
 
-## Return Result for expected failures — unwrap only where Err proves a bug
+## Expected failures travel as Result; unwrap only with a written proof
 
-`.unwrap()`/`.expect()` on a file read, a parse of user input, or a network response is exception-thinking: "throw and let something upstream deal with it." In Rust nothing upstream deals with it — the thread unwinds (and when it's `main`, the process exits; under `panic = "abort"` the whole process dies on the spot), and the caller was never told failure was possible because the signature returned `T`, not `Result<T, E>`. The dividing line is *whose bug is it*: failures the caller can cause or must react to (missing file, malformed input, refused connection) travel as `Err` through `?`; `unwrap`/`expect` is reserved for states where `Err`/`None` would prove the program itself is broken — and then `expect("...")` should state that invariant.
+Exception-trained code calls `.unwrap()`/`.expect()` on anything that "should work" — file reads, lookups, parses — turning recoverable outcomes into process aborts. codex-rs makes this mechanically impossible: the workspace denies `clippy::unwrap_used` and `clippy::expect_used` in production code (tests are exempt via `clippy.toml`), so an expected failure has exactly one path — a typed `Result`, with lookups converting absence via `ok_or(CodexErr::ThreadNotFound(thread_id))`. Where a failure genuinely cannot happen, the escape hatch is deliberate ceremony: a scoped `#[expect(clippy::expect_used)]` plus an `.expect("...")` message that states the invariant, so the proof is written where the panic would be.
 
-**Incorrect (an expected failure treated as unreachable):**
+```toml
+# codex-rs workspace Cargo.toml — enforced, not aspirational
+[workspace.lints.clippy]
+expect_used = "deny"
+unwrap_used = "deny"
+```
+
+**Incorrect (unwrap on an outcome the caller must handle):**
 
 ```rust
-fn load_config(path: &Path) -> Config {
-    let raw = std::fs::read_to_string(path).unwrap(); // user typo = process abort
-    toml::from_str(&raw).unwrap()
+use std::collections::HashMap;
+
+fn resume(threads: &HashMap<u64, String>, thread_id: u64) -> String {
+    threads.get(&thread_id).unwrap().clone() // absence is expected: aborts the agent
 }
 ```
 
-**Correct (the signature admits what can happen):**
+**Correct (absence is a typed outcome — how codex-rs resolves thread lookups):**
 
 ```rust
-fn load_config(path: &Path) -> Result<Config, ConfigError> {
-    let raw = std::fs::read_to_string(path)
-        .map_err(|source| ConfigError::Read { path: path.to_owned(), source })?;
-    toml::from_str(&raw).map_err(ConfigError::Parse)
+use std::collections::HashMap;
+
+#[derive(Debug)]
+enum CodexErr {
+    ThreadNotFound(u64),
+}
+
+fn resume(threads: &HashMap<u64, String>, thread_id: u64) -> Result<String, CodexErr> {
+    threads
+        .get(&thread_id)
+        .cloned()
+        .ok_or(CodexErr::ThreadNotFound(thread_id))
 }
 ```
 
-For mechanically keeping unwrap out of a whole workspace — `[workspace.lints]` denying `unwrap_used`/`expect_used` with local opt-ins — see `defensive-deny-unwrap-workspace-wide` in the sibling `openai-codex-rust-patterns` skill.
+**The sanctioned escape hatch (invariant written at the site):**
 
-Reference: [The Rust Book — To panic! or Not to panic!](https://doc.rust-lang.org/book/ch09-03-to-panic-or-not-to-panic.html)
+```rust
+#[derive(serde::Serialize)]
+struct Event {
+    id: u32,
+}
+
+fn event_json(event: &Event) -> serde_json::Value {
+    #[expect(clippy::expect_used)]
+    let value = serde_json::to_value(event).expect("Event must serialize");
+    value
+}
+```
+
+`#[expect]` beats `#[allow]` because it errors if the escape becomes unnecessary — codex-rs's blunter file-level `#![allow(clippy::unwrap_used)]` modules are its own acknowledged weak spots, not the pattern.
+
+Reference: [codex-rs Cargo.toml workspace lints](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/Cargo.toml#L473), [codex-rs core/src/agent/control.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/agent/control.rs#L301), [codex-rs mcp-server/src/outgoing_message.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/mcp-server/src/outgoing_message.rs#L107)

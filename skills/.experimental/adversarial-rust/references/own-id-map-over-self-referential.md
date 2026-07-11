@@ -1,40 +1,48 @@
 ---
-title: Model graphs with an owning map and ID handles, not references
-tags: own, ids, handles, graphs
+title: Graphs live in one owning map with ID handles, not references
+tags: own, id-handles, self-referential, registry
 ---
 
-## Model graphs with an owning map and ID handles, not references
+## Graphs live in one owning map with ID handles, not references
 
-A struct that tries to hold `&'a Node` references to its own contents — or `Rc<RefCell<Node>>` webs standing in for pointers — is the C/GC graph shape that Rust's ownership model rejects outright: self-referential structs won't borrow-check, and the `Rc` web pays the costs described in `own-no-rc-refcell-object-graph`. The idiomatic shape puts every node in one owning collection and stores edges as ID handles — a newtype key resolved through the owner on demand. Handles are cheap to pass around, never dangle into freed memory, serialize for free, and one `&mut` on the owner mutates any node without interior mutability.
+When entities genuinely relate many-to-many, the imported instinct stores references (or `Rc`s) in both directions — which in Rust becomes a self-referential lifetime fight or an `Rc` cycle. codex-rs's answer, used at every registry in the workspace: one map owns the entities, keyed by a `Copy` ID newtype, and every cross-reference is stored as the ID. The thread registry is `HashMap<ThreadId, Arc<CodexThread>>`; the app server tracks which connections watch which threads as `HashMap<ConnectionId, HashSet<ThreadId>>` — IDs on both axes, never references. Self-referential machinery is entirely absent: no `ouroboros`, no `self_cell`, and all 48 `Pin<Box<...>>` hits are ordinary boxed futures.
 
 ```rust
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
+use std::sync::Arc;
 
-#[derive(Clone, PartialEq, Eq, Hash)]
-struct CrateId(String);
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+struct ThreadId(u128);
 
-struct DepGraph {
-    crates: HashMap<CrateId, CrateNode>, // one owner for every node
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+struct ConnectionId(u64);
+
+struct CodexThread {
+    id: ThreadId,
 }
 
-struct CrateNode {
-    version: String,
-    depends_on: Vec<CrateId>, // edges are handles, not pointers
+#[derive(Debug)]
+enum RegistryError {
+    ThreadNotFound(ThreadId),
 }
 
-impl DepGraph {
-    fn node(&self, id: &CrateId) -> Option<&CrateNode> {
-        self.crates.get(id)
-    }
+// One owner for the entities…
+struct ThreadRegistry {
+    threads: HashMap<ThreadId, Arc<CodexThread>>,
+    // …and relations stored as IDs, not references into the map.
+    thread_ids_by_connection: HashMap<ConnectionId, HashSet<ThreadId>>,
+}
 
-    fn add(&mut self, name: &str, version: String) -> CrateId {
-        let id = CrateId(name.to_string());
-        self.crates.insert(id.clone(), CrateNode { version, depends_on: Vec::new() });
-        id
+impl ThreadRegistry {
+    fn get_thread(&self, thread_id: ThreadId) -> Result<Arc<CodexThread>, RegistryError> {
+        self.threads
+            .get(&thread_id)
+            .cloned()
+            .ok_or(RegistryError::ThreadNotFound(thread_id))
     }
 }
 ```
 
-The trade-off is honest: a stale ID is a `None` at lookup — a logic bug the compiler can't see, but one that surfaces as an explicit, local `Option` instead of a dangling pointer or a leaked cycle (mitigate by never removing nodes, or by treating a miss as a tombstone). For dense, hot graphs where hashing and `String` keys cost too much, the same shape compresses into a `Vec` arena with a `Copy` index newtype (`NodeId(u32)`) — the handles stay, only the owner's representation changes.
+Lookups return `Arc` clones (a pointer bump) and a typed error for the dangling case — the ID system makes "referent no longer exists" an explicit, handleable outcome instead of a dangling reference the compiler must prevent at all costs.
 
-Reference: [Nick Cameron — Graphs and arena allocation](https://github.com/nrc/r4cppp/blob/master/graphs/README.md)
+Reference: [codex-rs core/src/thread_manager.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/thread_manager.rs#L239), [codex-rs app-server/src/thread_state.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/app-server/src/thread_state.rs#L278), [codex-rs protocol/src/thread_id.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/thread_id.rs#L11)

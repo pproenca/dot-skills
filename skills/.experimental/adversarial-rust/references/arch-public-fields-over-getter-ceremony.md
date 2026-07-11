@@ -1,31 +1,45 @@
 ---
-title: Expose plain data as public fields, not getter/setter pairs
-tags: arch, encapsulation, getters, structs
+title: Plain data gets pub fields; accessors are for invariants
+tags: arch, encapsulation, getters, pub-fields
 ---
 
-## Expose plain data as public fields, not getter/setter pairs
+## Plain data gets pub fields; accessors are for invariants
 
-`get_name()`/`set_name()` on every field is C#/Java property ceremony, where accessors are the price of ever adding logic later. Rust doesn't pay that price: a plain data struct with `pub` fields can move to private-field-plus-method later as an ordinary (source-breaking, compiler-guided) refactor, and ownership already prevents the aliased-mutation surprises accessors guard against elsewhere. Accessors in Rust are for types with an *invariant* to protect — and even then the convention is `name()`, not `get_name()`.
+JavaBean reflexes generate a private field plus `get_x()`/`set_x()` pair for every member, doubling the API surface to protect invariants that don't exist. Rust's visibility answer is structural: codex-rs's central `Config` struct — the most-read type in the workspace — is all `pub` fields, and every serde protocol type (`PlanItemArg`, the event structs) exposes `pub` fields directly. Private fields appear exactly where an invariant lives: `AgentPath(String)` hides its field because every constructor runs absolute-path validation, and accessors like `allowed_domains()` exist because they return computed, normalized views rather than raw fields.
 
-**Incorrect (ceremony with nothing to protect):**
+**Incorrect (getter ceremony on plain data):**
 
 ```rust
-pub struct ShippingAddress { street: String, city: String }
+pub struct PlanItemArg {
+    step: String,
+    completed: bool,
+}
 
-impl ShippingAddress {
-    pub fn get_street(&self) -> &str { &self.street }
-    pub fn set_street(&mut self, s: String) { self.street = s; }
-    pub fn get_city(&self) -> &str { &self.city }
-    pub fn set_city(&mut self, c: String) { self.city = c; }
+impl PlanItemArg {
+    pub fn step(&self) -> &str {
+        &self.step
+    }
+    pub fn set_step(&mut self, step: String) {
+        self.step = step;
+    }
+    pub fn completed(&self) -> bool {
+        self.completed
+    }
+    pub fn set_completed(&mut self, completed: bool) {
+        self.completed = completed;
+    }
 }
 ```
 
-**Correct (plain data is plain):**
+**Correct (data is data — how codex-rs ships its protocol types):**
 
 ```rust
-pub struct ShippingAddress { pub street: String, pub city: String }
+pub struct PlanItemArg {
+    pub step: String,
+    pub completed: bool,
+}
 ```
 
-**When accessors ARE right:** the type maintains an invariant (a `Balance` that must never go negative, a sorted `Vec` that must stay sorted). Then keep fields private, validate in the mutating methods, and name getters without the `get_` prefix per C-GETTER.
+**When accessors ARE right:** the field's value carries a proof. codex-rs keeps `AbsolutePathBuf`'s inner `PathBuf` private because "guaranteed absolute and normalized" would be a lie the instant any caller could write the field — the private field plus validating constructors *is* the invariant. If you can't name the invariant a getter protects, the getter is ceremony.
 
-Reference: [Rust API Guidelines — C-GETTER](https://rust-lang.github.io/api-guidelines/naming.html#getter-names-follow-rust-convention-c-getter)
+Reference: [codex-rs core/src/config/mod.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/config/mod.rs#L611), [codex-rs protocol/src/plan_tool.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/plan_tool.rs#L15), [codex-rs utils/absolute-path/src/lib.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/utils/absolute-path/src/lib.rs#L23)

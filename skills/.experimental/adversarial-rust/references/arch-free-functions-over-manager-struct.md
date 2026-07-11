@@ -1,37 +1,40 @@
 ---
-title: Collapse stateless Manager/Service structs into module functions
-tags: arch, modules, service-objects, free-functions
+title: Collapse stateless Manager structs into module functions
+tags: arch, modules, free-functions, manager-structs
 ---
 
-## Collapse stateless Manager/Service structs into module functions
+## Collapse stateless Manager structs into module functions
 
-A fieldless `InvoiceManager`/`TaxService` struct whose methods take `&self` but never read it is a Java class reflex — in Java, functions must live on a class, so stateless behavior gets a stateless object. Rust modules already namespace functions; the struct adds a construction step, an instance to thread through the program, and the false suggestion that there is state or an identity worth holding. Flatten it: the module is the "service", the functions are its API. Keep a struct only when there is real state (a pool, a cache, config loaded once) — and then the fields, not the name `Manager`, justify it.
+The enterprise habit wraps every capability in a `*Manager`/`*Service` class because a class is the only unit of organization those languages have. In Rust the module is the namespace, so a struct with no fields is pure ceremony: callers must construct it, thread it through, and mock it, for zero information. codex-rs writes its stateless capabilities as plain `pub fn` in modules — `git-utils` exposes `get_git_repo_root`, `collect_git_info`, `recent_commits` as free functions, and `apply-patch` exposes `apply_patch`, `apply_hunks`, `print_summary` the same way. Its `*Manager` structs (`AuthManager` with 14 fields of locks and channels, `ThreadManager` owning the thread registry) earn the name by owning real state.
 
-**Incorrect (a class with no state):**
-
-```rust
-pub struct TaxCalculator;
-
-impl TaxCalculator {
-    pub fn new() -> Self { TaxCalculator }
-    pub fn vat(&self, net: Decimal, rate: Rate) -> Decimal {
-        net * rate.as_decimal()
-    }
-}
-// callers: let calc = TaxCalculator::new(); calc.vat(net, rate);
-```
-
-**Correct (the module is the namespace):**
+**Incorrect (a class wrapping stateless behavior):**
 
 ```rust
-pub mod tax {
-    use super::{Decimal, Rate};
+use std::path::{Path, PathBuf};
 
-    pub fn vat(net: Decimal, rate: Rate) -> Decimal {
-        net * rate.as_decimal()
+struct GitInfoService;
+
+impl GitInfoService {
+    fn new() -> Self {
+        Self
+    }
+
+    fn get_git_repo_root(&self, base_dir: &Path) -> Option<PathBuf> {
+        base_dir.ancestors().find(|p| p.join(".git").exists()).map(Path::to_path_buf)
     }
 }
-// callers: tax::vat(net, rate);
 ```
 
-Reference: [The Rust Book — Defining Modules to Control Scope and Privacy](https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html)
+**Correct (the module is the namespace — how codex-rs ships `git-utils`):**
+
+```rust
+use std::path::{Path, PathBuf};
+
+pub fn get_git_repo_root(base_dir: &Path) -> Option<PathBuf> {
+    base_dir.ancestors().find(|p| p.join(".git").exists()).map(Path::to_path_buf)
+}
+```
+
+**When a struct IS right:** it owns state or resources. codex-rs's `AuthManager` holds `RwLock<CachedAuth>`, a refresh `Semaphore`, and a `watch` channel — a genuine lifecycle owner. The test is one question: if every method takes `&self` and no method reads a field, the struct is a namespace pretending to be an object.
+
+Reference: [codex-rs git-utils/src/info.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/git-utils/src/info.rs#L35), [codex-rs apply-patch/src/lib.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/apply-patch/src/lib.rs#L276), [codex-rs login/src/auth/manager.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/login/src/auth/manager.rs#L1767)

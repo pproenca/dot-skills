@@ -1,33 +1,53 @@
 ---
-title: Replace boolean and string state flags with one enum
-tags: type, enums, state-machine, invalid-states
+title: One enum whose variants own their data, not bool and String flags
+tags: type, enums, state-machine, illegal-states
 ---
 
-## Replace boolean and string state flags with one enum
+## One enum whose variants own their data, not bool and String flags
 
-`is_active: bool, is_suspended: bool, status: String` is how languages without sum types encode a state machine — and it makes the impossible representable: active *and* suspended, a status string nobody matches on ("Suspended" vs "suspended"). Every reader must re-derive which combinations are legal, and no compiler checks them. One enum whose variants carry their state's data makes the illegal combinations unrepresentable and turns every state decision into an exhaustive `match` the compiler completes for you when a variant is added.
+State modeled as `mode: String` plus loose per-mode fields lets the flags contradict each other — `mode == "read-only"` with `writable_roots` populated is representable, so somewhere it happens. codex-rs models every mode as an enum whose variants *own* the fields valid for them: `SandboxPolicy::WorkspaceWrite` carries `writable_roots`, `ReadOnly` carries only `network_access`, and `DangerFullAccess` carries nothing — the invalid combinations don't typecheck. On its `ExternalSandbox` variant the discipline goes one step further: network access there is the two-variant enum `NetworkAccess { Restricted, Enabled }` rather than a `bool`, because a named variant survives refactors and reads unambiguously at call sites where a bare `true` does not.
 
-**Incorrect (three fields, most combinations meaningless):**
+**Incorrect (stringly mode + loose fields that can contradict it):**
 
 ```rust
-struct Subscription {
-    is_active: bool,
-    is_cancelled: bool,
-    cancelled_at: Option<DateTime<Utc>>, // "should be Some when cancelled"
-    trial_ends: Option<DateTime<Utc>>,   // "only meaningful during trial"
+struct SandboxConfig {
+    mode: String, // "read-only" | "workspace-write" | "danger-full-access"
+    writable_roots: Vec<std::path::PathBuf>,
+    network_access: bool,
 }
 ```
 
-**Correct (each state owns exactly its data):**
+**Correct (each variant owns exactly the data valid for it — how codex-rs ships `SandboxPolicy`):**
 
 ```rust
-enum Subscription {
-    Trial { ends: DateTime<Utc> },
-    Active { renews: DateTime<Utc> },
-    Cancelled { at: DateTime<Utc> },
+use std::path::PathBuf;
+
+enum SandboxPolicy {
+    DangerFullAccess,
+    ReadOnly {
+        network_access: bool,
+    },
+    WorkspaceWrite {
+        writable_roots: Vec<PathBuf>,
+        network_access: bool,
+    },
+    ExternalSandbox {
+        network_access: NetworkAccess,
+    },
+}
+
+enum NetworkAccess {
+    Restricted,
+    Enabled,
+}
+
+impl NetworkAccess {
+    fn is_enabled(&self) -> bool {
+        matches!(self, NetworkAccess::Enabled)
+    }
 }
 ```
 
-The refactor's payoff shows at the call sites: `if sub.is_active && !sub.is_cancelled` chains collapse into `match`, and the `cancelled_at.unwrap()` "it should be set by now" calls disappear because the data is only reachable in the state where it exists.
+The same shape repeats wherever an outcome carries outcome-specific payload: codex-rs's `SafetyCheck` is `AutoApprove { sandbox_type, .. } | AskUser | Reject { reason }` — not `(bool, Option<String>, Option<SandboxType>)` — and `ReviewDecision` attaches policy-amendment payloads to exactly the decisions that can carry them. The bool projection, when needed, is a method (`is_enabled()`), derived from the enum at the last moment.
 
-Reference: [corrode (Matthias Endler) — Making Illegal States Unrepresentable](https://corrode.dev/blog/illegal-state/)
+Reference: [codex-rs protocol/src/protocol.rs `SandboxPolicy`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/protocol.rs#L988), [codex-rs core/src/safety.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/safety.rs#L20), [codex-rs protocol/src/protocol.rs `ReviewDecision`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/protocol.rs#L3976)

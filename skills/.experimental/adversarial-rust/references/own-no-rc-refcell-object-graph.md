@@ -1,44 +1,56 @@
 ---
-title: Avoid rebuilding a GC object graph with Rc<RefCell<T>>
-tags: own, rc, refcell, object-graph
+title: No Rc RefCell object graphs — pick owners, share by Arc field or channel
+tags: own, rc-refcell, object-graph, shared-state
 ---
 
-## Avoid rebuilding a GC object graph with Rc<RefCell<T>>
+## No Rc RefCell object graphs — pick owners, share by Arc field or channel
 
-In a garbage-collected language every object freely holds references to its peers, so a ported design arrives as `Rc<RefCell<T>>` at every edge. That trades the compiler's aliasing guarantees for runtime ones — `borrow_mut()` panics replace borrow errors, moving the checking from your build to your users — and any back-edge (`child.parent`) creates an `Rc` cycle that never deallocates, because `Rc` does not collect cycles. The refactor is to pick owners: structure the data as a tree where parents own children and `&mut` flows down, and turn cross-links into IDs resolved through the owner.
+Engineers from garbage-collected languages rebuild their object graph in Rust as `Rc<RefCell<T>>` webs: everything points at everything, mutation is checked at runtime, `borrow()` panics replace data races, and cycles leak. The strongest evidence that this is never necessary: codex-rs — a multi-crate async agent with sessions, turns, tools, and UIs — contains **zero** `Rc<RefCell<...>>` across ~2,500 files. Shared mutable state is instead (1) a single owner with narrow `Mutex` fields per concern, (2) messages over channels (`watch`/`oneshot`/`broadcast` dominate `core`), or (3) an ID-keyed owning map. `RefCell` survives only leaf-local, inside single widgets.
 
-**Incorrect (every edge shared and mutable, parent back-edge leaks):**
+**Incorrect (the GC object graph, runtime-checked and cycle-prone):**
 
 ```rust
-use std::{cell::RefCell, rc::Rc};
+use std::cell::RefCell;
+use std::rc::Rc;
 
-struct Department {
-    employees: Vec<Rc<RefCell<Employee>>>,
+struct Turn {
+    session: Rc<RefCell<Session>>, // child points back at parent
+    output: Vec<String>,
 }
 
-struct Employee {
-    name: String,
-    department: Rc<RefCell<Department>>, // cycle: never freed
+struct Session {
+    turns: Vec<Rc<RefCell<Turn>>>, // parent points at children: a cycle
 }
 ```
 
-**Correct (one owner, cross-links by ID):**
+**Correct (one owner; shared pieces are narrow, named fields — how codex-rs shapes `Session`):**
 
 ```rust
-struct Company {
-    departments: Vec<Department>,
+use std::sync::Mutex;
+use tokio::sync::watch;
+
+struct Session {
+    // Each concern gets its own lock; no turn ever points back up.
+    state: Mutex<SessionState>,
+    active_turn: Mutex<Option<Turn>>,
+    agent_status: watch::Sender<AgentStatus>,
 }
 
-struct Department {
-    employees: Vec<Employee>,
+struct SessionState {
+    approved_commands: Vec<String>,
 }
 
-struct Employee {
-    name: String,
-    department: DeptId, // resolved via &Company when needed
+struct Turn {
+    output: Vec<String>,
+}
+
+#[derive(Clone)]
+enum AgentStatus {
+    Idle,
+    Running,
 }
 ```
 
-**When Rc/RefCell IS right:** genuinely shared ownership with no better owner (a config blob referenced by many subsystems in a single-threaded program) — and then prefer `Rc<T>` with immutable contents, reaching for `RefCell` only when shared *mutation* is the requirement, and `Weak` for any back-edge.
+The back-pointer disappears because ownership flows one way: code that has the `Session` reaches down into `active_turn`; a turn that needs to notify upward sends on a channel instead of holding a parent reference.
 
-Reference: [The Rust Book — Reference Cycles Can Leak Memory](https://doc.rust-lang.org/book/ch15-06-reference-cycles.html)
+Reference: [codex-rs core/src/session/session.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/session/session.rs#L28), [codex-rs core/src/state/service.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/state/service.rs#L50)

@@ -1,44 +1,49 @@
 ---
-title: Redesign ownership instead of cloning to satisfy the borrow checker
-tags: own, clone, borrowing, ownership
+title: Redesign ownership instead of cloning to compile; keep only designed clones
+tags: own, clone, ownership, arc-snapshot
 ---
 
-## Redesign ownership instead of cloning to satisfy the borrow checker
+## Redesign ownership instead of cloning to compile; keep only designed clones
 
-`.clone()` added until the error goes away is the signature move of treating the borrow checker as an obstacle. Each such clone silences a *design* diagnostic — the checker is reporting that two parts of the code want the same data at the same time — and buys the silence with an allocation and, worse, a fork: mutations to the copy never reach the original, which is a latent bug, not a style issue. Restructure instead: borrow disjoint fields separately, hoist the needed value out before mutating, or pass indices.
+When the borrow checker complains, the GC-trained reflex is `.clone()` until it compiles — which forks the data, so the copy the caller mutates is no longer the copy the owner reads, and the bug surfaces far from the clone. codex-rs denies `clippy::redundant_clone` workspace-wide and treats every surviving clone as a *designed* one of three kinds: a `Copy` bump (`ThreadId` is a `Copy` UUID newtype), an `Arc` pointer bump (`Config` clones deeply, so it travels as `Arc<Config>`; registry lookups return `thread.clone()` on an `Arc<CodexThread>`), or a deliberate snapshot (`AuthManager` "hands out cloned `CodexAuth` values so the rest of the program has a consistent snapshot"). The review question for any other clone is: who should own this data, and should the copies diverge?
 
-**Incorrect (clone forks the data to dodge a split-borrow error):**
+**Incorrect (clone to silence the borrow checker — the copies silently diverge):**
 
 ```rust
-struct Cart { items: Vec<LineItem>, log: Vec<String> }
+struct SessionState {
+    approved_commands: Vec<String>,
+}
 
-impl Cart {
-    fn apply_bulk_discount(&mut self) {
-        for mut item in self.items.clone() { // clone dodges the &self/&mut self clash…
-            item.price = item.price.discounted(BULK_RATE); // …and edits the copy
-            self.log.push(format!("discounted {}", item.sku));
-        }
-        // self.items still holds the old prices — the discount is silently lost
-    }
+fn approve(state: &mut SessionState, command: &str) {
+    // Clone so we can "keep using" the list while mutating state… but
+    // now `commands` is a fork that never sees this or later approvals.
+    let commands = state.approved_commands.clone();
+    state.approved_commands.push(command.to_string());
+    audit(&commands); // audits stale data
+}
+
+fn audit(commands: &[String]) {
+    let _ = commands.len();
 }
 ```
 
-**Correct (borrow disjoint fields — the checker allows it):**
+**Correct (restructure: mutate first, then borrow the single owner):**
 
 ```rust
-struct Cart { items: Vec<LineItem>, log: Vec<String> }
+struct SessionState {
+    approved_commands: Vec<String>,
+}
 
-impl Cart {
-    fn apply_bulk_discount(&mut self) {
-        let Cart { items, log } = self; // split &mut self into field borrows
-        for item in items.iter_mut() {
-            item.price = item.price.discounted(BULK_RATE);
-            log.push(format!("discounted {}", item.sku));
-        }
-    }
+fn approve(state: &mut SessionState, command: &str) {
+    state.approved_commands.push(command.to_string());
+    audit(&state.approved_commands); // audits the one true list
+}
+
+fn audit(commands: &[String]) {
+    let _ = commands.len();
 }
 ```
 
-**When a clone IS right:** the program genuinely needs two independent copies (a snapshot, data crossing a thread boundary by value), or the type is a cheap handle (`Rc`/`Arc` clone bumps a refcount). The test is whether you can say *why* two copies must exist — "it wouldn't compile otherwise" is the anti-pattern.
+**When a clone IS the design:** sharing (`Arc::clone` — advertise it by wrapping the type, as codex-rs does with `Arc<Config>` across 38 sites), snapshot semantics (a consistent copy extracted from behind a lock before an `.await`, so the guard drops early), or a `Copy` ID. In each case the divergence of copies is intended and named — not an accident of appeasing the compiler.
 
-Reference: [Rust Design Patterns — Clone to satisfy the borrow checker (anti-pattern)](https://rust-unofficial.github.io/patterns/anti_patterns/borrow_clone.html)
+Reference: [codex-rs core/src/thread_manager.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/thread_manager.rs#L1113), [codex-rs login/src/auth/manager.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/login/src/auth/manager.rs#L1759), [codex-rs Cargo.toml workspace lints](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/Cargo.toml#L498)

@@ -1,37 +1,56 @@
 ---
-title: Give libraries structured error enums — anyhow stays at the application edge
-tags: flow, thiserror, anyhow, error-design
+title: Libraries export matchable error enums; anyhow stays at the binary rim
+tags: flow, thiserror, anyhow, error-enums
 ---
 
-## Give libraries structured error enums — anyhow stays at the application edge
+## Libraries export matchable error enums; anyhow stays at the binary rim
 
-`anyhow::Result` (or `Box<dyn Error>`) in a library's public API is the "everything throws Exception" design: callers receive an opaque blob they can only log or string-match, so retry logic ends up as `err.to_string().contains("timed out")`. The split is by *who matches*: a library's callers need to distinguish failures, so it exports a `thiserror` enum with a variant per distinguishable outcome; an application's `main` mostly reports failures upward, so `anyhow` with `.context(...)` is the right tool there — and only there.
-
-**Incorrect (a library API that can only be logged):**
+The exception habit treats all errors as one opaque bag, which in Rust becomes `anyhow::Result` on every signature — callers can only bubble or print, never match. codex-rs types the errors on every load-bearing surface, one `thiserror` enum per layer: `CodexErr` for the agent domain (variants carry structured payloads like `UnexpectedResponseError { status, url, request_id, .. }`, and `is_retryable()` dispatches on variants, not string sniffing), `ApiError` for the model API, `TransportError`/`StreamError` for HTTP/SSE, `ThreadStoreError` for persistence. It even raises clippy's `large-error-threshold` to 256 bytes specifically "to accommodate richer error variants" — paying size for matchability. `anyhow::Result<()>` appears where it belongs: `fn main()` in `cli`, `exec`, `tui`, `app-server`, where the only consumer is a human reading stderr.
 
 ```rust
-// in crate `billing-client`
-pub fn charge(card: &Card, amount: Cents) -> anyhow::Result<Receipt> { /* ... */ }
-// caller: if e.to_string().contains("declined") { ... }  ← string matching
-```
+use thiserror::Error;
 
-**Correct (variants callers can match and act on):**
-
-```rust
-// in crate `billing-client`
-#[derive(Debug, thiserror::Error)]
-pub enum ChargeError {
-    #[error("card declined by issuer")]
-    Declined { code: DeclineCode },
-    #[error("gateway timed out, retry after {retry_after:?}")]
-    Timeout { retry_after: Duration },
-    #[error("transport failure")]
-    Transport(#[from] reqwest::Error),
+#[derive(Debug)]
+pub struct UnexpectedResponseError {
+    pub status: u16,
+    pub url: String,
+    pub request_id: Option<String>,
 }
 
-pub fn charge(card: &Card, amount: Cents) -> Result<Receipt, ChargeError> { /* ... */ }
+impl std::fmt::Display for UnexpectedResponseError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "unexpected status {} from {}", self.status, self.url)
+    }
+}
+
+#[derive(Error, Debug)]
+pub enum CodexErr {
+    #[error("stream disconnected before completion: {0}")]
+    Stream(String),
+    #[error("no thread with id: {0}")]
+    ThreadNotFound(u64),
+    #[error("{0}")]
+    UnexpectedStatus(UnexpectedResponseError),
+    #[error(transparent)]
+    Io(#[from] std::io::Error),
+}
+
+impl CodexErr {
+    pub fn is_retryable(&self) -> bool {
+        match self {
+            CodexErr::Stream(_) => true,
+            CodexErr::UnexpectedStatus(e) => e.status >= 500,
+            CodexErr::ThreadNotFound(_) | CodexErr::Io(_) => false,
+        }
+    }
+}
+
+// The binary rim: main() erases to anyhow, because stderr is the consumer.
+fn main() -> anyhow::Result<()> {
+    Ok(())
+}
 ```
 
-Designing the variants themselves — transient vs permanent split, carrying the retry delay, translating at layer boundaries — is covered in depth by the `errors-` rules of the sibling `openai-codex-rust-patterns` skill; this rule is the flatten that gets a codebase from opaque errors to a shape where those apply.
+**The review smell:** `pub fn ... -> anyhow::Result<T>` in a *library* crate. codex-rs itself has a handful of these leaks (`config` editing, `state` runtime setup) — treat them as acknowledged drift to review against, not as license: the crates whose errors callers must react to (`protocol`, `codex-api`, `http-client`, `thread-store`) hold the typed line without exception.
 
-Reference: [anyhow — crate docs (use anyhow in applications, a dedicated error type in libraries)](https://docs.rs/anyhow/latest/anyhow/)
+Reference: [codex-rs protocol/src/error.rs `CodexErr`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/error.rs#L24), [codex-rs cli/src/main.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/cli/src/main.rs#L956), [codex-rs clippy.toml `large-error-threshold`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/clippy.toml#L18)

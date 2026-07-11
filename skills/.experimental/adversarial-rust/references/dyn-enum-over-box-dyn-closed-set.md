@@ -1,42 +1,66 @@
 ---
-title: Use an enum, not Box<dyn Trait>, for a closed set of variants
-tags: dyn, enums, trait-objects, dispatch
+title: Use an enum for a closed set; reserve dyn for sets others extend
+tags: dyn, trait-objects, enums, dispatch
 ---
 
-## Use an enum, not Box<dyn Trait>, for a closed set of variants
+## Use an enum for a closed set; reserve dyn for sets others extend
 
-`Vec<Box<dyn PaymentMethod>>` where the implementors are the three structs *you* wrote in the same crate is the Java-interface reflex — "program to an interface" applied where no third party will ever add a variant. The trait object erases exactly the information you own: no exhaustive `match` (adding `Sepa` can't force every handler to update), a heap allocation and vtable call per element, and any method needing the concrete type grows `as_any()` downcasting ceremony. A closed set is what `enum` *is*; each variant carries its own data and dispatch is a `match` the compiler audits.
+"Program to an interface" reflexively produces `trait Event` + `Box<dyn Event>` for what is actually a fixed set of shapes — trading exhaustive matching, `derive`d serde, and direct field access for vtable indirection and downcasting. codex-rs draws the line by one question: *can code you don't control add a variant?* Its wire shapes are all tagged enums matched exhaustively — `Op` (submissions), `EventMsg` (agent events), `TurnItem`, and the three-variant `ToolPayload` — while `dyn` appears exactly where the set is genuinely open: the tool registry is `HashMap<ToolName, Arc<dyn CoreToolRuntime>>` because MCP servers, extensions, and dynamic tools register handlers unknown at compile time. Both live in the same subsystem: the *payload* a tool receives is a closed enum; the *handler* it dispatches to is an open trait object.
 
-**Incorrect (open-world machinery for a closed set):**
+**Incorrect (trait-object zoo for a fixed set of shapes):**
 
 ```rust
-trait PaymentMethod {
-    fn authorize(&self, amount: Cents) -> Result<AuthToken, ChargeError>;
+trait Event {
+    fn kind(&self) -> &'static str;
 }
-struct Card { pan: Pan }
-struct BankTransfer { iban: Iban }
-// all implementors live in this crate; nobody else can add one
-fn run(methods: Vec<Box<dyn PaymentMethod>>) { /* ... */ }
+
+struct ErrorEvent {
+    message: String,
+}
+struct AgentMessageEvent {
+    text: String,
+}
+
+impl Event for ErrorEvent {
+    fn kind(&self) -> &'static str {
+        "error"
+    }
+}
+impl Event for AgentMessageEvent {
+    fn kind(&self) -> &'static str {
+        "agent_message"
+    }
+}
+
+fn render(event: &dyn Event) -> String {
+    event.kind().to_string() // fields unreachable without downcasting
+}
 ```
 
-**Correct (the closed set, stated as one):**
+**Correct (the closed set is an enum, matched exhaustively — how codex-rs ships `EventMsg`):**
 
 ```rust
-enum PaymentMethod {
-    Card { pan: Pan },
-    BankTransfer { iban: Iban },
+enum EventMsg {
+    Error(ErrorEvent),
+    AgentMessage(AgentMessageEvent),
 }
 
-impl PaymentMethod {
-    fn authorize(&self, amount: Cents) -> Result<AuthToken, ChargeError> {
-        match self {
-            PaymentMethod::Card { pan } => authorize_card(pan, amount),
-            PaymentMethod::BankTransfer { iban } => authorize_sepa(iban, amount),
-        }
+struct ErrorEvent {
+    message: String,
+}
+struct AgentMessageEvent {
+    text: String,
+}
+
+fn render(event: &EventMsg) -> String {
+    // Adding a variant makes every match a compile error until handled.
+    match event {
+        EventMsg::Error(e) => format!("error: {}", e.message),
+        EventMsg::AgentMessage(m) => m.text.clone(),
     }
 }
 ```
 
-**When dyn IS right:** the set is genuinely open — downstream crates or runtime-loaded plugins supply implementations you cannot enumerate. That is the situation trait objects exist for.
+**When dyn IS right:** the implementor set is open (codex-rs's tool registry, its heterogeneous TUI cells `Arc<dyn HistoryCell>`) or host-supplied (`HttpClient`, `ThreadStore`, `ExecBackend` — the embedding application picks the backend). For sets you control but expect to extend across a protocol boundary, codex-rs marks the enum `#[non_exhaustive]` (`Op`, `UserInput`) — still an enum, with the openness declared to downstream crates instead of erased.
 
-Reference: [The Rust Book — Using Trait Objects That Allow for Values of Different Types](https://doc.rust-lang.org/book/ch18-02-trait-objects.html)
+Reference: [codex-rs protocol/src/protocol.rs `EventMsg`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/protocol.rs#L1267), [codex-rs core/src/tools/registry.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/tools/registry.rs#L322), [codex-rs tools/src/tool_payload.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/tools/src/tool_payload.rs#L6)

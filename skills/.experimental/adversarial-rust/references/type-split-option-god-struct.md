@@ -1,37 +1,50 @@
 ---
-title: Split the god-struct of Options by lifecycle stage
-tags: type, typestate, god-struct, lifecycle
+title: Confine the Option god-struct to the wire; resolve it once into a rich type
+tags: type, god-struct, wire-types, domain-types
 ---
 
-## Split the god-struct of Options by lifecycle stage
+## Confine the Option god-struct to the wire; resolve it once into a rich type
 
-One `Order` struct where `payment_id`, `shipped_at`, and `tracking_number` are all `Option` because "they're set later" is several types flattened into one — the OO habit of a single entity class mutated through its lifecycle. Every stage of the code then trusts comments instead of types ("shipped orders always have tracking") and cashes that trust as `.unwrap()`. Split the struct by stage: each stage's type holds exactly the fields that exist then, non-optional, and a stage transition is a function consuming the old stage and returning the new one — an illegal transition becomes a type error.
-
-**Incorrect (one struct, every stage, fields "set by now"):**
+A struct where half the fields are `None` at any given time is several types flattened into one — but the naive fix ("split it!") misses where such structs legitimately come from: serde. codex-rs's `ConfigToml` makes 91 of its 97 fields `Option` because every key in a user's config file is optional-by-overridability; that shape is correct *for the file format*. The discipline is that it never travels: config loading resolves `ConfigToml` **once** into `Config`, where the Options collapse into required rich types (`Permissions`, `ModelProviderInfo`, a full layer stack). The same one-projection pattern appears in hand-written deserializers: `SessionConfiguredEvent` deserializes a private `Wire` struct accepting both legacy and current fields, projects it to the canonical field, and interior code never sees the ambiguity again.
 
 ```rust
-struct Order {
-    items: Vec<LineItem>,
-    payment_id: Option<PaymentId>,     // Some after payment
-    shipped_at: Option<DateTime<Utc>>, // Some after shipping
-    tracking: Option<String>,          // "always Some when shipped"
+/// Wire shape: everything optional, because the file may omit any key.
+struct ConfigToml {
+    model: Option<String>,
+    approval_policy: Option<String>,
+    cwd: Option<std::path::PathBuf>,
+}
+
+/// Domain shape: resolved once; interior code never unwraps.
+struct Config {
+    model: String,
+    approval_policy: ApprovalPolicy,
+    cwd: std::path::PathBuf,
+}
+
+enum ApprovalPolicy {
+    OnRequest,
+    Never,
+}
+
+#[derive(Debug)]
+struct ConfigError(String);
+
+fn resolve(wire: ConfigToml, defaults: &Config) -> Result<Config, ConfigError> {
+    let approval_policy = match wire.approval_policy.as_deref() {
+        None => ApprovalPolicy::OnRequest,
+        Some("on-request") => ApprovalPolicy::OnRequest,
+        Some("never") => ApprovalPolicy::Never,
+        Some(other) => return Err(ConfigError(format!("unknown policy: {other}"))),
+    };
+    Ok(Config {
+        model: wire.model.unwrap_or_else(|| defaults.model.clone()),
+        approval_policy,
+        cwd: wire.cwd.unwrap_or_else(|| defaults.cwd.clone()),
+    })
 }
 ```
 
-**Correct (a type per stage, transitions consume):**
+The review smell is not the Option-heavy struct itself but its *reach*: if functions three layers from the parse boundary receive it and unwrap the same fields defensively, the resolve step is missing. Give the program one line where wire becomes domain, and keep the god-struct on the wire side of it.
 
-```rust
-struct DraftOrder { items: Vec<LineItem> }
-struct PaidOrder { items: Vec<LineItem>, payment_id: PaymentId }
-struct ShippedOrder { payment_id: PaymentId, shipped_at: DateTime<Utc>, tracking: String }
-
-impl DraftOrder {
-    fn pay(self, payment_id: PaymentId) -> PaidOrder {
-        PaidOrder { items: self.items, payment_id }
-    }
-}
-```
-
-**When NOT to split:** the optionals are genuinely independent optional attributes (a user's `middle_name`), not stages of a lifecycle — the smell is `Option`s that become `Some` *together*, in a fixed order.
-
-Reference: [Cliff L. Biffle — The Typestate Pattern in Rust](https://cliffle.com/blog/rust-typestate/)
+Reference: [codex-rs config/src/config_toml.rs](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/config/src/config_toml.rs#L154), [codex-rs core/src/config/mod.rs `Config`](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/core/src/config/mod.rs#L611), [codex-rs protocol/src/protocol.rs `Wire` deserializer](https://github.com/openai/codex/blob/f1affbac5e/codex-rs/protocol/src/protocol.rs#L3851)
