@@ -65,6 +65,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill when reviewing or refactoring existing Elixir/OTP/Ecto/Phoenix code that carries.. |
 | [adversarial-rust](skills/.experimental/adversarial-rust) | Use this skill when reviewing or refactoring existing Rust code that carries an alien mental.. |
 | [adversarial-tanstack](skills/.experimental/adversarial-tanstack) | Use this skill to gate TanStack Start plus TypeScript web-app changes with a pass/fail.. |
+| [adversarial-zod](skills/.experimental/adversarial-zod) | Use this skill to gate Zod 4 schema code in TypeScript and TanStack Start apps with a pass/fail.. |
 | [algorithmic-complexity-review](skills/.experimental/algorithmic-complexity-review) | Algorithmic complexity (Big-O) review — finding nested loops, N+1 queries, exponential.. |
 | [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
