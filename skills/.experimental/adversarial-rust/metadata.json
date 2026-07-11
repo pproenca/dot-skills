@@ -1,0 +1,29 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Rust",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "July 2026",
+  "abstract": "Adversarial, architecture-level review and refactoring of Rust code that imported an alien mental model (OO/enterprise ceremony, GC object graphs, exception-style control flow, imperative iteration, borrowed concurrency habits) — names the paradigm the code betrays and prescribes the deep, ceremony-flattening refactor back to idiomatic Rust. The diagnostic counterpart to the greenfield openai-codex-rust-patterns skill. All examples compile-tested on Rust 1.86.",
+  "references": [
+    "https://rust-unofficial.github.io/patterns/anti_patterns/deref.html",
+    "https://rust-unofficial.github.io/patterns/anti_patterns/borrow_clone.html",
+    "https://doc.rust-lang.org/book/ch09-03-to-panic-or-not-to-panic.html",
+    "https://doc.rust-lang.org/book/ch15-06-reference-cycles.html",
+    "https://doc.rust-lang.org/book/ch18-02-trait-objects.html",
+    "https://doc.rust-lang.org/book/ch13-04-performance.html",
+    "https://rust-lang.github.io/api-guidelines/naming.html",
+    "https://rust-lang.github.io/api-guidelines/type-safety.html",
+    "https://doc.rust-lang.org/std/panic/fn.catch_unwind.html",
+    "https://doc.rust-lang.org/std/iter/index.html",
+    "https://lexi-lambda.github.io/blog/2019/11/05/parse-don-t-validate/",
+    "https://corrode.dev/blog/illegal-state/",
+    "https://cliffle.com/blog/rust-typestate/",
+    "https://github.com/nrc/r4cppp/blob/master/graphs/README.md",
+    "https://ryhl.io/blog/async-what-is-blocking/",
+    "https://tokio.rs/tokio/tutorial/shared-state",
+    "https://docs.rs/anyhow/latest/anyhow/",
+    "https://docs.rs/rayon/latest/rayon/"
+  ]
+}
