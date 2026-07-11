@@ -36,6 +36,6 @@ impl PgUserStore {
 struct SignupFlow { store: PgUserStore }
 ```
 
-**When a trait IS right:** two or more real implementations exist today (Postgres and in-memory both shipped, not "someday"), or the trait crosses a crate boundary where downstream crates genuinely plug in their own types. For test seams without a trait, see `testing-wiremock-sse-fakes` and `testing-atomic-bool-test-opt-in` in the sibling `openai-codex-rust-patterns` skill.
+**When a trait IS right:** two or more real implementations exist today (Postgres and in-memory both shipped, not "someday"); the trait crosses a crate boundary where downstream crates genuinely plug in their own types; or the single real implementation cannot run under test at all — codex-rs keeps `EventSource` (live crossterm terminal events) and `KeyringStore` (the OS credential store) as one-real-impl seams for exactly this reason. Exhaust the real-boundary fakes first — `testing-wiremock-sse-fakes` and `testing-atomic-bool-test-opt-in` in the sibling `openai-codex-rust-patterns` skill — and reach for the trait only when no such boundary exists.
 
 Reference: [The Rust Book — Traits: Defining Shared Behavior](https://doc.rust-lang.org/book/ch10-02-traits.html)

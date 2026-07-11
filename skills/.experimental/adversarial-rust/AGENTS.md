@@ -1,6 +1,6 @@
 # Rust
 
-**Version 0.1.0**  
+**Version 0.2.0**  
 dot-skills  
 July 2026
 
@@ -21,7 +21,7 @@ Adversarial, architecture-level review and refactoring of Rust code that importe
    - 1.4 [Expose plain data as public fields, not getter/setter pairs](references/arch-public-fields-over-getter-ceremony.md)
 2. [Ownership Fought, Not Used](references/_sections.md#2-ownership-fought,-not-used)
    - 2.1 [Avoid rebuilding a GC object graph with Rc<RefCell<T>>](references/own-no-rc-refcell-object-graph.md)
-   - 2.2 [Model graphs with an arena and index handles, not references](references/own-arena-indices-over-self-referential.md)
+   - 2.2 [Model graphs with an owning map and ID handles, not references](references/own-id-map-over-self-referential.md)
    - 2.3 [Redesign ownership instead of cloning to satisfy the borrow checker](references/own-restructure-over-clone.md)
 3. [Anemic & Stringly Data](references/_sections.md#3-anemic-&-stringly-data)
    - 3.1 [Collapse parallel Option fields into the enum they encode](references/type-result-over-parallel-options.md)
@@ -42,7 +42,7 @@ Adversarial, architecture-level review and refactoring of Rust code that importe
 7. [Concurrency From Another Runtime](references/_sections.md#7-concurrency-from-another-runtime)
    - 7.1 [Avoid holding a std MutexGuard across an .await](references/conc-narrow-locks-before-await.md)
    - 7.2 [Move blocking work out of async fns — spawn_blocking or async primitives](references/conc-spawn-blocking-over-blocking-async.md)
-   - 7.3 [Use rayon for CPU-bound parallelism, not a fleet of async tasks](references/conc-rayon-over-async-cpu-parallelism.md)
+   - 7.3 [Offload CPU-bound work to the blocking pool, not a fleet of async tasks](references/conc-blocking-pool-over-async-cpu-fanout.md)
 
 ---
 
@@ -66,6 +66,7 @@ Adversarial, architecture-level review and refactoring of Rust code that importe
 16. [https://tokio.rs/tokio/tutorial/shared-state](https://tokio.rs/tokio/tutorial/shared-state)
 17. [https://docs.rs/anyhow/latest/anyhow/](https://docs.rs/anyhow/latest/anyhow/)
 18. [https://docs.rs/rayon/latest/rayon/](https://docs.rs/rayon/latest/rayon/)
+19. [https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html](https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html)
 
 ---
 

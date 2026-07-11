@@ -26,12 +26,12 @@ For greenfield "which pattern, which crate, which discipline" decisions while wr
 | # | Category | Prefix | The alien model it rips out |
 |---|----------|--------|------------------------------|
 | 1 | Enterprise Ceremony & Fake OO | `arch-` | DI traits, Deref inheritance, Manager structs, getter ceremony → concrete types, delegation, module functions, public fields |
-| 2 | Ownership Fought, Not Used | `own-` | clone-to-compile, Rc<RefCell> graphs, self-referential structs → ownership redesign, ID links, arenas |
+| 2 | Ownership Fought, Not Used | `own-` | clone-to-compile, Rc<RefCell> graphs, self-referential structs → ownership redesign, owning maps, ID handles |
 | 3 | Anemic & Stringly Data | `type-` | bool/String states, parallel Options, raw primitives, Option god-structs → enums, Result, newtypes, typestate |
 | 4 | Exception-Style Control Flow | `flow-` | unwrap-as-handling, sentinels, catch_unwind, opaque library errors → Result + ?, Option, thiserror enums |
 | 5 | Dynamic Dispatch by Habit | `dyn-` | Box<dyn> for closed sets, boxed callbacks → enums, impl Trait generics |
 | 6 | Imperative Iteration | `iter-` | index loops, mut accumulators, collect-per-step → named combinators, one lazy chain |
-| 7 | Concurrency From Another Runtime | `conc-` | blocking in async, guards across await, async CPU fan-out → spawn_blocking, narrowed locks, rayon |
+| 7 | Concurrency From Another Runtime | `conc-` | blocking in async, guards across await, async CPU fan-out → spawn_blocking, narrowed locks |
 
 ## Quick Reference
 
@@ -44,7 +44,7 @@ For greenfield "which pattern, which crate, which discipline" decisions while wr
 ### 2. Ownership Fought, Not Used
 - [`own-restructure-over-clone`](references/own-restructure-over-clone.md) — a compile-fixing `.clone()` forks data and hides a design diagnostic
 - [`own-no-rc-refcell-object-graph`](references/own-no-rc-refcell-object-graph.md) — `Rc<RefCell<T>>` webs panic at runtime and leak cycles; pick owners, link by ID
-- [`own-arena-indices-over-self-referential`](references/own-arena-indices-over-self-referential.md) — graphs live in an arena with index handles, not references
+- [`own-id-map-over-self-referential`](references/own-id-map-over-self-referential.md) — graphs live in one owning map with ID handles, not references
 
 ### 3. Anemic & Stringly Data
 - [`type-enum-over-bool-string-state`](references/type-enum-over-bool-string-state.md) — one enum, not bool/String flags whose combinations lie
@@ -69,7 +69,7 @@ For greenfield "which pattern, which crate, which discipline" decisions while wr
 ### 7. Concurrency From Another Runtime
 - [`conc-spawn-blocking-over-blocking-async`](references/conc-spawn-blocking-over-blocking-async.md) — a blocking call in async stalls every task on that worker
 - [`conc-narrow-locks-before-await`](references/conc-narrow-locks-before-await.md) — drop the `MutexGuard` before `.await`; don't reach for the async mutex first
-- [`conc-rayon-over-async-cpu-parallelism`](references/conc-rayon-over-async-cpu-parallelism.md) — async buys concurrent waiting; CPU-bound fan-out belongs on rayon
+- [`conc-blocking-pool-over-async-cpu-fanout`](references/conc-blocking-pool-over-async-cpu-fanout.md) — async buys concurrent waiting; CPU-bound work moves to the blocking pool
 
 ## How to Use
 

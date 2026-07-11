@@ -19,7 +19,7 @@ idiomatic Rust, up to and including deleting a whole layer.
 
 ## 2. Ownership Fought, Not Used (own)
 
-**Description:** Code that treats the borrow checker as an adversary instead of a design tool. `.clone()` sprinkled until it compiles, `Rc<RefCell<T>>`/`Arc<Mutex<T>>` reproducing a garbage-collected object graph, and doomed self-referential structs. Each is a signal that ownership was never designed — the data has no single owner, so the code buys shared mutability at runtime and loses the aliasing guarantees the language exists to give. The refactor redesigns who owns what: a tree of owned data with borrows flowing down, or an arena with index handles for genuine graphs.
+**Description:** Code that treats the borrow checker as an adversary instead of a design tool. `.clone()` sprinkled until it compiles, `Rc<RefCell<T>>`/`Arc<Mutex<T>>` reproducing a garbage-collected object graph, and doomed self-referential structs. Each is a signal that ownership was never designed — the data has no single owner, so the code buys shared mutability at runtime and loses the aliasing guarantees the language exists to give. The refactor redesigns who owns what: a tree of owned data with borrows flowing down, or a single owning collection with ID handles for genuine graphs.
 
 ## 3. Anemic & Stringly Data (type)
 
@@ -39,4 +39,4 @@ idiomatic Rust, up to and including deleting a whole layer.
 
 ## 7. Concurrency From Another Runtime (conc)
 
-**Description:** Concurrency habits imported from Go, JavaScript, or thread-per-request servers. Blocking calls (`std::thread::sleep`, synchronous I/O, heavy CPU work) inside `async fn`, a `std::sync::MutexGuard` held across an `.await`, and async task fan-out used for CPU-bound parallelism. An async runtime multiplexes many tasks onto few threads — one blocked task stalls every task on that worker. The refactor moves blocking work to `spawn_blocking`, narrows lock scopes to synchronous sections, and hands CPU-bound work to rayon or plain threads.
+**Description:** Concurrency habits imported from Go, JavaScript, or thread-per-request servers. Blocking calls (`std::thread::sleep`, synchronous I/O, heavy CPU work) inside `async fn`, a `std::sync::MutexGuard` held across an `.await`, and async task fan-out used for CPU-bound parallelism. An async runtime multiplexes many tasks onto few threads — one blocked task stalls every task on that worker. The refactor moves blocking and CPU-bound work to `spawn_blocking` and narrows lock scopes to synchronous sections.

@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "Rust",
   "discipline": "distillation",
@@ -24,6 +24,7 @@
     "https://ryhl.io/blog/async-what-is-blocking/",
     "https://tokio.rs/tokio/tutorial/shared-state",
     "https://docs.rs/anyhow/latest/anyhow/",
-    "https://docs.rs/rayon/latest/rayon/"
+    "https://docs.rs/rayon/latest/rayon/",
+    "https://docs.rs/tokio/latest/tokio/task/fn.spawn_blocking.html"
   ]
 }
