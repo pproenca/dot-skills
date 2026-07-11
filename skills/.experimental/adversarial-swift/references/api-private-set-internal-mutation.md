@@ -45,4 +45,4 @@ class Account {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Prevent unauthorized modifications of properties with private(set)”
+Reference: expert Swift reference (2025), “Prevent unauthorized modifications of properties with private(set)”

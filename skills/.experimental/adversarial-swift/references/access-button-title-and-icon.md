@@ -40,4 +40,4 @@ struct EditObservationButton: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Leveraging standard components and semantic styling”
+Reference: expert SwiftUI reference (2026), “Leveraging standard components and semantic styling”

@@ -5,7 +5,7 @@ tags: list, geometry, layout-loop, feedback
 
 ## Never feed measured geometry back into the measured view's own frame
 
-The wrong default is using the value captured by a geometry observer as a layout constraint on the very view being measured. "This establishes a race condition where a state update triggers a layout pass that immediately invalidates the measurement that just occurred" — an infinite layout loop. The book's rule is direct: "the output of a geometry observer must not serve as a layout constraint for its own source view"; geometry-driven state should influence distant nodes in the view tree or independent parameters such as presentation detents.
+The wrong default is using the value captured by a geometry observer as a layout constraint on the very view being measured. "This establishes a race condition where a state update triggers a layout pass that immediately invalidates the measurement that just occurred" — an infinite layout loop. The source's rule is direct: "the output of a geometry observer must not serve as a layout constraint for its own source view"; geometry-driven state should influence distant nodes in the view tree or independent parameters such as presentation detents.
 
 **Evidence of violation:** `@State` written inside an `onGeometryChange` (or `GeometryReader`-based) `action:` is referenced in a `.frame`, `.padding`, or other size-affecting modifier on the same modifier chain as — or an ancestor of — the measured view. PASS: the geometry state drives distant nodes or independent parameters (presentation detents, a sibling overlay, a toolbar). N/A: no geometry observers in the target.
 
@@ -54,4 +54,4 @@ struct TrackDescriptionSheet: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Adopting modern layout patterns”
+Reference: expert SwiftUI reference (2026), “Adopting modern layout patterns”

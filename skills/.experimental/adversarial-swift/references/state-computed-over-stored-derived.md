@@ -45,4 +45,4 @@ struct HikeStats {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Leverage computed properties to synchronize related data”.
+Reference: expert Swift reference (2025), “Leverage computed properties to synchronize related data”.

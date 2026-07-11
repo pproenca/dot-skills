@@ -25,4 +25,4 @@ let temperatures = [-5, 10, -2, 20, 25, -1]
 let aboveFreezingCount = temperatures.count { $0 > 0 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Efficiently count the number of elements that pass a test”.
+Reference: expert Swift reference (2025), “Efficiently count the number of elements that pass a test”.

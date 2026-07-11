@@ -31,4 +31,4 @@ let visitCounts = checkins.reduce(into: [String: Int]()) { counts, trail in
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Accumulate collection elements into a single value in a memory-efficient way”.
+Reference: expert Swift reference (2025), “Accumulate collection elements into a single value in a memory-efficient way”.

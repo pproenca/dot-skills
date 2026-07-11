@@ -56,4 +56,4 @@ struct SummitWeatherView: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Minimizing view initialization costs”.
+Reference: expert SwiftUI reference (2026), “Minimizing view initialization costs”.

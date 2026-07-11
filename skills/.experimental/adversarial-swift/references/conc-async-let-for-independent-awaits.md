@@ -42,4 +42,4 @@ func loadGardenData() async throws -> GardenSnapshot {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Start multiple asynchronous operations at the same time”.
+Reference: expert Swift reference (2025), “Start multiple asynchronous operations at the same time”.

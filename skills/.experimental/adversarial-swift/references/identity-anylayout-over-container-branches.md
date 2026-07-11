@@ -59,4 +59,4 @@ struct FeaturedTrailsView: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Preserving structural view identity”.
+Reference: expert SwiftUI reference (2026), “Preserving structural view identity”.

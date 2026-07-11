@@ -41,4 +41,4 @@ final class ChartLegendView: UIView {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Prevent misuse of irrelevant inherited functionalities in subclasses”
+Reference: expert Swift reference (2025), “Prevent misuse of irrelevant inherited functionalities in subclasses”

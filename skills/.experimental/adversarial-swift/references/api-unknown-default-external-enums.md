@@ -41,4 +41,4 @@ func displayName(for component: Calendar.Component) -> String {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Explicitly handle potential future enum cases”
+Reference: expert Swift reference (2025), “Explicitly handle potential future enum cases”

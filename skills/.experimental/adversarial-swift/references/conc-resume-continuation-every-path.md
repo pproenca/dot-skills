@@ -5,7 +5,7 @@ tags: conc, continuations, completion-handlers, async-bridging
 
 ## Resume checked continuations exactly once on every reachable path
 
-The wrong default when bridging a `(Value?, Error?)` completion handler with `withCheckedThrowingContinuation` is handling only the two expected branches — `if let data … else if let error …` — and forgetting the both-`nil` case. A path that never calls `resume` suspends the awaiting task forever with no crash and no log; a path that can resume twice traps at runtime. The book's canonical bridge resumes in a final `else` with a synthesized error precisely so every reachable path resumes exactly once.
+The wrong default when bridging a `(Value?, Error?)` completion handler with `withCheckedThrowingContinuation` is handling only the two expected branches — `if let data … else if let error …` — and forgetting the both-`nil` case. A path that never calls `resume` suspends the awaiting task forever with no crash and no log; a path that can resume twice traps at runtime. The source's canonical bridge resumes in a final `else` with a synthesized error precisely so every reachable path resumes exactly once.
 
 **Evidence of violation:** a `withCheckedContinuation` or `withCheckedThrowingContinuation` closure containing any reachable branch that never calls `continuation.resume` (the classic tell is `if let`/`else if let` over an optional pair with no closing `else`), or control flow where two branches can both execute a `resume` (e.g. a resume inside a loop or a resume followed by fall-through into another). PASS: every branch — including the "neither value arrived" fallback — resumes exactly once. N/A: the reviewed code contains no continuation bridging.
 
@@ -51,4 +51,4 @@ func fetchReportAsync() async throws -> Data {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Bridge async/await and completion handlers”.
+Reference: expert Swift reference (2025), “Bridge async/await and completion handlers”.

@@ -46,4 +46,4 @@ extension Person {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Preserve memberwise initializer when adding custom inits to structs”
+Reference: expert Swift reference (2025), “Preserve memberwise initializer when adding custom inits to structs”

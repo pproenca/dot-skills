@@ -31,4 +31,4 @@ func deviceName(from packet: Data) throws -> String {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Validate encoded input before creating a string”.
+Reference: expert Swift reference (2025), “Validate encoded input before creating a string”.

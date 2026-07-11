@@ -40,4 +40,4 @@ func shippingLabel(for weight: Measurement<UnitMass>) -> String {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Set a constant based on conditions”.
+Reference: expert Swift reference (2025), “Set a constant based on conditions”.

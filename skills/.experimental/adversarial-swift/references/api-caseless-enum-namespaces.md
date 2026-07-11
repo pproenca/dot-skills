@@ -38,4 +38,4 @@ enum UtilityFunctions {
 let area = UtilityFunctions.computeArea(radius: 5)
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Organize related functionalities using enums as namespaces”
+Reference: expert Swift reference (2025), “Organize related functionalities using enums as namespaces”

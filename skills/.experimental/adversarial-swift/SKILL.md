@@ -1,13 +1,13 @@
 ---
 name: adversarial-swift
-description: Use this skill to gate Swift and SwiftUI code with a pass/fail adversarial review — two blind reviewer subagents independently judge a diff or file set against 44 decidable rules distilled from Natalia Panferova's Swift Gems and The SwiftUI Way, covering SwiftUI state and observation (@Observable over ObservableObject, @State ownership), view identity (applyIf-style branching, AnyLayout), view update cost (init side effects, body derivations), task lifecycle (.task over onAppear+Task), lists and geometry (AnyView rows, GeometryReader measurement), accessibility (icon-only buttons, semantic styling), Swift concurrency (unresumed continuations, retain cycles, cancellation, serialized awaits, main-actor CPU work), and API and type design (@unknown default, CaseIterable, private(set), rethrows). Trigger it before merging Swift or SwiftUI work, or to check agent-authored code. It renders verdicts only, never fixes; SwiftUI categories go N/A on non-UI Swift.
+description: Use this skill to gate Swift and SwiftUI code with a pass/fail adversarial review — two blind reviewer subagents independently judge a diff or file set against 44 decidable rules distilled from expert Swift and SwiftUI reference material, covering SwiftUI state and observation (@Observable over ObservableObject, @State ownership), view identity (applyIf-style branching, AnyLayout), view update cost (init side effects, body derivations), task lifecycle (.task over onAppear+Task), lists and geometry (AnyView rows, GeometryReader measurement), accessibility (icon-only buttons, semantic styling), Swift concurrency (unresumed continuations, retain cycles, cancellation, serialized awaits, main-actor CPU work), and API and type design (@unknown default, CaseIterable, private(set), rethrows). Trigger it before merging Swift or SwiftUI work, or to check agent-authored code. It renders verdicts only, never fixes; SwiftUI categories go N/A on non-UI Swift.
 ---
 
 # Adversarial Swift Gate
 
 A Swift and SwiftUI review gate — pass/fail: two blind, identical reviewer subagents independently judge the work against this gate's rules, and the work passes only if both say PASS. This skill renders verdicts; it never fixes the work.
 
-The rules are derived from two named-expert books — *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025) for the Swift language rules and *The SwiftUI Way* (Panferova, 2026) for the SwiftUI rules — filtered down to the checks a reviewer can decide from code evidence alone. The gate judges the failure modes agents and experienced-but-not-expert developers actually produce: legacy observation stacks, identity-destroying conditionals, work attached to the wrong lifecycle point, hung continuations, retain cycles, and API surface that skips the compiler's help.
+The rules are derived from expert reference material — an expert Swift reference (2025) for the Swift language rules and an expert SwiftUI reference (2026) for the SwiftUI rules — filtered down to the checks a reviewer can decide from code evidence alone. The gate judges the failure modes agents and experienced-but-not-expert developers actually produce: legacy observation stacks, identity-destroying conditionals, work attached to the wrong lifecycle point, hung continuations, retain cycles, and API surface that skips the compiler's help.
 
 ## When to Apply
 
@@ -59,7 +59,7 @@ Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a
 
 ## Gotchas
 
-Read [gotchas.md](gotchas.md) before dispatching reviewers — it pre-records book-fidelity guards (patterns the source books endorse that community lore condemns, such as `id: \.self` on constant collections) so reviewers do not import outside rules.
+Read [gotchas.md](gotchas.md) before dispatching reviewers — it pre-records source-fidelity guards (patterns the source material endorses that community lore condemns, such as `id: \.self` on constant collections) so reviewers do not import outside rules.
 
 ## Related Skills
 

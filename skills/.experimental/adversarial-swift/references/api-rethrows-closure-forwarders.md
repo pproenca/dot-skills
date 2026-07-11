@@ -45,4 +45,4 @@ func transform<T>(
 let doubled = transform([1, 2, 3]) { $0 * 2 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Optimize error handling in higher-order functions with rethrows”
+Reference: expert Swift reference (2025), “Optimize error handling in higher-order functions with rethrows”

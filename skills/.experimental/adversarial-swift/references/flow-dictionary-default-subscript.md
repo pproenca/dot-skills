@@ -38,4 +38,4 @@ for order in importedOrders {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Specify default values in dictionary subscripts”.
+Reference: expert Swift reference (2025), “Specify default values in dictionary subscripts”.

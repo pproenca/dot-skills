@@ -50,4 +50,4 @@ struct AnimalRow: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Choosing between value and reference types”.
+Reference: expert SwiftUI reference (2026), “Choosing between value and reference types”.

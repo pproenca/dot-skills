@@ -35,4 +35,4 @@ struct DirectionPicker {
 }
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Generate a collection of all cases in an enum”
+Reference: expert Swift reference (2025), “Generate a collection of all cases in an enum”

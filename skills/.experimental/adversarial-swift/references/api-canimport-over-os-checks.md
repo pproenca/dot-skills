@@ -49,4 +49,4 @@ class HapticFeedbackManager {
 #endif
 ```
 
-Reference: *Swift Gems* (Natalia Panferova, Nil Coalescing, updated Nov 2025), “Tackle framework availability with compiler directives”
+Reference: expert Swift reference (2025), “Tackle framework availability with compiler directives”

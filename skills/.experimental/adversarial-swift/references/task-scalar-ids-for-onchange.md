@@ -5,7 +5,7 @@ tags: task, onchange, equality-cost, identifiers
 
 ## Compare scalar identifiers in onChange and task id, not whole collections
 
-The wrong default is passing an entire collection or a multi-property model as the compared value of `.onChange(of:)` or `.task(id:)`. SwiftUI must evaluate these values during every update cycle to detect a change, so "the framework will have to perform a comparison of the entire collection" each time — with large datasets or expensive equality checks this overhead leads to dropped frames. The book's remedy is to use "simple and lightweight identifiers like a unique ID or a version property" instead.
+The wrong default is passing an entire collection or a multi-property model as the compared value of `.onChange(of:)` or `.task(id:)`. SwiftUI must evaluate these values during every update cycle to detect a change, so "the framework will have to perform a comparison of the entire collection" each time — with large datasets or expensive equality checks this overhead leads to dropped frames. The source's remedy is to use "simple and lightweight identifiers like a unique ID or a version property" instead.
 
 **Evidence of violation:** the `of:` argument of `.onChange` or the `id:` argument of `.task` is an `Array`, `Dictionary`, or `Set` of model values, or a struct with more than one stored property or any collection-typed stored property. PASS: a scalar — an ID, a `count`, a version or hash property, a `Bool`, an enum — or a struct with a single scalar stored property (the reviewer must cite the type declaration). N/A: no `.onChange`/`.task(id:)` in the target.
 
@@ -51,4 +51,4 @@ struct RouteListView: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Running tasks in response to state changes”
+Reference: expert SwiftUI reference (2026), “Running tasks in response to state changes”

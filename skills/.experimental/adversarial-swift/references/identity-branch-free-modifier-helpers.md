@@ -41,4 +41,4 @@ extension View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Encapsulating logic with view modifiers”.
+Reference: expert SwiftUI reference (2026), “Encapsulating logic with view modifiers”.

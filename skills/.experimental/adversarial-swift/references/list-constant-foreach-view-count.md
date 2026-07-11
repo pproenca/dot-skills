@@ -7,7 +7,7 @@ tags: list, foreach, lazy-loading, filtering
 
 The wrong default is filtering inside the `ForEach` closure — an `if` that optionally shows a row. When SwiftUI cannot determine how many views an element resolves to, "SwiftUI will evaluate the ForEach closure for every single element in the collection upfront," saturating the main thread and inflating the memory footprint before a single row is displayed. Pre-filtering the collection keeps each element at a constant view count, which is what allows lazy row creation.
 
-**Evidence of violation:** an `if` on element data (without a view-producing `else`) directly inside a `ForEach` closure within a `List` or lazy container (`LazyVStack`, `LazyHStack`, lazy grids), making the per-element view count zero-or-one. PASS: the collection is filtered before the `ForEach` — cached in state or a model, as in the book's view-model example — and each element resolves to a fixed number of views. N/A: the `if/else` yields exactly one view per branch (constant count), or the container is non-lazy and trivially small — the reviewer must cite the container type to claim this.
+**Evidence of violation:** an `if` on element data (without a view-producing `else`) directly inside a `ForEach` closure within a `List` or lazy container (`LazyVStack`, `LazyHStack`, lazy grids), making the per-element view count zero-or-one. PASS: the collection is filtered before the `ForEach` — cached in state or a model, as in the source's view-model example — and each element resolves to a fixed number of views. N/A: the `if/else` yields exactly one view per branch (constant count), or the container is non-lazy and trivially small — the reviewer must cite the container type to claim this.
 
 **Incorrect (every element is instantiated upfront to discover the row count):**
 
@@ -53,4 +53,4 @@ struct DayWalksView: View {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Maximizing the performance of dynamic lists”
+Reference: expert SwiftUI reference (2026), “Maximizing the performance of dynamic lists”

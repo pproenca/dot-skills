@@ -70,4 +70,4 @@ enum RegionDirectory {
 }
 ```
 
-Reference: *The SwiftUI Way* (Natalia Panferova, Nil Coalescing, 2026), “Defining focused view components”.
+Reference: expert SwiftUI reference (2026), “Defining focused view components”.
