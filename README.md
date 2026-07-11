@@ -113,6 +113,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [expo-ios-screen-scaffolder](skills/.experimental/expo-ios-screen-scaffolder) | Scaffolds Expo (React Native) iOS screens that follow Apple Human Interface Guidelines by.. |
 | [expo-react-native-coder](skills/.experimental/expo-react-native-coder) | Comprehensive Expo React Native feature development guide |
 | [expo-react-native-performance](skills/.experimental/expo-react-native-performance) | Expo React Native performance optimization guidelines |
+| [feature-arch-gate](skills/.experimental/feature-arch-gate) | Adversarial pass/fail review gate that enforces the feature-arch skill's React feature-based.. |
 | [feature-spec](skills/.experimental/feature-spec) | Feature specification and planning guidelines for software engineers |
 | [fog-of-war-js-ts](skills/.experimental/fog-of-war-js-ts) | Fog of war, field of view, line of sight, and tile visibility in JavaScript or TypeScript games.. |
 | [framer-motion](skills/.experimental/framer-motion) | Framer Motion performance optimization guidelines |

@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "Community",
+  "technology": "React Feature-Based Architecture",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Companion pass/fail review gate for the feature-arch skill. Two blind, identical reviewer subagents independently judge a diff or codebase against the 33 decidable rules of feature-arch v1.1.0 (10 judgment-call rules are excluded with reasons), merging verdicts fail-closed with cited evidence and an actionable fix list.",
+  "references": [
+    "skills/.curated/feature-arch/",
+    "https://www.robinwieruch.de/react-feature-architecture/",
+    "https://feature-sliced.design/",
+    "https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md"
+  ]
+}
