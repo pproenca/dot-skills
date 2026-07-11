@@ -64,6 +64,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [acceptance-pipeline-feature-design](skills/.experimental/acceptance-pipeline-feature-design) | Designs new features, extensions, or modifications to Uncle Bob's Acceptance Pipeline.. |
 | [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill when reviewing or refactoring existing Elixir/OTP/Ecto/Phoenix code that carries.. |
 | [adversarial-rust](skills/.experimental/adversarial-rust) | Use this skill when reviewing or refactoring existing Rust code that carries an alien mental.. |
+| [adversarial-swift](skills/.experimental/adversarial-swift) | Use this skill to gate Swift and SwiftUI code with a pass/fail adversarial review — two blind.. |
 | [adversarial-tanstack](skills/.experimental/adversarial-tanstack) | Use this skill to gate TanStack Start plus TypeScript web-app changes with a pass/fail.. |
 | [adversarial-ts-patterns](skills/.experimental/adversarial-ts-patterns) | Use this skill to gate TypeScript and React application code with a pass/fail adversarial review.. |
 | [adversarial-zod](skills/.experimental/adversarial-zod) | Use this skill to gate Zod 4 schema code in TypeScript and TanStack Start apps with a pass/fail.. |

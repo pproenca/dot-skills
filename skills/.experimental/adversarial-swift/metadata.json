@@ -1,0 +1,18 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "Swift + SwiftUI",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Pass/fail review gate for Swift and SwiftUI code: two blind reviewers judge a diff or file set against 44 decidable rules derived from Natalia Panferova's books Swift Gems (Nov 2025) and The SwiftUI Way (2026), across state and observation, concurrency and error propagation, view identity, view update cost, task lifecycle, lists and geometry, platform accessibility, API and type design, and control flow and collections. SwiftUI categories go N/A on non-UI Swift targets; rules whose remedy needs a newer toolchain than the project's go N/A, not FAIL.",
+  "references": [
+    "https://books.nilcoalescing.com/swift-gems",
+    "https://books.nilcoalescing.com/the-swiftui-way",
+    "https://nilcoalescing.com/",
+    "https://developer.apple.com/documentation/observation",
+    "https://developer.apple.com/documentation/swiftui/view/task(priority:_:)",
+    "https://developer.apple.com/documentation/swift/checkedcontinuation",
+    "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/"
+  ]
+}
