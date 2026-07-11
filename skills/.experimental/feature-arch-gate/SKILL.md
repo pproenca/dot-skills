@@ -7,7 +7,7 @@ description: Adversarial pass/fail review gate that enforces the feature-arch sk
 
 Enforce React feature-based architecture conformance — a pass/fail gate: two blind, identical reviewer subagents independently judge the work against the rules of feature-arch v1.1.0, and the work passes only if both say PASS. This skill renders verdicts; it never fixes the work.
 
-This is a **companion gate**: it owns no rules. The 33 decidable rules it enforces (of the source's 43) live in the `feature-arch` distillation skill and are listed, with the evidence that decides each, in [references/rules-source.md](references/rules-source.md).
+The gate is **self-sufficient**: the 33 decidable rules it enforces (of the source's 43) are vendored into this skill's `references/` directory as a snapshot of feature-arch v1.1.0, so a review needs nothing outside this folder. [references/_rule-evidence.md](references/_rule-evidence.md) records the provenance, the evidence that decides each rule, and the 10 source rules excluded as non-decidable.
 
 ## When to Apply
 
@@ -23,7 +23,7 @@ Do NOT apply this gate to design or migrate an architecture — that is the `fea
 Follow these steps exactly — the gate's value is that every review runs the same way.
 
 1. **Identify the target.** Pin down exactly what is under review (a diff, a set of files, or a full `src/` tree) and note the ref/paths so both reviewers see the same thing. Record two context facts the reviewers need: does the codebase use React Server Components, and is a query library (TanStack Query etc.) present — two rules are N/A without them.
-2. **Load the rules.** Read [references/rules-source.md](references/rules-source.md) and resolve the 33 imported rule files it lists against the source skill at `skills/.curated/feature-arch/references/`. If the source skill is missing or any listed rule file is unreadable, **STOP and report the error** — never proceed with partial rules or silently pass.
+2. **Load the rules.** Read [references/_rule-evidence.md](references/_rule-evidence.md) and resolve the 33 vendored rule files it lists against this skill's own `references/` directory. If any listed rule file is missing or unreadable, **STOP and report the error** — never proceed with partial rules or silently pass.
 3. **Compose the reviewer prompt.** Fill [references/reviewer-prompt.md](references/reviewer-prompt.md) with the rule file paths, the target, and (if the target repo has one) its `docs/architecture/FEATURE-ARCH-TARGET.md` blueprint. The composed prompt must be fully self-contained — a reviewer sees no conversation history, so nothing may refer to context outside the prompt.
 4. **Dispatch two blind reviewers.** Launch two Task subagents in a single message (parallel) with the identical composed prompt. Do not share either reviewer's output with the other.
 5. **Merge fail-closed.**
@@ -45,7 +45,7 @@ Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a
 
 ## Rule Categories
 
-The categories, their priority order, and every rule live in the source skill; the imported subset and the 10 excluded rules (with reasons) are listed in [references/rules-source.md](references/rules-source.md).
+The eight categories and their priority order are defined in [references/_sections.md](references/_sections.md); the 33 vendored rule files live alongside it in `references/`, and [references/_rule-evidence.md](references/_rule-evidence.md) lists them with the evidence that decides each, plus the 10 excluded source rules (with reasons).
 
 ## Reference Files
 
@@ -53,9 +53,11 @@ The categories, their priority order, and every rule live in the source skill; t
 |------|-------------|
 | [references/reviewer-prompt.md](references/reviewer-prompt.md) | Self-contained prompt template for each blind reviewer |
 | [assets/templates/verdict.md](assets/templates/verdict.md) | Verdict report template |
-| [references/rules-source.md](references/rules-source.md) | Source skill pointer + imported rule subset |
+| [references/_rule-evidence.md](references/_rule-evidence.md) | Vendoring provenance + per-rule deciding evidence + exclusions |
+| [references/_sections.md](references/_sections.md) | Category definitions and fix-list priority order |
+| `references/<category>-*.md` | The 33 vendored rule files (struct/import/bound/fquery/fcomp/fstate/test/name) |
 | [metadata.json](metadata.json) | Version and source references |
 
 ## Related Skills
 
-- `feature-arch` — the source distillation skill; designs the target architecture and holds every rule this gate enforces (plus the 10 judgment-call rules the gate excludes).
+- `feature-arch` — the source distillation skill this gate's rules were vendored from; use it (if available) to design or migrate the target architecture, and to read the 10 judgment-call rules the gate excludes. The gate itself never needs it at review time.

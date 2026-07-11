@@ -11,10 +11,10 @@
        query library present?). The RSC and query-library facts matter: two imported rules
        are N/A without them.
      - {{TARGET_CONTENT_OR_PATHS}}: the diff inlined, or exact repo-relative paths to read.
-     - {{RULE_FILE_PATHS}}: the absolute paths of the 33 imported rule files listed in
-       references/rules-source.md, resolved against the feature-arch source skill. If any
-       listed rule file cannot be read, the review is INVALID — report the missing file
-       instead of a verdict.
+     - {{RULE_FILE_PATHS}}: the absolute paths of the 33 vendored rule files listed in
+       references/_rule-evidence.md, resolved against THIS skill's own references/ directory.
+       If any listed rule file cannot be read, the review is INVALID — report the missing
+       file instead of a verdict.
      - {{BLUEPRINT_SECTION}}: if docs/architecture/FEATURE-ARCH-TARGET.md exists in the
        target repo, inline it under a "## Project Architecture Blueprint" heading and add:
        "Where the blueprint names concrete feature boundaries or an import matrix, judge

@@ -5,7 +5,7 @@ Violating fixture (central api/, cross-feature deep imports, global mixed store,
 Added: 2026-07-11
 
 ### `struct-shared-layer` contests on unused generic-looking primitives in `shared/`
-In the first dry run, a `shared/components/button.tsx` with zero consumers split the reviewers: one applied the rule's litmus test ("Do 2+ features use it today?") and failed it as speculative placement; the other passed it as "a generic UI primitive, the rule's own Correct example". The litmus test is the deciding evidence — the source rule explicitly forbids speculative placement, so *appearance of genericity does not exempt dead code*. The evidence descriptor in `references/rules-source.md` now states this. If this rule contests again, quote the litmus test verbatim in the composed reviewer prompt.
+In the first dry run, a `shared/components/button.tsx` with zero consumers split the reviewers: one applied the rule's litmus test ("Do 2+ features use it today?") and failed it as speculative placement; the other passed it as "a generic UI primitive, the rule's own Correct example". The litmus test is the deciding evidence — the source rule explicitly forbids speculative placement, so *appearance of genericity does not exempt dead code*. The evidence descriptor in `references/_rule-evidence.md` now states this. If this rule contests again, quote the litmus test verbatim in the composed reviewer prompt.
 Added: 2026-07-11
 
 ### Missing-structure rules split FAIL vs N/A when the structure is absent entirely

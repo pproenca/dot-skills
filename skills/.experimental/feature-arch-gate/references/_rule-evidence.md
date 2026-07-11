@@ -1,17 +1,18 @@
-# Rules Source
+# Rule Evidence & Vendoring Provenance
 
-This skill is a **companion gate**: it owns no rules. It reviews against the rules of the distillation skill below, referenced by path so the gate stays in sync as the source evolves.
+The 33 rule files this gate enforces live in this skill's own `references/` directory — the gate is fully self-sufficient at review time and needs nothing outside its own folder. They are a **vendored snapshot** of the feature-arch distillation skill, recorded here for provenance and re-syncing:
 
-- **Source skill:** feature-arch
-- **Path:** `skills/.curated/feature-arch/` (repo-relative; rule files under `references/`)
-- **Source version:** 1.1.0 (from its metadata.json)
-- **Recorded:** 2026-07-11
+- **Source skill:** feature-arch (the same repo's distillation skill; also published from this collection)
+- **Vendored from version:** 1.1.0 (its metadata.json at snapshot time)
+- **Snapshot date:** 2026-07-11
 
-If the source skill is missing, moved, or unreadable at review time, **stop and report the error**. Never review with partial rules and never let a missing source count as a PASS.
+When the source skill releases a new version, re-run the decidability filter over its rules, re-copy the qualifying files, and update both tables below plus the version above. Divergence between a vendored file and its source original is a sync bug, not a fork.
 
-## Imported Rules
+If any rule file listed below is missing or unreadable at review time, **stop and report the error**. Never review with partial rules and never let a missing rule count as a PASS.
 
-Only rules that pass the decidability test are enforced — a reviewer must be able to decide PASS/FAIL from evidence in the artifact alone. 33 of the source's 43 rules qualify.
+## Vendored Rules
+
+Only rules that pass the decidability test are enforced — a reviewer must be able to decide PASS/FAIL from evidence in the artifact alone. 33 of the source's 43 rules qualify; each is a file in this skill's `references/` directory.
 
 | Rule file | What evidence decides it |
 |-----------|--------------------------|
@@ -51,7 +52,7 @@ Only rules that pass the decidability test are enforced — a reviewer must be a
 
 ## Excluded Rules
 
-Rules from the source skill that are teaching material, not decidable checks. They remain valuable in the source skill; they are just not enforceable as a gate.
+Rules from the source skill that are teaching material, not decidable checks. They are deliberately **not vendored**: they remain valuable in the source skill, they are just not enforceable as a gate.
 
 | Rule file | Why excluded |
 |-----------|--------------|
@@ -66,5 +67,6 @@ Rules from the source skill that are teaching material, not decidable checks. Th
 | `fstate-context-sparingly.md` | "Frequently-changing state" is not statically decidable; the appropriateness whitelist requires judgment |
 | `fstate-reset-on-unmount.md` | The rule's own exceptions (cart, drafts, preferences) make persist-vs-reset a product decision, not artifact evidence |
 
-<!-- If the source skill gains or changes rules, re-run the decidability filter and update
-     both tables. A source rule that is neither imported nor excluded is a sync bug. -->
+<!-- If the source skill gains or changes rules, re-run the decidability filter, re-vendor the
+     qualifying files, and update both tables. A source rule that is neither vendored nor
+     excluded is a sync bug. -->
