@@ -76,7 +76,7 @@ route segment is a feature candidate. Examples:
 
 Even with technical grouping, features exist implicitly. Look for:
 
-- **Filename clusters**: `PostCard.tsx`, `PostList.tsx`, `usePost.ts`, `postApi.ts` → feature `post`
+- **Filename clusters**: `PostCard.tsx`, `PostList.tsx`, `use-post.ts`, `post-api.ts` → feature `post`
 - **Model files**: types/models with names that recur across `components/`, `hooks/`, `api/`
 - **Route handlers**: API routes grouped by resource (`/api/posts`, `/api/comments`)
 
@@ -163,7 +163,7 @@ links to the rule files in this skill that govern that section. This makes
 the blueprint a *projection* of the rules onto the project, not a parallel
 authority. Example:
 
-```
+```text
 **Rules applied:** [struct-feature-folders](../../skills/.curated/feature-arch/references/struct-feature-folders.md),
 [struct-feature-self-contained](../../skills/.curated/feature-arch/references/struct-feature-self-contained.md)
 ```

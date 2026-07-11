@@ -12,7 +12,7 @@ When multiple features share state, they become implicitly coupled. Changes to t
 **Incorrect (shared global state):**
 
 ```typescript
-// src/stores/globalStore.ts
+// src/stores/global-store.ts
 export const globalStore = create((set) => ({
   user: null,
   cart: { items: [] },
@@ -22,7 +22,7 @@ export const globalStore = create((set) => ({
 }));
 
 // src/features/checkout/components/CheckoutForm.tsx
-import { globalStore } from '@/stores/globalStore';
+import { globalStore } from '@/stores/global-store';
 
 export function CheckoutForm() {
   const cart = globalStore(s => s.cart);
@@ -34,7 +34,7 @@ export function CheckoutForm() {
 **Correct (feature-scoped state with explicit boundaries):**
 
 ```typescript
-// src/features/cart/stores/cartStore.ts
+// src/features/cart/stores/cart-store.ts
 export const useCartStore = create((set) => ({
   items: [],
   addItem: (item) => set(s => ({ items: [...s.items, item] })),
@@ -42,7 +42,7 @@ export const useCartStore = create((set) => ({
 }));
 
 // src/features/cart/index.ts
-export { useCartStore } from './stores/cartStore';
+export { useCartStore } from './stores/cart-store';
 export type { CartItem } from './types';
 
 // src/app/pages/CheckoutPage.tsx

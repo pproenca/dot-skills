@@ -1,31 +1,27 @@
 # React Feature-Based Architecture
 
-**Version 0.1.0**  
+**Version 1.1.0**  
 Community  
-January 2026
-
-> **Note:**  
-> This document is mainly for agents and LLMs to follow when maintaining,  
-> generating, or refactoring codebases. Humans may also find it useful,  
-> but guidance here is optimized for automation and consistency by AI-assisted workflows.
+July 2026
 
 ---
 
 ## Abstract
 
-Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 42 rules across 8 categories, prioritized by impact from critical (directory structure and import rules) to incremental (naming conventions). Each rule includes detailed explanations, production-realistic code examples comparing incorrect vs. correct implementations, and specific impact metrics to guide automated refactoring and code generation.
+Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 43 rules across 8 categories, prioritized by impact from critical (directory structure and import rules) to incremental (naming conventions). When invoked on a project, the skill produces a concrete target-architecture blueprint at docs/architecture/FEATURE-ARCH-TARGET.md — covering project context, identified features, target directory tree, per-feature public APIs, import-boundary matrix, state ownership, cross-feature communication policy, a numbered migration plan, and a human conformance checklist — with every section anchored in the skill's underlying rules.
 
 ---
 
 ## Table of Contents
 
 1. [Directory Structure](references/_sections.md#1-directory-structure) — **CRITICAL**
-   - 1.1 [Include Only Necessary Segments](references/struct-optional-segments.md) — HIGH (Prevents empty folder clutter; keeps features minimal and focused)
-   - 1.2 [Keep Directory Hierarchy Flat](references/struct-flat-hierarchy.md) — CRITICAL (Reduces cognitive load; prevents 5+ level deep import paths)
-   - 1.3 [Make Features Self-Contained](references/struct-feature-self-contained.md) — CRITICAL (Enables independent deployment and parallel team development)
-   - 1.4 [Organize by Feature, Not Technical Type](references/struct-feature-folders.md) — CRITICAL (Eliminates cross-file navigation; reduces onboarding time by 50%+)
-   - 1.5 [Separate App Layer from Features](references/struct-app-layer.md) — HIGH (Isolates global concerns; enables feature modules to remain pure)
-   - 1.6 [Use Shared Layer for Truly Generic Code Only](references/struct-shared-layer.md) — CRITICAL (Prevents shared/ from becoming a dumping ground; maintains feature boundaries)
+   - 1.1 [Group Features into Domains at Large Scale](references/struct-domain-folders.md) — HIGH (Keeps 20+ feature codebases navigable; gives monorepo extraction a ready seam)
+   - 1.2 [Include Only Necessary Segments](references/struct-optional-segments.md) — HIGH (Prevents empty folder clutter; keeps features minimal and focused)
+   - 1.3 [Keep Directory Hierarchy Flat](references/struct-flat-hierarchy.md) — CRITICAL (Reduces cognitive load; prevents 5+ level deep import paths)
+   - 1.4 [Make Features Self-Contained](references/struct-feature-self-contained.md) — CRITICAL (Enables independent deployment and parallel team development)
+   - 1.5 [Organize by Feature, Not Technical Type](references/struct-feature-folders.md) — CRITICAL (Eliminates cross-file navigation; reduces onboarding time by 50%+)
+   - 1.6 [Separate App Layer from Features](references/struct-app-layer.md) — HIGH (Isolates global concerns; enables feature modules to remain pure)
+   - 1.7 [Use Shared Layer for Truly Generic Code Only](references/struct-shared-layer.md) — CRITICAL (Prevents shared/ from becoming a dumping ground; maintains feature boundaries)
 2. [Import & Dependencies](references/_sections.md#2-import-&-dependencies) — **CRITICAL**
    - 2.1 [Avoid Deep Barrel File Re-exports](references/import-avoid-barrel-files.md) — HIGH (Prevents tree-shaking failures; reduces bundle size by avoiding unused code)
    - 2.2 [Enforce Unidirectional Import Flow](references/import-unidirectional-flow.md) — CRITICAL (Prevents circular dependencies; enables deterministic build order)
@@ -74,10 +70,11 @@ Comprehensive architecture guide for organizing React applications by features, 
 
 ## References
 
-1. [https://www.robinwieruch.de/react-feature-architecture/](https://www.robinwieruch.de/react-feature-architecture/)
-2. [https://feature-sliced.design/](https://feature-sliced.design/)
-3. [https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md)
-4. [https://legacy.reactjs.org/docs/faq-structure.html](https://legacy.reactjs.org/docs/faq-structure.html)
+1. [https://www.robinwieruch.de/react-folder-structure/](https://www.robinwieruch.de/react-folder-structure/)
+2. [https://www.robinwieruch.de/react-feature-architecture/](https://www.robinwieruch.de/react-feature-architecture/)
+3. [https://feature-sliced.design/](https://feature-sliced.design/)
+4. [https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md](https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md)
+5. [https://legacy.reactjs.org/docs/faq-structure.html](https://legacy.reactjs.org/docs/faq-structure.html)
 
 ---
 
@@ -87,7 +84,7 @@ This document was compiled from individual reference files. For detailed editing
 
 | File | Description |
 |------|-------------|
-| [references/_sections.md](references/_sections.md) | Category definitions and impact ordering |
+| [references/_sections.md](references/_sections.md) | Category definitions and ordering |
 | [assets/templates/_template.md](assets/templates/_template.md) | Template for creating new rules |
 | [SKILL.md](SKILL.md) | Quick reference entry point |
 | [metadata.json](metadata.json) | Version and reference URLs |

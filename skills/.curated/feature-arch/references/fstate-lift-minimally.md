@@ -2,7 +2,7 @@
 title: Lift State Only as High as Necessary
 impact: MEDIUM
 impactDescription: Reduces re-renders; keeps state close to where it's used
-tags: state, lifting, locality, performance
+tags: fstate, lifting, locality, performance
 ---
 
 ## Lift State Only as High as Necessary

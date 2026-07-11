@@ -2,7 +2,7 @@
 title: Apply Single Responsibility to Components
 impact: MEDIUM-HIGH
 impactDescription: Enables parallel development and isolated testing; reduces component complexity
-tags: comp, single-responsibility, separation, focused
+tags: fcomp, single-responsibility, separation, focused
 ---
 
 ## Apply Single Responsibility to Components

@@ -2,7 +2,7 @@
 title: Use Context Sparingly for Feature State
 impact: MEDIUM
 impactDescription: Prevents context re-render cascades; keeps features portable
-tags: state, context, provider, scope
+tags: fstate, context, provider, scope
 ---
 
 ## Use Context Sparingly for Feature State
@@ -41,7 +41,7 @@ function CartIcon() {
 **Correct (store with selectors):**
 
 ```typescript
-// src/features/cart/stores/cartStore.ts
+// src/features/cart/stores/cart-store.ts
 export const useCartStore = create((set, get) => ({
   items: [],
   addItem: (item) => set(s => ({ items: [...s.items, item] })),

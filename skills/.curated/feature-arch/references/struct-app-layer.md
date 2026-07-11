@@ -11,7 +11,7 @@ The app layer handles global concerns: routing, providers, initialization, and g
 
 **Incorrect (routing and providers mixed with features):**
 
-```
+```text
 src/features/user/
 ├── components/
 │   └── UserProfile.tsx
@@ -35,7 +35,7 @@ export function UserRoutes() {
 
 **Correct (app layer owns routing and providers):**
 
-```
+```text
 src/
 ├── app/
 │   ├── providers/

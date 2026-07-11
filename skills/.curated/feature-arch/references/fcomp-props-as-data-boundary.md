@@ -2,7 +2,7 @@
 title: Use Props as Feature Boundaries
 impact: MEDIUM-HIGH
 impactDescription: Creates clear interfaces between features; enables feature composition
-tags: comp, props, interface, boundary
+tags: fcomp, props, interface, boundary
 ---
 
 ## Use Props as Feature Boundaries
@@ -13,7 +13,7 @@ When features interact, use props to define the interface. The receiving compone
 
 ```typescript
 // Checkout component knows about Cart's internal structure
-import { useCartStore } from '@/features/cart/stores/cartStore';
+import { useCartStore } from '@/features/cart/stores/cart-store';
 
 function CheckoutSummary() {
   // Directly accessing cart's internal state structure

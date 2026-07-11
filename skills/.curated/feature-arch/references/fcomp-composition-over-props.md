@@ -2,7 +2,7 @@
 title: Prefer Composition Over Prop Drilling
 impact: MEDIUM-HIGH
 impactDescription: Eliminates prop drilling; enables flexible slot-based component design
-tags: comp, composition, children, slots
+tags: fcomp, composition, children, slots
 ---
 
 ## Prefer Composition Over Prop Drilling

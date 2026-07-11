@@ -2,7 +2,7 @@
 title: Fetch Independent Data in Parallel
 impact: HIGH
 impactDescription: Reduces total load time by ~50% for pages with multiple data sources
-tags: query, parallel, performance, waterfall
+tags: fquery, parallel, performance, waterfall
 ---
 
 ## Fetch Independent Data in Parallel

@@ -11,7 +11,7 @@ Deep nesting creates long import paths, makes file relocation difficult, and obs
 
 **Incorrect (deep nesting):**
 
-```
+```text
 src/features/checkout/
 ├── components/
 │   ├── form/
@@ -32,7 +32,7 @@ import { CardInput } from '../../../components/form/fields/payment/CardInput';
 
 **Correct (flat hierarchy):**
 
-```
+```text
 src/features/checkout/
 ├── components/
 │   ├── CardInput.tsx

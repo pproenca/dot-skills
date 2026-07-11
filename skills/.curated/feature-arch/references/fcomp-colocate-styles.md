@@ -2,7 +2,7 @@
 title: Colocate Styles with Components
 impact: MEDIUM
 impactDescription: Enables complete component portability; prevents orphaned styles
-tags: comp, styles, colocation, css
+tags: fcomp, styles, colocation, css
 ---
 
 ## Colocate Styles with Components
@@ -11,7 +11,7 @@ Keep component styles in the same location as the component. When styles are cen
 
 **Incorrect (centralized styles):**
 
-```
+```text
 src/
 ├── styles/
 │   ├── components/
@@ -27,7 +27,7 @@ src/
 
 **Correct (colocated styles):**
 
-```
+```text
 src/features/user/
 ├── components/
 │   ├── UserCard.tsx
@@ -66,7 +66,7 @@ export function UserCard({ user }: { user: User }) {
 
 **Shared styles belong in shared:**
 
-```
+```text
 src/shared/
 ├── styles/
 │   ├── reset.css         # Global reset

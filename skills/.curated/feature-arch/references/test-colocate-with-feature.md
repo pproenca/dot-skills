@@ -11,7 +11,7 @@ Tests should live in the same feature folder as the code they test. When tests a
 
 **Incorrect (centralized test folder):**
 
-```
+```text
 src/
 ├── features/
 │   ├── user/
@@ -19,17 +19,17 @@ src/
 │   │       └── UserProfile.tsx
 │   └── cart/
 │       └── hooks/
-│           └── useCart.ts
+│           └── use-cart.ts
 └── tests/              # Disconnected from features
     ├── user/
     │   └── UserProfile.test.tsx
     └── cart/
-        └── useCart.test.ts
+        └── use-cart.test.ts
 ```
 
 **Correct (colocated tests):**
 
-```
+```text
 src/features/
 ├── user/
 │   ├── components/
@@ -37,14 +37,14 @@ src/features/
 │   │   └── __tests__/
 │   │       └── UserProfile.test.tsx
 │   └── hooks/
-│       ├── useUser.ts
+│       ├── use-user.ts
 │       └── __tests__/
-│           └── useUser.test.ts
+│           └── use-user.test.ts
 └── cart/
     ├── hooks/
-    │   ├── useCart.ts
+    │   ├── use-cart.ts
     │   └── __tests__/
-    │       └── useCart.test.ts
+    │       └── use-cart.test.ts
     └── api/
         ├── get-cart.ts
         └── __tests__/
@@ -53,7 +53,7 @@ src/features/
 
 **Alternative: Adjacent files:**
 
-```
+```text
 src/features/user/components/
 ├── UserProfile.tsx
 └── UserProfile.test.tsx   # Same folder, no __tests__ subfolder

@@ -2,7 +2,7 @@
 title: Keep Query Functions Single-Purpose
 impact: HIGH
 impactDescription: Prevents query permutation explosion as features grow
-tags: query, single-responsibility, data-fetching, api
+tags: fquery, single-responsibility, data-fetching, api
 ---
 
 ## Keep Query Functions Single-Purpose

@@ -11,51 +11,51 @@ Technical grouping (components/, hooks/, utils/) forces developers to navigate m
 
 **Incorrect (technical grouping):**
 
-```
+```text
 src/
 ├── components/
 │   ├── PostCard.tsx
 │   ├── CommentList.tsx
 │   └── UserAvatar.tsx
 ├── hooks/
-│   ├── usePost.ts
-│   ├── useComments.ts
-│   └── useUser.ts
+│   ├── use-post.ts
+│   ├── use-comments.ts
+│   └── use-user.ts
 ├── api/
 │   ├── posts.ts
 │   ├── comments.ts
 │   └── users.ts
 └── utils/
-    ├── postHelpers.ts
-    └── commentHelpers.ts
+    ├── post-helpers.ts
+    └── comment-helpers.ts
 ```
 
 **Correct (feature-based grouping):**
 
-```
+```text
 src/
 ├── features/
 │   ├── post/
 │   │   ├── components/
 │   │   │   └── PostCard.tsx
 │   │   ├── hooks/
-│   │   │   └── usePost.ts
+│   │   │   └── use-post.ts
 │   │   ├── api/
 │   │   │   └── get-post.ts
 │   │   └── utils/
-│   │       └── postHelpers.ts
+│   │       └── post-helpers.ts
 │   ├── comment/
 │   │   ├── components/
 │   │   │   └── CommentList.tsx
 │   │   ├── hooks/
-│   │   │   └── useComments.ts
+│   │   │   └── use-comments.ts
 │   │   └── api/
 │   │       └── get-comments.ts
 │   └── user/
 │       ├── components/
 │       │   └── UserAvatar.tsx
 │       └── hooks/
-│           └── useUser.ts
+│           └── use-user.ts
 └── shared/
     └── components/
         └── Button.tsx

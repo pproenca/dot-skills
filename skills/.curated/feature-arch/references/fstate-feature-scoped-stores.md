@@ -2,7 +2,7 @@
 title: Scope State Stores to Features
 impact: MEDIUM
 impactDescription: Prevents global state coupling; enables feature-level state reset and testing
-tags: state, stores, scope, feature
+tags: fstate, stores, scope, feature
 ---
 
 ## Scope State Stores to Features
@@ -34,7 +34,7 @@ export const useStore = create((set) => ({
 **Correct (feature-scoped stores):**
 
 ```typescript
-// src/features/user/stores/userStore.ts
+// src/features/user/stores/user-store.ts
 export const useUserStore = create((set) => ({
   user: null,
   isLoading: false,
@@ -42,7 +42,7 @@ export const useUserStore = create((set) => ({
   clearUser: () => set({ user: null }),
 }));
 
-// src/features/cart/stores/cartStore.ts
+// src/features/cart/stores/cart-store.ts
 export const useCartStore = create((set) => ({
   items: [],
   addItem: (item) => set(s => ({ items: [...s.items, item] })),
@@ -50,7 +50,7 @@ export const useCartStore = create((set) => ({
   clearCart: () => set({ items: [] }),
 }));
 
-// src/features/notification/stores/notificationStore.ts
+// src/features/notification/stores/notification-store.ts
 export const useNotificationStore = create((set) => ({
   notifications: [],
   add: (n) => set(s => ({ notifications: [...s.notifications, n] })),
@@ -64,7 +64,7 @@ export const useNotificationStore = create((set) => ({
 
 ```typescript
 // src/features/cart/index.ts
-export { useCartStore } from './stores/cartStore';
+export { useCartStore } from './stores/cart-store';
 export type { CartItem } from './types';
 
 // Other features use the exported store

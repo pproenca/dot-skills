@@ -2,7 +2,7 @@
 title: Use Feature-Scoped Query Keys
 impact: MEDIUM-HIGH
 impactDescription: Enables targeted cache invalidation; prevents accidental cache collisions
-tags: query, cache, keys, tanstack-query
+tags: fquery, cache, keys, tanstack-query
 ---
 
 ## Use Feature-Scoped Query Keys
@@ -12,10 +12,10 @@ Query keys should be hierarchical with the feature name as the root. This enable
 **Incorrect (flat, collision-prone keys):**
 
 ```typescript
-// src/features/user/hooks/useUser.ts
+// src/features/user/hooks/use-user.ts
 useQuery({ queryKey: ['user', userId], ... });
 
-// src/features/admin/hooks/useUser.ts
+// src/features/admin/hooks/use-user.ts
 useQuery({ queryKey: ['user', userId], ... });  // Collides with above!
 
 // Hard to invalidate all user queries
@@ -34,7 +34,7 @@ export const userKeys = {
   detail: (id: string) => [...userKeys.details(), id] as const,
 };
 
-// src/features/user/hooks/useUser.ts
+// src/features/user/hooks/use-user.ts
 import { userKeys } from '../query-keys';
 
 export function useUser(userId: string) {

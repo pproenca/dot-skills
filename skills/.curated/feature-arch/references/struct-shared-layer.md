@@ -11,23 +11,23 @@ The shared layer should contain only code with high reusability and minimal busi
 
 **Incorrect (business logic in shared):**
 
-```
+```text
 src/shared/
 ├── components/
 │   ├── Button.tsx          # Generic - OK
 │   ├── ProductCard.tsx     # Business-specific - WRONG
 │   └── UserBadge.tsx       # Business-specific - WRONG
 ├── hooks/
-│   ├── useDebounce.ts      # Generic - OK
-│   └── useCheckout.ts      # Business-specific - WRONG
+│   ├── use-debounce.ts      # Generic - OK
+│   └── use-checkout.ts      # Business-specific - WRONG
 └── utils/
-    ├── formatDate.ts       # Generic - OK
-    └── calculateTax.ts     # Business-specific - WRONG
+    ├── format-date.ts       # Generic - OK
+    └── calculate-tax.ts     # Business-specific - WRONG
 ```
 
 **Correct (shared is generic only):**
 
-```
+```text
 src/shared/
 ├── components/
 │   ├── Button.tsx
@@ -35,16 +35,16 @@ src/shared/
 │   ├── Modal.tsx
 │   └── Tooltip.tsx
 ├── hooks/
-│   ├── useDebounce.ts
-│   ├── useLocalStorage.ts
-│   └── useMediaQuery.ts
+│   ├── use-debounce.ts
+│   ├── use-local-storage.ts
+│   └── use-media-query.ts
 └── utils/
-    ├── formatDate.ts
-    ├── formatCurrency.ts
+    ├── format-date.ts
+    ├── format-currency.ts
     └── cn.ts
 ```
 
-```
+```text
 src/features/product/
 ├── components/
 │   └── ProductCard.tsx     # Business component lives with feature
@@ -52,17 +52,19 @@ src/features/product/
 
 src/features/checkout/
 ├── hooks/
-│   └── useCheckout.ts      # Business hook lives with feature
+│   └── use-checkout.ts      # Business hook lives with feature
 ├── utils/
-│   └── calculateTax.ts     # Business util lives with feature
+│   └── calculate-tax.ts     # Business util lives with feature
 └── ...
 ```
+
+**Promotion rule (rule of two):** if exactly one feature uses a util, it lives inside that feature; once two or more features need it, it moves up to the shared layer. Promotion is a deliberate move — never place code in shared/ speculatively "because something else might need it".
 
 **Litmus test for shared/:**
 - Would this be useful in a completely different project?
 - Does it contain zero business domain knowledge?
-- Is it used by 3+ features?
+- Do 2+ features use it today (not hypothetically)?
 
 If any answer is "no", it belongs in a feature folder.
 
-Reference: [Feature-Sliced Design](https://feature-sliced.design/)
+Reference: [Robin Wieruch - React Folder Structure](https://www.robinwieruch.de/react-folder-structure/), [Feature-Sliced Design](https://feature-sliced.design/)

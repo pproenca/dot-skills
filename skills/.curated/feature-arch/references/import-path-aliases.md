@@ -14,9 +14,9 @@ Configure path aliases to avoid relative import chains. Aliases make imports sel
 ```typescript
 // src/features/checkout/components/PaymentForm.tsx
 import { Button } from '../../../shared/components/Button';
-import { useAuth } from '../../../features/auth/hooks/useAuth';  // Also wrong: cross-feature
-import { formatCurrency } from '../../../shared/utils/formatCurrency';
-import { useCheckout } from '../hooks/useCheckout';
+import { useAuth } from '../../../features/auth/hooks/use-auth';  // Also wrong: cross-feature
+import { formatCurrency } from '../../../shared/utils/format-currency';
+import { useCheckout } from '../hooks/use-checkout';
 ```
 
 **Correct (path aliases):**
@@ -24,8 +24,8 @@ import { useCheckout } from '../hooks/useCheckout';
 ```typescript
 // src/features/checkout/components/PaymentForm.tsx
 import { Button } from '@/shared/components/Button';
-import { formatCurrency } from '@/shared/utils/formatCurrency';
-import { useCheckout } from '../hooks/useCheckout';  // Same feature = relative OK
+import { formatCurrency } from '@/shared/utils/format-currency';
+import { useCheckout } from '../hooks/use-checkout';  // Same feature = relative OK
 ```
 
 **tsconfig.json:**

@@ -35,7 +35,7 @@ export const userRoutes = {
   orders: (userId: string) => `/users/${userId}/orders`,
 } as const;
 
-// src/features/user/hooks/useUserParams.ts
+// src/features/user/hooks/use-user-params.ts
 import { useParams } from 'react-router-dom';
 
 export function useUserParams() {
@@ -47,7 +47,7 @@ export function useUserParams() {
 // src/features/user/components/UserProfile.tsx
 import { useNavigate } from 'react-router-dom';
 import { userRoutes } from '../routes';
-import { useUserParams } from '../hooks/useUserParams';
+import { useUserParams } from '../hooks/use-user-params';
 
 export function UserProfile() {
   const navigate = useNavigate();

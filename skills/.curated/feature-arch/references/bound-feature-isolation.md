@@ -12,10 +12,10 @@ Each feature should be modifiable, testable, and deployable without affecting ot
 **Incorrect (coupled features):**
 
 ```typescript
-// src/features/order/hooks/useOrder.ts
-import { useCart } from '@/features/cart/hooks/useCart';
-import { useUser } from '@/features/user/hooks/useUser';
-import { usePayment } from '@/features/payment/hooks/usePayment';
+// src/features/order/hooks/use-order.ts
+import { useCart } from '@/features/cart/hooks/use-cart';
+import { useUser } from '@/features/user/hooks/use-user';
+import { usePayment } from '@/features/payment/hooks/use-payment';
 
 export function useOrder() {
   const cart = useCart();
@@ -38,7 +38,7 @@ export function useOrder() {
 **Correct (isolated with dependency injection):**
 
 ```typescript
-// src/features/order/hooks/useOrder.ts
+// src/features/order/hooks/use-order.ts
 interface OrderDependencies {
   items: CartItem[];
   userId: string;

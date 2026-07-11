@@ -13,7 +13,7 @@ Each feature folder should contain everything needed to implement that feature. 
 
 ```typescript
 // src/components/checkout/CheckoutForm.tsx
-import { useCart } from '../../hooks/useCart';
+import { useCart } from '../../hooks/use-cart';
 import { validateCard } from '../../utils/validation';
 import { CartSummary } from '../cart/CartSummary';
 import { paymentApi } from '../../api/payment';
@@ -28,7 +28,7 @@ export function CheckoutForm() {
 
 ```typescript
 // src/features/checkout/components/CheckoutForm.tsx
-import { useCart } from '../hooks/useCart';
+import { useCart } from '../hooks/use-cart';
 import { validateCard } from '../utils/validation';
 import { CartSummary } from '../components/CartSummary';
 import { submitPayment } from '../api/submit-payment';
@@ -41,7 +41,7 @@ export function CheckoutForm() {
 
 **Feature folder structure:**
 
-```
+```text
 features/checkout/
 ├── api/
 │   └── submit-payment.ts
@@ -49,7 +49,7 @@ features/checkout/
 │   ├── CheckoutForm.tsx
 │   └── CartSummary.tsx
 ├── hooks/
-│   └── useCart.ts
+│   └── use-cart.ts
 ├── utils/
 │   └── validation.ts
 └── index.ts

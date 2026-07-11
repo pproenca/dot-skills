@@ -11,7 +11,7 @@ Features should be large enough to be meaningful but small enough to be maintain
 
 **Incorrect (too granular):**
 
-```
+```text
 src/features/
 ├── user-avatar/          # Too small - just one component
 ├── user-name/            # Too small
@@ -22,7 +22,7 @@ src/features/
 
 **Incorrect (too large):**
 
-```
+```text
 src/features/
 └── user/
     ├── components/
@@ -39,7 +39,7 @@ src/features/
 
 **Correct (cohesive features):**
 
-```
+```text
 src/features/
 ├── user/                # Core user identity
 │   ├── components/
@@ -47,13 +47,13 @@ src/features/
 │   │   ├── UserProfile.tsx
 │   │   └── UserSettings.tsx
 │   └── hooks/
-│       └── useUser.ts
+│       └── use-user.ts
 ├── orders/              # Separate domain
 │   ├── components/
 │   │   ├── OrderList.tsx
 │   │   └── OrderDetail.tsx
 │   └── hooks/
-│       └── useOrders.ts
+│       └── use-orders.ts
 ├── payments/            # Separate domain
 │   └── ...
 └── subscription/        # Separate domain

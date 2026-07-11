@@ -11,7 +11,7 @@ Name features after business domains, not technical implementations. This makes 
 
 **Incorrect (technical naming):**
 
-```
+```text
 src/features/
 ├── data-grid/          # What data? What domain?
 ├── form-handler/       # What form? What entity?
@@ -22,7 +22,7 @@ src/features/
 
 **Correct (domain naming):**
 
-```
+```text
 src/features/
 ├── user/               # User management domain
 ├── product/            # Product catalog domain
@@ -42,9 +42,19 @@ src/features/
 | Shopping | `cart`, `checkout` | `purchase-flow` |
 | Authentication | `auth` | `login-system` |
 
+**Keep names singular.** Use `features/customer/`, never `features/customers/`. Even when a component renders a collection, the folder represents one domain concept — `customer/customer-list/` reads unambiguously, while a mix of `customers/` and `customer/` across the tree forces contributors to guess. Collection folders (`features/`, `components/`, `hooks/`, `queries/`) and bundle files (`types.ts`, `utils.ts`) stay plural — they genuinely hold many items; the singular rule applies to domain and component names.
+
+```text
+src/features/
+├── customer/           # singular, even though it lists customers
+│   └── customer-list/
+└── project/
+    └── project-table/
+```
+
 **Sub-features:**
 
-```
+```text
 src/features/
 ├── user/
 │   ├── ...            # Core user feature
@@ -57,4 +67,4 @@ src/features/
 - Does this map to a business capability?
 - Would this name make sense in a requirements document?
 
-Reference: [Domain-Driven Design - Eric Evans](https://www.domainlanguage.com/ddd/)
+Reference: [Robin Wieruch - React Folder Structure](https://www.robinwieruch.de/react-folder-structure/), [Domain-Driven Design - Eric Evans](https://www.domainlanguage.com/ddd/)

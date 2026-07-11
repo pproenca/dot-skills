@@ -7,17 +7,16 @@ tags: name, files, conventions, consistency
 
 ## Use Consistent File Naming Conventions
 
-Establish and follow consistent file naming patterns. This enables automated tooling, makes files predictable, and reduces decision fatigue.
+Default to kebab-case for every file and folder name — components included. Kebab-case survives case-insensitive filesystems (macOS/Windows git rename bugs), matches Next.js route segments, and removes the "which casing does this file use?" decision entirely. The component itself stays PascalCase; only the filename is kebab-case.
 
-**Incorrect (inconsistent naming):**
+**Incorrect (mixed casing per file type):**
 
-```
+```text
 src/features/user/
 ├── components/
 │   ├── UserProfile.tsx      # PascalCase
 │   ├── user-avatar.tsx      # kebab-case
-│   ├── userBadge.tsx        # camelCase
-│   └── User_Settings.tsx    # Snake_Case
+│   └── userBadge.tsx        # camelCase
 ├── hooks/
 │   ├── useUser.ts           # camelCase
 │   └── use-auth.ts          # kebab-case
@@ -26,41 +25,43 @@ src/features/user/
     └── user-api.ts          # kebab-case
 ```
 
-**Correct (consistent conventions):**
+**Correct (kebab-case throughout):**
 
-```
+```text
 src/features/user/
 ├── components/
-│   ├── UserProfile.tsx      # PascalCase for components
-│   ├── UserAvatar.tsx
-│   ├── UserBadge.tsx
-│   └── UserSettings.tsx
+│   ├── user-profile.tsx     # exports UserProfile
+│   ├── user-avatar.tsx      # exports UserAvatar
+│   └── user-settings.tsx    # exports UserSettings
 ├── hooks/
-│   ├── useUser.ts           # camelCase with use prefix
-│   └── useUserAuth.ts
-├── api/
-│   ├── get-user.ts          # kebab-case for non-components
-│   ├── update-user.ts
-│   └── delete-user.ts
+│   ├── use-user.ts          # exports useUser
+│   └── use-user-auth.ts
+├── queries/
+│   ├── get-user.ts          # get- prefix for reads
+│   └── get-users.ts
+├── actions/
+│   ├── update-user-action.ts   # -action suffix for server actions
+│   └── delete-user-action.ts
 ├── stores/
-│   └── user-store.ts        # kebab-case
-├── types/
-│   └── index.ts
+│   └── user-store.ts
+├── types.ts
 └── utils/
-    └── format-user-name.ts  # kebab-case
+    └── format-user-name.ts
 ```
 
 **Recommended conventions:**
 
 | File Type | Convention | Example |
 |-----------|------------|---------|
-| React components | PascalCase | `UserProfile.tsx` |
-| Hooks | camelCase with use prefix | `useUser.ts` |
-| API functions | kebab-case | `get-user.ts` |
-| Stores | kebab-case | `user-store.ts` |
+| React components | kebab-case, PascalCase export | `user-profile.tsx` → `UserProfile` |
+| Hooks | kebab-case with use- prefix | `use-user.ts` → `useUser` |
+| Queries (reads) | kebab-case with get- prefix | `get-user.ts` |
+| Server actions | kebab-case with -action suffix | `update-user-action.ts` |
+| Stores | kebab-case with -store suffix | `user-store.ts` |
 | Utilities | kebab-case | `format-date.ts` |
-| Types | index.ts or kebab-case | `types/index.ts` |
-| Tests | match source + .test | `UserProfile.test.tsx` |
+| Tests | match source + .test | `user-profile.test.tsx` |
+
+**Acceptable alternative:** PascalCase filenames for component files (`UserProfile.tsx`) remain a widespread house convention. If the codebase already uses it, keep it — consistency beats migration churn. Do not mix both in one project.
 
 **ESLint enforcement:**
 
@@ -68,12 +69,9 @@ src/features/user/
 // .eslintrc.js
 rules: {
   'unicorn/filename-case': ['error', {
-    cases: {
-      pascalCase: true,  // For .tsx files
-      kebabCase: true,   // For .ts files
-    },
+    case: 'kebabCase',
   }],
 }
 ```
 
-Reference: [Airbnb React Style Guide](https://github.com/airbnb/javascript/tree/master/react)
+Reference: [Robin Wieruch - React Folder Structure](https://www.robinwieruch.de/react-folder-structure/)

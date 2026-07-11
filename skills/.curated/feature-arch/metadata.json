@@ -1,11 +1,12 @@
 {
-  "version": "1.0.6",
+  "version": "1.1.0",
   "discipline": "distillation",
   "organization": "Community",
   "technology": "React Feature-Based Architecture",
-  "date": "May 2026",
-  "abstract": "Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 42 rules across 8 categories, prioritized by impact from critical (directory structure and import rules) to incremental (naming conventions). When invoked on a project, the skill produces a concrete target-architecture blueprint at docs/architecture/FEATURE-ARCH-TARGET.md — covering project context, identified features, target directory tree, per-feature public APIs, import-boundary matrix, state ownership, cross-feature communication policy, a numbered migration plan, and a human conformance checklist — with every section anchored in the skill's underlying rules.",
+  "date": "July 2026",
+  "abstract": "Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 43 rules across 8 categories, prioritized by impact from critical (directory structure and import rules) to incremental (naming conventions). When invoked on a project, the skill produces a concrete target-architecture blueprint at docs/architecture/FEATURE-ARCH-TARGET.md — covering project context, identified features, target directory tree, per-feature public APIs, import-boundary matrix, state ownership, cross-feature communication policy, a numbered migration plan, and a human conformance checklist — with every section anchored in the skill's underlying rules.",
   "references": [
+    "https://www.robinwieruch.de/react-folder-structure/",
     "https://www.robinwieruch.de/react-feature-architecture/",
     "https://feature-sliced.design/",
     "https://github.com/alan2207/bulletproof-react/blob/master/docs/project-structure.md",

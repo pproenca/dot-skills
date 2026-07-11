@@ -2,7 +2,7 @@
 title: Reset Feature State on Unmount
 impact: MEDIUM
 impactDescription: Prevents stale state bugs; ensures clean feature initialization
-tags: state, reset, cleanup, unmount
+tags: fstate, reset, cleanup, unmount
 ---
 
 ## Reset Feature State on Unmount
@@ -30,7 +30,7 @@ function CheckoutPage() {
 **Correct (reset on unmount):**
 
 ```typescript
-// src/features/checkout/stores/checkoutStore.ts
+// src/features/checkout/stores/checkout-store.ts
 const initialState = {
   shippingAddress: null,
   paymentMethod: null,

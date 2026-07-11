@@ -36,7 +36,7 @@ import { UserAvatar } from '@/features/user';
 export { UserProfile } from './components/UserProfile';
 export { UserSettings } from './components/UserSettings';
 export { UserAvatar } from './components/UserAvatar';
-export { useUser } from './hooks/useUser';
+export { useUser } from './hooks/use-user';
 export type { User } from './types';
 
 // Consumer

@@ -14,7 +14,7 @@ Each feature should have a single entry point (index.ts) that exports its public
 ```typescript
 // src/app/pages/UserPage.tsx
 import { UserProfile } from '@/features/user/components/UserProfile';
-import { useUser } from '@/features/user/hooks/useUser';
+import { useUser } from '@/features/user/hooks/use-user';
 import { formatUserName } from '@/features/user/utils/formatters';
 import { User } from '@/features/user/types/user';
 ```
@@ -25,7 +25,7 @@ import { User } from '@/features/user/types/user';
 // src/features/user/index.ts (public API)
 export { UserProfile } from './components/UserProfile';
 export { UserSettings } from './components/UserSettings';
-export { useUser } from './hooks/useUser';
+export { useUser } from './hooks/use-user';
 export type { User, UserRole } from './types';
 // Note: formatUserName is NOT exported - it's internal
 
@@ -38,7 +38,7 @@ import type { User } from '@/features/user';
 
 ```typescript
 // src/features/user/components/UserProfile.tsx
-import { useUser } from '../hooks/useUser';
+import { useUser } from '../hooks/use-user';
 import { formatUserName } from '../utils/formatters';  // Internal util
 import type { User } from '../types';
 ```

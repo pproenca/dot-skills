@@ -2,7 +2,7 @@
 title: Colocate Data Fetching with Features
 impact: HIGH
 impactDescription: Makes features self-contained; enables independent API evolution
-tags: query, colocation, data-fetching, feature
+tags: fquery, colocation, data-fetching, feature
 ---
 
 ## Colocate Data Fetching with Features
@@ -11,7 +11,7 @@ Data fetching logic belongs within the feature that owns the data. When API call
 
 **Incorrect (centralized API layer):**
 
-```
+```text
 src/
 ├── api/
 │   ├── users.ts         # All user API calls
@@ -27,7 +27,7 @@ src/
 
 **Correct (colocated with features):**
 
-```
+```text
 src/features/
 ├── user/
 │   ├── api/
@@ -37,7 +37,7 @@ src/features/
 │   ├── components/
 │   │   └── UserProfile.tsx
 │   └── hooks/
-│       └── useUser.ts
+│       └── use-user.ts
 └── post/
     ├── api/
     │   ├── get-post.ts
@@ -46,11 +46,11 @@ src/features/
     ├── components/
     │   └── PostList.tsx
     └── hooks/
-        └── usePosts.ts
+        └── use-posts.ts
 ```
 
 ```typescript
-// src/features/user/hooks/useUser.ts
+// src/features/user/hooks/use-user.ts
 import { getUser } from '../api/get-user';
 
 export function useUser(userId: string) {

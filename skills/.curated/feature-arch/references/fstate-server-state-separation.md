@@ -2,7 +2,7 @@
 title: Separate Server State from Client State
 impact: MEDIUM
 impactDescription: Eliminates manual cache sync; leverages query library optimizations
-tags: state, server-state, client-state, tanstack-query
+tags: fstate, server-state, client-state, tanstack-query
 ---
 
 ## Separate Server State from Client State
@@ -12,7 +12,7 @@ Server state (data from API) and client state (UI state, form state) have differ
 **Incorrect (server state in client store):**
 
 ```typescript
-// src/stores/userStore.ts
+// src/stores/user-store.ts
 export const useUserStore = create((set) => ({
   users: [],
   isLoading: false,
@@ -36,7 +36,7 @@ export const useUserStore = create((set) => ({
 **Correct (server state in query library):**
 
 ```typescript
-// src/features/user/hooks/useUsers.ts
+// src/features/user/hooks/use-users.ts
 // Server state - managed by TanStack Query
 export function useUsers(filters: UserFilters) {
   return useQuery({
@@ -46,7 +46,7 @@ export function useUsers(filters: UserFilters) {
   });
 }
 
-// src/features/user/stores/userUIStore.ts
+// src/features/user/stores/user-uistore.ts
 // Client state - UI-only concerns
 export const useUserUIStore = create((set) => ({
   selectedUserId: null,

@@ -77,7 +77,7 @@ test('complete purchase flow', async ({ page }) => {
 
 **Test layer structure:**
 
-```
+```text
 tests/
 ├── unit/           # Fast, isolated tests (run on every commit)
 ├── integration/    # Feature composition tests (run on PR)

@@ -2,7 +2,7 @@
 title: Use Feature-Level Error Boundaries
 impact: MEDIUM
 impactDescription: Isolates failures to single features; prevents full-page crashes
-tags: comp, error-boundary, resilience, isolation
+tags: fcomp, error-boundary, resilience, isolation
 ---
 
 ## Use Feature-Level Error Boundaries

@@ -5,7 +5,7 @@ description: React feature-based architecture guidelines for scalable applicatio
 
 # Feature-Based Architecture Best Practices
 
-Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 42 rules across 8 categories, prioritized by impact from critical (directory structure, imports) to incremental (naming conventions). When invoked on a real project, the skill produces a project-specific blueprint that anchors every decision in those rules.
+Comprehensive architecture guide for organizing React applications by features, enabling scalable development with independent teams. Contains 43 rules across 8 categories, prioritized by impact from critical (directory structure, imports) to incremental (naming conventions). When invoked on a real project, the skill produces a project-specific blueprint that anchors every decision in those rules.
 
 ## Primary Output: The Target Architecture Blueprint
 
@@ -76,6 +76,7 @@ Reference these guidelines when:
 - `struct-flat-hierarchy` - Keep directory hierarchy flat
 - `struct-optional-segments` - Include only necessary segments
 - `struct-app-layer` - Separate app layer from features
+- `struct-domain-folders` - Group features into domains at large scale
 
 ### 2. Import & Dependencies (CRITICAL)
 

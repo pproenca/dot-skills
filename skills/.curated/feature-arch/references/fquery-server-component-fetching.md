@@ -2,7 +2,7 @@
 title: Fetch at Server Component Level
 impact: MEDIUM-HIGH
 impactDescription: Eliminates client-server waterfalls; reduces bundle size by keeping fetch logic on server
-tags: query, server-components, rsc, next.js
+tags: fquery, server-components, rsc, next.js
 ---
 
 ## Fetch at Server Component Level

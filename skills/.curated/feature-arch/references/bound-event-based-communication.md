@@ -12,9 +12,9 @@ When features must communicate without direct dependencies, use an event-based a
 **Incorrect (direct coupling):**
 
 ```typescript
-// src/features/order/hooks/useOrder.ts
-import { clearCart } from '@/features/cart/stores/cartStore';
-import { showNotification } from '@/features/notification/stores/notificationStore';
+// src/features/order/hooks/use-order.ts
+import { clearCart } from '@/features/cart/stores/cart-store';
+import { showNotification } from '@/features/notification/stores/notification-store';
 import { sendAnalytics } from '@/features/analytics/utils/analytics';
 
 export function useOrder() {
@@ -32,7 +32,7 @@ export function useOrder() {
 **Correct (event-based communication):**
 
 ```typescript
-// src/shared/events/eventBus.ts
+// src/shared/events/event-bus.ts
 type EventMap = {
   'order:completed': { orderId: string; total: number };
   'order:failed': { error: string };
@@ -42,7 +42,7 @@ type EventMap = {
 
 export const eventBus = createEventBus<EventMap>();
 
-// src/features/order/hooks/useOrder.ts
+// src/features/order/hooks/use-order.ts
 import { eventBus } from '@/shared/events/eventBus';
 
 export function useOrder() {
@@ -52,9 +52,9 @@ export function useOrder() {
   }
 }
 
-// src/features/cart/hooks/useCartSync.ts
+// src/features/cart/hooks/use-cart-sync.ts
 import { eventBus } from '@/shared/events/eventBus';
-import { useCartStore } from '../stores/cartStore';
+import { useCartStore } from '../stores/cart-store';
 
 export function useCartSync() {
   useEffect(() => {
@@ -64,7 +64,7 @@ export function useCartSync() {
   }, []);
 }
 
-// src/features/notification/hooks/useOrderNotifications.ts
+// src/features/notification/hooks/use-order-notifications.ts
 import { eventBus } from '@/shared/events/eventBus';
 
 export function useOrderNotifications() {

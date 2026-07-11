@@ -2,7 +2,7 @@
 title: Avoid N+1 Query Patterns
 impact: HIGH
 impactDescription: Prevents request count from scaling with data size; eliminates O(N) network calls
-tags: query, n-plus-one, performance, batching
+tags: fquery, n-plus-one, performance, batching
 ---
 
 ## Avoid N+1 Query Patterns

@@ -2,7 +2,7 @@
 title: Separate Container and Presentational Concerns
 impact: MEDIUM
 impactDescription: Enables design system reuse; keeps business logic testable
-tags: comp, container, presentational, separation
+tags: fcomp, container, presentational, separation
 ---
 
 ## Separate Container and Presentational Concerns

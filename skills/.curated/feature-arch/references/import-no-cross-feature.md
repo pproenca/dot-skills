@@ -14,7 +14,7 @@ Features must not import directly from other features. When features need to int
 ```typescript
 // src/features/checkout/components/CheckoutSummary.tsx
 import { ProductCard } from '@/features/product/components/ProductCard';  // WRONG
-import { useCart } from '@/features/cart/hooks/useCart';  // WRONG
+import { useCart } from '@/features/cart/hooks/use-cart';  // WRONG
 import { UserAddress } from '@/features/user/components/UserAddress';  // WRONG
 
 export function CheckoutSummary() {
@@ -65,6 +65,25 @@ export function CheckoutPage() {
 }
 ```
 
+**Escape hatch — the `relations/` subfolder.** Some coupling is genuinely domain-driven (a project *has* customers). Instead of a hidden deep import, make the relationship explicit: code that bridges two features lives in a `relations/<other-feature>/` subfolder of the owning feature. The coupling becomes visible in the directory tree and auditable in review, rather than buried in import statements. Use app-layer composition to assemble UI from independent features; use `relations/` when a feature owns genuine domain data coupling, such as a join query or action across two entities. Code in `relations/<other>/` may import the other feature's public API, never its internals.
+
+```text
+src/features/project/
+├── queries/
+│   └── get-project.ts
+├── components/
+│   └── project-upsert-form.tsx
+└── relations/
+    ├── customer/
+    │   ├── actions/
+    │   │   └── add-customer-to-project-action.ts
+    │   └── components/
+    │       └── customer-for-project-manage-button.tsx
+    └── user/
+        └── queries/
+            └── get-projects-by-user.ts
+```
+
 **ESLint enforcement per feature:**
 
 ```javascript
@@ -81,4 +100,4 @@ rules: {
 }
 ```
 
-Reference: [Robin Wieruch - React Feature Architecture](https://www.robinwieruch.de/react-feature-architecture/)
+Reference: [Robin Wieruch - React Feature Architecture](https://www.robinwieruch.de/react-feature-architecture/), [Robin Wieruch - React Folder Structure](https://www.robinwieruch.de/react-folder-structure/)
