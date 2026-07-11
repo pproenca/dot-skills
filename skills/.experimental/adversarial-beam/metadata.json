@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Elixir / OTP / BEAM runtime architecture",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Pass/fail review gate for BEAM runtime architecture in Elixir systems: two blind reviewers judge a diff or file set against 23 decidable rules that catch wrong assumptions about the runtime's execution and delivery model — supervision and failure design, backpressure and overload, event delivery semantics, shared-state consistency, distribution reality, and runtime mechanics — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Sibling of adversarial-elixir, which gates paradigm fit; judgment-call guidance lives in staff-level-elixir.",
+  "references": [
+    "https://www.erlang.org/doc/system/sup_princ.html",
+    "https://www.erlang.org/doc/system/ref_man_processes.html",
+    "https://www.erlang.org/doc/system/binaryhandling.html",
+    "https://www.erlang.org/doc/apps/erts/time_correction.html",
+    "https://www.erlang.org/doc/apps/erts/persistent_term.html",
+    "https://www.erlang.org/doc/apps/kernel/global.html",
+    "https://www.erlang.org/doc/apps/stdlib/ets.html",
+    "https://hexdocs.pm/elixir/GenServer.html",
+    "https://hexdocs.pm/elixir/Task.html",
+    "https://hexdocs.pm/elixir/Registry.html",
+    "https://hexdocs.pm/telemetry/telemetry.html",
+    "https://hexdocs.pm/broadway/introduction.html",
+    "https://hexdocs.pm/oban/Oban.html",
+    "https://ferd.ca/handling-overload.html",
+    "https://ferd.ca/the-zen-of-erlang.html",
+    "https://pragprog.com/titles/sbsockets/real-time-phoenix/"
+  ]
+}
