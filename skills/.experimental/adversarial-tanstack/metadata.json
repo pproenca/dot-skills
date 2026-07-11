@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "TanStack Start v1 RC + TypeScript",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Pass/fail review gate for TanStack Start + TypeScript web-app changes: two blind reviewers judge a diff or file set against 22 decidable rules across client/server boundary, server functions and routes, auth and security, SSR data loading, boundary type safety, and compiler configuration. Pinned to @tanstack/react-start 1.168+ (v1 RC) and TypeScript 5.8-6.x.",
+  "references": [
+    "https://tanstack.com/start/latest/docs/framework/react/guide/server-functions",
+    "https://tanstack.com/start/latest/docs/framework/react/guide/server-routes",
+    "https://tanstack.com/start/latest/docs/framework/react/guide/execution-model",
+    "https://tanstack.com/start/latest/docs/framework/react/guide/environment-variables",
+    "https://tanstack.com/start/latest/docs/framework/react/guide/authentication-server-primitives",
+    "https://tanstack.com/start/latest/docs/framework/react/build-from-scratch",
+    "https://tanstack.com/router/latest/docs/integrations/query",
+    "https://github.com/TanStack/router/blob/main/packages/react-start/CHANGELOG.md",
+    "https://www.typescriptlang.org/tsconfig/",
+    "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+    "https://typescript-eslint.io/rules/",
+    "https://effectivetypescript.com/2024/10/31/runtime-types/",
+    "https://zod.dev/"
+  ]
+}
