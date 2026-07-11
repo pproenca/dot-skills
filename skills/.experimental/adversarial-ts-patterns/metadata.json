@@ -1,0 +1,27 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "TypeScript + React design patterns",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Pass/fail review gate for design-pattern usage in TypeScript and React application code: two blind reviewers judge a diff or file set against 18 decidable rules across state modeling and machines, creational ports, behavioral ports, enterprise layers, React composition, and OO ceremony. Fails both over-abstraction (Java/C# pattern ports where idiomatic TS reaches for a function, module, or tagged union) and under-modeling (implicit state machines whose impossible states compile).",
+  "references": [
+    "https://react.dev/learn/choosing-the-state-structure",
+    "https://react.dev/learn/you-might-not-need-an-effect",
+    "https://react.dev/learn/sharing-state-between-components",
+    "https://react.dev/learn/reusing-logic-with-custom-hooks",
+    "https://react.dev/reference/react/useImperativeHandle",
+    "https://react.dev/reference/react/Component",
+    "https://legacy.reactjs.org/docs/composition-vs-inheritance.html",
+    "https://www.typescriptlang.org/docs/handbook/2/narrowing.html",
+    "https://www.typescriptlang.org/docs/handbook/type-compatibility.html",
+    "https://www.typescriptlang.org/docs/handbook/utility-types.html",
+    "https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules",
+    "https://martinfowler.com/eaaCatalog/repository.html",
+    "https://martinfowler.com/articles/injection.html",
+    "https://refactoring.guru/design-patterns/factory-method",
+    "https://refactoring.guru/design-patterns/strategy",
+    "https://google.github.io/styleguide/tsguide.html"
+  ]
+}
