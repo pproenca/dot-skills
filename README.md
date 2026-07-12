@@ -64,6 +64,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [acceptance-pipeline-feature-design](skills/.experimental/acceptance-pipeline-feature-design) | Designs new features, extensions, or modifications to Uncle Bob's Acceptance Pipeline.. |
 | [adversarial-beam](skills/.experimental/adversarial-beam) | Use this skill to gate Elixir/OTP systems on BEAM runtime architecture with a pass/fail.. |
 | [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill to gate Elixir, OTP, Ecto, and Phoenix code with a pass/fail adversarial review —.. |
+| [adversarial-phoenix-liveview](skills/.experimental/adversarial-phoenix-liveview) | Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — two.. |
 | [adversarial-rust](skills/.experimental/adversarial-rust) | Use this skill when reviewing or refactoring existing Rust code that carries an alien mental.. |
 | [adversarial-swift](skills/.experimental/adversarial-swift) | Use this skill to gate Swift and SwiftUI code with a pass/fail adversarial review — two blind.. |
 | [adversarial-tanstack](skills/.experimental/adversarial-tanstack) | Use this skill to gate TanStack Start plus TypeScript web-app changes with a pass/fail.. |
