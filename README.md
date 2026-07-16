@@ -63,6 +63,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [acceptance-pipeline-catalog](skills/.experimental/acceptance-pipeline-catalog) | Use when implementing, reviewing, or debugging a Gherkin acceptance-test pipeline with mutation.. |
 | [acceptance-pipeline-feature-design](skills/.experimental/acceptance-pipeline-feature-design) | Designs new features, extensions, or modifications to Uncle Bob's Acceptance Pipeline.. |
 | [adversarial-beam](skills/.experimental/adversarial-beam) | Use this skill to gate Elixir/OTP systems on BEAM runtime architecture with a pass/fail.. |
+| [adversarial-ddd](skills/.experimental/adversarial-ddd) | Use this skill to gate DDD and ubiquitous-language quality with a pass/fail adversarial review —.. |
 | [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill to gate Elixir, OTP, Ecto, and Phoenix code with a pass/fail adversarial review —.. |
 | [adversarial-phoenix-liveview](skills/.experimental/adversarial-phoenix-liveview) | Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — two.. |
 | [adversarial-rust](skills/.experimental/adversarial-rust) | Use this skill when reviewing or refactoring existing Rust code that carries an alien mental.. |
