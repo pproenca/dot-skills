@@ -36,7 +36,7 @@ A contested rule counts as FAIL. If the same rule is contested across repeated r
 
 <!-- Omit this section on overall PASS. Aggregate every reviewer's "missing for PASS"
      suggestions, dedupe, keep locations, order by category importance
-     (state > conc > identity > update > task > list > access > api > flow). -->
+     (conc > prop > err > enum > api > coll > flow). -->
 
 {{FOR_EACH FIX in FIX_LIST}}
 1. **{{FIX.rule_title}}** — {{FIX.change_and_location}}

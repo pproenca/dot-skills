@@ -5,21 +5,29 @@ tags: conc, continuations, completion-handlers, async-bridging
 
 ## Resume checked continuations exactly once on every reachable path
 
-The wrong default when bridging a `(Value?, Error?)` completion handler with `withCheckedThrowingContinuation` is handling only the two expected branches — `if let data … else if let error …` — and forgetting the both-`nil` case. A path that never calls `resume` suspends the awaiting task forever with no crash and no log; a path that can resume twice traps at runtime. The source's canonical bridge resumes in a final `else` with a synthesized error precisely so every reachable path resumes exactly once.
+The wrong default when bridging a `(Data?, Error?)` completion handler with `withCheckedThrowingContinuation` is mirroring only the two expected branches — `if let data … else if let error …` — and leaving the both-`nil` path without a `resume`. A continuation that never resumes suspends the awaiting task forever: no crash, no thrown error, no leak trace, and only the checked variants even log the loss. A path that can resume twice traps at runtime instead.
 
-**Evidence of violation:** a `withCheckedContinuation` or `withCheckedThrowingContinuation` closure containing any reachable branch that never calls `continuation.resume` (the classic tell is `if let`/`else if let` over an optional pair with no closing `else`), or control flow where two branches can both execute a `resume` (e.g. a resume inside a loop or a resume followed by fall-through into another). PASS: every branch — including the "neither value arrived" fallback — resumes exactly once. N/A: the reviewed code contains no continuation bridging.
+**Evidence of violation:** a `withCheckedContinuation` or `withCheckedThrowingContinuation` (or unsafe variant) closure containing any reachable path that exits without calling `continuation.resume` — the canonical tell is `if let`/`else if let` over an optional pair with no terminal `else`, or a `switch` case that returns early — or control flow where two branches can both execute a `resume`. Paths the callback's API contract claims are unreachable still fail unless the contract is enforced in code; the compiler cannot see contracts. PASS: every reachable path, including the "neither value arrived" fallback, resumes exactly once. N/A: the target contains no continuation bridging.
 
-**Incorrect (both-nil path never resumes, the task hangs forever):**
+**Incorrect (the both-nil callback path never resumes — the awaiting task hangs forever):**
 
 ```swift
-func legacyFetchReport(_ completion: @escaping (Data?, Error?) -> Void) { completion(Data(), nil) }
+import Foundation
 
-func fetchReportAsync() async throws -> Data {
+func fetchData(completion: @escaping (Data?, Error?) -> Void) {
+    // Simulating a network request
+    DispatchQueue.global(qos: .background).async {
+        let data = "Sample data".data(using: .utf8)
+        completion(data, nil)
+    }
+}
+
+func fetchDataAsync() async throws -> Data {
     try await withCheckedThrowingContinuation { continuation in
-        legacyFetchReport { data, error in
-            if let data {
+        fetchData { data, error in
+            if let data = data {
                 continuation.resume(returning: data)
-            } else if let error {
+            } else if let error = error {
                 continuation.resume(throwing: error)
             }
             // (nil, nil) is reachable: nothing resumes, the await never returns
@@ -28,27 +36,35 @@ func fetchReportAsync() async throws -> Data {
 }
 ```
 
-**Correct (a final else guarantees exactly one resume per path):**
+**Correct (a terminal else guarantees exactly one resume per path):**
 
 ```swift
-enum ReportError: Error { case emptyResponse }
-func legacyFetchReport(_ completion: @escaping (Data?, Error?) -> Void) { completion(Data(), nil) }
+import Foundation
 
-func fetchReportAsync() async throws -> Data {
+func fetchData(completion: @escaping (Data?, Error?) -> Void) {
+    // Simulating a network request
+    DispatchQueue.global(qos: .background).async {
+        let data = "Sample data".data(using: .utf8)
+        completion(data, nil)
+    }
+}
+
+func fetchDataAsync() async throws -> Data {
     try await withCheckedThrowingContinuation { continuation in
-        legacyFetchReport { data, error in
-            if let data {
+        fetchData { data, error in
+            if let data = data {
                 continuation.resume(returning: data)
-            } else if let error {
+            } else if let error = error {
                 continuation.resume(throwing: error)
             } else {
                 continuation.resume(
-                    throwing: ReportError.emptyResponse
+                    throwing: NSError(
+                        domain: "DataError",
+                        code: -1, userInfo: nil
+                    )
                 )
             }
         }
     }
 }
 ```
-
-Reference: expert Swift reference (2025), “Bridge async/await and completion handlers”.

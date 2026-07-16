@@ -1,45 +1,59 @@
 ---
-title: Run independent async operations concurrently with async let
-tags: conc, async-let, parallelism, latency, task-group
+title: Run independent awaits concurrently with async let
+tags: conc, async-let, latency, structured-concurrency
 ---
 
-## Run independent async operations concurrently with async let
+## Run independent awaits concurrently with async let
 
-The wrong default is awaiting independent operations one after another — `let a = try await fetchA(); let b = try await fetchB()` — which serializes work that has no reason to wait, adding the full latency of each call to the total. With `async let`, each operation begins the moment it is declared and Swift only suspends when the results are awaited, so independent fetches overlap for free. When the number of operations is dynamic, `withTaskGroup` is the equivalent tool.
+The wrong default is awaiting independent async operations one after another — `let flowers = try await fetchFlowers()` then `let pollinators = try await fetchPollinators()` — when neither result feeds the other. Total latency becomes the sum of the operations instead of the max of them; the code compiles clean and passes tests, so nothing ever flags the user-visible slowdown. `async let` starts both operations immediately and suspends only where the results are consumed.
 
-**Evidence of violation:** two or more sequential `await` calls in one function where the later call's arguments and control flow reference nothing produced by the earlier call. A claimed dependency must be cited per leg — name the produced value the later call consumes, or the ordering constraint (e.g. actor-serialized writes) that forces the sequence; a dependency asserted without citable evidence does not excuse the serialization. PASS: `async let` for a fixed set of independent operations, `withTaskGroup` / `withThrowingTaskGroup` for a dynamic set. N/A: every sequential await consumes a value or ordering guarantee from the one before it.
+**Evidence of violation:** two or more sequential `await` expressions in one function where no later expression consumes a value produced by an earlier one (no data dependency) and no ordering-sensitive code separates them. PASS: a data dependency links the awaits, an explicit ordering constraint is stated in code or a comment (rate limit, transactional ordering), the awaits target the same actor-isolated mutable resource, or the independent operations already run via `async let` or a task group. N/A: no function in the target contains two or more awaits.
 
-**Incorrect (independent fetches serialized — total latency is the sum):**
+**Incorrect (sequential awaits — total time is fetchFlowers plus fetchPollinators):**
 
 ```swift
-struct GardenSnapshot { let flowers: [String]; let pollinators: [String] }
-func fetchFlowers() async throws -> [String] { [] }
-func fetchPollinators() async throws -> [String] { [] }
+struct Flower { let name: String }
+struct Pollinator { let name: String }
+func fetchFlowers() async throws -> [Flower] { [] }
+func fetchPollinators() async throws -> [Pollinator] { [] }
 
-func loadGardenData() async throws -> GardenSnapshot {
-    let flowers = try await fetchFlowers()
-    let pollinators = try await fetchPollinators() // uses nothing from flowers
-    return GardenSnapshot(flowers: flowers, pollinators: pollinators)
+func loadGardenData() async {
+    do {
+        let loadedFlowers = try await fetchFlowers()
+        let loadedPollinators = try await fetchPollinators()
+
+        print("""
+        Loaded \(loadedFlowers.count) flowers \
+        and \(loadedPollinators.count) pollinators.
+        """)
+    } catch {
+        print("Failed to load data: \(error)")
+    }
 }
 ```
 
-**Correct (both start immediately, suspension happens only at the combined await):**
+**Correct (async let starts both at once — total time is the slower of the two):**
 
 ```swift
-struct GardenSnapshot { let flowers: [String]; let pollinators: [String] }
-func fetchFlowers() async throws -> [String] { [] }
-func fetchPollinators() async throws -> [String] { [] }
+struct Flower { let name: String }
+struct Pollinator { let name: String }
+func fetchFlowers() async throws -> [Flower] { [] }
+func fetchPollinators() async throws -> [Pollinator] { [] }
 
-func loadGardenData() async throws -> GardenSnapshot {
+func loadGardenData() async {
     async let flowers = fetchFlowers()
     async let pollinators = fetchPollinators()
-    let (loadedFlowers, loadedPollinators) =
-        try await (flowers, pollinators)
-    return GardenSnapshot(
-        flowers: loadedFlowers,
-        pollinators: loadedPollinators
-    )
+
+    do {
+        let (loadedFlowers, loadedPollinators) =
+            try await (flowers, pollinators)
+
+        print("""
+        Loaded \(loadedFlowers.count) flowers \
+        and \(loadedPollinators.count) pollinators.
+        """)
+    } catch {
+        print("Failed to load data: \(error)")
+    }
 }
 ```
-
-Reference: expert Swift reference (2025), “Start multiple asynchronous operations at the same time”.

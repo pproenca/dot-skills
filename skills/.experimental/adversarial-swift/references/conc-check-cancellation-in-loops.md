@@ -1,48 +1,63 @@
 ---
-title: Check for cancellation inside long-running task loops
-tags: conc, cancellation, tasks, cooperative-concurrency
+title: Check for cancellation inside long-running loops
+tags: conc, cancellation, task-lifecycle
 ---
 
-## Check for cancellation inside long-running task loops
+## Check for cancellation inside long-running loops
 
-Cancellation in Swift concurrency is cooperative: `task.cancel()` only sets a flag, and work that never consults the flag runs to completion regardless. The wrong default is writing a polling, batching, or retry loop inside a `Task` with no cancellation check, so cancelling the task changes nothing and the app burns CPU, network, and battery on work nobody will consume. Note the trap the source's own example sidesteps with an explicit check: `try? await Task.sleep(...)` swallows the `CancellationError` that `Task.sleep` throws on cancellation, so a `try?`-sleeping loop does not exit through error propagation.
+The wrong default is writing a multi-iteration loop inside a cancellable task with no `Task.isCancelled` guard and no `try Task.checkCancellation()`, so cancelling the task changes nothing — the loop runs to completion, burning CPU and network for a consumer that is gone. The trap compounds with `try? await Task.sleep(...)`: `try?` swallows the `CancellationError` the sleep throws on cancellation, silently discarding the one built-in signal that would have stopped the loop.
 
-**Evidence of violation:** a loop inside a `Task` or async function that performs repeated work or sleeps per iteration, whose body neither checks `Task.isCancelled` / `try Task.checkCancellation()` nor propagates cancellation through an un-suppressed throwing await — `try? await Task.sleep(...)` suppresses `CancellationError` and does not count as propagation. PASS: an explicit check that exits early, or a `try await` (not `try?`) suspension per iteration whose error propagates out of the loop. N/A: short bounded loops with no suspension, or a task documented at its creation site as not cancellable by design.
+**Evidence of violation:** a `for`/`while` loop inside a `Task {}` or async function performing per-iteration work, whose body contains neither a `Task.isCancelled` guard nor `try Task.checkCancellation()`, in code where the task is cancellable (a handle to it exists, or it is a child of a cancellable scope). `try? await Task.sleep(...)` — or any `try?`/`try!`-wrapped throwing await — does NOT count as cancellation propagation, because `try?` swallows the `CancellationError`; a loop whose only suspension point is a `try?`-wrapped sleep runs to completion after `cancel()`. PASS: the loop checks `Task.isCancelled` or calls `try Task.checkCancellation()` per iteration, or every iteration `try await`s (plain `try`, propagating) a call that rethrows `CancellationError`. N/A: the target has no multi-iteration loops in cancellable async contexts.
 
-**Incorrect (cancel() has no effect — try? swallows CancellationError and nothing checks the flag):**
+**Incorrect (cancel() has no effect — no check, and try? swallows the CancellationError):**
 
 ```swift
-enum ExportStatus { case running, finished }
-struct ExportService: Sendable { func status(for jobID: String) async -> ExportStatus { .finished } }
-let exportService = ExportService()
+func performLongRunningTask() async {
+    let task = Task {
+        for i in 1...10 {
+            print("Processing \(i)")
 
-func pollExportStatus(jobID: String) -> Task<Void, Never> {
-    Task {
-        while true {
-            let status = await exportService.status(for: jobID)
-            if status == .finished { break }
-            try? await Task.sleep(for: .seconds(2))
+            // Sleep for 1 second
+            try? await Task.sleep(for: .seconds(1))
         }
+        print("Task completed successfully")
+    }
+
+    Task {
+        // Sleep for 3 seconds
+        try? await Task.sleep(for: .seconds(3))
+
+        task.cancel()
+        print("Called cancel on the task")
     }
 }
 ```
 
-**Correct (the flag is consulted every iteration, cancellation exits early):**
+**Correct (a per-iteration guard stops the loop as soon as the task is cancelled):**
 
 ```swift
-enum ExportStatus { case running, finished }
-struct ExportService: Sendable { func status(for jobID: String) async -> ExportStatus { .finished } }
-let exportService = ExportService()
+func performLongRunningTask() async {
+    let task = Task {
+        for i in 1...10 {
+            guard !Task.isCancelled else {
+                print("Task was cancelled!")
+                return
+            }
 
-func pollExportStatus(jobID: String) -> Task<Void, Never> {
-    Task {
-        while !Task.isCancelled {
-            let status = await exportService.status(for: jobID)
-            if status == .finished { break }
-            try? await Task.sleep(for: .seconds(2))
+            print("Processing \(i)")
+
+            // Sleep for 1 second
+            try? await Task.sleep(for: .seconds(1))
         }
+        print("Task completed successfully")
+    }
+
+    Task {
+        // Sleep for 3 seconds
+        try? await Task.sleep(for: .seconds(3))
+
+        task.cancel()
+        print("Called cancel on the task")
     }
 }
 ```
-
-Reference: expert Swift reference (2025), “Utilize task cancellation mechanisms to stop unnecessary work”.

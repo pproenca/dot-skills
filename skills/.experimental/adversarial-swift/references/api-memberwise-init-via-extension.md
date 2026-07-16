@@ -1,37 +1,41 @@
 ---
-title: Declare custom struct initializers in an extension to keep the memberwise init
+title: Declare convenience struct initializers in an extension to keep the memberwise init
 tags: api, structs, initializers, memberwise
 ---
 
-## Declare custom struct initializers in an extension to keep the memberwise init
+## Declare convenience struct initializers in an extension to keep the memberwise init
 
-Adding a custom initializer inside a struct's main definition suppresses the free memberwise initializer, and the wrong default is then hand-writing a memberwise-equivalent init to get it back. That re-implementation is pure ceremony that silently goes stale when a property is added — the compiler-provided one updates itself. Declaring the custom initializer in an extension preserves both: extensions add initializers without suppressing the default provision.
+The wrong default when a struct needs a derived initializer (build `age` from `birthYear`, parse from a raw payload) is declaring that `init` inside the struct's main body — which silently suppresses the compiler-synthesized memberwise initializer, breaking every existing `Person(name:age:)` call site and forcing the full init to be hand-written and hand-maintained as properties change. The identical `init` declared in an extension adds the convenience form while the compiler keeps synthesizing the memberwise one for free.
 
-**Evidence of violation:** a struct whose main body contains BOTH a custom initializer AND a hand-written initializer that merely assigns each stored property from same-named parameters (a re-implementation of the memberwise init). PASS when the custom initializer lives in an extension and the memberwise init is used untouched. N/A when the struct intentionally exposes only the custom initializer — no memberwise re-implementation present in the main body.
+**Evidence of violation:** a `struct` whose main declaration body contains an `init` that does not simply assign every stored property from same-named parameters — a convenience or derived init — with no invariant-enforcing purpose visible in its body. PASS: convenience inits live in an `extension` and the struct body declares none, or the body's only init is the full memberwise shape restated for access-control reasons. N/A: the body init deliberately validates or normalizes (failable `init?`, `guard`/`precondition` clauses, clamping) — suppressing unchecked memberwise construction is then the point.
 
-**Incorrect (the hand-written memberwise init is ceremony that goes stale):**
+**Incorrect (the derived init in the struct body kills the memberwise initializer):**
 
 ```swift
+import Foundation
+
 struct Person {
     var name: String
     var age: Int
 
-    init(name: String, age: Int) {
-        self.name = name
-        self.age = age
-    }
-
     init(name: String, birthYear: Int) {
         let currentYear = Calendar.current
             .component(.year, from: Date())
-        self.init(name: name, age: currentYear - birthYear)
+        self.name = name
+        self.age = currentYear - birthYear
     }
 }
+
+let person2 = Person(name: "Bob", birthYear: 1990)
+// Person(name: "Charlie", age: 25) no longer compiles —
+// the memberwise initializer was suppressed
 ```
 
-**Correct (both initializers work, the memberwise one stays compiler-maintained):**
+**Correct (the extension adds the convenience form and keeps the memberwise init):**
 
 ```swift
+import Foundation
+
 struct Person {
     var name: String
     var age: Int
@@ -44,6 +48,7 @@ extension Person {
         self.init(name: name, age: currentYear - birthYear)
     }
 }
-```
 
-Reference: expert Swift reference (2025), “Preserve memberwise initializer when adding custom inits to structs”
+let person2 = Person(name: "Bob", birthYear: 1990)
+let person3 = Person(name: "Charlie", age: 25)
+```

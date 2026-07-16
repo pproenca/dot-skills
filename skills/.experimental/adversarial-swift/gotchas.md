@@ -2,30 +2,48 @@
 
 Failure points discovered while running this gate. Append-only, with dates.
 
-### Gate proven both ways at creation (dry run, 2026-07-11)
+### Gate proven both ways at v1.0.0 creation (dry run, 2026-07-16)
 
-Two blind reviewers per artifact, identical composed prompt, Swift 6.3 / iOS 17 target:
+Two blind reviewers per artifact, identical composed prompt, Swift 6.3.3 / nonisolated default actor isolation:
 
-- **Planted-violation artifact** (single-file SwiftUI feature, 14 planted violations across all 9 categories): both reviewers returned overall FAIL and unanimously failed all 14 planted rules (`state-observable-not-observableobject`, `conc-resume-continuation-every-path`, `conc-preserve-underlying-error`, `conc-weak-self-in-retained-closures`, `identity-branch-free-modifier-helpers`, `update-no-side-effects-in-view-init`, `task-modifier-not-onappear-task`, `list-no-anyview-rows`, `list-ongeometrychange-over-georeader`, `access-button-title-and-icon`, `access-semantic-fonts-and-colors`, `api-unknown-default-external-enums`, `flow-count-where-over-filter-count`, `flow-reduce-into-for-collections`), each with file:line evidence and a concrete fix. Zero contested rules.
+- **Planted-violation artifact** (single-file Swift module, 15 planted violations spanning all 7 categories): both reviewers returned overall FAIL and unanimously failed all 15 planted rules (`conc-resume-continuation-every-path`, `conc-check-cancellation-in-loops`, `conc-async-let-for-independent-awaits`, `prop-computed-over-stored-derived`, `prop-private-set-internal-mutation`, `err-preserve-underlying-error`, `err-callsite-location-default-args`, `enum-unknown-default-external-enums`, `enum-caseiterable-over-hand-lists`, `api-memberwise-init-via-extension`, `api-optionset-over-boolean-rows`, `coll-reduce-into-accumulators`, `coll-count-where-over-filter-count`, `flow-branch-assigned-let`, `flow-validating-untrusted-bytes`), each with file:line evidence and a concrete fix. Zero contested rules.
 - **Clean equivalent artifact**: both reviewers returned overall PASS with per-rule evidence. Zero contested rules.
-- Near-miss traps behaved as designed: a row view reading two model properties went N/A on `update-pass-minimal-data` (the rule fails only the single-read case); an `if/else` yielding one view per branch inside `ForEach` did not fire `list-constant-foreach-view-count`; both reviewers ignored the artifact's `// Planted:` comments and judged from the code.
-- The only per-rule splits were PASS-vs-N/A on rules whose subject was absent or trivially satisfied (`conc-offload-cpu-work-off-mainactor`, `state-own-models-in-state`, `state-computed-over-stored-derived`, `list-constant-foreach-view-count`, `access-button-not-ontapgesture`) — all resolve to PASS under the merge table and are expected reviewer-granularity noise, not decidability bugs.
+- Near-miss traps behaved as designed: two `final` classes passed `api-final-or-private-classes`, a correct `default:` dictionary upsert passed `coll-dictionary-default-subscript`, and neither reviewer credited `try? await Task.sleep` as a cancellation check.
+- The sharpened `prop-private-set-internal-mutation` carve-out resolved identically for both clean-side reviewers (a settable property with no invariant-enforcing methods judged out of the rule's trigger, not N/A-by-external-write), confirming the fail-closed rewording.
+- `conc-concurrent-offload-under-mainactor-default` went N/A on both artifacts as constructed (nonisolated default isolation in the stack facts) — it has not yet been exercised FAIL-side in a MainActor-default target.
 
-Added: 2026-07-11
+Added: 2026-07-16
 
-### Source-fidelity guards the reviewers must not override (pre-recorded at creation)
+### Source-fidelity guards the reviewers must not override (pre-recorded at v1.0.0 creation)
 
-The gate's rules are grounded in expert Swift and SwiftUI reference material that deliberately diverges from common community lore in ways reviewers trained on that lore may try to re-impose:
+The gate's rules are grounded in source material that deliberately diverges from common community lore in ways reviewers trained on that lore may try to re-impose:
 
-- `id: \.self` on constant collections is **endorsed** by the source material (its own recommended examples use it on `[String]`) — there is no unstable-ForEach-id rule in this gate, and flagging it is out of scope.
-- Synchronous, lightweight work in `.onAppear` is **endorsed**; only the `.onAppear { Task { ... } }` combination fails `task-modifier-not-onappear-task`.
-- The source material prescribes `@concurrent` (Swift 6.2) as the primary offloading tool for `conc-offload-cpu-work-off-mainactor`; `nonisolated`, a non-main actor, and `Task.detached` are accepted equivalents, not preferred ones.
-- `withAnimation` on ordinary hierarchies is fine; the source material only warns about generic containers and heavy trees, which this gate deliberately excluded as too rare.
+- **Untyped `throws` is NOT a violation.** The source material keeps untyped throws as the recommended default for general-purpose code; there is no typed-throws rule in this gate, and flagging `throws` without `throws(E)` is out of scope.
+- **Explicit `_ =` discards are NOT a violation.** There is no `@discardableResult` rule — many styles prefer the explicit discard at call sites.
+- **`@concurrent` is the primary offloading remedy** for `conc-concurrent-offload-under-mainactor-default` on Swift 6.2+; `nonisolated` and moving the work to a non-main actor are accepted equivalents, not preferred ones.
+- **`zip(collection.indices, collection)` is the in-language remedy** for `flow-zip-indices-over-enumerated` — `indexed()` requires the swift-algorithms package and is never required for a PASS.
 
-Added: 2026-07-11
+Added: 2026-07-16
+
+### Source-verbatim examples are frozen — accept the validator's generic-name warnings
+
+The code examples are kept exactly as the source material presents them (user-directed). `validate-skill.js` warns about generic identifiers in `err-result-get-over-manual-switch.md` (`processData()`) and `prop-defer-observed-init-assignments.md` (`MyClass`) — those are the source's own identifiers. Do NOT rename them to silence the warnings on a future evolve; the warnings are accepted deliberately. The one permitted deviation class is compile necessity (e.g. `prop-discard-self-in-consuming-cleanup.md` stores an `Int` id where the source used a `String`, because `discard self` requires trivially destroyable storage) — always note such deviations in the rule's surrounding text or here.
+
+Added: 2026-07-16
 
 ### try? await Task.sleep does not propagate cancellation
 
-`conc-check-cancellation-in-loops` explicitly names `try? await Task.sleep(...)` as NOT counting as cancellation propagation — `try?` swallows the `CancellationError`, so a loop whose only suspension point is a `try?`-wrapped sleep runs to completion after `cancel()`. Reviewers repeatedly want to credit the sleep as a cancellation check; the rule text forbids it.
+`conc-check-cancellation-in-loops` explicitly names `try? await Task.sleep(...)` as NOT counting as cancellation propagation — `try?` swallows the `CancellationError`, so a loop whose only suspension point is a `try?`-wrapped sleep runs to completion after `cancel()`. Reviewers repeatedly want to credit the sleep as a cancellation check; the rule text forbids it. (Carried over from the v0.1.x gate, where this split reviewers until pre-recorded.)
 
-Added: 2026-07-11
+Added: 2026-07-16
+
+### Rules pre-flagged as contested-risk at creation
+
+Three rules were flagged at planning as reviewer-split risks and included by user decision with tightened carve-outs. If a dry run or live review contests them, sharpen the rule text (or demote the rule to a distillation sibling) rather than overriding the gate:
+
+- `api-final-or-private-classes` — needs whole-file-set subclass knowledge; test-double base classes (visible Mock/Spy/Stub subclass) and pre-existing classes the diff merely touches are N/A by rule text.
+- `err-warning-directive-for-pending-work` — verdict depends on build-config stack facts (warnings-as-errors CI, SwiftLint todo rule); absent those facts, only diff-introduced TODOs on stubbed/incomplete behavior fail.
+- `flow-take-for-one-shot-optionals` — consequence is explicit single-use intent, not a crash; only the adjacent read-then-nil teardown shape fails, and toolchains before `Optional.take()` (Swift 6.0, SE-0437) are N/A.
+- `prop-private-set-internal-mutation` — an external write site is NOT settable-API evidence when the type's own methods guard the invariant that write could break; the skill-reviewer flagged the earlier carve-out wording ("external write sites exist → N/A") as self-neutralizing exactly when the bypass is most visible. The rule text now says the bypassing write is the violation made manifest — fail closed.
+
+Added: 2026-07-16
