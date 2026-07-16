@@ -1,0 +1,15 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "SwiftUI",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Pass/fail review gate for SwiftUI architecture: two blind reviewers judge a diff or file set against 31 decidable rules across data modeling and observation, view update cost, structural identity, task lifecycle, lists and geometry, animation scope, and platform accessibility. Targets without a SwiftUI surface abort; rules whose remedy needs a newer toolchain or deployment target than the project's go N/A, not FAIL.",
+  "references": [
+    "https://developer.apple.com/documentation/observation",
+    "https://developer.apple.com/documentation/swiftui/view/task(id:priority:_:)",
+    "https://developer.apple.com/documentation/swiftui/view/ongeometrychange(for:of:action:)",
+    "https://developer.apple.com/documentation/swiftui/view/visualeffect(_:)"
+  ]
+}

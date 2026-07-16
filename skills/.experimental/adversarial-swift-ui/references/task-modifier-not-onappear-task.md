@@ -1,0 +1,74 @@
+---
+title: Use the task modifier for view-lifetime async work, not Task inside onAppear
+tags: task, lifecycle, cancellation, onappear
+---
+
+## Use the task modifier for view-lifetime async work, not Task inside onAppear
+
+The wrong default is `.onAppear { Task { await fetch() } }` — a manually created task starts a unit of work SwiftUI cannot manage, so the framework cannot cancel it when the user navigates away before the load completes. A view that is added and removed repeatedly stacks redundant background tasks that keep consuming memory and CPU after the user has moved on. The `.task` modifier ties the same work to the view's presence in the hierarchy: if the view is removed before the work finishes, SwiftUI cancels the task automatically, and the async closure is already a managed async context so no manual `Task` block is needed.
+
+**Evidence of violation:** a `Task { }` created inside `.onAppear` (or another appearance-driven entry point) whose awaited result populates this view's state. A `Task { }` inside `.onChange` is out of scope here — `task-id-for-async-state-reactions` owns change-driven work. PASS: the same work expressed as `.task { await … }` or `.task(id:)`. Synchronous, lightweight work inside `.onAppear` — property assignments, run-once guards — is endorsed by the source and never fails this rule. N/A: the spawned work is deliberately view-independent (must outlive the view) AND a comment on the `Task` says so — absent that comment, fail closed. N/A on deployment targets below iOS 15 / macOS 12, where `.task` is unavailable.
+
+**Incorrect (task survives the view and stacks on reappearance):**
+
+```swift
+import SwiftUI
+
+struct Bird: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
+enum BirdDataService {
+    static func fetchBirds() async -> [Bird] { [] }
+}
+
+struct BirdListView: View {
+    @State private var birds: [Bird] = []
+
+    var body: some View {
+        List(birds) { bird in
+            Text(bird.name)
+        }
+        .onAppear {
+            // ⚠️ This task won't be automatically cancelled
+            Task {
+                birds = await BirdDataService.fetchBirds()
+            }
+        }
+    }
+}
+```
+
+**Correct (SwiftUI cancels the work when the view leaves the hierarchy):**
+
+```swift
+import SwiftUI
+
+struct Bird: Identifiable {
+    let id = UUID()
+    let name: String
+}
+
+enum BirdDataService {
+    static func fetchBirds() async -> [Bird] { [] }
+}
+
+struct BirdListView: View {
+    @State private var birds: [Bird] = []
+
+    var body: some View {
+        List(birds) { bird in
+            Text(bird.name)
+        }
+        .overlay {
+            if birds.isEmpty {
+                ProgressView()
+            }
+        }
+        .task {
+            birds = await BirdDataService.fetchBirds()
+        }
+    }
+}
+```
