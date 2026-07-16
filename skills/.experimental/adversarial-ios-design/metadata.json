@@ -1,0 +1,23 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "SwiftUI / iOS design",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "abstract": "Pass/fail review gate for iOS SwiftUI design and UX quality: two blind reviewers judge screens, diffs, or features against 55 decidable rules derived from the Human Interface Guidelines and WWDC design sessions, spanning navigation and information architecture, modality and flow grammar, layout, color and contrast, typography floors, Liquid Glass placement, feedback states, motion, haptics, and craft details. Targets without a SwiftUI UI surface abort; rules whose remedy needs a newer deployment target go N/A, not FAIL; screenshot-dependent legs go N/A when no captures are provided.",
+  "references": [
+    "https://developer.apple.com/design/human-interface-guidelines",
+    "https://developer.apple.com/design/human-interface-guidelines/tab-bars",
+    "https://developer.apple.com/design/human-interface-guidelines/modality",
+    "https://developer.apple.com/design/human-interface-guidelines/color",
+    "https://developer.apple.com/design/human-interface-guidelines/typography",
+    "https://developer.apple.com/design/human-interface-guidelines/materials",
+    "https://developer.apple.com/design/human-interface-guidelines/motion",
+    "https://developer.apple.com/design/human-interface-guidelines/playing-haptics",
+    "https://developer.apple.com/design/human-interface-guidelines/loading",
+    "https://developer.apple.com/videos/play/wwdc2025/219/",
+    "https://developer.apple.com/videos/play/wwdc2025/356/",
+    "https://developer.apple.com/videos/play/wwdc2023/10158/"
+  ]
+}
