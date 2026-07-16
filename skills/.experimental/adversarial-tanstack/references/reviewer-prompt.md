@@ -32,7 +32,7 @@ Judge the target against each rule file below. Read every listed file — each r
 
 - **Verdict per rule:** `PASS`, `FAIL`, or `N/A` (the rule's subject does not occur in the target — say why in one clause, e.g. "no server functions in this diff").
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "chain `.validator(ProfileSchema)` before `.handler` in `src/utils/profile.functions.ts:12`". Never a lecture like "improve validation".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "chain `.validator(ProfileSchema)` before `.handler` in `src/utils/profile.functions.ts:12`". Never a lecture like "improve validation". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
 ## Output Format
@@ -50,7 +50,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

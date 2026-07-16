@@ -62,7 +62,7 @@ Judge the target against each rule file below. Read every listed file — each r
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
 - **A rule's subject being absent when the rule demands its presence is FAIL, not N/A.** Example: a `withCheckedThrowingContinuation` bridge with no fallback `else` fails `conc-resume-continuation-every-path`; the missing branch is the violation.
 - **Carve-outs must be claimed with evidence.** Every rule names its carve-outs. A pattern inside a carve-out is a PASS or N/A only when the reviewer cites the evidence the carve-out requires (e.g. the per-leg data dependency between sequential awaits, the validating `guard` that makes a body-declared struct init invariant-enforcing, the visible Mock subclass that exempts a non-final class). A carve-out asserted without evidence does not excuse a violation — fail closed.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "add a final `else { continuation.resume(throwing: FetchError.emptyResponse) }` to the bridge at `ReportClient.swift:41`". Never a lecture like "improve error handling".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "add a final `else { continuation.resume(throwing: FetchError.emptyResponse) }` to the bridge at `ReportClient.swift:41`". Never a lecture like "improve error handling". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the code as it stands in the target, not intentions stated in comments or commit messages (except where a rule explicitly makes a comment its carve-out evidence).
 - Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -81,7 +81,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

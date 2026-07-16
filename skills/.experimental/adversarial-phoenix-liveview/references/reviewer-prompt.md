@@ -73,7 +73,7 @@ Judge the target against each rule file below. Read every listed file — each r
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
 - **A required mechanism being absent is FAIL, not N/A, when the rule's problem shape is present.** Examples: a collection appends from PubSub and no `stream/4` exists — the absence fails `stream-collections-not-assigns`; a mutating `handle_event` exists and no authorization check or scoped context call exists — the absence fails `trust-authorize-every-event`; a submit button exists and neither `phx-disable-with` nor loading-class styling exists anywhere — the absence fails `ui-inflight-feedback`. N/A is only for the problem shape itself being absent.
 - **Carve-outs must be claimed with evidence.** Every rule names its carve-outs. A pattern inside a carve-out is a PASS only when the reviewer cites the evidence the carve-out requires (the second subscriber, the server-side read of the presentation assign, the visible bound on the collection, the public route/render). A carve-out asserted without evidence does not excuse a violation — every rule in this gate fails closed.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "replace the `@bids` list assign with `stream(:bids, ...)` in `PaddleWeb.AuctionLive.mount/3` (`lib/paddle_web/live/auction_live.ex:24`) and add `phx-update=\"stream\"` with a container id to the bid list". Never a lecture like "improve realtime hygiene".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "replace the `@bids` list assign with `stream(:bids, ...)` in `PaddleWeb.AuctionLive.mount/3` (`lib/paddle_web/live/auction_live.ex:24`) and add `phx-update=\"stream\"` with a container id to the bid list". Never a lecture like "improve realtime hygiene". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the code as it stands in the target, not intentions stated in comments or commit messages (except where a rule explicitly makes a citable attribute or config its carve-out evidence).
 - Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -92,7 +92,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

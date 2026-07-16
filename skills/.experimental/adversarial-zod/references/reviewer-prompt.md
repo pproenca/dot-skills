@@ -34,7 +34,7 @@ Judge the target against each rule file below. Read every listed file — each r
 
 - **Verdict per rule:** `PASS`, `FAIL`, or `N/A` (the rule's subject does not occur in the target — say why in one clause, e.g. "no recursive schemas in this diff").
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "replace `z.string().email()` with `z.email()` in `src/schemas/user.ts:8`". Never a lecture like "modernize the schemas".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "replace `z.string().email()` with `z.email()` in `src/schemas/user.ts:8`". Never a lecture like "modernize the schemas". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - The `start-` rules apply only when the target uses TanStack Start/Router; in any other app they are N/A, not FAIL.
 - Judge only against the rules listed. Other flaws you notice — including Zod misuse the rules do not cover — go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -53,7 +53,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

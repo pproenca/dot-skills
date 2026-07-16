@@ -67,7 +67,7 @@ Judge the target against each rule file below. Read every listed file — each r
 - **A required mechanism being absent is FAIL, not N/A, when the rule's problem shape is present.** Examples: a GenServer accumulates unrecoverable domain state and no rehydration path exists anywhere — the *absence* fails `sup-no-restart-amnesia`; a job worker performs a non-idempotent effect and no guard exists — the absence fails `evt-idempotent-consumers`; a payload slice is stored long-lived and no `:binary.copy` exists — the absence fails `mech-copy-sub-binaries-into-state`. N/A is only for the problem shape itself being absent.
 - **Carve-outs must be claimed with evidence.** Every rule names its carve-outs. A pattern inside a carve-out is a PASS only when the reviewer cites the evidence the carve-out requires (the rate bound, the reconciler module, the commutativity argument, the size bound on the parent binary). A carve-out asserted without evidence does not excuse a violation — fail closed.
 - **One rule fails open:** `load-demand-driven-pipeline` FAILs only when you can name the demand-driven replacement (the producer/consumer stage split or the specific Broadway adapter). If you cannot produce it, the verdict is PASS. Every other rule fails closed.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "move the `Oban.insert!` into the `Ecto.Multi` in `MyApp.Orders.place_order/1` (`lib/my_app/orders.ex:41`) so job and order commit atomically". Never a lecture like "improve reliability".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "move the `Oban.insert!` into the `Ecto.Multi` in `MyApp.Orders.place_order/1` (`lib/my_app/orders.ex:41`) so job and order commit atomically". Never a lecture like "improve reliability". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the code as it stands in the target, not intentions stated in comments or commit messages (except where a rule explicitly makes a citable comment or config its carve-out evidence).
 - Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -86,7 +86,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

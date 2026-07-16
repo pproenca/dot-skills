@@ -27,6 +27,7 @@
 ### {{RULE.title}}
 - **Reviewer A ({{RULE.verdict_a}}):** {{RULE.rationale_a}}
 - **Reviewer B ({{RULE.verdict_b}}):** {{RULE.rationale_b}}
+- **Missing for PASS (failing reviewer):** {{RULE.fix_from_failing_reviewer}}
 {{END_FOR_EACH}}
 
 A contested rule counts as FAIL. If the same rule is contested across repeated reviews, the rule is under-specified — sharpen it rather than overriding the gate.
@@ -35,7 +36,11 @@ A contested rule counts as FAIL. If the same rule is contested across repeated r
 
 <!-- Omit this section on overall PASS. Aggregate every reviewer's "missing for PASS"
      suggestions, dedupe, keep locations, order by category importance
-     (state → update → identity → task → list → anim → access). -->
+     (state → update → identity → task → list → anim → access).
+     Completeness: every rule whose Final is FAIL or CONTESTED appears here exactly
+     once, each with a change concrete enough to apply as written — if a reviewer
+     only restated the violation, derive the fix from the rule's Correct example
+     before rendering. -->
 
 {{FOR_EACH FIX in FIX_LIST}}
 1. **{{FIX.rule_title}}** — {{FIX.change_and_location}}

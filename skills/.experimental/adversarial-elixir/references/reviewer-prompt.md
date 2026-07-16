@@ -55,7 +55,7 @@ Judge the target against each rule file below. Read every listed file — each r
 - **A rule's subject being absent when the rule demands its presence is FAIL, not N/A.** Example: a domain entity passed between modules with no struct anywhere fails `type-struct-over-bare-map`; the absence of the struct is the violation.
 - **Carve-outs must be claimed with evidence.** Every rule names its carve-outs. A pattern inside a carve-out is a PASS only when the reviewer cites the evidence the carve-out requires (e.g. the Mox double behind a DI behaviour, the runtime-bound lifecycle of a per-entity process, the domain-state nil clause). A carve-out asserted without evidence does not excuse a violation — fail closed.
 - **Rules that require naming the replacement fail only when you can name it.** `iter-named-combinator-over-manual-loop` FAILs only with the exact combinator named; `meta-functions-not-macro-dsl` FAILs only with the data-plus-interpreter equivalent sketched. If you cannot produce it, the verdict is PASS.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "delete `MyApp.Repositories.UserRepository` and call `Repo.get!(User, id)` from `MyApp.Accounts.get_user!/1` (`lib/my_app/accounts.ex:12`)". Never a lecture like "reduce the layering".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "delete `MyApp.Repositories.UserRepository` and call `Repo.get!(User, id)` from `MyApp.Accounts.get_user!/1` (`lib/my_app/accounts.ex:12`)". Never a lecture like "reduce the layering". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the code as it stands in the target, not intentions stated in comments or commit messages (except where a rule explicitly makes a comment or citable constraint its carve-out evidence).
 - Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -74,7 +74,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

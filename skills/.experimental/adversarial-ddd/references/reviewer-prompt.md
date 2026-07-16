@@ -41,7 +41,7 @@ Judge the target against each rule file below. Read every listed file — each r
 - **N/A prerequisites are explicit.** `ctx-no-foreign-model-reach`, `ctx-one-writer-per-model` need two or more identifiable contexts; `ctx-domain-free-of-infrastructure` needs an identifiable domain module; `dsl-*` rules need a DSL, builder surface, or declarative spec format; `gloss-code-conforms`, `gloss-terms-live`, `gloss-definitions-carry-meaning` need an existing glossary (its absence is `gloss-language-recorded`'s FAIL, not theirs). Cite the missing prerequisite when returning N/A.
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote — for glossary rules, quote the entry). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
 - **Carve-outs must be claimed with evidence.** Every rule names its carve-outs. A pattern inside a carve-out is a PASS only when you cite the evidence the carve-out requires (the structural difference between two contexts' models, the glossary alias entry, the framework requirement, the boundary module the vendor types never escape). A carve-out asserted without evidence does not excuse a violation — fail closed.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "create `docs/ubiquitous-language.md` defining Invoice, Credit Note, and Dunning — the terms already visible in `billing/src/`", or "rename `RefundVoucher` (`billing/refund-voucher.ts:4`) to `CreditNote` per the glossary entry". Never a lecture like "improve the domain modeling".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "create `docs/ubiquitous-language.md` defining Invoice, Credit Note, and Dunning — the terms already visible in `billing/src/`", or "rename `RefundVoucher` (`billing/refund-voucher.ts:4`) to `CreditNote` per the glossary entry". Never a lecture like "improve the domain modeling". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the artifact as it stands, not intentions stated in comments or commit messages.
 - Judge only against the rules listed. Other flaws you notice — including DDD concerns the rules do not cover — go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -64,7 +64,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

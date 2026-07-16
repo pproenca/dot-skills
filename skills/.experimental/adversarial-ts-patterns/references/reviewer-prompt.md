@@ -35,7 +35,7 @@ Judge the target against each rule file below. Read every listed file — each r
 - **Verdict per rule:** `PASS`, `FAIL`, or `N/A` (the rule's subject does not occur in the target — say why in one clause, e.g. "no builder classes in this diff").
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
 - **Carve-outs must be claimed with evidence.** Every rule names its carve-outs. A pattern inside a carve-out is a PASS only when the reviewer cites the evidence the carve-out requires (e.g. the second production implementation, the `undo()` member, the cross-root boundary, the comment documenting an open-ended external union). A carve-out asserted without evidence does not excuse a violation — fail closed.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "replace the `isLoading`/`isError` booleans in `useCheckout.ts:12` with a single `status` discriminated union". Never a lecture like "simplify the abstractions".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "replace the `isLoading`/`isError` booleans in `useCheckout.ts:12` with a single `status` discriminated union". Never a lecture like "simplify the abstractions". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the code as it stands in the target, not intentions stated in comments or commit messages.
 - Judge only against the rules listed. Other flaws you notice — including pattern misuse the rules do not cover — go in a final `Out of scope` note, and they do not affect any verdict.
 
@@ -54,7 +54,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

@@ -66,7 +66,7 @@ Read `references/_sections.md` and every rule file in `references/` (all `nav-*.
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line`, a short quote, or a named screenshot region). A PASS cites what you checked and where. A PASS without evidence is not a verdict — re-examine or mark FAIL.
 - **A rule's subject being absent when the rule demands its presence is FAIL, not N/A** — a primary content list with no empty-state branch, a dirty editable sheet with no dismiss protection, an error path with no recovery action, a Reduce Motion trigger pattern with no reduce-motion branch.
 - **Carve-outs must be claimed with evidence.** Every rule's N/A and exception legs name what must be cited (a comment, a text-free composition, a media-app design intent, an enumerated HIG use case). A carve-out asserted without that evidence does not excuse a violation — fail closed.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "wrap the deletion in `withAnimation` at `PantryListView.swift:84`" or "add a `ContentUnavailableView` branch for `invoices.isEmpty` in `InvoiceListScreen.body`". Never a lecture like "improve the empty states".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "wrap the deletion in `withAnimation` at `PantryListView.swift:84`" or "add a `ContentUnavailableView` branch for `invoices.isEmpty` in `InvoiceListScreen.body`". Never a lecture like "improve the empty states". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge the code and captures, not comments or stated intentions. Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
 ## Output Format
@@ -84,7 +84,7 @@ Return exactly this structure:
 
 ### {rule-file-name}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 

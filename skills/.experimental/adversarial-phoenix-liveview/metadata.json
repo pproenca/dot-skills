@@ -1,5 +1,5 @@
 {
-  "version": "0.1.0",
+  "version": "0.1.1",
   "organization": "dot-skills",
   "technology": "Phoenix 1.8 / LiveView 1.1+ realtime UI architecture",
   "discipline": "adversarial",

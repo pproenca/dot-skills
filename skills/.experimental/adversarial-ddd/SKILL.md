@@ -36,13 +36,13 @@ Follow these steps exactly — the gate's value is that every review runs the sa
    | PASS | FAIL (either order) | **FAIL** — rule marked **CONTESTED** |
 
    N/A splits: N/A vs N/A → N/A; N/A vs PASS → PASS; N/A vs FAIL → CONTESTED (counts as FAIL). Overall verdict is PASS only when both reviewers' overall verdicts are PASS. Contested rules count as FAIL and show both rationales. If either reviewer returns "GATE NOT APPLICABLE" (no domain concepts in the target), stop and report that instead of a verdict.
-6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate every reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance — glossary edits first, since creating or correcting the recorded language is what makes the remaining rules checkable.
+6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate every reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance — glossary edits first, since creating or correcting the recorded language is what makes the remaining rules checkable. Every rule whose final result is FAIL or CONTESTED must appear in the fix list with a change concrete enough to apply as written — if a reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering.
 
 If the same rule is repeatedly contested across reviews, the rule is not decidable enough — record it in [gotchas.md](gotchas.md) and sharpen the rule; do not override the gate.
 
 ## Verdict Format
 
-Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line`, a quote, or the glossary entry — required for PASS as well as FAIL), and for every FAIL, what is missing to reach PASS. Each reviewer also reports which glossary it found (or that none exists and where it searched). The final report follows [assets/templates/verdict.md](assets/templates/verdict.md).
+Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line`, a quote, or the glossary entry — required for PASS as well as FAIL), and for every FAIL, the fix that flips the rule to PASS once applied — the named change plus its location, never a restatement of the violation. Each reviewer also reports which glossary it found (or that none exists and where it searched). The final report follows [assets/templates/verdict.md](assets/templates/verdict.md).
 
 ## Rule Categories
 

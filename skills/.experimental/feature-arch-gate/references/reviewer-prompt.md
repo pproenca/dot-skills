@@ -44,7 +44,7 @@ Judge the target against each rule file below. Read every file — each rule exp
 - **Scope by target type.** For a diff, judge the changed files plus any file whose imports the diff alters; do not fail the target for pre-existing violations in untouched files (note them under `Out of scope` instead). For a full-tree audit, judge everything in scope.
 - **Respect each rule's own exceptions.** Several rules carve out explicit exceptions (the `relations/<other>/` escape hatch in `import-no-cross-feature`, the auth/theme/flags whitelist in `bound-minimize-shared-state`, the N<5/cached/lazy exceptions in `fquery-avoid-n-plus-one`, the consistent-PascalCase alternative in `name-file-conventions`). Code inside a documented exception is a PASS, not a FAIL.
 - **Evidence is mandatory in both directions.** A FAIL cites the violating location (`file:line` or a short quote). A PASS cites what you checked and where (e.g. "grepped all imports in `src/features/`; none cross feature boundaries"). A PASS without evidence is not a verdict — re-examine or mark FAIL.
-- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "move `calculate-tax.ts` from `src/shared/utils/` into `src/features/checkout/utils/` and update its two importers (`checkout-form.tsx:3`, `order-summary.tsx:5`)". Never a lecture like "improve the boundaries".
+- **For every FAIL, state what is missing to reach PASS** — the specific change and where it goes, e.g. "move `calculate-tax.ts` from `src/shared/utils/` into `src/features/checkout/utils/` and update its two importers (`checkout-form.tsx:3`, `order-summary.tsx:5`)". Never a lecture like "improve the boundaries". Apply the flip test before returning it: if the named change were applied verbatim, would this rule's evidence of violation be gone on re-review? If not, the suggestion is not a fix yet — sharpen it until it would.
 - Judge only against the rules listed. Other flaws you notice go in a final `Out of scope` note, and they do not affect any verdict.
 
 ## Output Format
@@ -62,7 +62,7 @@ Return exactly this structure:
 
 ### {rule-file}
 - **Violation:** {what and where}
-- **Missing for PASS:** {the specific change and its location}
+- **Missing for PASS:** {the concrete change that, applied verbatim, flips this rule to PASS — the replacement construct, value, or wording plus its exact location; a negation of the violation ("stop doing X") is not a fix}
 
 ## Overall Verdict
 
