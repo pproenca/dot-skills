@@ -67,6 +67,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill to gate Elixir, OTP, Ecto, and Phoenix code with a pass/fail adversarial review —.. |
 | [adversarial-ios-design](skills/.experimental/adversarial-ios-design) | Use this skill to gate iOS SwiftUI design and UX with a pass/fail adversarial review — two blind.. |
 | [adversarial-phoenix-liveview](skills/.experimental/adversarial-phoenix-liveview) | Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — two.. |
+| [adversarial-reactor](skills/.experimental/adversarial-reactor) | Use this skill to gate Elixir code built on the Reactor orchestration library (~> 1.0) with a.. |
 | [adversarial-rust](skills/.experimental/adversarial-rust) | Use this skill when reviewing or refactoring existing Rust code that carries an alien mental.. |
 | [adversarial-swift-ui](skills/.experimental/adversarial-swift-ui) | Use this skill to gate SwiftUI code with a pass/fail adversarial review — two blind reviewers.. |
 | [adversarial-swift](skills/.experimental/adversarial-swift) | Use this skill to gate Swift language code with a pass/fail adversarial review — two blind.. |
