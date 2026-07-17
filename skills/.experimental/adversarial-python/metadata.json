@@ -1,0 +1,26 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Python 3.10–3.14",
+  "discipline": "adversarial",
+  "type": "adversarial-review",
+  "date": "July 2026",
+  "verified_python": "3.14",
+  "abstract": "Pass/fail adversarial gate for Python code: two blind reviewers judge a diff or file set against 20 decidable rules covering dispatch structure, data modeling, abstraction altitude, modern typing, stdlib currency, and async/error flow. A version probe reads the target's Python floor, marks version-gated rules N/A below their gate, and composes a what's-new delta briefing when the floor exceeds verified_python.",
+  "references": [
+    "https://docs.python.org/3/whatsnew/3.10.html",
+    "https://docs.python.org/3/whatsnew/3.11.html",
+    "https://docs.python.org/3/whatsnew/3.12.html",
+    "https://docs.python.org/3/whatsnew/3.13.html",
+    "https://docs.python.org/3/whatsnew/3.14.html",
+    "https://docs.python.org/3/library/dataclasses.html",
+    "https://docs.python.org/3/library/typing.html#typing.Protocol",
+    "https://docs.python.org/3/library/enum.html#enum.StrEnum",
+    "https://docs.python.org/3/library/pathlib.html",
+    "https://docs.python.org/3/library/asyncio-task.html#asyncio.TaskGroup",
+    "https://peps.python.org/pep-0008/",
+    "https://peps.python.org/pep-0020/",
+    "https://peps.python.org/pep-0604/",
+    "https://peps.python.org/pep-0695/"
+  ]
+}
