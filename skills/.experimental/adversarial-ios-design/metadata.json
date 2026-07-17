@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "community",
   "technology": "SwiftUI / iOS design",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for iOS SwiftUI design and UX quality: two blind reviewers judge screens, diffs, or features against 55 decidable rules derived from the Human Interface Guidelines and WWDC design sessions, spanning navigation and information architecture, modality and flow grammar, layout, color and contrast, typography floors, Liquid Glass placement, feedback states, motion, haptics, and craft details. Targets without a SwiftUI UI surface abort; rules whose remedy needs a newer deployment target go N/A, not FAIL; screenshot-dependent legs go N/A when no captures are provided.",
+  "abstract": "Pass/fail review gate for iOS SwiftUI design and UX quality: two blind reviewers judge screens, diffs, or features against 56 decidable rules derived from the Human Interface Guidelines and WWDC design sessions, working backwards from mandatory rendered evidence — simulator screenshots (light, dark, accessibility text size) and interaction recordings tiled into filmstrips — across navigation and information architecture, modality and flow grammar, layout, color and contrast, typography floors, Liquid Glass placement, feedback states, motion, haptics, and craft. Tier-1 motion rules are recording-primary — code alone nominates candidates, never FAILs, and never prescribes an unseen animation — while the spring-curve and Reduce Motion rules stay code-decidable because their fixes never add animation; gratuitous decoration fails, and every fix must be the minimal change with removal preferred over addition. Targets without a SwiftUI UI surface abort; version-gated remedies go N/A, not FAIL.",
   "references": [
     "https://developer.apple.com/design/human-interface-guidelines",
     "https://developer.apple.com/design/human-interface-guidelines/tab-bars",

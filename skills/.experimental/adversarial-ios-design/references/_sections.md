@@ -36,7 +36,7 @@ decisions that come up most often and cost most when wrong go first.
 
 ## 8. Motion (motion)
 
-**Description:** Whether change on screen moves the way iOS moves — visible structural changes animated rather than teleporting, springs instead of ease curves for movement, bounce capped where the element is interface chrome, brief feedback on direct interaction, a Reduce Motion path for large or repeating custom animation, and zoom transitions when detail content visibly originates from a tapped element. Motion is where an otherwise-correct screen most often feels wrong in the hand.
+**Description:** Whether change on screen moves the way iOS moves, judged from rendered evidence — recordings tiled into filmstrips are the primary evidence for how structure changes, how long feedback lasts, how chrome settles, whether pushes zoom, and whether anything moves that no user action caused. Visible structural changes animate rather than teleport, springs instead of ease curves for movement, bounce capped on interface chrome, brief feedback on direct interaction, a Reduce Motion path for large or repeating custom animation, zoom transitions when detail content visibly originates from a tapped element — and no motion that decorates rather than communicates. Without a recording, code evidence only nominates candidates (reported N/A, never FAIL); the two exceptions decidable from code are `motion-springs-over-curves` and `motion-reduce-motion-path`, whose fixes never add animation. Motion is where an otherwise-correct screen most often feels wrong in the hand.
 
 ## 9. Haptics (haptic)
 

@@ -1,8 +1,12 @@
 # Review Verdict — {{TARGET_SHORT_DESCRIPTION}}
 
 - **Target:** {{TARGET_REF_OR_PATHS}}
+- **Target manifest (frozen ref):** {{COMMIT_SHA_OR_STASH_OR_SAVED_DIFF}}
+- **Gate status:** {{RENDERED_OR_VOID_WITH_REASON}} <!-- a dispatched gate always ends RENDERED, GATE NOT APPLICABLE, or "VOID — <reason>"; never silence -->
 - **Toolchain / deployment target:** {{SWIFT_VERSION_AND_MIN_OS}}
-- **Screenshots:** {{SCREENSHOT_PATHS_OR_NONE}}
+- **Screenshots (light / dark / accessibility size):** {{SCREENSHOT_PATHS_OR_NONE}}
+- **Recordings / filmstrips:** {{RECORDING_AND_FILMSTRIP_PATHS_OR_NONE}}
+- **Capture blocker:** {{NAMED_BLOCKER_OR_NONE}} <!-- only when captures are missing; "didn't attempt" is a protocol violation, not a blocker -->
 - **Rules:** this gate's rules ({{RULES_APPLIED_COUNT}} applied)
 - **Reviewers:** 2 independent blind reviewers, identical prompt, dispatched in parallel
 
@@ -30,9 +34,10 @@
 - **Reviewer A ({{RULE.verdict_a}}):** {{RULE.rationale_a}}
 - **Reviewer B ({{RULE.verdict_b}}):** {{RULE.rationale_b}}
 - **Missing for PASS (failing reviewer):** {{RULE.fix_from_failing_reviewer}}
+- **Gotchas entry:** {{RULE.id_plus_the_ambiguity_that_split_the_reviewers}}
 {{END_FOR_EACH}}
 
-A contested rule counts as FAIL. If the same rule is contested across repeated reviews, the rule is under-specified — sharpen it rather than overriding the gate.
+A contested rule counts as FAIL. Append every Gotchas entry above to gotchas.md before rendering — a rendered verdict with contested rules and no gotchas entries is a protocol violation. If the same rule is contested across repeated reviews, the rule is under-specified — sharpen it rather than overriding the gate.
 
 ## What's Missing for a PASS
 
@@ -42,8 +47,21 @@ A contested rule counts as FAIL. If the same rule is contested across repeated r
      Completeness: every rule whose Final is FAIL or CONTESTED appears here exactly
      once, each with a change concrete enough to apply as written — if a reviewer
      only restated the violation, derive the fix from the rule's Correct example
-     before rendering. -->
+     before rendering.
+     Minimality: every fix is the smallest change that flips its rule; when removal
+     and addition both flip it, name the removal; no fix adds animations, haptics,
+     views, state, or abstractions beyond the rule's named remedy. -->
 
 {{FOR_EACH FIX in FIX_LIST}}
 1. **{{FIX.rule_title}}** — {{FIX.change_and_location}}
+{{END_FOR_EACH}}
+
+## Out-of-Scope Observations
+
+<!-- Omit when empty. Violations reviewers noticed outside the declared target
+     manifest. Reported for a future gate invocation — never fixed under this
+     verdict, never counted in it. -->
+
+{{FOR_EACH OBS in OUT_OF_SCOPE_OBSERVATIONS}}
+- **{{OBS.rule_title}}** — {{OBS.location_and_note}}
 {{END_FOR_EACH}}

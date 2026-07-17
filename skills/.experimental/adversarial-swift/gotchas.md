@@ -47,3 +47,17 @@ Three rules were flagged at planning as reviewer-split risks and included by use
 - `prop-private-set-internal-mutation` — an external write site is NOT settable-API evidence when the type's own methods guard the invariant that write could break; the skill-reviewer flagged the earlier carve-out wording ("external write sites exist → N/A") as self-neutralizing exactly when the bypass is most visible. The rule text now says the bypassing write is the violation made manifest — fail closed.
 
 Added: 2026-07-16
+
+### Field failure: gates run as cleanup drivers on a moving target (maddie-ios, July 2026)
+
+Three Codex sessions invoked this gate family with "do full cleanup for any slop and
+complexity, do it aggressively" — verdict-only gates used as rewrite engines. Result:
+blind reviews were dispatched, discarded when the code changed underneath them, and
+re-dispatched, with **zero verdicts rendered across ~11 hours**; the diff grew to 33
+files; a parallel "cleanup" subagent deleted the vendored skill trees mid-run; and the
+repo's micro-commit discipline collapsed into 90–162-file opaque sweeps. The SKILL.md
+dispatch preconditions (frozen target manifest, verdicts-not-cleanup, immutable rule
+snapshot, gate-status record) were added in direct response — do not weaken them on
+evolve.
+
+Added: 2026-07-17

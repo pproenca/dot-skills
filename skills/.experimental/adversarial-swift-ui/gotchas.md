@@ -40,3 +40,34 @@ Added: 2026-07-16
 `access-style-protocols-for-custom-controls` and `access-representation-for-custom-controls` split by whether a style protocol exists for the control's semantic role: Toggle/Button/Label roles → the style-protocol rule; roles with no style protocol (segmented control/Picker, sliders drawn with Canvas) → the representation rule.
 
 Added: 2026-07-16
+
+### Field failure: perf rules without a materiality floor drove a refactor treadmill (maddie-ios, July 2026)
+
+Across ~7 fresh reviewer pairs in one session, `update-cache-expensive-derivations` and
+`task-concurrent-offload-cpu-work` kept relocating the "main-actor work" boundary
+(treatment search → startup store init → prepared-ledger helpers → booking selection →
+detail refresh), each finding individually defensible, none material — reducing one
+appointment's handful of payments is O(tiny). The cumulative fix list drove an
+app-wide async-store rearchitecture from a payment-flow review, and the offload rule
+was satisfied with 7 `@unchecked Sendable` conformances (maddie-ios a90d254) that a
+later repair pass had to remove. Both rules now carry a materiality leg (unbounded
+input cited via its loading site; small bounded collections are N/A) and the explicit
+`@unchecked Sendable`-does-not-flip clause — do not weaken either on evolve.
+
+Added: 2026-07-17
+
+### Rule candidates from the July 2026 field audit (next evolve)
+
+Two decidable checks the audit showed no gate currently owns:
+
+- **Deleted regression test requires behavior evidence** — a diff that deletes or
+  rewrites a UI/regression test must carry evidence the guarded interaction still
+  works. Field case: the agent "dropped the legacy stationary-hold regression" test
+  and the same rewrite broke exactly that path (resize handles never mounted).
+- **Resilient XCUITest locators** — element lookups scoped to an element type
+  (`app.otherElements["schedule.timeline"]`) silently match nothing when a refactor
+  changes the element's class (`Other` → `ScrollView`); prefer type-agnostic queries
+  (`app.descendants(matching: .any)` / `firstMatch` on the identifier). Field case: a
+  brand-new 5-cycle tap test failed at its locator, not the behavior it claimed to test.
+
+Added: 2026-07-17

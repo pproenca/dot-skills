@@ -22,6 +22,13 @@ Do not apply to targets with no SwiftUI surface — server-side Swift, CLI tools
 
 Follow these steps exactly — the gate's value is that every review runs the same way.
 
+Two preconditions before step 1 — both exist because their violation is the gate family's recorded field-failure mode (July 2026: gates run as cleanup drivers on a moving target rendered zero verdicts while the diff grew to 33 files):
+
+- **Frozen target.** Dispatch only against a fixed ref — a commit SHA, stash, or saved diff — recorded as the target manifest. If the code under review is still changing (the worktree keeps collecting edits, other agents are active on it), do not dispatch. A target change while reviewers are in flight voids the run: report `GATE VOID — target changed` in place of a verdict and re-dispatch against the new frozen state. A dispatched gate must always end in a rendered verdict, a `GATE NOT APPLICABLE`, or a recorded void — never silence, which is indistinguishable from "reviewed".
+- **Verdicts, not cleanup.** This gate is a terminal check on finished work. "Run the gate and fix everything aggressively" inverts the contract and is the documented path to scope explosion: implement first, freeze, then gate. After a FAIL, the caller applies fixes within the original target only, and the re-gate dispatches a fresh blind pair against the **same target manifest** — the surface never widens between rounds; new code means a new gate invocation with its own manifest.
+
+When other agents may mutate the workspace mid-review, reviewers read the rules from an immutable snapshot (e.g. `git archive <ref> <skill-dir> | tar -x -C "$TMPDIR"`) rather than the live checkout — and skill directories are read-only infrastructure, excluded from every cleanup or fix scope.
+
 1. **Identify the target.** Pin down exactly what is under review (a diff, a set of files, a PR) and note the ref/paths so both reviewers see the same thing. Record the Swift toolchain version and minimum deployment target (from `Package.swift`, the Xcode project, or availability annotations) — several rules version-gate on them. Include the repo root in the target description — `update-pass-minimal-data`, `state-own-models-in-state`, and `update-cache-expensive-derivations` can require reading whole files beyond the diff hunks.
 2. **Load the rules.** Read [references/_sections.md](references/_sections.md) and every rule file in `references/` (all `state-*.md`, `update-*.md`, `identity-*.md`, `task-*.md`, `list-*.md`, `anim-*.md`, `access-*.md` files).
 3. **Compose the reviewer prompt.** Fill [references/reviewer-prompt.md](references/reviewer-prompt.md) with the rules, the target, and the toolchain/deployment facts. The composed prompt must be fully self-contained — a reviewer sees no conversation history, so nothing may refer to context outside the prompt.
@@ -35,7 +42,7 @@ Follow these steps exactly — the gate's value is that every review runs the sa
    | PASS | FAIL (either order) | **FAIL** — rule marked **CONTESTED** |
 
    N/A splits: N/A vs N/A → N/A; N/A vs PASS → PASS; N/A vs FAIL → CONTESTED (counts as FAIL). Overall verdict is PASS only when both reviewers' overall verdicts are PASS. Contested rules count as FAIL and show both rationales. If either reviewer returns "GATE NOT APPLICABLE" (no SwiftUI surface), stop and report that instead of a verdict.
-6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate every reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance. Every rule whose final result is FAIL or CONTESTED must appear in the fix list with a change concrete enough to apply as written — if a reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering.
+6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate every reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance. Every rule whose final result is FAIL or CONTESTED must appear in the fix list with a change concrete enough to apply as written — if a reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering. The fix list is verification material — proof that each FAIL is decidable and flippable — not a work queue: every fix names the minimal change that flips its rule inside the declared target, and a fix that reaches for an unsafe escape hatch (`@unchecked Sendable`, `try!`, force-unwraps) to satisfy a rule does not flip it. Violations reviewers noticed outside the target manifest go under the verdict's out-of-scope observations — reported for a future gate invocation, never fixed under this one, never counted in the verdict.
 
 If the same rule is repeatedly contested across reviews, the rule is not decidable enough — record it in [gotchas.md](gotchas.md) and sharpen the rule; do not override the gate.
 
@@ -62,6 +69,7 @@ Read [gotchas.md](gotchas.md) before dispatching reviewers — it pre-records ru
 ## Related Skills
 
 - `adversarial-swift` — the sibling gate for Swift language concerns (concurrency, error propagation, API and type design, control flow); run both on mixed Swift+SwiftUI work.
+- `adversarial-ios-design` — the sibling gate for rendered design and UX (HIG grammar, motion, mandatory evidence capture); run it too on user-facing work, and run it **first** when the diff changes gestures or interaction behavior — recognizer arbitration is invisible to this gate's code-only review.
 - `ios-taste` (curated) — judgment-call iOS design guidance this gate deliberately excludes; use it when the goal is taste, not a verdict.
 - `search-ios26-docs` / `search-macos26-docs` — verify current-SDK API availability when a version-gate question decides a rule.
 

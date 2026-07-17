@@ -7,7 +7,7 @@ tags: motion, reduce-motion, accessibility, vestibular
 
 The wrong default is zero `accessibilityReduceMotion` handling anywhere — models never emit it unprompted. Users who enable Reduce Motion do so because zooming, scaling, and peripheral motion can cause genuine discomfort; Apple's guidance is to respond by reducing automatic and repetitive animation, tightening springs to remove bounce, replacing x/y/z-axis transitions with fades, and avoiding animating into and out of blurs. An app whose big custom animations play identically regardless of the setting is overriding a medical accommodation.
 
-**Evidence of violation:** any of these trigger patterns with no `@Environment(\.accessibilityReduceMotion)` (or `UIAccessibility.isReduceMotionEnabled`) branch in the same view or module altering the behavior: a `.repeatForever()` animation; an animated `scaleEffect` or `offset` spanning a container or the full screen; an animated `blur(radius:)`; an animated `rotation3DEffect` or parallax effect; a custom bouncy hero transition. Cite the trigger pattern and the absence of the branch — the absence is the violation, so a trigger with no Reduce Motion handling anywhere is FAIL, not N/A. PASS: the environment value is read and the guarded branch replaces movement with an opacity fade, tightens the spring to remove bounce, or disables the repeat — cite both the read and the branch. N/A: none of the enumerated trigger patterns exist in the target — small, brief, single-shot feedback animations do not trigger this rule.
+**Evidence of violation:** any of these trigger patterns with no `@Environment(\.accessibilityReduceMotion)` (or `UIAccessibility.isReduceMotionEnabled`) branch in the same view or module altering the behavior: a `.repeatForever()` animation; an animated `scaleEffect` or `offset` spanning a container or the full screen; an animated `blur(radius:)`; an animated `rotation3DEffect` or parallax effect; a custom bouncy hero transition. Cite the trigger pattern and the absence of the branch — the absence is the violation, so a trigger with no Reduce Motion handling anywhere is FAIL, not N/A. PASS: the environment value is read and the guarded branch replaces movement with an opacity fade, tightens the spring to remove bounce, or disables the repeat — cite both the read and the branch. N/A: none of the enumerated trigger patterns exist in the target — small, brief, single-shot feedback animations do not trigger this rule. This rule stays decidable from code without a recording: its subject is a missing accessibility accommodation, structural like a missing empty state, and its fix adds a guard that reduces motion — it never adds animation. Before prescribing the guard, check the trigger against `motion-no-gratuitous-animation`: a decorative loop should be deleted, not guarded — the recording badge in this rule's example survives that check only because it is an ongoing-process status indicator, a cited carve-out there.
 
 **Incorrect (a forever-pulsing recording badge ignores the user's Reduce Motion setting):**
 
@@ -31,7 +31,7 @@ struct RecordingBadge: View {
 }
 ```
 
-**Correct (Reduce Motion swaps the pulse for a static opacity emphasis):**
+**Correct (Reduce Motion swaps the pulse for a static opacity emphasis — the pulse itself is legitimate here because it signals an ongoing recording, a status-indicator carve-out under `motion-no-gratuitous-animation`):**
 
 ```swift
 import SwiftUI
