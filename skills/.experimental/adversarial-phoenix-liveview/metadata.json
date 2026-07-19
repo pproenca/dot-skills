@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "Phoenix 1.8 / LiveView 1.1+ realtime UI architecture",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for Phoenix LiveView realtime UIs: two blind reviewers judge a diff or file set against 32 decidable rules that catch LiveView written as a page-controller-plus-JS-framework instead of a stateful process rendering change-tracked diffs over a lossy socket — state ownership and lifecycle, realtime data flow, async responsiveness, render and wire efficiency, streams, component and context boundaries, client trust, and mechanism-presence interaction feedback. Sibling of adversarial-beam (delivery semantics) and adversarial-elixir (paradigm fit); judgment-call guidance lives in staff-level-elixir.",
+  "abstract": "Pass/fail review gate for Phoenix LiveView realtime UIs: a single blind reviewer judges a diff or file set against 32 decidable rules that catch LiveView written as a page-controller-plus-JS-framework instead of a stateful process rendering change-tracked diffs over a lossy socket — state ownership and lifecycle, realtime data flow, async responsiveness, render and wire efficiency, streams, component and context boundaries, client trust, and mechanism-presence interaction feedback. Sibling of adversarial-beam (delivery semantics) and adversarial-elixir (paradigm fit); judgment-call guidance lives in staff-level-elixir.",
   "references": [
     "https://hexdocs.pm/phoenix_live_view/assigns-eex.html",
     "https://hexdocs.pm/phoenix_live_view/security-model.html",

@@ -1,8 +1,8 @@
 # Gotchas
 
-Scope guards pre-recorded at authoring time so reviewers do not judge outside
-the rules; contested-rule patterns get appended below with dates as reviews
-accumulate.
+Scope guards pre-recorded at authoring time so the reviewer does not judge outside
+the rules; verdict-instability patterns (a rule flipping across re-reviews, or an
+overridden verdict) get appended below with dates as reviews accumulate.
 
 ### Proven both ways (release dry-run)
 
@@ -20,7 +20,8 @@ dataclasses, `TypedDict` boundary, `TaskGroup`, `pathlib`, `batched`,
 rules across both runs. One planting lesson: a boolean flag whose `True`
 branch is a strict superset of the `False` branch correctly PASSes
 `disp-split-boolean-switch-params` via the superset carve-out — the rule
-gates disjoint bodies, not added logging steps.
+gates disjoint bodies, not added logging steps. (Recorded under the earlier
+two-reviewer protocol; the gate now dispatches a single blind reviewer.)
 Added: 2026-07-17
 
 ### The version probe decides more verdicts than any rule — get the floor right
@@ -57,8 +58,8 @@ Added: 2026-07-17
 
 `alt-no-single-impl-interfaces` and `alt-compose-over-concrete-inheritance`
 require repo-wide searches (implementer counts, substitution sites). A
-reviewer that rules FAIL without stating what it searched produces contested
-verdicts against a reviewer that searched. The search performed is part of the
+reviewer that rules FAIL without stating what it searched produces verdicts
+that flip between runs. The search performed is part of the
 evidence — "grepped for `(BillingBackend)` subclasses: one hit" is a verdict;
 "looks like a single-impl ABC" is not.
 Added: 2026-07-17

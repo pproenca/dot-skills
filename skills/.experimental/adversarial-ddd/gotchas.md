@@ -8,13 +8,15 @@ completeness, not term misuse" and put it out of scope. Root cause: the rule's e
 covered wrong-term and wrong-concept, not an entry asserting defining content the code lacks.
 Fix: leg (c) added to `gloss-code-conforms` — a glossary that over-promises about the model is
 drift, FAIL until the model or the entry is amended. The contested reviewer had in fact caught a
-real, author-unintended defect in the artifact.
+real, author-unintended defect in the artifact. (Recorded under the earlier two-reviewer protocol;
+the gate now dispatches a single blind reviewer.)
 Added: 2026-07-16
 
 ### Watch item: gloss-definitions-carry-meaning leg (a)
 "The definition adds no word that distinguishes the concept" is the softest boundary in the rule
 set (flagged by the skill-reviewer). It has held so far — both dry-run rounds judged it
-unanimously — but if it recurs as CONTESTED, tighten leg (a) to a concrete tell, e.g. "the
+unanimously (recorded under the earlier two-reviewer protocol) — but if it recurs as a verdict that
+flips across re-reviews of an unchanged target, tighten leg (a) to a concrete tell, e.g. "the
 definition contains only the term's own words plus a generic verb like manages/handles/represents".
 Added: 2026-07-16
 
@@ -30,5 +32,6 @@ Added: 2026-07-16
   first gotcha — a real artifact defect plus a rule gap); after sharpening the rule and fixing the
   artifact, round 2 with two fresh blind reviewers returned unanimous overall PASS — 14 PASS /
   6 N/A each, rule-for-rule identical, all carve-outs (persistence hydration, boundary mapper,
-  port implementation) claimed with citations, 0 contested.
+  port implementation) claimed with citations, 0 contested. (Recorded under the earlier
+  two-reviewer protocol; the gate now dispatches a single blind reviewer.)
 Added: 2026-07-16

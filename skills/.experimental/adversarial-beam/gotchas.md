@@ -11,6 +11,8 @@ Two blind reviewers per artifact, identical composed prompt, Elixir ~> 1.18 stac
 - **Clean artifact, round 2** (three bugs fixed): both reviewers returned overall PASS — 22 PASS + 1 N/A (`state-persistent-term-is-read-optimized`, N/A vs N/A → N/A), zero contested. Carve-outs were claimed with citations, not asserted: the Book's restart-amnesia PASS cited the venue_seq-guarded latest-tick derivation rebuilt by the live stream; the per-node ledger sequence PASS cited the `(node(), seq)` keying and `max_seq(node())` rehydrate; the `:global` BillingRunner PASS cited both the `Pulse.Leases.acquire` stand-down AND the per-day idempotency keys.
 - Convergence notes worth keeping: (1) both reviewers ruled that an `active: :once` socket re-armed only after a synchronous `push` returns satisfies `load-call-for-backpressure-on-ingest` — the kernel buffer is the bound; treat that shape as PASS. (2) Both ruled `send/2` into an assumed-cheap collector process is not ingest-edge evidence without visible nontrivial per-message work. (3) Both ruled `Date.utc_today()` inside an idempotency key is timestamp-as-data, not a duration subtraction.
 
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
+
 Added: 2026-07-11
 
 ### Scope guards the reviewers must not override (pre-recorded at creation)

@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "community",
   "technology": "TypeScript + React design patterns",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for design-pattern usage in TypeScript and React application code: two blind reviewers judge a diff or file set against 18 decidable rules across state modeling and machines, creational ports, behavioral ports, enterprise layers, React composition, and OO ceremony. Fails both over-abstraction (Java/C# pattern ports where idiomatic TS reaches for a function, module, or tagged union) and under-modeling (implicit state machines whose impossible states compile).",
+  "abstract": "Pass/fail review gate for design-pattern usage in TypeScript and React application code: a single blind reviewer judges a diff or file set against 18 decidable rules across state modeling and machines, creational ports, behavioral ports, enterprise layers, React composition, and OO ceremony. Fails both over-abstraction (Java/C# pattern ports where idiomatic TS reaches for a function, module, or tagged union) and under-modeling (implicit state machines whose impossible states compile).",
   "references": [
     "https://react.dev/learn/choosing-the-state-structure",
     "https://react.dev/learn/you-might-not-need-an-effect",

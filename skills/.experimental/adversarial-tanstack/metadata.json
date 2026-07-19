@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "community",
   "technology": "TanStack Start v1 RC + TypeScript",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for TanStack Start + TypeScript web-app changes: two blind reviewers judge a diff or file set against 22 decidable rules across client/server boundary, server functions and routes, auth and security, SSR data loading, boundary type safety, and compiler configuration. Pinned to @tanstack/react-start 1.168+ (v1 RC) and TypeScript 5.8-6.x.",
+  "abstract": "Pass/fail review gate for TanStack Start + TypeScript web-app changes: a single blind reviewer judges a diff or file set against 22 decidable rules across client/server boundary, server functions and routes, auth and security, SSR data loading, boundary type safety, and compiler configuration. Pinned to @tanstack/react-start 1.168+ (v1 RC) and TypeScript 5.8-6.x.",
   "references": [
     "https://tanstack.com/start/latest/docs/framework/react/guide/server-functions",
     "https://tanstack.com/start/latest/docs/framework/react/guide/server-routes",

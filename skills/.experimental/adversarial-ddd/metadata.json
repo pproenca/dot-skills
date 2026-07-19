@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "community",
   "technology": "Domain-Driven Design + ubiquitous language (language-agnostic)",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for domain-driven design quality in any codebase: two blind reviewers judge a diff, module/bounded context, or DSL surface against 20 decidable rules across glossary lifecycle, language consistency, domain model integrity, context boundaries, and semantic-model/DSL craft. The glossary lifecycle fails closed — domain concepts with no recorded ubiquitous language is a FAIL whose fix list names the entries to create — so repeated runs converge any project's code, team, and stakeholders on one recorded, well-sized vocabulary.",
+  "abstract": "Pass/fail review gate for domain-driven design quality in any codebase: a single blind reviewer judges a diff, module/bounded context, or DSL surface against 20 decidable rules across glossary lifecycle, language consistency, domain model integrity, context boundaries, and semantic-model/DSL craft. The glossary lifecycle fails closed — domain concepts with no recorded ubiquitous language is a FAIL whose fix list names the entries to create — so repeated runs converge any project's code, team, and stakeholders on one recorded, well-sized vocabulary.",
   "references": [
     "https://www.domainlanguage.com/ddd/reference/",
     "https://martinfowler.com/bliki/UbiquitousLanguage.html",

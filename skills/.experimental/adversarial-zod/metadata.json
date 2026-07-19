@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "community",
   "technology": "Zod 4.x + TypeScript / TanStack Start",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for Zod schema code in TypeScript and TanStack Start apps: two blind reviewers judge a diff or file set against 24 decidable rules across silent Zod 3-to-4 semantic breaks, removed APIs, error customization and formatting, deprecated method forms, composition and codecs, TanStack Start integration, and packaging. Pinned to zod 4.4.x and the TanStack Start v1 RC.",
+  "abstract": "Pass/fail review gate for Zod schema code in TypeScript and TanStack Start apps: a single blind reviewer judges a diff or file set against 24 decidable rules across silent Zod 3-to-4 semantic breaks, removed APIs, error customization and formatting, deprecated method forms, composition and codecs, TanStack Start integration, and packaging. Pinned to zod 4.4.x and the TanStack Start v1 RC.",
   "references": [
     "https://zod.dev/v4/changelog",
     "https://zod.dev/api",

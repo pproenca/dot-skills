@@ -1,11 +1,11 @@
 ---
 name: adversarial-ts-patterns
-description: Use this skill to gate TypeScript and React application code with a pass/fail adversarial review of design-pattern usage — two blind reviewer subagents independently judge a diff or file set against 18 decidable rules covering implicit state machines (boolean-flag lifecycles, useEffect chains, stored derived state, non-exhaustive union matches) and over-engineered OO/enterprise ports (getInstance singletons, factory and builder classes, single-method strategy classes, State/Visitor hierarchies, event buses inside a React tree, pass-through repositories, DI containers, single-implementation interfaces, component inheritance, logic-only HOCs, static-only classes, trivial accessors). Trigger it before merging TS/React work, when asked to gate or pass/fail pattern usage, or as a check that agent-authored code is not porting Java/C# idioms. It renders verdicts only; for teaching-style guidance use implementation-design-patterns or implementation-functional-patterns.
+description: Use this skill to gate TypeScript and React application code with a pass/fail adversarial review of design-pattern usage — a single blind reviewer subagent judges a diff or file set against 18 decidable rules covering implicit state machines (boolean-flag lifecycles, useEffect chains, stored derived state, non-exhaustive union matches) and over-engineered OO/enterprise ports (getInstance singletons, factory and builder classes, single-method strategy classes, State/Visitor hierarchies, event buses inside a React tree, pass-through repositories, DI containers, single-implementation interfaces, component inheritance, logic-only HOCs, static-only classes, trivial accessors). Trigger it before merging TS/React work, when asked to gate or pass/fail pattern usage, or as a check that agent-authored code is not porting Java/C# idioms. It renders verdicts only; for teaching-style guidance use implementation-design-patterns or implementation-functional-patterns.
 ---
 
 # Adversarial TS Patterns Gate
 
-A design-pattern usage gate for TypeScript and React application code — a pass/fail gate: two blind, identical reviewer subagents independently judge the work against this gate's rules, and the work passes only if both say PASS. This skill renders verdicts; it never fixes the work.
+A design-pattern usage gate for TypeScript and React application code — a pass/fail gate: a single blind reviewer subagent judges the work against this gate's rules with an adversarial mandate, and the work passes only when every rule is PASS or N/A. This skill renders verdicts; it never fixes the work.
 
 The gate judges in both directions. **Over-abstraction** — Gang of Four and enterprise machinery ported from Java/C# where idiomatic TypeScript reaches for a function, a module, or a tagged union. **Under-modeling** — implicit state machines whose impossible states compile: boolean-flag lifecycles, effect chains, hand-synced derived state, silent `default` branches.
 
@@ -22,26 +22,18 @@ Do not apply to non-TypeScript codebases (the reviewer prompt's precondition abo
 
 Follow these steps exactly — the gate's value is that every review runs the same way.
 
-1. **Identify the target.** Pin down exactly what is under review (a diff, a set of files, a PR) and note the ref/paths so both reviewers see the same thing. Include the repo root in the target description — the `layer-no-single-impl-interface` and `layer-no-di-container-in-app` rules require searching beyond the diff for second implementations and registrations.
+1. **Identify the target.** Pin down exactly what is under review (a diff, a set of files, a PR) and note the ref/paths so the review runs against an unambiguous, fixed target. Include the repo root in the target description — the `layer-no-single-impl-interface` and `layer-no-di-container-in-app` rules require searching beyond the diff for second implementations and registrations.
 2. **Load the rules.** Read [references/_sections.md](references/_sections.md) and every rule file in `references/` (all `state-*.md`, `create-*.md`, `behave-*.md`, `layer-*.md`, `react-*.md`, `oo-*.md` files).
 3. **Compose the reviewer prompt.** Fill [references/reviewer-prompt.md](references/reviewer-prompt.md) with the rules and the target. The composed prompt must be fully self-contained — a reviewer sees no conversation history, so nothing may refer to context outside the prompt.
-4. **Dispatch two blind reviewers.** Launch two Task subagents in a single message (parallel) with the identical composed prompt. Do not share either reviewer's output with the other.
-5. **Merge fail-closed.**
+4. **Dispatch one blind reviewer.** Launch a single Task subagent whose entire input is the composed prompt — no conversation context, no commentary alongside it.
+5. **Render fail-closed.** The reviewer's structured output is the verdict — there is no merge step. Overall verdict is PASS only when every rule is PASS or N/A; any single FAIL fails the gate. Never average, weigh severity, or waive a rule — a "minor" FAIL is a FAIL. If the reviewer returns "GATE NOT APPLICABLE" (not a TypeScript target), stop and report that instead of a verdict.
+6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate the reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance. Every rule whose final result is FAIL must appear in the fix list with a change concrete enough to apply as written — if the reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering.
 
-   | Reviewer A | Reviewer B | Final |
-   |-----------|-----------|-------|
-   | PASS | PASS | **PASS** |
-   | FAIL | FAIL | **FAIL** |
-   | PASS | FAIL (either order) | **FAIL** — rule marked **CONTESTED** |
-
-   N/A splits: N/A vs N/A → N/A; N/A vs PASS → PASS; N/A vs FAIL → CONTESTED (counts as FAIL). Overall verdict is PASS only when both reviewers' overall verdicts are PASS. Contested rules count as FAIL and show both rationales. If either reviewer returns "GATE NOT APPLICABLE" (not a TypeScript target), stop and report that instead of a verdict.
-6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate every reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance. Every rule whose final result is FAIL or CONTESTED must appear in the fix list with a change concrete enough to apply as written — if a reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering.
-
-If the same rule is repeatedly contested across reviews, the rule is not decidable enough — record it in [gotchas.md](gotchas.md) and sharpen the rule; do not override the gate.
+If the same rule flips verdicts across re-reviews of an unchanged target, or a human reads the evidence and overrides the verdict, that is a decidability bug in the rule — record it in [gotchas.md](gotchas.md) and sharpen the rule; do not override the gate.
 
 ## Verdict Format
 
-Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a quote — required for PASS as well as FAIL), and for every FAIL, the fix that flips the rule to PASS once applied — the named change plus its location, never a restatement of the violation. The final report follows [assets/templates/verdict.md](assets/templates/verdict.md).
+The reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a quote — required for PASS as well as FAIL), and for every FAIL, the fix that flips the rule to PASS once applied — the named change plus its location, never a restatement of the violation. The final report follows [assets/templates/verdict.md](assets/templates/verdict.md).
 
 ## Rule Categories
 
@@ -64,7 +56,7 @@ Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a
 
 | File | Description |
 |------|-------------|
-| [references/reviewer-prompt.md](references/reviewer-prompt.md) | Self-contained prompt template for each blind reviewer |
+| [references/reviewer-prompt.md](references/reviewer-prompt.md) | Self-contained prompt template for the blind reviewer |
 | [assets/templates/verdict.md](assets/templates/verdict.md) | Verdict report template |
 | [references/_sections.md](references/_sections.md) | Category definitions and ordering |
 | [metadata.json](metadata.json) | Version and source references |

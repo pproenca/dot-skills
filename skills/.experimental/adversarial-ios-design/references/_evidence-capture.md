@@ -27,7 +27,7 @@ dispatching — do not find out mid-run.
 | Recording → filmstrip | Every interaction that mutates visible structure (add/delete/toggle/expand/load) and every push from an artwork cell | All tier-1 motion rules (`motion-animate-structural-changes`, `motion-no-gratuitous-animation`, `motion-bounce-cap`, `motion-brief-feedback`, `motion-zoom-transitions`) |
 | Idle recording → filmstrip (5 s, no input) | Each primary screen at rest | The ambient-motion leg of `motion-no-gratuitous-animation` |
 
-Name files so reviewers can cite regions: `evidence/<screen>-<light|dark|ax5>.png`,
+Name files so the reviewer can cite regions: `evidence/<screen>-<light|dark|ax5>.png`,
 `evidence/<interaction>-filmstrip.png`. Put them in the session scratchpad and pass
 **absolute paths** into the reviewer prompt.
 
@@ -68,7 +68,7 @@ kill -INT "$REC_PID"; wait "$REC_PID"
 ```
 
 Tile the recording into a filmstrip — at `fps=10` **each tile is 100 ms**, which is the
-unit reviewers count in:
+unit the reviewer counts in:
 
 ```bash
 ffmpeg -i evidence/delete-row-rec.mp4 -vf "fps=10,scale=240:-1,tile=8x4" \

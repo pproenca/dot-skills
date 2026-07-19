@@ -12,11 +12,13 @@ Two blind reviewers per artifact, identical composed prompt, Swift 6.2 / iOS 18 
 - One planted violation did NOT fire, unanimously: a lookup inside a `@ViewBuilder` computed var on a row whose stored properties are all `let`s passed the second evidence leg of `update-subview-structs-not-computed-vars` ("the view has other change sources") — both reviewers reasoned identically that nothing can invalidate the row independently of its inputs, so the extraction is harmless there. This is the rule's conjunction working, not a miss: the harm the rule names requires an independent invalidation source. Keep the conjunction; it is what kept the verdict unanimous.
 - The only per-rule splits were PASS-vs-N/A on rules whose subject was absent or trivially satisfied — expected reviewer-granularity noise that resolves to PASS under the merge table.
 
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
+
 Added: 2026-07-16
 
-### Rule-fidelity guards the reviewers must not override (pre-recorded at creation)
+### Rule-fidelity guards the reviewer must not override (pre-recorded at creation)
 
-The gate's rules deliberately diverge from common community lore in ways reviewers trained on that lore may try to re-impose:
+The gate's rules deliberately diverge from common community lore in ways a reviewer trained on that lore may try to re-impose:
 
 - `id: \.self` on constant collections is **endorsed** — there is no unstable-ForEach-id rule in this gate, and flagging it is out of scope.
 - Synchronous, lightweight work in `.onAppear` is **endorsed**; only the `.onAppear { Task { ... } }` combination fails `task-modifier-not-onappear-task`.
@@ -35,7 +37,7 @@ Added: 2026-07-16
 
 ### Interlocking-rule precedence (pre-recorded at creation)
 
-`update-subview-structs-not-computed-vars` and `update-cache-expensive-derivations` can both match a computed property that transforms data. Precedence: if the property returns `some View`, judge it under `update-subview-structs-not-computed-vars`; if it returns data read by `body`, judge it under `update-cache-expensive-derivations`. One finding, one rule — reviewers reporting the same line under both is expected granularity noise, not a decidability bug.
+`update-subview-structs-not-computed-vars` and `update-cache-expensive-derivations` can both match a computed property that transforms data. Precedence: if the property returns `some View`, judge it under `update-subview-structs-not-computed-vars`; if it returns data read by `body`, judge it under `update-cache-expensive-derivations`. One finding, one rule — the reviewer reporting the same line under both is expected granularity noise, not a decidability bug.
 
 `access-style-protocols-for-custom-controls` and `access-representation-for-custom-controls` split by whether a style protocol exists for the control's semantic role: Toggle/Button/Label roles → the style-protocol rule; roles with no style protocol (segmented control/Picker, sliders drawn with Canvas) → the representation rule.
 

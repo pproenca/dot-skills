@@ -1,11 +1,11 @@
 {
-  "version": "0.1.0",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "Elixir / Reactor (saga & dataflow orchestration)",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for Elixir code built on Reactor (~> 1.0): two blind reviewers judge a diff or file set against 28 decidable rules that catch wrong assumptions about the library's saga and dataflow model — compensation vs undo semantics, retry discipline under the max_retries :infinity default, DAG dependencies vs lexical order, step and middleware return contracts, DSL composition (compose/map/switch/recurse) over hand-rolled control flow, and async defaults — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Siblings adversarial-elixir and adversarial-beam gate paradigm fit and runtime semantics.",
+  "abstract": "Pass/fail review gate for Elixir code built on Reactor (~> 1.0): a single blind reviewer judges a diff or file set against 28 decidable rules that catch wrong assumptions about the library's saga and dataflow model — compensation vs undo semantics, retry discipline under the max_retries :infinity default, DAG dependencies vs lexical order, step and middleware return contracts, DSL composition (compose/map/switch/recurse) over hand-rolled control flow, and async defaults — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Siblings adversarial-elixir and adversarial-beam gate paradigm fit and runtime semantics.",
   "references": [
     "https://reactor.hexdocs.pm/readme.html",
     "https://reactor.hexdocs.pm/01-getting-started.html",

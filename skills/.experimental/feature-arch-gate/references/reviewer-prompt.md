@@ -1,8 +1,8 @@
 # Reviewer Prompt — Feature-Arch Gate
 
 <!-- This file is a prompt TEMPLATE. At review time, the dispatching agent fills the
-     {{...}} slots and sends the composed text verbatim to TWO Task subagents in one
-     message. The composed prompt must be fully self-contained: reviewers have no
+     {{...}} slots and sends the composed text verbatim to a single Task subagent.
+     The composed prompt must be fully self-contained: the reviewer has no
      conversation history, so nothing here may refer to outside context.
 
      Slot-filling notes for the dispatcher:

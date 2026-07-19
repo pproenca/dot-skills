@@ -1,11 +1,11 @@
 ---
 name: adversarial-phoenix-liveview
-description: Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — two blind reviewer subagents judge a diff or file set against 32 decidable rules covering state ownership and lifecycle (patch vs remount, callback load placement, connected-mount guards, form recovery), realtime data flow (broadcast placement, scoped topics, presence mechanisms), async responsiveness (blocking external calls, socket-copying closures, lifecycle-owned tasks, rendered failure states), render and wire efficiency (the constructs that silently disable HEEx change tracking), streams (growing collections in assigns, the stream DOM contract, bounded infinite scroll), component and context boundaries, client trust (per-event authorization, scoped lookups, live_session boundaries, revocation disconnects), and mechanism-presence interaction feedback (JS commands, in-flight feedback, debounce, hook contracts, overlay focus). Verdicts only, never fixes.
+description: Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — a single blind reviewer subagent judges a diff or file set against 32 decidable rules covering state ownership and lifecycle (patch vs remount, callback load placement, connected-mount guards, form recovery), realtime data flow (broadcast placement, scoped topics, presence mechanisms), async responsiveness (blocking external calls, socket-copying closures, lifecycle-owned tasks, rendered failure states), render and wire efficiency (the constructs that silently disable HEEx change tracking), streams (growing collections in assigns, the stream DOM contract, bounded infinite scroll), component and context boundaries, client trust (per-event authorization, scoped lookups, live_session boundaries, revocation disconnects), and mechanism-presence interaction feedback (JS commands, in-flight feedback, debounce, hook contracts, overlay focus). Verdicts only, never fixes.
 ---
 
 # Adversarial Phoenix LiveView Gate
 
-A realtime-UI architecture review gate for Phoenix LiveView — pass/fail: two blind, identical reviewer subagents independently judge the work against this gate's rules, and the work passes only if both say PASS. This skill renders verdicts; it never fixes the work.
+A realtime-UI architecture review gate for Phoenix LiveView — pass/fail: a single blind reviewer subagent judges the work against this gate's rules with an adversarial mandate, and the work passes only when every rule is PASS or N/A. This skill renders verdicts; it never fixes the work.
 
 The rules target one failure mode: **LiveView written as a page-controller bolted to a JS framework, instead of what it is — a stateful process rendering change-tracked diffs over a lossy socket**. Remounts that destroy state a patch would keep, broadcasts emitted where only one writer fires them, external calls that freeze the whole view, template constructs that silently disable change tracking, collections that grow per-socket memory without bound, events trusted because the button was hidden, and interactions designed against localhost latency. These all compile cleanly and demo perfectly; they surface as memory bloat, stale UIs, frozen views, and IDOR reports in production. Each rule carries an **Evidence of violation** paragraph so a reviewer can decide PASS/FAIL/N/A from artifact evidence alone. Sibling gates: `adversarial-beam` judges message-delivery semantics, `adversarial-elixir` judges paradigm fit — run all three for full coverage of substantial Phoenix work.
 
@@ -22,26 +22,18 @@ Do not apply to non-Phoenix codebases (the reviewer prompt's precondition aborts
 
 Follow these steps exactly — the gate's value is that every review runs the same way.
 
-1. **Identify the target.** Pin down exactly what is under review (a diff, a set of files, a PR) and note the ref/paths so both reviewers see the same thing. Record the stack facts (from `mix.exs`, the router, and `config/`) — phoenix/phoenix_live_view versions, scope module presence, PubSub/Presence usage, `live_session` blocks and their `on_mount` hooks, where global CSS lives. Include the repo root in the target description — several rules must search beyond the diff for context callers, router auth hooks, revocation flows, loading-class styling, and component definitions (the reviewer prompt lists them).
+1. **Identify the target.** Pin down exactly what is under review (a diff, a set of files, a PR) and note the ref/paths so the review runs against an unambiguous, fixed target. Record the stack facts (from `mix.exs`, the router, and `config/`) — phoenix/phoenix_live_view versions, scope module presence, PubSub/Presence usage, `live_session` blocks and their `on_mount` hooks, where global CSS lives. Include the repo root in the target description — several rules must search beyond the diff for context callers, router auth hooks, revocation flows, loading-class styling, and component definitions (the reviewer prompt lists them).
 2. **Load the rules.** Read [references/_sections.md](references/_sections.md) and every rule file in `references/` (all `state-*.md`, `flow-*.md`, `async-*.md`, `render-*.md`, `stream-*.md`, `bound-*.md`, `trust-*.md`, `ui-*.md` files).
 3. **Compose the reviewer prompt.** Fill [references/reviewer-prompt.md](references/reviewer-prompt.md) with the rules, the target, and the stack facts. The composed prompt must be fully self-contained — a reviewer sees no conversation history, so nothing may refer to context outside the prompt.
-4. **Dispatch two blind reviewers.** Launch two Task subagents in a single message (parallel) with the identical composed prompt. Do not share either reviewer's output with the other.
-5. **Merge fail-closed.**
+4. **Dispatch one blind reviewer.** Launch a single Task subagent whose entire input is the composed prompt — no conversation context, no commentary alongside it.
+5. **Render fail-closed.** The reviewer's structured output is the verdict — there is no merge step. Overall verdict is PASS only when every rule is PASS or N/A; any single FAIL fails the gate. Never average, weigh severity, or waive a rule — a "minor" FAIL is a FAIL. If the reviewer returns "GATE NOT APPLICABLE" (not a Phoenix LiveView target), stop and report that instead of a verdict.
+6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate the reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance. Every rule whose final result is FAIL must appear in the fix list with a change concrete enough to apply as written — if the reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering.
 
-   | Reviewer A | Reviewer B | Final |
-   |-----------|-----------|-------|
-   | PASS | PASS | **PASS** |
-   | FAIL | FAIL | **FAIL** |
-   | PASS | FAIL (either order) | **FAIL** — rule marked **CONTESTED** |
-
-   N/A splits: N/A vs N/A → N/A; N/A vs PASS → PASS; N/A vs FAIL → CONTESTED (counts as FAIL). Overall verdict is PASS only when both reviewers' overall verdicts are PASS. Contested rules count as FAIL and show both rationales. If either reviewer returns "GATE NOT APPLICABLE" (not a Phoenix LiveView target), stop and report that instead of a verdict.
-6. **Render the verdict.** Fill [assets/templates/verdict.md](assets/templates/verdict.md). On FAIL, aggregate every reviewer's "missing for PASS" suggestions into the fix list, each with its location, ordered by category importance. Every rule whose final result is FAIL or CONTESTED must appear in the fix list with a change concrete enough to apply as written — if a reviewer's suggestion only restates the violation, derive the fix from the rule's Correct example before rendering.
-
-If the same rule is repeatedly contested across reviews, the rule is not decidable enough — record it in [gotchas.md](gotchas.md) and sharpen the rule; do not override the gate.
+If the same rule flips verdicts across re-reviews of an unchanged target, or a human reads the evidence and overrides the verdict, that is a decidability bug in the rule — record it in [gotchas.md](gotchas.md) and sharpen the rule; do not override the gate.
 
 ## Verdict Format
 
-Each reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a quote — required for PASS as well as FAIL), and for every FAIL, the fix that flips the rule to PASS once applied — the named change plus its location, never a restatement of the violation. The final report follows [assets/templates/verdict.md](assets/templates/verdict.md).
+The reviewer returns, per rule: `PASS | FAIL | N/A`, evidence (`file:line` or a quote — required for PASS as well as FAIL), and for every FAIL, the fix that flips the rule to PASS once applied — the named change plus its location, never a restatement of the violation. The final report follows [assets/templates/verdict.md](assets/templates/verdict.md).
 
 ## Rule Categories
 

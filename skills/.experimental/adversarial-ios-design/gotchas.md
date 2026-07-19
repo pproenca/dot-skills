@@ -11,7 +11,7 @@ four legs stand together — do not weaken one on evolve:
 
 1. Evidence capture is a mandatory protocol step ([references/_evidence-capture.md](references/_evidence-capture.md)),
    with named blockers as the only exemption.
-2. Reviewers judge pixels before code — the Review Order section of the reviewer prompt.
+2. The reviewer judges pixels before code — the Review Order section of the reviewer prompt.
 3. Motion rules are recording-primary (see "Capture evidence protocol" below); code
    alone nominates candidates reported as N/A, never FAIL.
 4. Every fix must pass the minimality test — smallest change that flips the rule,
@@ -21,7 +21,7 @@ Added: 2026-07-17
 
 ## Rule-fidelity guards — patterns this gate must not import or contradict
 
-These are pre-recorded so reviewers judge by this gate's rules, not by community lore
+These are pre-recorded so the reviewer judges by this gate's rules, not by community lore
 or by the sibling gates' territory. The reviewer prompt carries the same list; keep
 the two in sync.
 
@@ -39,7 +39,7 @@ Added: 2026-07-16
 Added: 2026-07-16
 
 ### Confirmation on routine deletes fails, absence of confirmation on irreversible ones also fails
-`flow-no-confirm-undoable-deletes` is deliberately two-directional. Reviewers must not import
+`flow-no-confirm-undoable-deletes` is deliberately two-directional. The reviewer must not import
 "always confirm destructive actions" lore — the HIG says the opposite for common, undoable
 deletions. Both legs require the recoverability evidence named in the rule.
 Added: 2026-07-16
@@ -60,9 +60,9 @@ Added: 2026-07-16
 
 ### The 0.5 s feedback-duration cap is derived, not Apple-published
 `motion-brief-feedback` anchors on Apple's default spring response (0.55) and the HIG's
-"brevity and precision" language. The rule text discloses this. If it produces contested
-verdicts, tighten the trigger list (which interactions count as direct feedback) rather
-than debating the number.
+"brevity and precision" language. The rule text discloses this. If it produces verdicts
+that flip between runs, tighten the trigger list (which interactions count as direct
+feedback) rather than debating the number.
 Added: 2026-07-16
 
 ### No sub-300 ms spinner rule
@@ -100,8 +100,8 @@ Added: 2026-07-16; revised 2026-07-17 (capture made mandatory, motion tiers adde
 
 ## Judgment calls deliberately excluded from this gate
 
-Routed to `ios-taste` / teaching territory because two blind reviewers cannot decide them
-from artifact evidence: minimize typefaces; important-items-near-the-top placement;
+Routed to `ios-taste` / teaching territory because a blind reviewer cannot decide them
+from artifact evidence alone: minimize typefaces; important-items-near-the-top placement;
 negative-space and density judgment; "realistic"/"excessive" motion; menu label clarity;
 "appropriate" tab count beyond the ≤5 floor; onboarding "fast, fun" quality; haptic
 intensity-matching; single-accent discipline; relevance ranking of search results; medium
@@ -124,6 +124,8 @@ Added: 2026-07-16
   3 returned unanimous PASS with zero failures and zero contested rules.
 - The strongest decidability evidence is the PASS side: the rules repeatedly failed a
   "clean" artifact on real defects the author did not plant.
+
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
 
 Added: 2026-07-16
 
@@ -173,6 +175,8 @@ Contested rules recorded (one dry run — record, don't rewrite yet; sharpen if 
   missed a nested `.sheet` inside a sheet-presented form. Consider requiring reviewers to
   grep `.sheet(` and audit every site inside sheet-presented content.
 
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer. Under the current protocol, a rule that produced a split here would instead be watched for a flipped verdict across re-reviews of an unchanged target.)
+
 Added: 2026-07-17
 
 ## Contested-verdict history
@@ -195,6 +199,8 @@ Two blind reviewers per artifact, July 2026 dry run. Splits and the fixes applie
 - **`craft-numeric-text`** (FAIL vs N/A on a `Stepper`'s string-interpolated title): sharpened —
   standard controls' own title labels are N/A; the subject is a `Text` displaying a changing
   metric.
+
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
 
 Added: 2026-07-16
 

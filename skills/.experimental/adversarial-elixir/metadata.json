@@ -1,11 +1,11 @@
 {
-  "version": "1.0.1",
+  "version": "1.1.0",
   "organization": "dot-skills",
   "technology": "Elixir / OTP / Ecto / Phoenix",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for Elixir on the BEAM: two blind reviewers judge a diff or file set against 19 decidable rules that catch architecture imported from an alien paradigm — enterprise layering, processes as objects, anemic data modeling, defensive control flow, imperative iteration, and needless metaprogramming — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Converted from the v0.1.0 distillation skill of the same name; judgment-call guidance lives in staff-level-elixir.",
+  "abstract": "Pass/fail review gate for Elixir on the BEAM: a single blind reviewer judges a diff or file set against 19 decidable rules that catch architecture imported from an alien paradigm — enterprise layering, processes as objects, anemic data modeling, defensive control flow, imperative iteration, and needless metaprogramming — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Converted from the v0.1.0 distillation skill of the same name; judgment-call guidance lives in staff-level-elixir.",
   "references": [
     "https://hexdocs.pm/elixir/design-anti-patterns.html",
     "https://hexdocs.pm/elixir/code-anti-patterns.html",

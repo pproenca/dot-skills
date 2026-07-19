@@ -1,11 +1,11 @@
 {
-  "version": "0.1.1",
+  "version": "0.2.0",
   "organization": "dot-skills",
   "technology": "Elixir / OTP / BEAM runtime architecture",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for BEAM runtime architecture in Elixir systems: two blind reviewers judge a diff or file set against 23 decidable rules that catch wrong assumptions about the runtime's execution and delivery model — supervision and failure design, backpressure and overload, event delivery semantics, shared-state consistency, distribution reality, and runtime mechanics — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Sibling of adversarial-elixir, which gates paradigm fit; judgment-call guidance lives in staff-level-elixir.",
+  "abstract": "Pass/fail review gate for BEAM runtime architecture in Elixir systems: a single blind reviewer judges a diff or file set against 23 decidable rules that catch wrong assumptions about the runtime's execution and delivery model — supervision and failure design, backpressure and overload, event delivery semantics, shared-state consistency, distribution reality, and runtime mechanics — each rule carrying the artifact evidence that decides PASS/FAIL/N/A with fail-closed carve-outs. Sibling of adversarial-elixir, which gates paradigm fit; judgment-call guidance lives in staff-level-elixir.",
   "references": [
     "https://www.erlang.org/doc/system/sup_princ.html",
     "https://www.erlang.org/doc/system/ref_man_processes.html",

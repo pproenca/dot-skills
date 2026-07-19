@@ -65,13 +65,13 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [adversarial-beam](skills/.experimental/adversarial-beam) | Use this skill to gate Elixir/OTP systems on BEAM runtime architecture with a pass/fail.. |
 | [adversarial-ddd](skills/.experimental/adversarial-ddd) | Use this skill to gate DDD and ubiquitous-language quality with a pass/fail adversarial review —.. |
 | [adversarial-elixir](skills/.experimental/adversarial-elixir) | Use this skill to gate Elixir, OTP, Ecto, and Phoenix code with a pass/fail adversarial review —.. |
-| [adversarial-ios-design](skills/.experimental/adversarial-ios-design) | Use this skill to gate iOS SwiftUI design and UX with a pass/fail adversarial review — two blind.. |
-| [adversarial-phoenix-liveview](skills/.experimental/adversarial-phoenix-liveview) | Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — two.. |
+| [adversarial-ios-design](skills/.experimental/adversarial-ios-design) | Use this skill to gate iOS SwiftUI design and UX with a pass/fail adversarial review — a single.. |
+| [adversarial-phoenix-liveview](skills/.experimental/adversarial-phoenix-liveview) | Use this skill to gate Phoenix LiveView realtime UIs with a pass/fail adversarial review — a.. |
 | [adversarial-python](skills/.experimental/adversarial-python) | Use this skill to gate Python code (floors 3.10+, rules verified through 3.14) with a pass/fail.. |
 | [adversarial-reactor](skills/.experimental/adversarial-reactor) | Use this skill to gate Elixir code built on the Reactor orchestration library (~> 1.0) with a.. |
 | [adversarial-rust](skills/.experimental/adversarial-rust) | Use this skill when reviewing or refactoring existing Rust code that carries an alien mental.. |
-| [adversarial-swift-ui](skills/.experimental/adversarial-swift-ui) | Use this skill to gate SwiftUI code with a pass/fail adversarial review — two blind reviewers.. |
-| [adversarial-swift](skills/.experimental/adversarial-swift) | Use this skill to gate Swift language code with a pass/fail adversarial review — two blind.. |
+| [adversarial-swift-ui](skills/.experimental/adversarial-swift-ui) | Use this skill to gate SwiftUI code with a pass/fail adversarial review — a single blind.. |
+| [adversarial-swift](skills/.experimental/adversarial-swift) | Use this skill to gate Swift language code with a pass/fail adversarial review — a single blind.. |
 | [adversarial-tanstack](skills/.experimental/adversarial-tanstack) | Use this skill to gate TanStack Start plus TypeScript web-app changes with a pass/fail.. |
 | [adversarial-ts-patterns](skills/.experimental/adversarial-ts-patterns) | Use this skill to gate TypeScript and React application code with a pass/fail adversarial review.. |
 | [adversarial-zod](skills/.experimental/adversarial-zod) | Use this skill to gate Zod 4 schema code in TypeScript and TanStack Start apps with a pass/fail.. |

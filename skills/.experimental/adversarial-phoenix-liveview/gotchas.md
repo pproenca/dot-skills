@@ -12,6 +12,8 @@ Two blind reviewers per artifact, identical composed prompt, Phoenix 1.8.9 / pho
 - **Clean artifact** (independent implementation of the same feature surface, every rule's problem shape exercised on the correct side): both reviewers returned overall PASS — 32 PASS, 0 N/A, 0 contested. Carve-outs were claimed with citations, not asserted: the search form's `phx-auto-recover="ignore"` attribute, the `{@rest}` spread backed by `attr :rest, :global`, and the presentation assign (`:editing`) read by server logic.
 - Convergence notes worth keeping: (1) both reviewers ruled that pure data-shaping `Enum.map`s (payload/options builders) are outside `render-keyed-comprehensions` — only `Enum.map` producing template elements fires it; (2) both ruled a wholesale-replaced list assign (`@tables` re-assigned per patch) is not `stream-collections-not-assigns` evidence — only accumulation (`++`, `[x | xs]` across events) is; (3) both treated the missing-CSS repo fact as decisive for `ui-inflight-feedback` (no loading-class styling can exist if no stylesheet exists) — give reviewers the CSS location in stack facts.
 
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
+
 Added: 2026-07-12
 
 ### Scope guards the reviewers must not override (pre-recorded at creation)

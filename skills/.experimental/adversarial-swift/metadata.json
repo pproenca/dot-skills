@@ -1,11 +1,11 @@
 {
-  "version": "1.1.0",
+  "version": "1.2.0",
   "organization": "community",
   "technology": "Swift",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Pass/fail review gate for Swift language code — two blind reviewers judge a diff or file set against 36 decidable rules across concurrency and task structure, property and resource invariants, error handling and diagnostics, enum evolution and exhaustiveness, API and type surface, collections and dictionaries, and control flow, strings, and conditional compilation. Applies to any Swift target (app, server-side, CLI, package); rules whose remedy needs a newer toolchain than the project's go N/A, not FAIL. SwiftUI review is owned by the sibling adversarial-swift-ui gate.",
+  "abstract": "Pass/fail review gate for Swift language code — a single blind reviewer judges a diff or file set against 36 decidable rules across concurrency and task structure, property and resource invariants, error handling and diagnostics, enum evolution and exhaustiveness, API and type surface, collections and dictionaries, and control flow, strings, and conditional compilation. Applies to any Swift target (app, server-side, CLI, package); rules whose remedy needs a newer toolchain than the project's go N/A, not FAIL. SwiftUI review is owned by the sibling adversarial-swift-ui gate.",
   "references": [
     "https://docs.swift.org/swift-book/documentation/the-swift-programming-language/concurrency/",
     "https://developer.apple.com/documentation/swift/checkedcontinuation",

@@ -12,11 +12,13 @@ Two blind reviewers per artifact, identical composed prompt, Swift 6.3.3 / nonis
 - The sharpened `prop-private-set-internal-mutation` carve-out resolved identically for both clean-side reviewers (a settable property with no invariant-enforcing methods judged out of the rule's trigger, not N/A-by-external-write), confirming the fail-closed rewording.
 - `conc-concurrent-offload-under-mainactor-default` went N/A on both artifacts as constructed (nonisolated default isolation in the stack facts) — it has not yet been exercised FAIL-side in a MainActor-default target.
 
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
+
 Added: 2026-07-16
 
-### Source-fidelity guards the reviewers must not override (pre-recorded at v1.0.0 creation)
+### Source-fidelity guards the reviewer must not override (pre-recorded at v1.0.0 creation)
 
-The gate's rules are grounded in source material that deliberately diverges from common community lore in ways reviewers trained on that lore may try to re-impose:
+The gate's rules are grounded in source material that deliberately diverges from common community lore in ways a reviewer trained on that lore may try to re-impose:
 
 - **Untyped `throws` is NOT a violation.** The source material keeps untyped throws as the recommended default for general-purpose code; there is no typed-throws rule in this gate, and flagging `throws` without `throws(E)` is out of scope.
 - **Explicit `_ =` discards are NOT a violation.** There is no `@discardableResult` rule — many styles prefer the explicit discard at call sites.
@@ -33,13 +35,13 @@ Added: 2026-07-16
 
 ### try? await Task.sleep does not propagate cancellation
 
-`conc-check-cancellation-in-loops` explicitly names `try? await Task.sleep(...)` as NOT counting as cancellation propagation — `try?` swallows the `CancellationError`, so a loop whose only suspension point is a `try?`-wrapped sleep runs to completion after `cancel()`. Reviewers repeatedly want to credit the sleep as a cancellation check; the rule text forbids it. (Carried over from the v0.1.x gate, where this split reviewers until pre-recorded.)
+`conc-check-cancellation-in-loops` explicitly names `try? await Task.sleep(...)` as NOT counting as cancellation propagation — `try?` swallows the `CancellationError`, so a loop whose only suspension point is a `try?`-wrapped sleep runs to completion after `cancel()`. The reviewer repeatedly wants to credit the sleep as a cancellation check; the rule text forbids it. (Carried over from the v0.1.x gate, where this split reviewers until pre-recorded — recorded under the earlier two-reviewer protocol.)
 
 Added: 2026-07-16
 
-### Rules pre-flagged as contested-risk at creation
+### Rules pre-flagged as decidability-risk at creation
 
-Three rules were flagged at planning as reviewer-split risks and included by user decision with tightened carve-outs. If a dry run or live review contests them, sharpen the rule text (or demote the rule to a distillation sibling) rather than overriding the gate:
+Three rules were flagged at planning as decidability risks (a single reviewer could plausibly land on either verdict) and included by user decision with tightened carve-outs. If a dry run or live review produces a verdict that flips across re-reviews of an unchanged target for one of them, or a human overrides the verdict after reading the evidence, sharpen the rule text (or demote the rule to a distillation sibling) rather than overriding the gate:
 
 - `api-final-or-private-classes` — needs whole-file-set subclass knowledge; test-double base classes (visible Mock/Spy/Stub subclass) and pre-existing classes the diff merely touches are N/A by rule text.
 - `err-warning-directive-for-pending-work` — verdict depends on build-config stack facts (warnings-as-errors CI, SwiftLint todo rule); absent those facts, only diff-introduced TODOs on stubbed/incomplete behavior fail.

@@ -1,11 +1,11 @@
 {
-  "version": "0.2.1",
+  "version": "0.3.0",
   "organization": "Community",
   "technology": "React Feature-Based Architecture",
   "discipline": "adversarial",
   "type": "adversarial-review",
   "date": "July 2026",
-  "abstract": "Self-sufficient pass/fail review gate enforcing React feature-based architecture. Two blind, identical reviewer subagents independently judge a diff or codebase against 33 decidable rules vendored as a snapshot of feature-arch v1.1.0 (10 judgment-call rules are excluded with reasons), merging verdicts fail-closed with cited evidence and an actionable fix list. Needs nothing outside its own directory at review time.",
+  "abstract": "Self-sufficient pass/fail review gate enforcing React feature-based architecture. A single blind reviewer subagent judges a diff or codebase against 33 decidable rules vendored as a snapshot of feature-arch v1.1.0 (10 judgment-call rules are excluded with reasons), rendering verdicts fail-closed with cited evidence and an actionable fix list. Needs nothing outside its own directory at review time.",
   "references": [
     "skills/.curated/feature-arch/ (vendoring source, v1.1.0 snapshot 2026-07-11 — not required at review time)",
     "https://www.robinwieruch.de/react-feature-architecture/",

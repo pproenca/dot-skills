@@ -10,6 +10,7 @@ of the sharpened rule produced a unanimous FAIL.
 Fix: keep evidence enumerations type-based, not syntax-based, when the trigger is really
 "anything typed `T | undefined`".
 Added: 2026-07-11
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
 
 ### Watch item: as-casts on server-function/query results
 Both dry-run reviewers independently marked `data as Project[]` (a `useQuery` result) N/A
@@ -20,6 +21,7 @@ pattern keeps surfacing, decide deliberately: either extend the evidence to cove
 on values that crossed the server-function wire, or keep it excluded because Start types
 server-fn results end-to-end and the cast is redundancy, not a boundary hole.
 Added: 2026-07-11
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
 
 ### Dry-run record (proves the gate both ways)
 - Clean TanStack Start fixture (validator + POST mutation + auth middleware + getRouter
@@ -30,3 +32,4 @@ Added: 2026-07-11
   noUncheckedIndexedAccess/erasableSyntaxOnly): FAIL + FAIL → **FAIL**, 11 unanimous rule
   failures, every planted violation caught with file:line evidence and a located fix.
 Added: 2026-07-11
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)

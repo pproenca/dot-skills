@@ -11,6 +11,8 @@ Two blind reviewers per artifact, identical composed prompt, Elixir ~> 1.18 / Ph
 - Carve-out traps behaved as designed — each PASS was claimed with the required citation, not asserted: the DI behaviour passed only after both reviewers cited the external HTTP boundary AND the `Mox.defmock` line; the multi-aggregate `reduce` passed because no single combinator covers the whole loop (name-the-replacement fired fail-open as intended); the closed three-variant single-site `case` passed via the in-rule carve-out; the `__using__` injecting `@behaviour` + `def` + `defoverridable` passed `meta-use-is-not-import`.
 - Convergence note worth keeping: both reviewers independently ruled that message tuples confined to a **dedicated client module** wrapping a per-key server (`Shop.Inventory` client functions over `Shop.Inventory.SkuServer`) do NOT fail `proc-consolidate-interface` — the protocol is confined, not scattered, and the split mirrors the `proc-no-singleton-manager` correct example. Treat that shape as PASS.
 
+(Recorded under the earlier two-reviewer protocol; the gate now dispatches a single blind reviewer.)
+
 Added: 2026-07-11
 
 ### Scope guards the reviewers must not override (pre-recorded at conversion)
