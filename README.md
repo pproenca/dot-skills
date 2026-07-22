@@ -100,6 +100,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [codex-goals](skills/.experimental/codex-goals) | Patterns and anti-patterns for using OpenAI Codex Goals — the persistent objectives feature.. |
 | [complexity-optimizer](skills/.experimental/complexity-optimizer) | Analyze a software codebase for algorithmic complexity and performance hotspots, then propose or.. |
 | [computer-science-algorithms](skills/.experimental/computer-science-algorithms) | Choosing or implementing an algorithm or data structure — asymptotic complexity, data-structure.. |
+| [datadog-dashboards](skills/.experimental/datadog-dashboards) | Corrects the wrong defaults a model has when building Datadog dashboards, verified against.. |
 | [design-to-react-algorithms](skills/.experimental/design-to-react-algorithms) | Reverse-engineering a Sketch file (or Figma export with similar shape) into pixel-perfect React.. |
 | [dev-rfc](skills/.experimental/dev-rfc) | Create well-structured RFCs and technical proposals for software projects |
 | [diagram-quality](skills/.experimental/diagram-quality) | "PlantUML diagram quality on the agent-uml collaborative canvas — three tiers: rendering safety.. |
