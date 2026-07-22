@@ -213,6 +213,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [webpack-plugin-recipes](skills/.experimental/webpack-plugin-recipes) | Use whenever you face a webpack-build problem that ends with needing to write a plugin — 26.. |
 | [write-design-docs](skills/.experimental/write-design-docs) | Write, revise, or review software design documents using Malte Ubl's "Design Docs at Google".. |
 | [wxt-browser-extensions](skills/.experimental/wxt-browser-extensions) | WXT browser extension performance optimization guidelines |
+| [yjs-nextjs](skills/.experimental/yjs-nextjs) | Corrects the wrong defaults a capable model has when building Yjs collaborative editing into a.. |
 | [zustand](skills/.experimental/zustand) | Zustand state management best practices for React applications |
 <!-- SKILLS-TABLE:END -->
 

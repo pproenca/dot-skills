@@ -1,0 +1,75 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "Yjs in Next.js 16 with tRPC and shadcn/ui",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "July 2026",
+  "abstract": "Corrects the wrong defaults a capable model has when building Yjs collaborative editing into a Next.js 16 App Router app with tRPC v11 and shadcn/ui, pinned to Yjs 13.6.31. Concentrates on the failures that are silent rather than loud — shared-type choices that discard concurrent edits, Uint8Array updates that vanish across a JSON boundary, undo that reverts other users' work, and controlled inputs that destroy the caret — alongside the deployment and trust-boundary decisions that determine whether the sync loop can run at all.",
+  "libraryVersion": "13.6.31",
+  "categories": [
+    {
+      "name": "Sync Topology & Dependencies",
+      "prefix": "host",
+      "ruleCount": 6
+    },
+    {
+      "name": "Binary Transport & Persistence",
+      "prefix": "wire",
+      "ruleCount": 4
+    },
+    {
+      "name": "Modeling State in Shared Types",
+      "prefix": "model",
+      "ruleCount": 4
+    },
+    {
+      "name": "Doc Lifecycle & React Binding",
+      "prefix": "react",
+      "ruleCount": 3
+    },
+    {
+      "name": "Undo, Snapshots & Offline Load",
+      "prefix": "hist",
+      "ruleCount": 3
+    },
+    {
+      "name": "Awareness & Cursors",
+      "prefix": "pres",
+      "ruleCount": 2
+    },
+    {
+      "name": "Editor & Form Integration",
+      "prefix": "ui",
+      "ruleCount": 2
+    }
+  ],
+  "totalRules": 24,
+  "references": [
+    "https://docs.yjs.dev/api/about-awareness",
+    "https://docs.yjs.dev/api/document-updates",
+    "https://docs.yjs.dev/api/relative-positions",
+    "https://docs.yjs.dev/api/shared-types/y.array",
+    "https://docs.yjs.dev/api/shared-types/y.text",
+    "https://docs.yjs.dev/api/undo-manager",
+    "https://docs.yjs.dev/api/y.doc",
+    "https://docs.yjs.dev/ecosystem/database-provider/y-indexeddb",
+    "https://docs.yjs.dev/getting-started/working-with-shared-types",
+    "https://github.com/cloudflare/partykit",
+    "https://github.com/yjs/y-protocols/blob/v1.0.7/awareness.js",
+    "https://github.com/yjs/y-websocket-server/blob/main/README.md",
+    "https://github.com/yjs/y-websocket/blob/master/README.md",
+    "https://github.com/yjs/yhub",
+    "https://html.spec.whatwg.org/multipage/input.html#dom-input-value",
+    "https://liveblocks.io",
+    "https://nextjs.org/docs/app/getting-started/server-and-client-components",
+    "https://nextjs.org/docs/app/guides/backend-for-frontend",
+    "https://react.dev/reference/react/StrictMode",
+    "https://react.dev/reference/react/useSyncExternalStore",
+    "https://tiptap.dev/docs/collaboration/getting-started/install",
+    "https://tiptap.dev/docs/editor/extensions/functionality/collaboration",
+    "https://tiptap.dev/hocuspocus",
+    "https://trpc.io/docs/client/links/httpSubscriptionLink",
+    "https://vercel.com/docs/functions/websockets"
+  ]
+}
