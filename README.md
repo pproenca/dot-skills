@@ -198,6 +198,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [theory-of-constraints](skills/.experimental/theory-of-constraints) | Apply the Theory of Constraints (Goldratt's Five Focusing Steps) to find and fix the single.. |
 | [threat-model](skills/.experimental/threat-model) | Security threat modeling, attack surface mapping, and trust boundary analysis on a codebase |
 | [threat-patch](skills/.experimental/threat-patch) | Remediate security findings by producing minimal, surgical code patches |
+| [trpc](skills/.experimental/trpc) | Corrects the wrong defaults a model has for tRPC v11 (verified against 11.18.0) |
 | [ts-google](skills/.experimental/ts-google) | Google TypeScript style guide for writing clean, consistent, type-safe code |
 | [typescript-advanced-patterns](skills/.experimental/typescript-advanced-patterns) | Advanced TypeScript — type-level programming, library/DSL APIs, declaration merging, modern.. |
 | [typescript-refactor](skills/.experimental/typescript-refactor) | TypeScript and TSX refactoring and modernization guidelines from a principal specialist.. |

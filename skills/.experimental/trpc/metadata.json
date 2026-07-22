@@ -1,0 +1,81 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "tRPC",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "July 2026",
+  "abstract": "Corrects the wrong defaults a capable model has when writing tRPC v11, pinned to 11.18.0. Covers the v10-to-v11 drift that leaves stale code compiling but wrong — the React client flipping to @trpc/tanstack-react-query, transformers moving into links, renamed type exports, observable subscriptions replaced by async generators over SSE — alongside the defaults that are unsafe rather than merely stale, such as uncapped batching, CDN cache headers that cross users, and middleware ordered ahead of input validation.",
+  "libraryVersion": "11.18.0",
+  "categories": [
+    {
+      "name": "React Client Surface",
+      "prefix": "client",
+      "ruleCount": 4
+    },
+    {
+      "name": "v10 to v11 Drift",
+      "prefix": "mig",
+      "ruleCount": 4
+    },
+    {
+      "name": "Router & Procedure Construction",
+      "prefix": "proc",
+      "ruleCount": 5
+    },
+    {
+      "name": "Error & Validation Semantics",
+      "prefix": "err",
+      "ruleCount": 4
+    },
+    {
+      "name": "Links, Transport & Serialization",
+      "prefix": "link",
+      "ruleCount": 8
+    },
+    {
+      "name": "SSR, RSC & Server-Side Calls",
+      "prefix": "rsc",
+      "ruleCount": 4
+    },
+    {
+      "name": "Subscriptions & Streaming",
+      "prefix": "sub",
+      "ruleCount": 4
+    }
+  ],
+  "totalRules": 33,
+  "references": [
+    "https://trpc.io/blog/introducing-tanstack-react-query-client",
+    "https://trpc.io/docs/client/links",
+    "https://trpc.io/docs/client/links/httpBatchLink#limiting-batch-size",
+    "https://trpc.io/docs/client/links/httpBatchLink#options",
+    "https://trpc.io/docs/client/links/httpSubscriptionLink#connectionParams",
+    "https://trpc.io/docs/client/links/httpSubscriptionLink#server-ping",
+    "https://trpc.io/docs/client/links/httpSubscriptionLink#setup",
+    "https://trpc.io/docs/client/react/useInfiniteQuery",
+    "https://trpc.io/docs/client/tanstack-react-query/server-components",
+    "https://trpc.io/docs/client/tanstack-react-query/setup",
+    "https://trpc.io/docs/client/tanstack-react-query/usage",
+    "https://trpc.io/docs/client/tanstack-react-query/usage#queryFilter",
+    "https://trpc.io/docs/client/tanstack-react-query/usage#queryKey",
+    "https://trpc.io/docs/migrate-from-v10-to-v11",
+    "https://trpc.io/docs/server/adapters/fetch",
+    "https://trpc.io/docs/server/caching",
+    "https://trpc.io/docs/server/data-transformers",
+    "https://trpc.io/docs/server/error-formatting",
+    "https://trpc.io/docs/server/error-handling",
+    "https://trpc.io/docs/server/middlewares#concat",
+    "https://trpc.io/docs/server/middlewares#context-extension",
+    "https://trpc.io/docs/server/non-json-content-types",
+    "https://trpc.io/docs/server/procedures#reusable-base-procedures",
+    "https://trpc.io/docs/server/routers",
+    "https://trpc.io/docs/server/server-side-calls",
+    "https://trpc.io/docs/server/subscriptions",
+    "https://trpc.io/docs/server/subscriptions#tracked",
+    "https://trpc.io/docs/server/validators#input-merging",
+    "https://trpc.io/docs/server/validators#library-integrations",
+    "https://trpc.io/docs/server/validators#output-validators",
+    "https://trpc.io/faq"
+  ]
+}
