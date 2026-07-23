@@ -68,15 +68,17 @@ CallExpression { useForm }
 
 ---
 
-## Rule 04 — `rhf-audit-04-useeffect-depends-useform`
+## Rule 04 — REMOVED in 0.2.0
 
-**Severity:** CRITICAL · **Tool:** ts-morph · **Companion:** `formcfg-useeffect-dependency`
+**Was:** `rhf-audit-04-useeffect-depends-useform` — CRITICAL, flagged `useEffect(fn, [form])` where `form` was the `useForm()` return, on the premise that "the return object is a new reference every render, causing infinite effect re-runs."
 
-**What it catches:** `useEffect(fn, [deps])` where `deps` includes the variable bound to `useForm()`'s return (e.g., `const form = useForm(); useEffect(..., [form])`). The return object is a new reference every render, causing infinite effect re-runs.
+**Why it was removed:** the premise is false, and has been for the entire v7 range this skill targets. `useForm` stores its return in a `useRef` and returns `_formControl.current` on every render; `formState` is *mutated* onto that same object (`_formControl.current.formState = React.useMemo(...)`). The identity never changes, so `[form]` in a dependency array is safe and does not loop.
 
-**Whitelist:** `register`, `control`, `setValue`, `setError`, `clearErrors`, `reset`, `subscribe`, `trigger`, `unregister` — these are stable refs and are intentionally listed as deps.
+Because the detector was CRITICAL it exited non-zero, so it **failed CI on correct code**. It was removed rather than demoted.
 
-**Fix:** Destructure the stable callbacks you need and depend on them, not on the form object.
+**What actually changes identity:** the `formState` proxy is rebuilt via `useMemo` keyed on `[control, formState]`, so `useEffect(..., [formState])` re-runs on every form-state update. That is the real hazard, and it is documented in the companion rule `formcfg-useeffect-dependency` rather than detected here — the pattern is often intentional.
+
+Rule ID 04 is retired and must not be reused.
 
 ---
 
@@ -171,7 +173,7 @@ CallExpression { handleSubmit }
 
 **What it catches:** `register('name', { disabled: <expression> })` where the expression is an Identifier (state variable), PropertyAccess, PrefixUnary (e.g. `!x`), or BinaryExpression — i.e., a reactive value rather than a literal `true`.
 
-**Why this matters:** `register`'s `disabled` option clears the field's value to `undefined` and skips validation. If you only want the input greyed out, use the HTML `disabled` attribute directly on the input.
+**Why this matters:** `register`'s `disabled` option drops the field from the submitted payload and skips its validation. It does **not** clear the stored value — `handleSubmit` `unset`s disabled names from a *clone* of the form values, so `getValues()` still returns what the user typed. If you only want the input greyed out, use the HTML `disabled` attribute directly on the input.
 
 **Fix:** `<input {...register('name')} disabled={condition} />` for visual disable; `{...register('name', { disabled: condition })}` only when you truly want the field excluded from submission and validation.
 
@@ -204,6 +206,44 @@ CallExpression { handleSubmit }
 **What it catches:** Any `useFormContext()` call site.
 
 **Why informational:** FormContext is occasionally the right tool (e.g., a generic reusable Field component). It's just worth a manual check — shallow uses add implicit coupling without payoff. Confirm the consuming component is deep enough that prop drilling would be worse.
+
+---
+
+## Rule 16 — `rhf-audit-16-fieldarray-disabled-noop`
+
+**Severity:** MEDIUM · **Tool:** ts-morph · **Companion:** `array-disabled-silently-noops`
+
+**What it catches:** `useFieldArray({ ..., disabled: <expression> })` where the expression is reactive (Identifier, PropertyAccess, PrefixUnary, BinaryExpression, or shorthand) rather than a literal `true` — the same heuristic as Rule 12.
+
+**Why this matters:** when `disabled` is truthy, `append`, `prepend`, `insert`, `remove`, `swap`, `move`, `update`, and `replace` all return immediately. No mutation, no throw, no console warning. Wiring it to something like `isSubmitting` produces buttons that silently do nothing.
+
+**Fix:** disable the buttons and inputs instead. Reserve `disabled: true` for arrays that are structurally read-only for this user, where a mutation slipping through would be a bug; `fields[index].disabled` (RHF 7.80+) then carries the flag to each row.
+
+**False positives:** a deliberately reactive read-only array (e.g. `disabled: !canEditPlan`). The literal-`true` carve-out exists so the unambiguous case stays quiet; a reactive permission check is worth the one-line confirmation.
+
+**Requires:** react-hook-form ≥ 7.79 (the `disabled` option) / ≥ 7.80 (`fields[i].disabled`).
+
+---
+
+## Rule 17 — `rhf-audit-17-useeffect-reset-instead-of-values`
+
+**Severity:** MEDIUM · **Tool:** ts-morph · **Companion:** `formcfg-values-prop`
+
+**What it catches:** a `useEffect` in a `useForm()` component whose body calls `reset(<something>)` with at least one argument — the hand-rolled way to seed a form from fetched data.
+
+**Why this matters:** the effect re-runs whenever the source data changes identity, including background refetches (window focus, polling, cache invalidation). Each run overwrites the live form, discarding whatever the user was typing. `useForm({ values, resetOptions: { keepDirtyValues: true } })` re-syncs declaratively and leaves touched fields alone.
+
+**Deliberate exclusions:**
+- `reset()` with **no** arguments — that is the recommended post-submit clear, not a sync
+- any effect mentioning `isSubmitSuccessful` — the post-submit pattern from `formstate-async-submit-lifecycle`, which legitimately passes values
+
+**False positives:** a one-shot seed guarded so it can only run once (an `initialised` ref, or `enabled: false` on the query). The detector can't see the guard; confirm and move on.
+
+---
+
+## Scan Scope (why detectors are not gated on `useForm`)
+
+Rules 13, 15, and 16 run over **every** candidate file, not only files containing a `useForm()` call. The companion distillation skill tells authors to move field arrays and context consumers into child components that receive `control` as a prop — those files have no `useForm()`. An earlier version gated the whole file on `useForm()` being present, which made these detectors blind to precisely the architecture the skill recommends. Keep new detectors at file level unless they genuinely need the `useForm()` call site (rules 1–3, 6–12 do).
 
 ---
 

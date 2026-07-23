@@ -51,4 +51,6 @@ function IngredientsForm() {
 }
 ```
 
+**Forward compatibility:** `field.id` is correct for all of v7. The v8 beta line renames the generated render key to `field.key` and drops the `keyName` option, so `id` becomes an ordinary data property that no longer guarantees uniqueness. Do not pre-emptively switch on v7 — but if you set `keyName` to something custom today, that is the piece with no v8 equivalent.
+
 Reference: [useFieldArray](https://react-hook-form.com/docs/usefieldarray)

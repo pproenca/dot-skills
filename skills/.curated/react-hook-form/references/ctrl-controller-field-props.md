@@ -1,7 +1,7 @@
 ---
 title: Wire Controller Field Props Correctly for UI Libraries
 impact: HIGH
-impactDescription: prevents form binding bugs and eliminates silent failures in 100% of UI library integrations
+impactDescription: prevents a control that renders correctly but never writes back to the form
 tags: ctrl, Controller, field-props, ui-libraries
 ---
 
@@ -12,7 +12,7 @@ Different UI libraries expect different prop names. Map Controller's field props
 **Incorrect (spreading field on incompatible component):**
 
 ```typescript
-function FormWithSelect({ control }: { control: Control<FormData> }) {
+function FormWithSelect({ control }: { control: Control<ShippingFormValues> }) {
   return (
     <Controller
       name="country"
@@ -28,7 +28,7 @@ function FormWithSelect({ control }: { control: Control<FormData> }) {
 **Correct (manually wire required props):**
 
 ```typescript
-function FormWithSelect({ control }: { control: Control<FormData> }) {
+function FormWithSelect({ control }: { control: Control<ShippingFormValues> }) {
   return (
     <Controller
       name="country"

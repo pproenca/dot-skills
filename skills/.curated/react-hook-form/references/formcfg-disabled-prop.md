@@ -1,15 +1,17 @@
 ---
-title: Understand That register's disabled Prop Clears the Value
+title: Use the HTML disabled Attribute for Visual Disabling, Not register's disabled Option
 impact: MEDIUM
-impactDescription: prevents lost field values and silently skipped validation
+impactDescription: prevents fields silently missing from submission and skipped validation
 tags: formcfg, register, disabled, validation, footgun
 ---
 
-## Understand That register's disabled Prop Clears the Value
+## Use the HTML disabled Attribute for Visual Disabling, Not register's disabled Option
 
-Passing `disabled: true` to `register` (or to `useController`/`Controller`) makes the field's value become `undefined` in the form state and skips its validation. This is the documented behavior — RHF treats a disabled field as "not part of submission." It is **not** the same as `<input disabled>` for purely visual disabling. If you only want the input greyed out, use the plain HTML attribute. Use `register('name', { disabled: true })` only when you intentionally want the field excluded from submission and validation.
+Passing `disabled: true` to `register` (or to `useController`/`Controller`) tells RHF the field is "not part of submission": `handleSubmit` deletes the field from the values object it hands your handler, and validation for that field is skipped. It is **not** the same as `<input disabled>` for purely visual disabling. If you only want the input greyed out, use the plain HTML attribute.
 
-**Incorrect (using register's disabled option for visual disabling — the user's typed value disappears from form state):**
+The value itself is **not** destroyed — `handleSubmit` unsets disabled names from a *clone* of the form values, so `getValues('promoCode')` still returns what the user typed and re-enabling the field brings it back into the payload. The bug this causes is a field that quietly vanishes from your submit handler while the UI still shows a value in it.
+
+**Incorrect (using register's disabled option for visual disabling — promoCode silently disappears from the submitted payload):**
 
 ```typescript
 function CheckoutForm() {
@@ -26,8 +28,8 @@ function CheckoutForm() {
       </label>
       <input
         {...register('promoCode', { disabled: usingGiftCard })}
-        // When usingGiftCard flips true, promoCode becomes undefined in form state.
-        // Validation is skipped, and the user's typed value is gone if they toggle back.
+        // When usingGiftCard flips true, submitCheckout receives no promoCode key at all
+        // and its validation is skipped — while the input still shows the typed value.
       />
       <input {...register('giftCardCode', { disabled: !usingGiftCard })} />
     </form>
@@ -75,5 +77,7 @@ function CheckoutForm() {
 **Rule of thumb:**
 - Want the field greyed out but still submitted/validated → use the HTML `disabled` attribute directly on the input
 - Want the field excluded from submission and validation → use `register('name', { disabled: true })`
+
+If a value is disappearing from your submit handler, check for this option before suspecting `getValues()` — the two disagree by design.
 
 Reference: [register - disabled](https://react-hook-form.com/docs/useform/register)

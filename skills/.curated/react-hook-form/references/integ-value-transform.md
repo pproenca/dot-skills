@@ -1,7 +1,7 @@
 ---
 title: Transform Values at Controller Level for Type Coercion
 impact: MEDIUM
-impactDescription: prevents type coercion bugs in 100% of numeric/date form fields
+impactDescription: stops string input values reaching a number- or date-typed schema
 tags: integ, transform, value-coercion, Controller
 ---
 

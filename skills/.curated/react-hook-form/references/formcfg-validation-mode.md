@@ -1,51 +1,55 @@
 ---
-title: Use onSubmit Mode for Optimal Performance
+title: Justify Any mode Other Than the Default onSubmit
 impact: CRITICAL
-impactDescription: prevents re-renders on every keystroke
+impactDescription: prevents a full validation pass and re-render on every keystroke
 tags: formcfg, validation-mode, re-renders, useForm
 ---
 
-## Use onSubmit Mode for Optimal Performance
+## Justify Any mode Other Than the Default onSubmit
 
-The `mode` option in useForm determines when validation runs. Using `onChange` mode triggers validation on every keystroke, causing significant re-renders. Default to `onSubmit` unless real-time feedback is essential.
+`mode` decides when RHF validates. The default is `'onSubmit'`, and you should have to argue your way off it: `'onChange'` runs the field's validation — the whole resolver schema, if you use one — and re-renders on every keystroke. It gets reached for reflexively because "validate as they type" sounds like better UX, when in practice it means showing someone an "invalid email" error while they are still on the third character.
 
-**Incorrect (validates on every keystroke):**
+**Incorrect (onChange chosen by default — errors fire mid-word, every keystroke re-validates):**
 
 ```typescript
-const { register, handleSubmit, formState: { errors } } = useForm({
-  mode: 'onChange',  // Triggers validation + re-render on EVERY input change
-})
-
 function RegistrationForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<RegistrationData>({
+    mode: 'onChange',
+    defaultValues: { email: '' },
+  })
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('email', { required: true, pattern: /^\S+@\S+$/i })} />
+    <form onSubmit={handleSubmit(createAccount)}>
+      <input {...register('email', { pattern: { value: /^\S+@\S+$/, message: 'Enter a valid email' } })} />
       {errors.email && <span>{errors.email.message}</span>}
     </form>
   )
 }
 ```
 
-**Correct (validates only on submit):**
+**Correct (leave the default; escalate only where it earns its keep):**
 
 ```typescript
-const { register, handleSubmit, formState: { errors } } = useForm({
-  mode: 'onSubmit',  // Default: validates only when form is submitted
-})
-
 function RegistrationForm() {
+  const { register, handleSubmit, formState: { errors } } = useForm<RegistrationData>({
+    defaultValues: { email: '' },
+  })
+
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <input {...register('email', { required: true, pattern: /^\S+@\S+$/i })} />
+    <form onSubmit={handleSubmit(createAccount)}>
+      <input {...register('email', { pattern: { value: /^\S+@\S+$/, message: 'Enter a valid email' } })} />
       {errors.email && <span>{errors.email.message}</span>}
     </form>
   )
 }
 ```
 
-**When to use other modes:**
-- `onBlur`: Validate when user leaves a field (good balance of UX and performance)
-- `onTouched`: Like `onBlur` but only after first interaction
-- `onChange`: Only when real-time validation feedback is critical (use sparingly)
+`reValidateMode` already defaults to `'onChange'`, so a field that has *failed* validation does give immediate feedback as the user corrects it — which is what people usually think they need `mode: 'onChange'` for.
+
+**Modes worth the escalation:**
+- `onTouched` — validate after the first blur, then on change. The usual right answer when submit-time errors feel too late.
+- `onBlur` — validate on blur only; quieter than `onTouched` while correcting.
+- `onChange` — password-strength meters, "username is available" checks, live-computed totals. Add a comment saying which.
+- `all` — `onBlur` and `onChange` together; rarely justified.
 
 Reference: [useForm - mode](https://react-hook-form.com/docs/useform)

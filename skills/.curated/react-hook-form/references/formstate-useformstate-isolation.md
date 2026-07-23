@@ -59,4 +59,13 @@ function SaveIndicator({ control }: { control: Control }) {
 }
 ```
 
+**Scope it further with `name`.** An isolated `useFormState({ control })` still re-renders on *any* field's state change. Pass `name` to narrow it to the fields the component actually displays:
+
+```typescript
+function EmailFieldError({ control }: { control: Control<SignupFormValues> }) {
+  const { errors } = useFormState({ control, name: 'email' })
+  return errors.email ? <span>{errors.email.message}</span> : null
+}
+```
+
 Reference: [useFormState](https://react-hook-form.com/docs/useformstate)

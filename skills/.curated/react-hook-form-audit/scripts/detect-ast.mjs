@@ -6,7 +6,6 @@
 //   Rule 1  sub-usewatch-over-watch          watch() in same component as useForm()
 //   Rule 2  sub-watch-specific-fields        watch() with no args
 //   Rule 3  formcfg-default-values           useForm without defaultValues
-//   Rule 4  formcfg-useeffect-dependency     useEffect depending on useForm return
 //   Rule 6  ctrl-usecontroller-isolation     <Controller> inlined in useForm parent
 //   Rule 7  formstate-async-submit-lifecycle async submit without try/catch
 //   Rule 8  valid-resolver-caching           schema defined inside component
@@ -15,6 +14,8 @@
 //   Rule 12 formcfg-disabled-prop            register({ disabled: <state> }) for visual disable
 //   Rule 13 array-use-field-id-as-key        useFieldArray map missing field.id key
 //   Rule 15 sub-useformcontext-sparingly     bare useFormContext() usage flagged
+//   Rule 16 array-disabled-silently-noops    useFieldArray({ disabled: <state> }) no-ops mutations
+//   Rule 17 formcfg-values-prop              useEffect+reset(data) instead of the values prop
 //
 // Output: JSON array of findings on stdout.
 
@@ -150,7 +151,10 @@ function functionCallsNetworkApi(fn) {
 // --- Detectors per source file ---
 for (const sf of project.getSourceFiles()) {
   const useFormCalls = findCallsByName(sf, 'useForm');
-  if (useFormCalls.length === 0) continue;
+  // NOTE: do NOT early-`continue` when a file has no useForm(). The distillation skill
+  // tells authors to move field arrays and context consumers into child components that
+  // receive `control` as a prop — those files have no useForm() call, and gating the whole
+  // file on one made rules 13/15/16 blind to exactly the architecture we recommend.
 
   for (const useFormCall of useFormCalls) {
     const componentFn = getEnclosingComponentFn(useFormCall);
@@ -184,6 +188,27 @@ for (const sf of project.getSourceFiles()) {
       if (Node.isObjectBindingPattern(nameNode)) {
         for (const el of nameNode.getElements()) {
           destructuredNames.add(el.getName());
+        }
+      }
+    }
+
+    // --- Rule 17: useEffect(() => reset(data), [data]) instead of the `values` prop ---
+    // Only fires when reset() is called WITH an argument. Bare reset() inside an effect is the
+    // recommended post-submit pattern, and an effect guarded by isSubmitSuccessful is that
+    // pattern even when it passes values, so both are excluded.
+    if (destructuredNames.has('reset')) {
+      for (const eff of findCallsByName(componentFn, 'useEffect')) {
+        const effText = eff.getText();
+        if (/\bisSubmitSuccessful\b/.test(effText)) continue;
+        const resetWithArg = findCallsByName(eff, 'reset').some((c) => c.getArguments().length >= 1);
+        if (resetWithArg) {
+          addFinding({
+            rule: 'rhf-audit-17-useeffect-reset-instead-of-values',
+            severity: 'MEDIUM',
+            message:
+              'useEffect + reset(data) re-syncs the form on every change of the source data, including background refetches, discarding whatever the user has typed. Prefer useForm({ values: data, resetOptions: { keepDirtyValues: true } }).',
+            node: eff,
+          });
         }
       }
     }
@@ -252,38 +277,15 @@ for (const sf of project.getSourceFiles()) {
       }
     }
 
-    // --- Rule 4: useEffect depending on useForm return ---
-    const useEffectCalls = findCallsByName(componentFn, 'useEffect');
-    for (const eff of useEffectCalls) {
-      const depsArg = eff.getArguments()[1];
-      if (!depsArg || !Node.isArrayLiteralExpression(depsArg)) continue;
-      for (const dep of depsArg.getElements()) {
-        if (Node.isIdentifier(dep) && destructuredNames.has(dep.getText())) {
-          // Whitelisted: these are stable refs and meant to be deps.
-          if (['register', 'control', 'setValue', 'setError', 'clearErrors', 'reset', 'subscribe', 'trigger', 'unregister'].includes(dep.getText())) {
-            continue;
-          }
-        }
-        if (Node.isIdentifier(dep)) {
-          // Detect a dep that is literally the useForm return variable.
-          const declVarStmt = useFormCall.getFirstAncestorByKind(SyntaxKind.VariableStatement);
-          if (declVarStmt) {
-            const decls = declVarStmt.getDeclarations();
-            for (const d of decls) {
-              const nameNode = d.getNameNode();
-              if (Node.isIdentifier(nameNode) && nameNode.getText() === dep.getText()) {
-                addFinding({
-                  rule: 'rhf-audit-04-useeffect-depends-useform',
-                  severity: 'CRITICAL',
-                  message: `useEffect lists '${dep.getText()}' (the useForm return) as a dependency. The form object is a new reference every render — this causes infinite re-runs. Destructure stable callbacks instead.`,
-                  node: eff,
-                });
-              }
-            }
-          }
-        }
-      }
-    }
+    // --- Rule 4: REMOVED (2026-07-23) ---
+    // This detector flagged `useEffect(fn, [form])` as a CRITICAL infinite-loop bug.
+    // That is false, and has been false for the whole v7 range this skill targets:
+    // useForm returns `_formControl.current`, a useRef object whose identity never
+    // changes across renders (formState is *mutated* onto it via
+    // `_formControl.current.formState = useMemo(...)`). Depending on the form object
+    // is safe. The detector failed CI (exit 1) on correct code, so it was removed
+    // rather than demoted. See references/detectors.md and the companion rule
+    // `formcfg-useeffect-dependency`.
 
     // --- Rule 7 / 9: async submit handler analysis ---
     // Find handleSubmit(fn) calls — the inner fn is the user's submit handler.
@@ -364,16 +366,51 @@ for (const sf of project.getSourceFiles()) {
           addFinding({
             rule: 'rhf-audit-12-disabled-visual',
             severity: 'MEDIUM',
-            message: "register({ disabled: <state> }) clears the field's value and skips validation. If you only want it greyed out, use the HTML `disabled` attribute on the input instead.",
+            message: "register({ disabled: <state> }) drops the field from the submitted payload and skips its validation (the value itself survives in form state). If you only want it greyed out, use the HTML `disabled` attribute on the input instead.",
             node: disabledProp,
           });
         }
       }
     }
 
-    // --- Rule 13: useFieldArray map missing field.id key ---
-    const useFieldArrayCalls = findCallsByName(componentFn, 'useFieldArray');
-    for (const ufa of useFieldArrayCalls) {
+  }
+
+  // --- Rules 13 & 16: useFieldArray checks, scanned at FILE level ---
+  // Deliberately not nested under the useForm() loop: the recommended architecture puts
+  // field arrays in child components that take `control` as a prop and never call useForm.
+  for (const ufa of findCallsByName(sf, 'useFieldArray')) {
+    const componentFn = getEnclosingComponentFn(ufa);
+    if (!componentFn) continue;
+      // --- Rule 16: useFieldArray({ disabled: <state> }) — silently no-ops every mutation ---
+      // Same heuristic as rule 12: a literal `true` is a deliberate read-only array; a reactive
+      // expression is almost always someone reaching for a visual disable.
+      const ufaOpts = ufa.getArguments()[0];
+      if (ufaOpts && Node.isObjectLiteralExpression(ufaOpts)) {
+        const ufaDisabled = ufaOpts.getProperties().find((p) => {
+          if (!(Node.isPropertyAssignment(p) || Node.isShorthandPropertyAssignment(p))) return false;
+          return p.getName() === 'disabled';
+        });
+        if (ufaDisabled) {
+          const initVal = Node.isPropertyAssignment(ufaDisabled) ? ufaDisabled.getInitializer() : null;
+          const kind = initVal?.getKind();
+          const isReactive =
+            Node.isShorthandPropertyAssignment(ufaDisabled) ||
+            kind === SyntaxKind.Identifier ||
+            kind === SyntaxKind.PropertyAccessExpression ||
+            kind === SyntaxKind.PrefixUnaryExpression ||
+            kind === SyntaxKind.BinaryExpression;
+          if (isReactive) {
+            addFinding({
+              rule: 'rhf-audit-16-fieldarray-disabled-noop',
+              severity: 'MEDIUM',
+              message:
+                'useFieldArray({ disabled: <state> }) makes append/prepend/insert/remove/swap/move/update/replace silent no-ops — no error, no warning. Disable the buttons instead, and reserve this option for arrays that are structurally read-only.',
+              node: ufaDisabled,
+            });
+          }
+        }
+      }
+
       // Find the `fields` identifier destructured from this call.
       const vd = ufa.getFirstAncestorByKind(SyntaxKind.VariableDeclaration);
       if (!vd) continue;
@@ -427,7 +464,6 @@ for (const sf of project.getSourceFiles()) {
         }
       }
     }
-  }
 
   // --- Rule 15: useFormContext() usage flag (LOW — informational) ---
   for (const call of findCallsByName(sf, 'useFormContext')) {

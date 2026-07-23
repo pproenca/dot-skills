@@ -1,11 +1,11 @@
 ---
 name: react-hook-form
-description: React Hook Form performance optimization for client-side form validation using useForm, useWatch, useController, useFieldArray, and the v7.55+ subscribe() API. This skill should be used when building client-side controlled forms with React Hook Form library. This skill does NOT cover React 19 Server Actions, useActionState, or server-side form handling (use react-19 skill for those).
+description: React Hook Form performance optimization for client-side form validation using useForm, useWatch, useController, useFieldArray, the subscribe() API, and the Watch / FormStateSubscribe / FieldArray render-prop components. Covers RHF 7.82 additions including resetDefaultValues() and the disabled field-array option. This skill should be used when building client-side controlled forms with React Hook Form library. This skill does NOT cover React 19 Server Actions, useActionState, or server-side form handling (use react-19 skill for those).
 ---
 
 # React Hook Form Best Practices by Community
 
-Comprehensive performance optimization guide for React Hook Form applications. Contains 45 rules across 8 categories, prioritized by impact to guide form development, automated refactoring, and code generation.
+Comprehensive performance optimization guide for React Hook Form applications. Contains 35 rules across 7 categories, each naming a decision that goes wrong by default. Verified against react-hook-form **7.82.0**.
 
 ## When to Apply
 
@@ -32,81 +32,67 @@ Reference these guidelines when:
 | 2 | Field Subscription | CRITICAL | `sub-` |
 | 3 | Controlled Components | HIGH | `ctrl-` |
 | 4 | Validation Patterns | HIGH | `valid-` |
-| 5 | Field Arrays | MEDIUM-HIGH | `array-` |
-| 6 | State Management | MEDIUM | `formstate-` |
+| 5 | State Management | MEDIUM-HIGH | `formstate-` |
+| 6 | Field Arrays | MEDIUM-HIGH | `array-` |
 | 7 | Integration Patterns | MEDIUM | `integ-` |
-| 8 | Advanced Patterns | LOW | `adv-` |
 
 ## Quick Reference
 
 ### 1. Form Configuration (CRITICAL)
 
-- `formcfg-validation-mode` - Use onSubmit mode for optimal performance
-- `formcfg-revalidate-mode` - Consider reValidateMode for expensive validation
-- `formcfg-default-values` - Always provide defaultValues for form initialization
-- `formcfg-async-default-values` - Use async defaultValues for server data
-- `formcfg-should-unregister` - Enable shouldUnregister for dynamic form memory efficiency
-- `formcfg-useeffect-dependency` - Avoid useForm return object in useEffect dependencies
-- `formcfg-disabled-prop` - Understand that register's disabled prop clears the value
+- `formcfg-default-values` - Always Provide defaultValues for Form Initialization
+- `formcfg-useeffect-dependency` - Depend on formState Slices, Not on formState Itself
+- `formcfg-validation-mode` - Justify Any mode Other Than the Default onSubmit
+- `formcfg-revalidate-mode` - Keep Default reValidateMode Unless Validation Is Expensive
+- `formcfg-should-unregister` - Keep shouldUnregister Off Unless Hidden Fields Must Leave the Payload
+- `formcfg-transformed-values-generic` - Pass the Third useForm Generic When the Resolver Transforms Values
+- `formcfg-async-default-values` - Use Async defaultValues for Server Data
+- `formcfg-disabled-prop` - Use the HTML disabled Attribute for Visual Disabling, Not register's disabled Option
+- `formcfg-values-prop` - Use the values Prop to Keep a Form in Sync with Server Data
 
 ### 2. Field Subscription (CRITICAL)
 
-- `sub-usewatch-over-watch` - Use useWatch instead of watch for isolated re-renders
-- `sub-watch-specific-fields` - Watch specific fields instead of entire form
-- `sub-subscribe-outside-react` - Use subscribe() for non-UI side-effects (analytics, autosave)
-- `sub-usewatch-with-getvalues` - Combine useWatch with getValues for timing safety
-- `sub-deep-subscription` - Subscribe deep in component tree where data is needed
-- `sub-avoid-watch-in-render` - Avoid calling watch() in render for one-time reads
-- `sub-usewatch-default-value` - Provide defaultValue to useWatch for initial render
-- `sub-useformcontext-sparingly` - Use useFormContext sparingly for deep nesting
+- `sub-avoid-watch-in-render` - Avoid Calling watch() in Render for One-Time Reads
+- `sub-memo-cannot-beat-context` - React.memo Cannot Stop Context-Driven Re-renders Under FormProvider
+- `sub-subscribe-outside-react` - Use subscribe() to React to Form Changes Outside the React Lifecycle
+- `sub-render-prop-components` - Use the Render-Prop Components to Isolate Re-renders Without a Child Component
+- `sub-useformcontext-sparingly` - Use useFormContext Sparingly for Deep Nesting
+- `sub-usewatch-over-watch` - Use useWatch Instead of watch for Isolated Re-renders
+- `sub-watch-specific-fields` - Watch Specific Fields Instead of Entire Form
 
 ### 3. Controlled Components (HIGH)
 
-- `ctrl-usecontroller-isolation` - Isolate controlled inputs in dedicated child components
-- `ctrl-avoid-double-registration` - Avoid double registration with useController
-- `ctrl-controller-field-props` - Wire Controller field props correctly for UI libraries
-- `ctrl-single-usecontroller-per-component` - Use single useController per component
-- `ctrl-local-state-combination` - Combine local state with useController for UI-only state
+- `ctrl-usecontroller-isolation` - Isolate Controlled Inputs in Dedicated Child Components
+- `ctrl-controller-field-props` - Wire Controller Field Props Correctly for UI Libraries
 
 ### 4. Validation Patterns (HIGH)
 
-- `valid-resolver-caching` - Define schema outside component for resolver caching
-- `valid-server-errors` - Surface server errors via setError('root.serverError', ...)
-- `valid-dynamic-schema-factory` - Use schema factory for dynamic validation
-- `valid-error-message-strategy` - Access errors via optional chaining or lodash get
-- `valid-inline-vs-resolver` - Prefer resolver over inline validation for complex rules
-- `valid-delay-error` - Use delayError to debounce rapid error display
-- `valid-native-validation` - Consider native validation for simple forms
+- `valid-resolver-caching` - Build the Validation Schema Once, Outside the Render Path
+- `valid-valueasnumber-empty-nan` - Handle the NaN valueAsNumber Produces for an Empty Input
+- `valid-server-errors` - Surface Server Errors via setError('root.serverError', ...)
+- `valid-delay-error` - Use delayError to Debounce Rapid Error Display
 
-### 5. Field Arrays (MEDIUM-HIGH)
+### 5. State Management (MEDIUM-HIGH)
 
-- `array-use-field-id-as-key` - Use field.id as key in useFieldArray maps
-- `array-complete-default-objects` - Provide complete default objects for field array operations
-- `array-separate-crud-operations` - Separate sequential field array operations
-- `array-unique-fieldarray-per-name` - Use single useFieldArray instance per field name
-- `array-virtualization-formprovider` - Use FormProvider for virtualized field arrays
+- `formstate-avoid-isvalid-with-onsubmit` - Avoid isValid with onSubmit Mode for Button State
+- `formstate-destructure-formstate` - Read Every formState Property You Depend On During Render
+- `formstate-reset-default-values` - Rebase Defaults with resetDefaultValues After a Successful Save
+- `formstate-handlesubmit-oninvalid` - Use handleSubmit's Second Argument to Handle a Rejected Submit
+- `formstate-useformstate-isolation` - Use useFormState for Isolated State Subscriptions
+- `formstate-async-submit-lifecycle` - Wrap Async Submit Handlers in try/catch and Reset on isSubmitSuccessful
 
-### 6. State Management (MEDIUM)
+### 6. Field Arrays (MEDIUM-HIGH)
 
-- `formstate-async-submit-lifecycle` - Wrap async submit handlers in try/catch and reset on isSubmitSuccessful
-- `formstate-destructure-formstate` - Destructure formState properties before render
-- `formstate-useformstate-isolation` - Use useFormState for isolated state subscriptions
-- `formstate-getfieldstate-for-single-field` - Use getFieldState for single field state access
-- `formstate-subscribe-to-specific-fields` - Subscribe to specific field names in useFormState
-- `formstate-avoid-isvalid-with-onsubmit` - Avoid isValid with onSubmit mode for button state
+- `array-separate-crud-operations` - Separate Sequential Field Array Operations
+- `array-use-field-id-as-key` - Use field.id as Key in useFieldArray Maps
+- `array-unique-fieldarray-per-name` - Use Single useFieldArray Instance Per Field Name
+- `array-disabled-silently-noops` - useFieldArray's disabled Option Makes Every Mutation a Silent No-op
 
 ### 7. Integration Patterns (MEDIUM)
 
-- `integ-shadcn-form-import` - Verify shadcn Form component import source
-- `integ-shadcn-select-wiring` - Wire shadcn Select with onValueChange instead of spread
-- `integ-mui-controller-pattern` - Use Controller for Material-UI components
-- `integ-value-transform` - Transform values at Controller level for type coercion
-
-### 8. Advanced Patterns (LOW)
-
-- `adv-formprovider-memo` - Wrap FormProvider children with React.memo
-- `adv-devtools-performance` - Disable DevTools in production and during performance testing
-- `adv-testing-wrapper` - Create test wrapper with QueryClient and AuthProvider
+- `integ-value-transform` - Transform Values at Controller Level for Type Coercion
+- `integ-shadcn-form-import` - Verify shadcn Form Component Import Source
+- `integ-shadcn-select-wiring` - Wire shadcn Select with onValueChange Instead of Spread
 
 ## How to Use
 

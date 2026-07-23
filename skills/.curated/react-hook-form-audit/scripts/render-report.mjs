@@ -31,7 +31,7 @@ const RULE_TO_FILE = {
   'rhf-audit-01-watch-at-form-root': 'sub-usewatch-over-watch',
   'rhf-audit-02-watch-all-fields': 'sub-watch-specific-fields',
   'rhf-audit-03-missing-default-values': 'formcfg-default-values',
-  'rhf-audit-04-useeffect-depends-useform': 'formcfg-useeffect-dependency',
+  // 'rhf-audit-04-...' retired in 0.2.0 — premise was false. Do not reuse ID 04.
   'rhf-audit-05-non-use-client': null, // Next.js-specific; no companion rule
   'rhf-audit-06-controller-inlined': 'ctrl-usecontroller-isolation',
   'rhf-audit-07-async-submit-no-trycatch': 'formstate-async-submit-lifecycle',
@@ -43,6 +43,8 @@ const RULE_TO_FILE = {
   'rhf-audit-13-fieldarray-no-field-id': 'array-use-field-id-as-key',
   'rhf-audit-14-revalidate-onblur': 'formcfg-revalidate-mode',
   'rhf-audit-15-useformcontext': 'sub-useformcontext-sparingly',
+  'rhf-audit-16-fieldarray-disabled-noop': 'array-disabled-silently-noops',
+  'rhf-audit-17-useeffect-reset-instead-of-values': 'formcfg-values-prop',
 };
 
 function ruleLink(ruleId) {

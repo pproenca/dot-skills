@@ -1,54 +1,62 @@
 ---
-title: Avoid useForm Return Object in useEffect Dependencies
-impact: CRITICAL
-impactDescription: prevents infinite render loops
-tags: formcfg, useEffect, dependencies, infinite-loop
+title: Depend on formState Slices, Not on formState Itself
+impact: HIGH
+impactDescription: prevents effects that re-run on every keystroke
+tags: formcfg, useEffect, dependencies, formState
 ---
 
-## Avoid useForm Return Object in useEffect Dependencies
+## Depend on formState Slices, Not on formState Itself
 
-Adding the entire useForm return object to a useEffect dependency array causes infinite loops. Destructure only the specific methods you need.
+The `useForm()` return object is **stable**. `useForm` keeps it in a `useRef` and returns the same object on every render, mutating `formState` onto it — so `useEffect(fn, [form])` runs once, and `register`, `reset`, `control`, `setValue` and friends are all safe dependencies. (Widely repeated advice says the form object is a fresh reference each render and loops; that is not true of any v7 release.)
 
-**Incorrect (entire form object causes infinite loop):**
+The `formState` **proxy** is the part that changes. It is rebuilt via `useMemo` keyed on the underlying state, so it gets a new identity on every form-state update — every keystroke, in `onChange` mode. Depending on it re-runs the effect that often. Depend on the specific boolean you care about.
+
+**Incorrect (effect re-runs on every form-state update, not just on success):**
 
 ```typescript
-function ContactForm({ defaultEmail }: { defaultEmail: string }) {
-  const form = useForm({
+function ContactForm({ onSaved }: { onSaved: () => void }) {
+  const { register, handleSubmit, reset, formState } = useForm({
     defaultValues: { email: '' },
   })
 
   useEffect(() => {
-    form.reset({ email: defaultEmail })
-  }, [form, defaultEmail])  // form reference changes on every render = infinite loop
+    if (formState.isSubmitSuccessful) {
+      reset()
+      onSaved()
+    }
+  }, [formState, reset, onSaved])  // New proxy identity on every keystroke
 
   return (
-    <form onSubmit={form.handleSubmit(onSubmit)}>
-      <input {...form.register('email')} />
-    </form>
-  )
-}
-```
-
-**Correct (destructure specific stable methods):**
-
-```typescript
-function ContactForm({ defaultEmail }: { defaultEmail: string }) {
-  const { register, handleSubmit, reset } = useForm({
-    defaultValues: { email: '' },
-  })
-
-  useEffect(() => {
-    reset({ email: defaultEmail })
-  }, [reset, defaultEmail])  // reset is stable, no infinite loop
-
-  return (
-    <form onSubmit={handleSubmit(onSubmit)}>
+    <form onSubmit={handleSubmit(saveContact)}>
       <input {...register('email')} />
     </form>
   )
 }
 ```
 
-**Note:** In a future major release, useForm return will be memoized. Until then, always destructure.
+**Correct (depend on the slice that actually gates the effect):**
 
-Reference: [useForm](https://react-hook-form.com/docs/useform)
+```typescript
+function ContactForm({ onSaved }: { onSaved: () => void }) {
+  const { register, handleSubmit, reset, formState: { isSubmitSuccessful } } = useForm({
+    defaultValues: { email: '' },
+  })
+
+  useEffect(() => {
+    if (isSubmitSuccessful) {
+      reset()
+      onSaved()
+    }
+  }, [isSubmitSuccessful, reset, onSaved])  // Only flips once per successful submit
+
+  return (
+    <form onSubmit={handleSubmit(saveContact)}>
+      <input {...register('email')} />
+    </form>
+  )
+}
+```
+
+Destructuring also matters for a second reason: reading `formState.isSubmitSuccessful` is what registers the Proxy subscription in the first place — see `formstate-destructure-formstate`.
+
+Reference: [useForm](https://react-hook-form.com/docs/useform) · [formState](https://react-hook-form.com/docs/useform/formstate)

@@ -49,4 +49,14 @@ function SearchForm() {
 - Fields with character count requirements
 - Search inputs with minimum length
 
-Reference: [useForm - delayError](https://react-hook-form.com/docs/useform)
+**Opting a single `setValue` into the delay (7.82+):** `setValue` accepts `delayError`, but it is a **boolean** — it opts that call into the debounce, and the duration still comes from `useForm({ delayError })`. Passing a number is a type error, even though the 7.82.0 release notes show `delayError: 500`:
+
+```typescript
+const { setValue } = useForm({ mode: 'onChange', delayError: 300 })
+
+setValue('query', suggestion, { shouldValidate: true, delayError: true })  // debounced by 300ms
+```
+
+Without a form-level `delayError`, `{ delayError: true }` on `setValue` has nothing to debounce with and the error appears immediately.
+
+Reference: [useForm - delayError](https://react-hook-form.com/docs/useform) · [useForm - setValue](https://react-hook-form.com/docs/useform/setvalue)

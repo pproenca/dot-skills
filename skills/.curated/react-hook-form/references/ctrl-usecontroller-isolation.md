@@ -1,7 +1,7 @@
 ---
 title: Isolate Controlled Inputs in Dedicated Child Components
 impact: HIGH
-impactDescription: reduces re-renders from O(n) to O(1) per field change
+impactDescription: re-renders only the changed field instead of the whole form
 tags: ctrl, useController, Controller, controlled-components, re-renders
 ---
 

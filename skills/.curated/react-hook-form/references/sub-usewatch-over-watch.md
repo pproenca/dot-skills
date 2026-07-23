@@ -1,7 +1,7 @@
 ---
 title: Use useWatch Instead of watch for Isolated Re-renders
 impact: CRITICAL
-impactDescription: reduces re-renders by 10-50× in complex forms with multiple watchers
+impactDescription: confines value-change re-renders to the subscribing component
 tags: sub, useWatch, watch, re-renders, subscription
 ---
 
@@ -54,5 +54,7 @@ function ShippingCostDisplay({ control }: { control: Control<CheckoutFormData> }
   return <ShippingCost method={shippingMethod} />
 }
 ```
+
+**Push the subscription as deep as it will go.** The win is not `useWatch` over `watch` in itself — it is *where the subscription lives*. A `useWatch` at the top of the form re-renders the whole form exactly like `watch` does. Put it in the leaf that renders the value, and pass `control` down rather than the watched value; the sibling sections then never re-render. If you don't want to author a component for it, `<Watch>` does the same inline — see `sub-render-prop-components`.
 
 Reference: [useWatch](https://react-hook-form.com/docs/usewatch)

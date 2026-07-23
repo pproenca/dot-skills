@@ -1,10 +1,10 @@
 ---
 name: react-hook-form-audit
-description: Audits a Next.js (App Router, 14/15+) codebase for React Hook Form anti-patterns — watch() at form root, Controller inlined in parent, async submit without try/catch, missing setError on server failures, RHF in non-"use client" files, RHF mixed with useActionState, schemas defined inside components, useFieldArray without field.id keys, register({ disabled }) for visual disabling. Read-only; emits a markdown report with file:line citations linking back to the companion `react-hook-form` distillation skill. Trigger when the user asks to audit/review/lint RHF usage, find form anti-patterns, or run a quality check on forms — even if they don't say "react-hook-form" by name; if they mention auditing forms in a Next.js project, use this skill.
+description: Audits a Next.js (App Router, 14/15+) codebase for React Hook Form anti-patterns — watch() at form root, Controller inlined in parent, async submit without try/catch, missing setError on server failures, RHF in non-"use client" files, RHF mixed with useActionState, schemas defined inside components, useFieldArray without field.id keys, register({ disabled }) for visual disabling, useFieldArray({ disabled }) that silently no-ops mutations, useEffect+reset(data) instead of the values prop. Read-only; emits a markdown report with file:line citations linking back to the companion `react-hook-form` distillation skill. Trigger when the user asks to audit/review/lint RHF usage, find form anti-patterns, or run a quality check on forms — even if they don't say "react-hook-form" by name; if they mention auditing forms in a Next.js project, use this skill.
 ---
 # React Hook Form Audit for Next.js
 
-Static-analysis audit that detects 15 React Hook Form anti-patterns in Next.js App Router codebases. Combines ripgrep (fast pass for regex-detectable rules) with ts-morph (AST pass for structural rules). Outputs a markdown report grouped by severity, with file:line references and links back to the companion `react-hook-form` distillation skill.
+Static-analysis audit that detects 16 React Hook Form anti-patterns in Next.js App Router codebases. Combines ripgrep (fast pass for regex-detectable rules) with ts-morph (AST pass for structural rules). Outputs a markdown report grouped by severity, with file:line references and links back to the companion `react-hook-form` distillation skill.
 
 ## When to Apply
 
@@ -32,7 +32,7 @@ Static-analysis audit that detects 15 React Hook Form anti-patterns in Next.js A
 1. detect-project.sh   Verify Next.js + react-hook-form in package.json
 2. collect-files.sh    Ripgrep for "use client" files importing RHF
 3. detect-fast.sh      Ripgrep detectors (rules 5, 11, 14)
-4. detect-ast.mjs      ts-morph detectors (rules 1-4, 6-10, 12-13, 15)
+4. detect-ast.mjs      ts-morph detectors (rules 1-3, 6-10, 12-13, 15-17)
 5. render-report.mjs   Render markdown + JSON; print summary; exit 0/1
 ```
 
@@ -58,14 +58,13 @@ Exit codes:
 
 ## Detector Catalog
 
-15 detectors across 4 severities. See [`references/detectors.md`](references/detectors.md) for per-rule pattern, AST shape, false-positive notes, and the line of advice each detector enforces.
+16 detectors across 4 severities. See [`references/detectors.md`](references/detectors.md) for per-rule pattern, AST shape, false-positive notes, and the line of advice each detector enforces.
 
 | ID | Severity | What it catches |
 |----|---------|-----------------|
 | 01 | CRITICAL | `watch()` in same component as `useForm()` |
 | 02 | CRITICAL | `watch()` with no args (subscribes to all fields) |
 | 03 | CRITICAL | `useForm()` without `defaultValues` |
-| 04 | CRITICAL | `useEffect` depends on the `useForm` return |
 | 05 | CRITICAL | RHF imported in a non-`"use client"` file |
 | 06 | HIGH | `<Controller>` inlined inside `useForm()` parent |
 | 07 | HIGH | Async submit handler without `try/catch` |
@@ -77,6 +76,10 @@ Exit codes:
 | 13 | MEDIUM | `useFieldArray` map missing `field.id` as key |
 | 14 | LOW | `reValidateMode: 'onBlur'` (now demoted advice) |
 | 15 | LOW | `useFormContext()` usage (manual review) |
+| 16 | MEDIUM | `useFieldArray({ disabled: <state> })` — silently no-ops every mutation |
+| 17 | MEDIUM | `useEffect` + `reset(data)` instead of the `values` prop |
+
+Rule 04 (`useEffect` depends on the `useForm` return) was **removed** in 0.2.0 — the premise was false. See [`references/detectors.md`](references/detectors.md).
 
 ## How to Use
 
@@ -105,5 +108,5 @@ The skill ships with sensible defaults in `config.json`. On first run, `audit.sh
 
 ## Related Skills
 
-- `react-hook-form` — the companion distillation skill with the 45 rules this auditor enforces. Findings link directly to its reference files.
+- `react-hook-form` — the companion distillation skill with the 35 rules this auditor enforces. Findings link directly to its reference files.
 - `react-19` — for Server Action / `useActionState` patterns the audit explicitly does NOT cover
