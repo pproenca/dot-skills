@@ -77,6 +77,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [adversarial-zod](skills/.experimental/adversarial-zod) | Use this skill to gate Zod 4 schema code in TypeScript and TanStack Start apps with a pass/fail.. |
 | [algorithmic-complexity-review](skills/.experimental/algorithmic-complexity-review) | Algorithmic complexity (Big-O) review — finding nested loops, N+1 queries, exponential.. |
 | [app-planner](skills/.experimental/app-planner) | Produces a design-plan (living document like an exec-plan) that maps an app domain to feature.. |
+| [ast-grep-typescript-react](skills/.experimental/ast-grep-typescript-react) | Use this skill when writing, debugging, or reviewing ast-grep patterns, YAML rules, or codemods.. |
 | [ast-grep](skills/.experimental/ast-grep) | ast-grep rule writing and usage best practices |
 | [audio-voice-recovery](skills/.experimental/audio-voice-recovery) | Audio forensics and voice recovery guidelines for CSI-level audio analysis |
 | [base-ui-migrator](skills/.experimental/base-ui-migrator) | Migrates React UI code to Base UI (`@base-ui/react`) — replacing bespoke modals, custom.. |

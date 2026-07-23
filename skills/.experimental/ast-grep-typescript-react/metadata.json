@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "ast-grep (TypeScript/React)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "July 2026",
+  "abstract": "The TypeScript/React-specific wrong defaults when using ast-grep: the tsx-vs-typescript language split that makes JSX rules silently match nothing, JSX and TypeScript node kinds, fragment matching with context/selector, JSX/TS codemods, and the @ast-grep/napi API. Complements the general-purpose ast-grep skill, which covers language-agnostic rule mechanics. Every node kind and behavior was verified against ast-grep 0.44.1.",
+  "references": [
+    "https://ast-grep.github.io/reference/languages.html",
+    "https://ast-grep.github.io/reference/sgconfig.html",
+    "https://ast-grep.github.io/guide/api-usage/js-api.html",
+    "https://ast-grep.github.io/reference/yaml/transformation.html",
+    "https://ast-grep.github.io/guide/pattern-syntax.html",
+    "https://ast-grep.github.io/reference/rule.html",
+    "https://ast-grep.github.io/guide/rewrite-code.html",
+    "https://github.com/tree-sitter/tree-sitter-typescript"
+  ]
+}
