@@ -1,0 +1,70 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "Relational Data Modeling",
+  "discipline": "distillation",
+  "type": "code-quality",
+  "date": "July 2026",
+  "abstract": "Corrects the wrong defaults a capable model has when designing a relational schema, covering the decisions where it imports ORM habits that discard referential integrity — polymorphic foreign keys, reflexive surrogate keys, one-to-one splits, blanket soft-delete flags — and the ones where it leaves an invariant to application code that the engine could prove instead. Examples are PostgreSQL 18, executed against 18.4 including their failure cases.",
+  "libraryVersion": "PostgreSQL 18.4",
+  "categories": [
+    {
+      "name": "Identity and Keys",
+      "prefix": "key",
+      "ruleCount": 5
+    },
+    {
+      "name": "Relationships and Cardinality",
+      "prefix": "rel",
+      "ruleCount": 6
+    },
+    {
+      "name": "Constraints as the Model",
+      "prefix": "cons",
+      "ruleCount": 6
+    },
+    {
+      "name": "Types and Domains",
+      "prefix": "type",
+      "ruleCount": 5
+    },
+    {
+      "name": "Derived and Encoded Data",
+      "prefix": "norm",
+      "ruleCount": 3
+    },
+    {
+      "name": "Time, History and Lifecycle",
+      "prefix": "time",
+      "ruleCount": 4
+    }
+  ],
+  "totalRules": 29,
+  "references": [
+    "https://www.postgresql.org/docs/18/ddl-constraints.html",
+    "https://www.postgresql.org/docs/18/sql-createtable.html",
+    "https://www.postgresql.org/docs/18/sql-altertable.html",
+    "https://www.postgresql.org/docs/18/sql-altertype.html",
+    "https://www.postgresql.org/docs/18/indexes-partial.html",
+    "https://www.postgresql.org/docs/18/ddl-partitioning.html",
+    "https://www.postgresql.org/docs/18/ddl-generated-columns.html",
+    "https://www.postgresql.org/docs/18/rangetypes.html",
+    "https://www.postgresql.org/docs/18/datatype-datetime.html",
+    "https://www.postgresql.org/docs/18/datatype-numeric.html",
+    "https://www.postgresql.org/docs/18/datatype-character.html",
+    "https://www.postgresql.org/docs/18/datatype-enum.html",
+    "https://www.postgresql.org/docs/18/datatype-json.html",
+    "https://www.postgresql.org/docs/18/functions-uuid.html",
+    "https://www.postgresql.org/docs/18/btree-gist.html",
+    "https://www.postgresql.org/docs/18/storage-toast.html",
+    "https://www.postgresql.org/docs/18/sql-set-constraints.html",
+    "https://www.postgresql.org/docs/18/sql-refreshmaterializedview.html",
+    "https://www.postgresql.org/docs/release/18.0/",
+    "https://wiki.postgresql.org/wiki/Don%27t_Do_This",
+    "https://dev.mysql.com/doc/refman/8.4/en/create-table-foreign-keys.html",
+    "https://pragprog.com/titles/bksap1/sql-antipatterns-volume-1/",
+    "https://martinfowler.com/eaaCatalog/",
+    "https://martinfowler.com/eaaDev/AccountingEntry.html",
+    "https://www2.cs.arizona.edu/~rts/tdbbook.pdf"
+  ]
+}

@@ -183,6 +183,8 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [react-optimise](skills/.experimental/react-optimise) | Application-level React performance optimization covering React Compiler mastery, bundle.. |
 | [react-refactor](skills/.experimental/react-refactor) | Architectural refactoring guide for React applications covering component architecture, state.. |
 | [react-testing-library](skills/.experimental/react-testing-library) | React Testing Library best practices for writing maintainable, user-centric tests |
+| [relational-data-modeling](skills/.experimental/relational-data-modeling) | Corrects the wrong defaults a model has when designing a relational schema — the DDL decisions.. |
+| [relational-database-design](skills/.experimental/relational-database-design) | Distills a logical relational-database design methodology into rules an agent applies while.. |
 | [same-results-less-code](skills/.experimental/same-results-less-code) | Same behaviour in fewer, clearer lines — covers the judgment gaps that linters cannot catch.. |
 | [search-ios26-docs](skills/.experimental/search-ios26-docs) | Search and inspect local iOS 26 SDK documentation and Swift interfaces, especially SwiftUI and.. |
 | [search-macos26-docs](skills/.experimental/search-macos26-docs) | Search and inspect local macOS 26 SDK documentation and Swift interfaces, especially SwiftUI,.. |

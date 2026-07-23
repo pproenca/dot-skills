@@ -1,0 +1,21 @@
+{
+  "version": "0.1.0",
+  "organization": "community",
+  "technology": "Relational database design (RDBMS-agnostic)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "July 2026",
+  "abstract": "Distills a logical relational-database design methodology into rules an agent applies while designing or reviewing a schema. Covers the design sequence, one-subject tables, atomic single-valued fields, candidate/primary/foreign keys, relationships with deletion rules and participation, the four levels of data integrity, business rules and views, and the bad-design antipatterns to avoid — all expressed as logical structure that is independent of any specific RDBMS and normalized by construction.",
+  "categories": [
+    { "name": "Design Process & Requirements", "prefix": "proc", "ruleCount": 5 },
+    { "name": "Table Structure", "prefix": "tbl", "ruleCount": 4 },
+    { "name": "Field Design", "prefix": "fld", "ruleCount": 5 },
+    { "name": "Keys", "prefix": "key", "ruleCount": 4 },
+    { "name": "Relationships", "prefix": "rel", "ruleCount": 5 },
+    { "name": "Data Integrity, Rules & Views", "prefix": "intg", "ruleCount": 5 },
+    { "name": "Antipatterns", "prefix": "anti", "ruleCount": 4 },
+    { "name": "Terminology", "prefix": "term", "ruleCount": 3 }
+  ],
+  "totalRules": 35,
+  "references": []
+}
