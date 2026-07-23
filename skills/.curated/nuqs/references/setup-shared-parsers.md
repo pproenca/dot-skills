@@ -64,10 +64,23 @@ export function PageInfo() {
 }
 ```
 
+**Share the same map between client and server:**
+
+The same parser map drives a Server Component's `createSearchParamsCache` (or `createLoader`) and a client `useQueryState`. Keep the server cache in its own module so `nuqs/server` never leaks into a client bundle, and import the parsers from a client-safe file:
+
+```tsx
+// lib/searchParams.server.ts — server-only
+import { createSearchParamsCache } from 'nuqs/server'
+import { searchParams } from './searchParams'
+
+export const searchParamsCache = createSearchParamsCache(searchParams)
+```
+
+A default that disagrees across the boundary (server `withDefault(1)`, client `withDefault(0)`) is a classic hydration mismatch — the shared map makes it impossible.
+
 **Benefits:**
 - Single source of truth for parser configuration
 - TypeScript catches mismatches at compile time
 - Easy to update defaults in one place
-- Shared between client and server (with proper imports)
 
 Reference: [nuqs Documentation](https://nuqs.dev/docs)

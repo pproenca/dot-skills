@@ -95,6 +95,6 @@ export default async function SearchPage({ searchParams }) {
 }
 ```
 
-The same parser map can power **both** `createSearchParamsCache` and `createLoader` (and a client-side `useQueryStates`), so the choice is purely about ergonomics — see `server-share-parsers`.
+The same parser map can power **both** `createSearchParamsCache` and `createLoader` (and a client-side `useQueryStates`), so the choice is purely about ergonomics — see `setup-shared-parsers`.
 
 Reference: [nuqs Server-Side](https://nuqs.dev/docs/server-side)

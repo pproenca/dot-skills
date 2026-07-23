@@ -7,7 +7,7 @@ tags: setup, NuqsAdapter, defaultOptions, configuration, consistency
 
 ## Configure App-Wide Defaults on NuqsAdapter
 
-Since nuqs v2.5, `NuqsAdapter` accepts a `defaultOptions` prop. Setting `history`, `shallow`, `scroll`, `clearOnDefault`, `limitUrlUpdates`, or `startTransition` once on the adapter eliminates the temptation to copy-paste the same `.withOptions({ … })` chain onto every parser, and reduces the chance one component silently disagrees with the rest of the app (e.g. one missing `shallow: false` that drops a server fetch).
+Since nuqs v2.5, `NuqsAdapter` accepts a `defaultOptions` prop. It takes exactly the serialisable options — `shallow`, `scroll`, `clearOnDefault`, `limitUrlUpdates`, and (since v2.9.0) `history`. Setting them once on the adapter eliminates the temptation to copy-paste the same `.withOptions({ … })` chain onto every parser, and reduces the chance one component silently disagrees with the rest of the app (e.g. one missing `shallow: false` that drops a server fetch). `startTransition` is **not** a `defaultOptions` key — it's a function from `useTransition()` and can only be passed per hook call.
 
 **Incorrect (every parser repeats the same options):**
 

@@ -1,7 +1,7 @@
 ---
 title: Enable Debug Logging for Troubleshooting
 impact: LOW-MEDIUM
-impactDescription: reduces debugging time by 5-10×
+impactDescription: surfaces the exact parse/serialize/URL-write step instead of guessing from silent state
 tags: debug, logging, localStorage, troubleshooting, devtools
 ---
 

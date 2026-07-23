@@ -7,16 +7,16 @@ tags: setup, nextjs, version, compatibility, app-router
 
 ## Ensure Compatible Next.js Version
 
-nuqs requires specific Next.js versions depending on the router you use. Using incompatible versions causes runtime errors or missing functionality.
+`nuqs@^2` declares `next` as a peer dependency at `>=14.2.0` — the **same floor for both App and Pages routers**. There is no separate, lower minimum for the Pages Router; older tables that list `12.0.0` or `14.0.0` are wrong for v2. On Next.js below 14.2, install `nuqs@^1` instead. Using an unsupported combination surfaces as cryptic runtime errors, not a clean install failure.
 
-**Version Requirements:**
+**Version Requirements (nuqs v2):**
 
-| Router | Minimum Next.js | Notes |
-|--------|-----------------|-------|
-| App Router | 14.2.0+ | Full support including streaming |
-| App Router (basic) | 14.0.0+ | Limited features |
-| App Router (Next.js 15+) | 15.0.0+ | `searchParams` is `Promise<SearchParams>` — must be `await`-ed. See `server-next15-async`. |
-| Pages Router | 12.0.0+ | Full support |
+| Next.js | Support | Notes |
+|---------|---------|-------|
+| `< 14.2.0` | Not supported by nuqs v2 | Use `nuqs@^1` for these versions. |
+| `>= 14.2.0` | App & Pages routers | Minimum for `nuqs@^2` (both routers). |
+| `15.x` | App & Pages routers | `searchParams` is `Promise<SearchParams>` — must be `await`-ed. See `server-next15-async`. |
+| `16.x` (`cacheComponents`) | App router | Requires **nuqs `>= 2.9.0`** to avoid stale URL reads when Server Components are cached. Older nuqs returns outdated query values on revisit. |
 
 **Check your version:**
 

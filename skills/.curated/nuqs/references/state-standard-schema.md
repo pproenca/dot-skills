@@ -1,7 +1,7 @@
 ---
 title: Use Standard Schema for Cross-Library Validation
 impact: MEDIUM
-impactDescription: eliminates 2-4× duplicate schema definitions across nuqs, tRPC, route validators, and forms
+impactDescription: one parser map validates nuqs, tRPC, route validators, and forms — no duplicated schema
 tags: state, standard-schema, zod, valibot, trpc, validation
 ---
 

@@ -9,28 +9,24 @@ tags: state, withOptions, configuration, parsers, reusability
 
 Instead of passing options to every `useQueryState` call, configure options on the parser itself with `withOptions`. This ensures consistent behavior and reduces repetition.
 
-**Incorrect (repeated options):**
+**Incorrect (options repeated at every call site):**
 
 ```tsx
 'use client'
-import { useQueryState, parseAsString } from 'nuqs'
+import { useQueryState, parseAsString, throttle } from 'nuqs'
 
 export default function SearchPage() {
-  const [query, setQuery] = useQueryState('q', {
-    ...parseAsString,
-    shallow: false,
-    throttleMs: 500,
-    history: 'push'
-  })
+  const [query, setQuery] = useQueryState(
+    'q',
+    parseAsString.withDefault('').withOptions({ shallow: false, limitUrlUpdates: throttle(500), history: 'push' })
+  )
 
-  const [filter, setFilter] = useQueryState('filter', {
-    ...parseAsString,
-    shallow: false,
-    throttleMs: 500,
-    history: 'push'
-  })
+  const [filter, setFilter] = useQueryState(
+    'filter',
+    parseAsString.withDefault('').withOptions({ shallow: false, limitUrlUpdates: throttle(500), history: 'push' })
+  )
 
-  // Repeated configuration for each parameter
+  // Same option bag copy-pasted — one typo and the two keys drift apart
 }
 ```
 
@@ -38,11 +34,11 @@ export default function SearchPage() {
 
 ```tsx
 // lib/searchParams.ts
-import { parseAsString, parseAsInteger } from 'nuqs'
+import { parseAsString, parseAsInteger, throttle } from 'nuqs'
 
 const serverSyncOptions = {
   shallow: false,
-  throttleMs: 500,
+  limitUrlUpdates: throttle(500),
   history: 'push' as const
 }
 
@@ -72,7 +68,7 @@ export default function SearchPage() {
 parseAsInteger
   .withDefault(1)
   .withOptions({ shallow: false })
-  .withOptions({ throttleMs: 300 }) // Merges with previous options
+  .withOptions({ limitUrlUpdates: throttle(300) }) // Merges with previous options
 ```
 
 Reference: [nuqs Options](https://nuqs.dev/docs/options)

@@ -1,7 +1,7 @@
 ---
 title: Use urlKeys for Shorter URLs
 impact: LOW
-impactDescription: reduces URL length by 50-70% for verbose params
+impactDescription: keeps shareable links compact by shortening verbose URL keys
 tags: advanced, urlKeys, serializer, url-length, abbreviation
 ---
 

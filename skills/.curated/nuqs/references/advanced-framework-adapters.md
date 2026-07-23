@@ -45,22 +45,22 @@ function App() {
 }
 ```
 
-**Available adapters (current as of nuqs v2.8):**
+**Available adapters (current as of nuqs v2.9):**
 
 | Framework | Import Path | Notes |
 |-----------|-------------|-------|
 | Next.js App Router | `nuqs/adapters/next/app` | |
 | Next.js Pages Router | `nuqs/adapters/next/pages` | |
 | Next.js (unified) | `nuqs/adapters/next` | Use when an app mixes both routers |
-| React Router v5 | `nuqs/adapters/react-router/v5` | Added in v2.8 |
 | React Router v6 | `nuqs/adapters/react-router/v6` | |
 | React Router v7 | `nuqs/adapters/react-router/v7` | |
+| React Router v8 | `nuqs/adapters/react-router/v8` | Added in v2.9 |
 | Remix | `nuqs/adapters/remix` | |
-| TanStack Router | `nuqs/adapters/tanstack-router` | Added in v2.5; TanStack Start support is still WIP |
+| TanStack Router | `nuqs/adapters/tanstack-router` | Added in v2.5 |
 | Plain React (no router) | `nuqs/adapters/react` | For Vite / CRA apps with no router |
 | Testing | `nuqs/adapters/testing` | See `debug-testing` |
 
-**Deprecation:** The unversioned `nuqs/adapters/react-router` import (which used to alias v6) is deprecated and slated for removal in nuqs v3. Always pin the version explicitly.
+**Deprecation:** The dedicated `react-router/v5` subpath was removed in v2.9 (v5 apps use the unversioned alias or upgrade). The unversioned `nuqs/adapters/react-router` import (which still aliases v6) is itself deprecated and slated for removal in nuqs v3 — always pin `/v6`, `/v7`, or `/v8` explicitly.
 
 **Key isolation (v2.5+):** All non-Next.js adapters scope re-renders to the specific URL key a hook subscribes to. Next.js continues to re-render the entire subtree on any URL change because its `URLSearchParams` context is global. If fine-grained re-renders matter and you're not on Next.js, you generally don't need to memoize aggressively. See `perf-avoid-rerender`.
 

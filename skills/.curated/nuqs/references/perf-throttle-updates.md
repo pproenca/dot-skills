@@ -9,7 +9,7 @@ tags: perf, limitUrlUpdates, throttle, rate-limiting, slider
 
 Browsers rate-limit History API calls. Rapid updates (typing, sliders, dragging) can exceed this limit, causing dropped updates and console warnings. Pass `limitUrlUpdates: throttle(N)` to coalesce URL writes — local state continues to update instantly, the URL writes at most every N ms.
 
-The legacy `throttleMs: N` option was deprecated in nuqs v2.5 and removed from new code paths; prefer `limitUrlUpdates` going forward.
+The legacy `throttleMs: N` option was deprecated in nuqs v2.5. It still works in v2.9 for backwards compatibility, but its JSDoc marks it deprecated and it will be removed in v3 — write new code with `limitUrlUpdates: throttle(N)` (or `debounce(N)`).
 
 **Incorrect (every keystroke pushes to history):**
 

@@ -5,7 +5,7 @@ description: nuqs (type-safe URL query state) best practices for Next.js and oth
 
 # Community nuqs Best Practices for Next.js & React
 
-Comprehensive guide for type-safe URL query state management with nuqs across Next.js, React Router, TanStack Router, Remix, and plain React. Covers nuqs v2.5–v2.8 features. Contains 46 rules across 8 categories, prioritized by impact to guide code generation, refactoring, and code review.
+Comprehensive guide for type-safe URL query state management with nuqs across Next.js, React Router, TanStack Router, Remix, and plain React. Covers nuqs v2.5–v2.9 features. Contains 39 rules across 8 categories, prioritized by impact to guide code generation, refactoring, and code review.
 
 ## When to Apply
 
@@ -42,7 +42,6 @@ Reference these guidelines when:
 - [`parser-json-validation`](references/parser-json-validation.md) — Validate JSON parser input
 - [`parser-date-format`](references/parser-date-format.md) — Select appropriate date parser
 - [`parser-index-offset`](references/parser-index-offset.md) — Use parseAsIndex for 1-based URL display
-- [`parser-hex-colors`](references/parser-hex-colors.md) — Use parseAsHex for color values
 
 ### 2. Adapter & Setup (CRITICAL)
 
@@ -56,9 +55,7 @@ Reference these guidelines when:
 ### 3. State Management (HIGH)
 
 - [`state-use-query-states`](references/state-use-query-states.md) — Use useQueryStates for related parameters
-- [`state-functional-updates`](references/state-functional-updates.md) — Use functional updates for derived state
 - [`state-clear-with-null`](references/state-clear-with-null.md) — Clear URL parameters with null
-- [`state-controlled-inputs`](references/state-controlled-inputs.md) — Handle controlled input value properly
 - [`state-avoid-derived`](references/state-avoid-derived.md) — Avoid derived state from URL parameters
 - [`state-options-inheritance`](references/state-options-inheritance.md) — Use withOptions for parser-level configuration
 - [`state-setter-return`](references/state-setter-return.md) — Use setter return value for URL access
@@ -70,7 +67,6 @@ Reference these guidelines when:
 - [`server-shallow-false`](references/server-shallow-false.md) — Use shallow:false to trigger server re-renders
 - [`server-use-transition`](references/server-use-transition.md) — Integrate useTransition for loading states
 - [`server-parse-before-get`](references/server-parse-before-get.md) — Call parse() before get() in Server Components
-- [`server-share-parsers`](references/server-share-parsers.md) — Share parsers between client and server
 - [`server-next15-async`](references/server-next15-async.md) — Handle async searchParams in Next.js 15+
 
 ### 5. Performance Optimization (MEDIUM)
@@ -84,15 +80,12 @@ Reference these guidelines when:
 
 ### 6. History & Navigation (MEDIUM)
 
-- [`history-push-navigation`](references/history-push-navigation.md) — Use history:push for navigation-like state
-- [`history-replace-ephemeral`](references/history-replace-ephemeral.md) — Use history:replace for ephemeral state
+- [`history-push-navigation`](references/history-push-navigation.md) — Choose history:push vs history:replace
 - [`history-scroll-behavior`](references/history-scroll-behavior.md) — Control scroll behavior on URL changes
-- [`history-back-sync`](references/history-back-sync.md) — Handle browser back/forward navigation
 
 ### 7. Debugging & Testing (LOW-MEDIUM)
 
 - [`debug-enable-logging`](references/debug-enable-logging.md) — Enable debug logging for troubleshooting
-- [`debug-common-errors`](references/debug-common-errors.md) — Diagnose common nuqs errors
 - [`debug-testing`](references/debug-testing.md) — Test components with URL state
 
 ### 8. Advanced Patterns (LOW)

@@ -1,7 +1,7 @@
 ---
 title: Integrate useTransition for Loading States
 impact: HIGH
-impactDescription: 100% visibility into server fetch pending state
+impactDescription: exposes pending state for non-shallow server fetches so the UI can show loading
 tags: server, useTransition, loading, suspense, streaming
 ---
 
