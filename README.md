@@ -110,6 +110,7 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [dockerfile-optimise](skills/.experimental/dockerfile-optimise) | Dockerfile optimization guidelines from official Docker documentation |
 | [docs-search](skills/.experimental/docs-search) | Library-documentation lookup methodology — API behavior, version-specific changes, idiomatic.. |
 | [domain-architect](skills/.experimental/domain-architect) | Discovers business domains in a Swift codebase by tracing what users can DO — not by reading.. |
+| [drizzle-nextjs-postgres](skills/.experimental/drizzle-nextjs-postgres) | Drizzle ORM against PostgreSQL inside a Next.js App Router app |
 | [drizzle-sqlite-scaffold](skills/.experimental/drizzle-sqlite-scaffold) | Scaffolds Drizzle ORM + SQLite boilerplate — a new `drizzle.config.ts`, a singleton client with.. |
 | [drizzle-sqlite](skills/.experimental/drizzle-sqlite) | Drizzle ORM targeting SQLite (better-sqlite3, libsql/Turso, bun:sqlite, Cloudflare D1,.. |
 | [dx-harness](skills/.experimental/dx-harness) | Developer-experience friction auditing and fixing — slow onboarding, repeated manual setup.. |
