@@ -181,6 +181,8 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [rails-application-ui-blocks](skills/.experimental/rails-application-ui-blocks) | Compose new Rails backend pages and refactor existing Rails UI to use premium blocks from.. |
 | [rails-design-system](skills/.experimental/rails-design-system) | Ruby on Rails design system guidelines for building consistent, maintainable UI with minimal.. |
 | [rails-hotwire](skills/.experimental/rails-hotwire) | Ruby on Rails Hotwire best practices for building interactive applications with Turbo Drive,.. |
+| [ray-llm](skills/.experimental/ray-llm) | LLM workloads on open-source Ray (pinned to 2.57) — OpenAI-compatible serving with ray.serve.llm.. |
+| [ray](skills/.experimental/ray) | Production Ray (open-source, pinned to 2.57) for classic-ML workloads from training to serving —.. |
 | [react-fetch-cache-patterns](skills/.experimental/react-fetch-cache-patterns) | React data-fetching patterns at scale — recommender carousels, infinite feeds, pages with many.. |
 | [react-native-elements](skills/.experimental/react-native-elements) | React Native Elements UI component library best practices for performance, theming, and proper.. |
 | [react-optimise](skills/.experimental/react-optimise) | Application-level React performance optimization covering React Compiler mastery, bundle.. |

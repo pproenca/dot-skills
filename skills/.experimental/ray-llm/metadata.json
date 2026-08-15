@@ -1,0 +1,24 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "Ray Serve LLM + Ray Data LLM (open-source Ray)",
+  "discipline": "distillation",
+  "type": "library-reference",
+  "date": "August 2026",
+  "abstract": "Library-reference skill for LLM workloads on open-source Ray: OpenAI-compatible serving via ray.serve.llm (LLMConfig, build_openai_app, vLLM engine) and batch inference via ray.data.llm (build_processor). 13 rules across 5 categories covering where this fast-churning surface broke with what a model produces: the archived ray-llm repo, renamed entry points, restructured stage configs, relocated classes, placement and accelerator validation, autoscaling, LoRA multiplexing, and routing. Pinned to ray 2.57.0 (whose llm extra pins its matching vLLM); claims verified against the unpacked wheel and installed package source, with every example config constructed under CPU-only pydantic validation; engine/GPU runtime behavior is source-verified, not executed.",
+  "references": [
+    "https://docs.ray.io/en/latest/serve/llm/quick-start.html",
+    "https://docs.ray.io/en/latest/serve/llm/user-guides/configuration.html",
+    "https://docs.ray.io/en/latest/data/working-with-llms.html",
+    "https://github.com/ray-project/ray/releases/tag/ray-2.57.0",
+    "https://github.com/ray-project/ray-llm",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/serve/llm/__init__.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/serve/llm/ingress.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/serve/llm/request_router.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/data/llm.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/llm/_internal/serve/core/configs/llm_config.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/llm/_internal/batch/processor/base.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/llm/_internal/serve/engines/vllm/vllm_models.py",
+    "https://github.com/ray-project/ray/blob/ray-2.57.0/python/ray/util/accelerators/accelerators.py"
+  ]
+}
