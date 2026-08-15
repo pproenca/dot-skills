@@ -1,0 +1,19 @@
+{
+  "version": "0.1.0",
+  "organization": "dot-skills",
+  "technology": "MLflow 3 MLOps (open-source)",
+  "discipline": "composition",
+  "type": "automation",
+  "date": "August 2026",
+  "abstract": "Guided seven-phase workflow that takes an arbitrary ML codebase to a production-grade open-source MLflow 3 setup: scripted read-only assessment, registry domain modelling, per-environment tracking infrastructure (dev/staging/prod), training-code restructuring to MLflow 3 idioms, evaluation-gated promotion via aliases and copy_model_version, serving with smoke tests, and the ongoing MLOps loop. Companion to the mlflow-3 distillation skill; pinned to mlflow 3.15.1.",
+  "references": [
+    "https://mlflow.org/docs/latest/ml/mlflow-3/",
+    "https://mlflow.org/docs/latest/ml/model-registry/workflow/",
+    "https://mlflow.org/docs/latest/self-hosting/architecture/overview/",
+    "https://mlflow.org/docs/latest/self-hosting/security/basic-http-auth/",
+    "https://mlflow.org/docs/latest/self-hosting/kubernetes-helm/",
+    "https://mlflow.org/docs/latest/self-hosting/migrate-from-file-store",
+    "https://mlflow.org/docs/latest/ml/deployment/",
+    "https://mlflow.org/docs/latest/ml/deployment/deploy-model-locally/"
+  ]
+}

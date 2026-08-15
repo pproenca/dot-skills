@@ -1,0 +1,18 @@
+{
+  "dev_tracking_uri": "",
+  "staging_tracking_uri": "",
+  "prod_tracking_uri": "",
+  "registry_namespace": "",
+  "model_name": "",
+  "experiment_name": "",
+  "serving_url": "",
+  "_setup_instructions": {
+    "dev_tracking_uri": "Tracking server URI for the dev environment (e.g. http://localhost:5000 from scaffold-dev-tracking.sh)",
+    "staging_tracking_uri": "Tracking server URI for staging (empty until phase 2 stands it up; may equal dev_tracking_uri when one server hosts all environments)",
+    "prod_tracking_uri": "Tracking server URI for prod (empty until phase 2; may equal staging_tracking_uri on a shared server)",
+    "registry_namespace": "Team/domain segment used in registered-model names, e.g. 'growth' produces dev.growth.<model_name>",
+    "model_name": "The business problem's model name, e.g. churn_classifier — combined as <env>.<namespace>.<model_name>",
+    "experiment_name": "MLflow experiment name for training runs, e.g. churn-classifier",
+    "serving_url": "Base URL of the served model once phase 5 runs it (e.g. http://localhost:5001); used by verify.sh's serving assertions"
+  }
+}

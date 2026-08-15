@@ -161,6 +161,8 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 | [marketplace-search-recsys-planning](skills/.experimental/marketplace-search-recsys-planning) | Search and recommendation system planning for a two-sided trust marketplace built on OpenSearch.. |
 | [metric-validation-harness](skills/.experimental/metric-validation-harness) | Empirically validates a software metric before trusting or optimizing it — point it at any.. |
 | [migrate-js-to-modern-typescript](skills/.experimental/migrate-js-to-modern-typescript) | Migrating a JavaScript codebase to TypeScript — converting .js files to .ts, adding types to.. |
+| [mlflow-3](skills/.experimental/mlflow-3) | MLflow 3 (open-source, pinned to 3.15) for classic-ML MLOps — logging and registering models,.. |
+| [mlflow-mlops-migration](skills/.experimental/mlflow-mlops-migration) | Guided workflow for taking any ML codebase — including one with no experiment tracking at all,.. |
 | [nextjs-bundle-optimizer](skills/.experimental/nextjs-bundle-optimizer) | "Next.js 16 bundle-size and build-time optimization — runs a data-driven iteration loop: measure.. |
 | [nextjs-ppr-patterns](skills/.experimental/nextjs-ppr-patterns) | Next.js 16 App Router pages mixing static and dynamic content — Partial Prerendering (PPR) under.. |
 | [nginx-c-module-debug](skills/.experimental/nginx-c-module-debug) | nginx C module debugging guidelines based on the official nginx development guide |

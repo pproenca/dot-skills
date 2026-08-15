@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if printf '%s' \"$TOOL_INPUT\" | grep -qE 'mlflow[[:space:]]+(gc|db[[:space:]]+upgrade)' && [ \"${MLFLOW_MAINTENANCE_ACK:-}\" != \"yes\" ]; then echo 'Blocked: mlflow gc / mlflow db upgrade are destructive. Get explicit user confirmation (and a DB snapshot for db upgrade), then re-run with MLFLOW_MAINTENANCE_ACK=yes.' >&2; exit 2; fi",
+            "timeout": 5
+          }
+        ]
+      }
+    ]
+  }
+}
