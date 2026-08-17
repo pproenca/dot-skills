@@ -18,7 +18,7 @@ tags: conc, render-purity, side-effects, idempotent-render
 - Reading `window.innerWidth`, `document.cookie`, or other browser-only globals directly in render — works once, breaks under SSR and breaks again under interrupted renders.
 - A `Math.random()` or `Date.now()` value persisted into a `useState` initializer's body (the unwrapped form) instead of the lazy initializer — value changes on every render attempt.
 
-The canonical resolution: side effects go in `useEffect`/`useLayoutEffect`; external state reads go through `useSyncExternalStore`; stable identifiers come from `useId` or `useRef`; "once on mount" intent is rare and should be expressed via an effect with an empty deps and ref-guarded body, not via render-body code.
+The canonical resolution: synchronization with external systems goes in `useEffect`/`useLayoutEffect` with complete dependencies and cleanup that mirrors setup; external state reads go through `useSyncExternalStore`; stable identifiers come from `useId` or `useRef`; app initialization belongs at module scope or in a framework boot hook. Effects must remain correct across a setup → cleanup → setup cycle.
 
 **Incorrect (side effects during render):**
 
