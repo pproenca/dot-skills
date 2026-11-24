@@ -227,20 +227,20 @@ A collection of AI agent skills following the [Agent Skills](https://agentskills
 
 ## Installation
 
-Install skills using Vercel's [add-skill](https://github.com/vercel-labs/add-skill) CLI:
+Install skills using Vercel's [skills](https://github.com/vercel-labs/skills) CLI:
 
 ```bash
-# Install all skills
-npx add-skill pproenca/dot-skills
+# Install skills (interactive selection)
+npx skills add pproenca/dot-skills
 
-# List available skills
-npx add-skill pproenca/dot-skills --list
+# Browse available skills
+npx skills find
 
 # Install a specific skill
-npx add-skill pproenca/dot-skills --skill <skill-name>
+npx skills add pproenca/dot-skills --skill <skill-name>
 
 # Install globally (across all projects)
-npx add-skill pproenca/dot-skills --global
+npx skills add pproenca/dot-skills -g
 ```
 
 ### Supported Agents
@@ -261,15 +261,25 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on creating new skills.
 
 ### Quick Start
 
-1. Copy the template: `cp -r skills/.template skills/my-skill`
-2. Rename the template file: `mv skills/my-skill/SKILL.md.template skills/my-skill/SKILL.md`
-3. Edit `SKILL.md` with your skill's frontmatter and instructions
-4. Add scripts, references, or assets as needed
-5. Test with `npx add-skill . --list`
+1. Create a new skill template:
+
+   ```bash
+   npx skills init my-skill
+   ```
+
+2. Edit `my-skill/SKILL.md` with your skill's frontmatter and instructions.
+
+3. Add scripts, references, or assets as needed.
+
+4. Test the skill locally:
+
+   ```bash
+   npx skills find
+   ```
 
 ## Skill Structure
 
-```
+```text
 skills/
 ├── my-skill/
 │   ├── SKILL.md          # Required: Skill definition and instructions
